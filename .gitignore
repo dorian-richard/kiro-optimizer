@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.kopt/
+*.log
+infra/cdk.out/
+infra/node_modules/
+bench/repos/
+bench/results/*.raw.json
+.DS_Store
