@@ -161,19 +161,6 @@ describe('runCommand', () => {
     expect(out.text).toMatch(/^kopt_run: cwd must be inside the repo/);
   });
 
-  it('refuses to run when KOPT_DISABLE_RUN=1 (central mode)', async () => {
-    const prev = process.env.KOPT_DISABLE_RUN;
-    process.env.KOPT_DISABLE_RUN = '1';
-    try {
-      const r = await runCommand({ command: 'echo hi' }, newToolContext(cfg));
-      expect(r.text).toMatch(/^kopt_run is disabled/);
-      expect(r.text.split('\n')).toHaveLength(1);
-    } finally {
-      if (prev === undefined) delete process.env.KOPT_DISABLE_RUN;
-      else process.env.KOPT_DISABLE_RUN = prev;
-    }
-  });
-
   it('honours KOPT_SHELL (e.g. pwsh)', () => {
     const prev = process.env.KOPT_SHELL;
     try {

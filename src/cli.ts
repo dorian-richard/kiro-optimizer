@@ -197,139 +197,19 @@ function fmtStats(s: { filesSeen: number; filesIndexed: number; filesUnchanged: 
   );
 }
 
-async function cmdIndex(o: { root?: string; refresh?: boolean; snapshot?: string; repo?: string }): Promise<void> {
+async function cmdIndex(o: { root?: string; refresh?: boolean }): Promise<void> {
   const cfg = await config(o.root);
-  const [{ Store }, { META }, { indexPath }, mods] = await Promise.all([
-    import('./store/store.js'),
-    import('./store/schema.js'),
-    import('./core/config.js'),
-    modules(),
-  ]);
+  const [{ Store }, { indexPath }, mods] = await Promise.all([import('./store/store.js'), import('./core/config.js'), modules()]);
   const idx = await mods.indexer();
   const progress = progressPrinter('indexing');
-  const repoName = o.repo ?? cfg.central.repoName;
-  if (o.snapshot) {
-    const { rmSync, statSync } = await import('node:fs');
-    const out = resolve(o.snapshot);
-    for (const f of [out, `${out}-wal`, `${out}-shm`, `${out}-journal`]) rmSync(f, { force: true });
-    const store = Store.open(out, { root: cfg.root });
-    const name = repoName ?? cfg.root.split(/[\\/]/).pop()!;
-    try {
-      const stats = await idx.indexRepo(store, { config: cfg, withBlobs: true, repoName: name, onProgress: progress });
-      progress.end();
-      store.setMeta(META.origin, 'snapshot');
-      store.setMeta(META.repo, name);
-      // Self-contained single file for upload: no -wal/-shm side files.
-      store.db.exec('PRAGMA wal_checkpoint(TRUNCATE); PRAGMA journal_mode=DELETE;');
-      closeQuietly(store);
-      const mb = (statSync(out).size / 1048576).toFixed(1);
-      return await finish(`${fmtStats(stats)} · snapshot ${out} (${mb} MB)`);
-    } finally {
-      closeQuietly(store);
-    }
-  }
   const store = Store.open(indexPath(cfg), { root: cfg.root });
   try {
     const stats = o.refresh
-      ? await idx.refreshIndex(store, { config: cfg, repoName, onProgress: progress })
-      : await idx.indexRepo(store, { config: cfg, repoName, onProgress: progress });
+      ? await idx.refreshIndex(store, { config: cfg, onProgress: progress })
+      : await idx.indexRepo(store, { config: cfg, onProgress: progress });
     progress.end();
     closeQuietly(store);
     await finish(fmtStats(stats));
-  } finally {
-    closeQuietly(store);
-  }
-}
-
-function git(root: string, args: string[]): Promise<string | undefined> {
-  return import('node:child_process').then(
-    ({ execFileSync }) => {
-      try {
-        return execFileSync('git', args, { cwd: root, encoding: 'utf8', timeout: 5000, stdio: ['ignore', 'pipe', 'ignore'], windowsHide: true }).trim() || undefined;
-      } catch {
-        return undefined;
-      }
-    },
-  );
-}
-
-/** Download the central snapshot for this repo/commit into <dataDir>/index.db, then catch up with local changes. */
-async function cmdSync(o: { root?: string }): Promise<void> {
-  const cfg = await config(o.root);
-  const tmpl = cfg.central.snapshotUrl;
-  if (!tmpl) throw new Error('central.snapshotUrl is not configured (config file or KOPT_SNAPSHOT_URL)');
-  const { basename } = await import('node:path');
-  const fs = await import('node:fs');
-  const remote = await git(cfg.root, ['remote', 'get-url', 'origin']);
-  const repo = cfg.central.repoName ?? (remote ? basename(remote).replace(/\.git$/, '') : basename(cfg.root));
-  const commits: string[] = [];
-  if (tmpl.includes('{commit}')) {
-    for (const c of [
-      await git(cfg.root, ['rev-parse', 'HEAD']),
-      await git(cfg.root, ['merge-base', 'HEAD', 'origin/HEAD']),
-      await git(cfg.root, ['merge-base', 'HEAD', 'origin/main']),
-      'latest',
-    ]) {
-      if (c && !commits.includes(c)) commits.push(c);
-    }
-  } else commits.push('');
-  const token = process.env[cfg.telemetry.tokenEnv];
-  // Presigned S3 URLs reject a second auth mechanism.
-  const headers: Record<string, string> = token && !/[?&]X-Amz-Signature=/i.test(tmpl) ? { Authorization: `Bearer ${token}` } : {};
-  const { indexPath } = await import('./core/config.js');
-  const { renameWithRetry } = await import('./telemetry/fsutil.js');
-  const target = indexPath(cfg);
-  const tmp = `${target}.download`;
-  fs.mkdirSync(cfg.dataDir, { recursive: true });
-  let fetched: string | undefined;
-  for (const commit of commits) {
-    const url = tmpl.replaceAll('{repo}', encodeURIComponent(repo)).replaceAll('{commit}', encodeURIComponent(commit));
-    const res = await fetch(url, { headers, signal: AbortSignal.timeout(10 * 60_000) });
-    if (res.status === 404 || res.status === 403) continue; // S3 answers 403 for missing keys without ListBucket
-    if (!res.ok || !res.body) throw new Error(`snapshot download ${url}: HTTP ${res.status}`);
-    const [{ Readable }, { pipeline }] = await Promise.all([import('node:stream'), import('node:stream/promises')]);
-    await pipeline(Readable.fromWeb(res.body as any), fs.createWriteStream(tmp));
-    fetched = commit || 'snapshot';
-    break;
-  }
-  if (!fetched) throw new Error(`no snapshot found for ${repo} (tried ${commits.join(', ')})`);
-  const head = Buffer.alloc(2);
-  const fd = fs.openSync(tmp, 'r');
-  fs.readSync(fd, head, 0, 2, 0);
-  fs.closeSync(fd);
-  if (head[0] === 0x1f && head[1] === 0x8b) {
-    const [{ createGunzip }, { pipeline }] = await Promise.all([import('node:zlib'), import('node:stream/promises')]);
-    await pipeline(fs.createReadStream(tmp), createGunzip(), fs.createWriteStream(`${tmp}.db`));
-    renameWithRetry(`${tmp}.db`, tmp);
-  }
-  const [{ Store }, { META, SCHEMA_VERSION }] = await Promise.all([import('./store/store.js'), import('./store/schema.js')]);
-  const check = Store.open(tmp, { readonly: true });
-  const version = check.getMeta(META.schemaVersion);
-  check.close();
-  if (Number(version) !== SCHEMA_VERSION) {
-    fs.rmSync(tmp, { force: true });
-    throw new Error(`snapshot schema v${version} is incompatible with v${SCHEMA_VERSION}; upgrade kopt`);
-  }
-  // A leftover WAL from the previous index would be replayed into the new file and corrupt it.
-  try {
-    for (const f of [`${target}-wal`, `${target}-shm`, `${target}-journal`]) fs.rmSync(f, { force: true });
-    renameWithRetry(tmp, target);
-  } catch (err) {
-    // Windows: the index is open (Kiro's kopt MCP server holds it); retrying cannot help.
-    const code = (err as NodeJS.ErrnoException).code;
-    if (code === 'EPERM' || code === 'EBUSY' || code === 'EACCES') {
-      throw new Error(`${target} is in use (${code}): close Kiro and re-run \`kopt sync\`; the downloaded snapshot is at ${tmp}`);
-    }
-    throw err;
-  }
-  const store = Store.open(target, { root: cfg.root });
-  try {
-    const idx = await (await modules()).indexer();
-    const progress = progressPrinter('refreshing');
-    const stats = await idx.refreshIndex(store, { config: cfg, repoName: repo, onProgress: progress });
-    progress.end();
-    closeQuietly(store);
-    await finish(`synced ${repo}@${fetched.slice(0, 12)} · ${fmtStats(stats)}`);
   } finally {
     closeQuietly(store);
   }
@@ -444,11 +324,9 @@ async function main(): Promise<void> {
 
   program
     .command('index')
-    .description('build or update the local index (or a central snapshot with --snapshot)')
+    .description('build or update the local index')
     .option('--root <dir>', 'repo root (default: nearest git root)')
     .option('--refresh', 'only re-index files changed since the last run')
-    .option('--snapshot <out.db>', 'write a fresh self-contained snapshot (with file contents) to this path')
-    .option('--repo <name>', 'logical repo name stored in the index')
     .action(wrap(cmdIndex));
 
   program
@@ -464,54 +342,6 @@ async function main(): Promise<void> {
           await local.serveStdioAuto(loadConfig(process.cwd()));
         }
         process.exit(0);
-      }),
-    );
-
-  program
-    .command('serve')
-    .description('run the central Streamable HTTP MCP server over repo snapshots (replicas: share KOPT_SESSION_SECRET)')
-    .addOption(new Option('--port <n>', 'port').default('8080').env('PORT'))
-    .addOption(new Option('--host <addr>', 'bind address').default('0.0.0.0').env('KOPT_HOST'))
-    .addOption(new Option('--repos-dir <dir>', 'directory of <repo>/index.db snapshots').default('./repos').env('KOPT_REPOS_DIR'))
-    .addOption(new Option('--auth-issuer <url>', 'OAuth issuer; enables bearer JWT auth').env('KOPT_AUTH_ISSUER'))
-    .addOption(new Option('--auth-audience <list>', 'accepted aud values').env('KOPT_AUTH_AUDIENCE'))
-    .addOption(new Option('--auth-client-id <list>', 'accepted client_id values (Cognito access tokens)').env('KOPT_AUTH_CLIENT_ID'))
-    .addOption(new Option('--auth-jwks <url>', 'JWKS URL (default <issuer>/.well-known/jwks.json)').env('KOPT_AUTH_JWKS'))
-    .addOption(new Option('--auth-scopes <list>', 'required scopes').env('KOPT_AUTH_SCOPES'))
-    .addOption(new Option('--auth-telemetry-scopes <list>', 'scopes required on /telemetry instead of --auth-scopes').env('KOPT_AUTH_TELEMETRY_SCOPES'))
-    .addOption(new Option('--auth-metadata <mode>', "'self' serves RFC 8414 metadata for issuers lacking it (Cognito)").choices(['issuer', 'self']).env('KOPT_AUTH_METADATA'))
-    .addOption(new Option('--resource-url <url>', 'public base URL of this server').env('KOPT_RESOURCE_URL'))
-    .addOption(new Option('--repos-acl <file>', 'JSON {group: [repo|"*"]}').env('KOPT_REPOS_ACL'))
-    .addOption(new Option('--telemetry-file <file>', 'append ingested telemetry as NDJSON').env('KOPT_TELEMETRY_FILE'))
-    .action(
-      wrap(async (o: Record<string, string | undefined>) => {
-        const port = int(o.port ?? '8080');
-        const [{ serveHttp }, { loadConfig }] = await Promise.all([import('./mcp/http.js'), import('./core/config.js')]);
-        const auth = o.authIssuer
-          ? {
-              issuer: o.authIssuer,
-              audience: list(o.authAudience),
-              clientId: list(o.authClientId),
-              jwksUrl: o.authJwks,
-              requiredScopes: list(o.authScopes),
-              telemetryScopes: list(o.authTelemetryScopes),
-              resourceUrl: o.resourceUrl ?? `http://localhost:${port}`,
-              reposAcl: o.reposAcl ? resolve(o.reposAcl) : undefined,
-              authServerMetadata: o.authMetadata as 'issuer' | 'self' | undefined,
-            }
-          : undefined;
-        if (auth && !o.resourceUrl) process.stderr.write(`kopt: --resource-url not set, using ${auth.resourceUrl}\n`);
-        const h = await serveHttp({
-          port,
-          host: o.host,
-          reposDir: resolve(o.reposDir ?? './repos'),
-          auth,
-          config: loadConfig(process.cwd()),
-          telemetryFile: o.telemetryFile ? resolve(o.telemetryFile) : undefined,
-        });
-        const stop = () => void h.close().finally(() => process.exit(0));
-        process.once('SIGTERM', stop);
-        process.once('SIGINT', stop);
       }),
     );
 
@@ -627,25 +457,16 @@ async function main(): Promise<void> {
   program
     .command('init')
     .description('optional per-project install: Kiro files under <root>/.kiro (kopt setup already covers every project)')
-    .option('--remote <url>', 'use the central MCP server at this URL instead of a local one')
-    .option('--client-id <id>', 'pre-registered OAuth public client id for the remote server')
-    .option('--oauth-port <n>', 'loopback port of the OAuth callback (remote)', int)
-    .option('--oauth-scopes <list>', 'OAuth scopes to request (remote)')
     .option('--user', 'install for the user (~/.kiro): same files as kopt setup, without the npm install')
     .option('--dry-run', 'show what would be written')
     .option('--force', 'overwrite existing files')
     .option('--explorer-model <id>', 'model for the read-only explorer agent')
     .option('--root <dir>')
     .action(
-      wrap(async (o: { remote?: string; clientId?: string; oauthPort?: number; oauthScopes?: string; user?: boolean; dryRun?: boolean; force?: boolean; explorerModel?: string; root?: string }) => {
+      wrap(async (o: { user?: boolean; dryRun?: boolean; force?: boolean; explorerModel?: string; root?: string }) => {
         const { installKiro } = await (await modules()).kiro();
         const r = await installKiro({
           root: o.root ? resolve(o.root) : findRoot(),
-          mode: o.remote ? 'remote' : 'local',
-          remoteUrl: o.remote,
-          clientId: o.clientId,
-          oauthPort: o.oauthPort,
-          oauthScopes: list(o.oauthScopes),
           scope: o.user ? 'user' : 'workspace',
           explorerModel: o.explorerModel,
           dryRun: o.dryRun,
@@ -681,24 +502,7 @@ async function main(): Promise<void> {
       }),
     );
 
-  program
-    .command('telemetry')
-    .description('telemetry utilities')
-    .command('ship')
-    .description('send local telemetry to the central endpoint')
-    .option('--root <dir>')
-    .action(
-      wrap(async (o: { root?: string }) => {
-        const cfg = await config(o.root);
-        const tel = await (await modules()).telemetry();
-        const r = await tel.ship(cfg);
-        await finish(`sent ${r.sent} · failed ${r.failed}`, r.failed ? 1 : 0);
-      }),
-    );
-
   program.command('credits').description('collect Kiro CLI session credits and print a summary').option('--root <dir>').action(wrap(cmdCredits));
-
-  program.command('sync').description('download the central index snapshot for this repo, then refresh local changes').option('--root <dir>').action(wrap(cmdSync));
 
   program
     .command('bench')

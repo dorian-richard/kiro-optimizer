@@ -1,11 +1,9 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { cpSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, utimesSync, writeFileSync, appendFileSync } from 'node:fs';
-import { createServer, type IncomingMessage, type Server } from 'node:http';
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, utimesSync, writeFileSync, appendFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { gunzipSync } from 'node:zlib';
 import { defaultConfig, type KoptConfig } from '../src/core/config.js';
-import { collectKiroCredits, record, ship, stats, telemetryUser, dayFileName, SHIP_BATCH } from '../src/telemetry/index.js';
+import { collectKiroCredits, dayFileName, pruneTelemetry, record, RETAIN_DAYS, stats } from '../src/telemetry/index.js';
 
 let tmp: string;
 let prevKiroHome: string | undefined;
@@ -17,7 +15,6 @@ function makeConfig(name: string): KoptConfig {
   const c = defaultConfig(root);
   c.userDir = join(root, '.user');
   c.dataDir = join(root, '.kopt');
-  c.central.repoName = 'acme-api';
   return c;
 }
 
@@ -51,28 +48,23 @@ afterAll(() => {
 });
 
 describe('record', () => {
-  it('appends one JSON line per event to the UTC day file, adding user and repo', () => {
-    const c = makeConfig('rec');
+  it('appends one JSON line per event to the UTC day file, labelled with the project folder', () => {
+    const c = makeConfig('acme-api');
     const ts = Date.UTC(2026, 9, 9, 12);
     record({ ts, kind: 'tool', tool: 'kopt_find', tokensOut: 120 }, c);
     record({ ts, kind: 'hook', tool: 'read_file', tokensOut: 900, repo: 'explicit' }, c);
     const file = join(c.userDir, 'telemetry', '2026-10-09.jsonl');
     const evs = readFileSync(file, 'utf8').trim().split('\n').map((l) => JSON.parse(l));
     expect(evs).toHaveLength(2);
-    expect(evs[0]).toMatchObject({ ts, kind: 'tool', tool: 'kopt_find', tokensOut: 120, repo: 'acme-api' });
-    expect(evs[0].user).toMatch(/^[0-9a-f]{12}$/);
+    expect(evs[0]).toEqual({ ts, kind: 'tool', tool: 'kopt_find', tokensOut: 120, repo: 'acme-api' });
     expect(evs[1].repo).toBe('explicit');
     expect(dayFileName(ts)).toBe('2026-10-09.jsonl');
   });
 
-  it('honours user overrides and the enabled switch, and never throws', () => {
+  it('honours the enabled switch and never throws', () => {
     const c = makeConfig('rec2');
-    (c.telemetry as any).user = 'team-a';
-    expect(telemetryUser(c)).toBe('team-a');
-    (c.telemetry as any).user = false;
-    expect(telemetryUser(c)).toBeUndefined();
     record({ ts: Date.now(), kind: 'tool' }, c);
-    expect(lines(c)[0].user).toBeUndefined();
+    expect(lines(c)).toHaveLength(1);
     const off = makeConfig('rec-off');
     off.telemetry.enabled = false;
     record({ ts: Date.now(), kind: 'tool' }, off);
@@ -84,87 +76,20 @@ describe('record', () => {
   });
 });
 
-describe('ship', () => {
-  let server: Server;
-  let url: string;
-  const received: { headers: IncomingMessage['headers']; lines: any[] }[] = [];
-  /** Per-request outcomes: true = answer 503. Consumed in order; empty = succeed. */
-  let failPlan: boolean[] = [];
-
-  beforeAll(async () => {
-    server = createServer((req, res) => {
-      const chunks: Buffer[] = [];
-      req.on('data', (c) => chunks.push(c));
-      req.on('end', () => {
-        if (failPlan.shift()) { res.statusCode = 503; res.end(); return; }
-        const body = gunzipSync(Buffer.concat(chunks)).toString('utf8');
-        received.push({ headers: req.headers, lines: body.split('\n').filter(Boolean).map((l) => JSON.parse(l)) });
-        res.statusCode = 202;
-        res.end('ok');
-      });
-    });
-    await new Promise<void>((r) => server.listen(0, '127.0.0.1', () => r()));
-    const addr = server.address() as { port: number };
-    url = `http://127.0.0.1:${addr.port}/ingest`;
-  });
-
-  afterAll(() => new Promise<void>((r) => server.close(() => r())));
-
-  it('sends unsent lines as gzip ndjson in batches of 500 with a bearer token, then nothing more', async () => {
-    const c = makeConfig('ship');
-    c.telemetry.endpoint = url;
-    c.telemetry.tokenEnv = 'KOPT_TEST_TOKEN';
-    process.env.KOPT_TEST_TOKEN = 'secret-123';
-    const now = Date.now();
-    for (let i = 0; i < 1200; i++) record({ ts: now, kind: 'hook', tool: 'read_file', tokensOut: i }, c);
-    const r = await ship(c);
-    expect(r).toEqual({ sent: 1200, failed: 0 });
-    expect(received.map((b) => b.lines.length)).toEqual([SHIP_BATCH, SHIP_BATCH, 200]);
-    expect(received[0].headers['content-type']).toBe('application/x-ndjson');
-    expect(received[0].headers['content-encoding']).toBe('gzip');
-    expect(received[0].headers.authorization).toBe('Bearer secret-123');
-    expect(received.flatMap((b) => b.lines).map((e) => e.tokensOut)).toEqual(Array.from({ length: 1200 }, (_, i) => i));
-    received.length = 0;
-    expect(await ship(c)).toEqual({ sent: 0, failed: 0 });
-    record({ ts: now, kind: 'tool', tool: 'kopt_read' }, c);
-    expect(await ship(c)).toEqual({ sent: 1, failed: 0 });
-    expect(received[0].lines[0].tool).toBe('kopt_read');
-    delete process.env.KOPT_TEST_TOKEN;
-  });
-
-  it('keeps the cursor on failure and retries later; reads the token from <userDir>/token', async () => {
-    received.length = 0;
-    const c = makeConfig('ship-fail');
-    c.telemetry.endpoint = url;
-    c.telemetry.tokenEnv = 'KOPT_UNSET_TOKEN_VAR';
-    mkdirSync(c.userDir, { recursive: true });
-    writeFileSync(join(c.userDir, 'token'), 'file-token\n');
-    for (let i = 0; i < 700; i++) record({ ts: Date.now(), kind: 'hook', tokensOut: i }, c);
-    failPlan = [true];
-    expect(await ship(c)).toEqual({ sent: 0, failed: 700 });
-    // first batch accepted, second rejected: only the first one is acknowledged
-    failPlan = [false, true];
-    expect(await ship(c)).toEqual({ sent: 500, failed: 200 });
-    expect(await ship(c)).toEqual({ sent: 200, failed: 0 });
-    expect(received.flatMap((b) => b.lines).map((e) => e.tokensOut)).toEqual(Array.from({ length: 700 }, (_, i) => i));
-    expect(received[0].headers.authorization).toBe('Bearer file-token');
-    // unreachable endpoint: fails fast, keeps data
-    record({ ts: Date.now(), kind: 'hook' }, c);
-    c.telemetry.endpoint = 'http://127.0.0.1:9/never';
-    expect(await ship(c)).toEqual({ sent: 0, failed: 1 });
-  });
-
-  it('ignores a partially written last line until it is complete', async () => {
-    received.length = 0;
-    const c = makeConfig('ship-partial');
-    c.telemetry.endpoint = url;
-    record({ ts: Date.now(), kind: 'hook', tokensOut: 1 }, c);
-    const file = join(c.userDir, 'telemetry', dayFileName(Date.now()));
-    appendFileSync(file, '{"ts":1,"kind":"ho');
-    expect(await ship(c)).toEqual({ sent: 1, failed: 0 });
-    appendFileSync(file, 'ok"}\n');
-    expect(await ship(c)).toEqual({ sent: 1, failed: 0 });
-    expect(received.flatMap((b) => b.lines).map((e) => e.kind)).toEqual(['hook', 'hook']);
+describe('pruneTelemetry', () => {
+  it(`keeps ${RETAIN_DAYS} days of day files and ignores other files`, () => {
+    const c = makeConfig('prune');
+    const now = Date.UTC(2026, 9, 9, 12);
+    const day = (d: number) => dayFileName(now - d * 86400_000);
+    const dir = join(c.userDir, 'telemetry');
+    mkdirSync(dir, { recursive: true });
+    for (const f of [day(RETAIN_DAYS + 30), day(RETAIN_DAYS + 1), day(RETAIN_DAYS), day(0), 'credits-cursor.json']) writeFileSync(join(dir, f), '{}\n');
+    pruneTelemetry(c, now);
+    expect(readdirSync(dir).sort()).toEqual([day(RETAIN_DAYS), day(0), 'credits-cursor.json'].sort());
+    // no telemetry dir yet: nothing to do, nothing created
+    const none = makeConfig('prune-none');
+    expect(() => pruneTelemetry(none, now)).not.toThrow();
+    expect(existsSync(join(none.userDir, 'telemetry'))).toBe(false);
   });
 });
 

@@ -14,8 +14,8 @@ const nodeLine = (bin: string) => `${shellArg(NODE)} ${shellArg(bin)}`;
 
 let tmp: string;
 const saved: Record<string, string | undefined> = {};
-const ENV = ['KOPT_HOME', 'KOPT_KIRO_HOME', 'KOPT_KIRO_USER_SETTINGS', 'KOPT_CLI', 'KOPT_OAUTH_CLIENT_ID', 'KOPT_OAUTH_PORT', 'KOPT_MCP_URL',
-  'KOPT_HOOK_COMMAND', 'KOPT_KIRO_CLI', 'KOPT_KIRO_IDE_PATHS', 'KOPT_CACHE_DIR', 'KIRO_HOME'];
+const ENV = ['KOPT_HOME', 'KOPT_KIRO_HOME', 'KOPT_KIRO_USER_SETTINGS', 'KOPT_CLI', 'KOPT_HOOK_COMMAND', 'KOPT_KIRO_CLI', 'KOPT_KIRO_IDE_PATHS',
+  'KOPT_CACHE_DIR', 'KIRO_HOME'];
 let cli: string;
 
 function write(root: string, rel: string, content: string | Buffer): void {
@@ -185,7 +185,7 @@ describe('installKiro', () => {
     write(root, '.vscode/settings.json', '{\n  // keep me\n  "editor.tabSize": 2\n}\n');
     if (hasGit()) git(root, 'add', '-A');
 
-    const r = await installKiro({ root, mode: 'local', scope: 'workspace' });
+    const r = await installKiro({ root, scope: 'workspace' });
     const k = join(root, '.kiro');
     for (const p of [
       join(k, 'settings', 'mcp.json'), join(k, 'steering', 'kopt.md'), join(k, 'steering', 'kopt-specs.md'),
@@ -228,7 +228,7 @@ describe('installKiro', () => {
     expect(parseJsonc(vs)).toEqual({ 'kiroAgent.agentIgnoreFiles': ['.kiroignore'], 'editor.tabSize': 2 });
 
     // idempotent
-    const again = await installKiro({ root, mode: 'local', scope: 'workspace' });
+    const again = await installKiro({ root, scope: 'workspace' });
     expect(again.written).toEqual([]);
     expect(again.skipped.length).toBeGreaterThanOrEqual(7);
   });
@@ -237,7 +237,7 @@ describe('installKiro', () => {
     const root = newRepo('ws-local');
     mkdirSync(join(root, '.kopt'));
     write(root, '.gitignore', 'node_modules/');
-    await installKiro({ root, mode: 'local', scope: 'workspace' });
+    await installKiro({ root, scope: 'workspace' });
     expect(read(join(root, '.gitignore'))).toBe('node_modules/\n.kopt/\n');
     expect(read(join(root, '.kiroignore'))).toContain('\n/.kopt/\n');
   });
@@ -245,14 +245,14 @@ describe('installKiro', () => {
   it('writes the bare kopt shim when kopt is on PATH', async () => {
     process.env.KOPT_HOOK_COMMAND = 'shim';
     const root = newRepo('ws-shim');
-    await installKiro({ root, mode: 'local', scope: 'workspace' });
+    await installKiro({ root, scope: 'workspace' });
     expect(json(join(root, '.kiro', 'settings', 'mcp.json')).mcpServers.kopt.args.slice(0, 1)).toEqual(process.platform === 'win32' ? [cli] : ['mcp']);
     expect(json(join(root, '.kiro', 'hooks', 'kopt.json')).hooks[2].action.command).toBe(`${process.platform === 'win32' ? 'kopt.cmd' : 'kopt'} hook --source workspace`);
   });
 
   it('dry run computes changes without writing anything', async () => {
     const root = newRepo('dry');
-    const r = await installKiro({ root, mode: 'local', scope: 'workspace', dryRun: true });
+    const r = await installKiro({ root, scope: 'workspace', dryRun: true });
     expect(r.written.length).toBeGreaterThanOrEqual(6);
     expect(r.notes[0]).toMatch(/dry run/);
     for (const p of r.written) expect(existsSync(p), p).toBe(false);
@@ -260,50 +260,31 @@ describe('installKiro', () => {
 
   it('keeps user-edited kopt files unless forced, but updates files it wrote itself', async () => {
     const root = newRepo('edits');
-    await installKiro({ root, mode: 'local', scope: 'workspace' });
+    await installKiro({ root, scope: 'workspace' });
     const steering = join(root, '.kiro', 'steering', 'kopt.md');
     writeFileSync(steering, '---\ninclusion: always\n---\nmy own rules\n');
     // explorer model change: agent file was written by us, so it is updated without --force
-    const r = await installKiro({ root, mode: 'local', scope: 'workspace', explorerModel: 'claude-sonnet-4.6' });
+    const r = await installKiro({ root, scope: 'workspace', explorerModel: 'claude-sonnet-4.6' });
     expect(json(join(root, '.kiro', 'agents', 'kopt-explorer.json')).model).toBe('claude-sonnet-4.6');
     expect(read(steering)).toContain('my own rules');
     expect(r.notes.some((n) => n.includes('kopt.md') && n.includes('--force'))).toBe(true);
-    await installKiro({ root, mode: 'local', scope: 'workspace', force: true });
+    await installKiro({ root, scope: 'workspace', force: true });
     expect(read(steering)).not.toContain('my own rules');
   });
 
   it('refreshes a stale kopt server entry while keeping user fields, and refuses to clobber invalid JSON', async () => {
     const root = newRepo('stale');
     write(root, '.kiro/settings/mcp.json', JSON.stringify({ mcpServers: { kopt: { command: '/old/node', args: ['/old/cli.js', 'mcp'], env: { A: '1' }, autoApprove: ['kopt_find'], disabled: false } } }));
-    await installKiro({ root, mode: 'local', scope: 'workspace' });
+    await installKiro({ root, scope: 'workspace' });
     const kopt = json(join(root, '.kiro', 'settings', 'mcp.json')).mcpServers.kopt;
     expect(kopt).toEqual({ command: NODE, args: [cli, 'mcp', '--root', root], env: { A: '1' }, autoApprove: ['kopt_find'], disabled: false });
 
     const bad = newRepo('badjson');
     write(bad, '.kiro/settings/mcp.json', '{ "mcpServers": { oops');
-    const r = await installKiro({ root: bad, mode: 'local', scope: 'workspace' });
+    const r = await installKiro({ root: bad, scope: 'workspace' });
     expect(read(join(bad, '.kiro', 'settings', 'mcp.json'))).toBe('{ "mcpServers": { oops');
     expect(r.notes.some((n) => n.includes('not valid JSON'))).toBe(true);
     expect(existsSync(join(bad, '.kiro', 'hooks', 'kopt.json'))).toBe(true);
-  });
-
-  it('writes a remote OAuth entry with read-only auto-approval', async () => {
-    const root = newRepo('remote');
-    const r = await installKiro({ root, mode: 'remote', remoteUrl: 'https://kopt.example.com/mcp', scope: 'workspace', clientId: 'abc123', oauthPort: 7790 });
-    const kopt = json(join(root, '.kiro', 'settings', 'mcp.json')).mcpServers.kopt;
-    expect(kopt).toEqual({
-      url: 'https://kopt.example.com/mcp',
-      oauth: { clientId: 'abc123', redirectUri: 'http://localhost:7790/oauth/callback', oauthScopes: [] },
-      oauthScopes: [],
-      autoApprove: AUTO_APPROVE,
-    });
-    expect(r.notes.some((n) => /issuer/.test(n))).toBe(true);
-    // default callback = the one the CDK stack registers in Cognito (http allowed only for `localhost`)
-    const root2 = newRepo('remote-default');
-    await installKiro({ root: root2, mode: 'remote', remoteUrl: 'https://kopt.example.com/mcp', scope: 'workspace', clientId: 'abc123' });
-    expect(json(join(root2, '.kiro', 'settings', 'mcp.json')).mcpServers.kopt.oauth.redirectUri).toBe('http://localhost:33418/oauth/callback');
-    const missing = await installKiro({ root: newRepo('remote-missing'), mode: 'remote', scope: 'workspace' });
-    expect(missing.notes.some((n) => n.includes('needs the server URL'))).toBe(true);
   });
 
   it('installs user-wide into ~/.kiro (same layout as kopt setup) with a global kiroignore and the IDE user setting', async () => {
@@ -312,7 +293,7 @@ describe('installKiro', () => {
     write(root, 'data/big.csv', 'a,b\n'.repeat(80_000));
     if (hasGit()) git(root, 'add', '-A');
     const home = process.env.KOPT_KIRO_HOME!;
-    const r = await installKiro({ root, mode: 'local', scope: 'user' });
+    const r = await installKiro({ root, scope: 'user' });
     const mcp = json(join(home, 'settings', 'mcp.json'));
     expect(mcp.mcpServers.kopt).toEqual({ command: NODE, args: [cli, 'mcp'], autoApprove: AUTO_APPROVE });
     for (const rel of ['steering/kopt.md', 'hooks/kopt.json', 'agents/kopt-explorer.json', 'agents/kopt.json']) expect(existsSync(join(home, rel)), rel).toBe(true);

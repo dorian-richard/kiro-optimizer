@@ -66,12 +66,6 @@ CREATE TABLE IF NOT EXISTS file_imports (
 CREATE INDEX IF NOT EXISTS file_imports_file   ON file_imports(file_id);
 CREATE INDEX IF NOT EXISTS file_imports_target ON file_imports(target_file_id);
 
--- Optional file contents, filled only for central snapshots (server has no checkout).
-CREATE TABLE IF NOT EXISTS blobs (
-  file_id INTEGER PRIMARY KEY REFERENCES files(id) ON DELETE CASCADE,
-  content BLOB NOT NULL                  -- gzip of utf8 text
-);
-
 -- Lexical index over symbols. rowid = symbols.id. Contentless: we only need matching + bm25.
 -- Columns hold space-separated, lower-cased, code-aware terms (see indexer/terms.ts):
 --   name_terms: full name + its sub-words (camelCase/snake_case split) + qualified name parts
@@ -136,10 +130,6 @@ export const META = {
   schemaVersion: 'schema_version',
   /** git HEAD commit the index reflects (for files not locally modified). */
   commit: 'commit',
-  /** Logical repo name. */
-  repo: 'repo',
   indexedAt: 'indexed_at',
-  /** 'local' | 'snapshot' (built in CI with blobs). */
-  origin: 'origin',
   toolVersion: 'tool_version',
 } as const;

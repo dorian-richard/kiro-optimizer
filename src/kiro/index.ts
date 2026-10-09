@@ -32,27 +32,11 @@ export type { InstallResult } from './plan.js';
 
 export interface InstallOptions {
   root: string;
-  mode: 'local' | 'remote';
-  remoteUrl?: string;
   scope: 'workspace' | 'user';
   explorerModel?: string;
   dryRun?: boolean;
   force?: boolean;
-  /** Remote mode: pre-registered public OAuth client id (PKCE). Omit to let Kiro try DCR. */
-  clientId?: string;
-  /** Remote mode: loopback port for the OAuth callback (default 33418 = the CDK stack's default, or env KOPT_OAUTH_PORT). */
-  oauthPort?: number;
-  /** Remote mode: scopes to request (default [] = all scopes allowed for the client, e.g. Cognito). */
-  oauthScopes?: string[];
 }
-
-/**
- * Default OAuth callback: `http://localhost:33418/oauth/callback`, the callback URL the CDK stack registers on its
- * Cognito app client (infra `oauthCallbackPort`). Cognito accepts plain http only for `localhost` (not `127.0.0.1`),
- * and Kiro sends the redirect URI exactly as configured, so host and port must match the registration.
- */
-const DEFAULT_OAUTH_PORT = 33418;
-const oauthCallback = (port: number) => `http://localhost:${port}/oauth/callback`;
 
 /** Quote one argv element for the shell Kiro uses to run hook commands. */
 export function shellQuote(arg: string): string {
@@ -70,19 +54,8 @@ export function hookCommand(source = 'workspace'): string {
   return hookCommandLine(koptCommand(), source);
 }
 
-/** The `kopt` server entry for mcp.json. */
-export function mcpServerEntry(o: InstallOptions, remoteUrl?: string, cmd: KoptCommand = koptCommand()): Record<string, unknown> {
-  if (o.mode === 'remote') {
-    const port = o.oauthPort ?? (Number(process.env.KOPT_OAUTH_PORT) || DEFAULT_OAUTH_PORT);
-    const scopes = o.oauthScopes ?? (process.env.KOPT_OAUTH_SCOPES ? process.env.KOPT_OAUTH_SCOPES.split(/[\s,]+/).filter(Boolean) : []);
-    const oauth: Record<string, unknown> = {};
-    const clientId = o.clientId ?? process.env.KOPT_OAUTH_CLIENT_ID;
-    if (clientId) oauth.clientId = clientId;
-    oauth.redirectUri = oauthCallback(port);
-    oauth.oauthScopes = scopes;
-    // top-level oauthScopes is the CLI agent-config spelling; oauth.oauthScopes wins in the IDE
-    return { url: remoteUrl, oauth, oauthScopes: scopes, autoApprove: [...AUTO_APPROVE] };
-  }
+/** The `kopt` server entry for mcp.json (local stdio server). */
+export function mcpServerEntry(o: Pick<InstallOptions, 'root' | 'scope'>, cmd: KoptCommand = koptCommand()): Record<string, unknown> {
   const args = [...cmd.mcp.args];
   if (o.scope === 'workspace') args.push('--root', resolve(o.root));
   return { command: cmd.mcp.command, args, autoApprove: [...AUTO_APPROVE] };
@@ -95,29 +68,13 @@ export async function installKiro(o: InstallOptions): Promise<InstallResult> {
   const plan = new Plan(!!o.dryRun, !!o.force, userDir);
   const cmd = koptCommand();
   const state = readState(userDir);
-  let remoteUrl = o.remoteUrl;
-  if (o.mode === 'remote' && !remoteUrl) {
-    try {
-      remoteUrl = loadConfig(root).central.mcpUrl;
-    } catch {
-      // no config
-    }
-  }
 
   if (!workspace) {
     // user scope = the global (setup) layout, without the global npm install step
     const h = hostEnv();
     const surfaces = detectSurfaces(h);
     const forced = surfaces.ide || surfaces.cli ? undefined : 'all';
-    let mcpEntry: Record<string, unknown> | undefined;
-    if (o.mode === 'remote') {
-      if (!remoteUrl) {
-        plan.notes.push('remote mode needs the server URL (remoteUrl / KOPT_MCP_URL / central.mcpUrl).');
-        return plan.result();
-      }
-      mcpEntry = mcpServerEntry(o, remoteUrl, cmd);
-    }
-    writeUserConfig({ h, cmd, plan, hooks: hookPlan(surfaces, forced), surfaces, state, forced, explorerModel: o.explorerModel, mcpEntry });
+    writeUserConfig({ h, cmd, plan, hooks: hookPlan(surfaces, forced), surfaces, state, forced, explorerModel: o.explorerModel });
     plan.finish();
     if (!o.dryRun) writeState(userDir, state);
     if (o.dryRun) plan.notes.unshift('dry run: nothing was written.');
@@ -128,18 +85,8 @@ export async function installKiro(o: InstallOptions): Promise<InstallResult> {
 
   // 1. MCP server
   const mcpPath = join(base, 'settings', 'mcp.json');
-  if (o.mode === 'remote' && !remoteUrl) {
-    plan.skipped.push(mcpPath);
-    plan.notes.push('remote mode needs the server URL (remoteUrl / KOPT_MCP_URL / central.mcpUrl); mcp.json not changed.');
-  } else {
-    mergeMcpServer(plan, mcpPath, mcpServerEntry(o, remoteUrl, cmd), { force: !!o.force });
-  }
-  if (o.mode === 'remote' && remoteUrl) {
-    const port = o.oauthPort ?? (Number(process.env.KOPT_OAUTH_PORT) || DEFAULT_OAUTH_PORT);
-    plan.notes.push(`OAuth: register ${oauthCallback(port)} as a callback URL of a public (PKCE, no secret) app client; the IDE does not support client secrets.`);
-    plan.notes.push('OAuth: Kiro requires an exact issuer match (RFC 8414): the authorization server URL advertised in the server\'s protected-resource metadata must equal the IdP metadata "issuer" character for character (scheme, host, port, path, trailing slash).');
-    if (!(o.clientId ?? process.env.KOPT_OAUTH_CLIENT_ID)) plan.notes.push('OAuth: no clientId given, Kiro will try Dynamic Client Registration (Cognito does not support DCR: pass the app client id).');
-  } else if (o.mode === 'local' && cmd.kind === 'node') {
+  mergeMcpServer(plan, mcpPath, mcpServerEntry(o, cmd), { force: !!o.force });
+  if (cmd.kind === 'node') {
     plan.notes.push('mcp.json holds absolute local paths (node, kopt): keep .kiro/settings/mcp.json out of git, or use kopt setup (user-level) in shared repos.');
   }
 

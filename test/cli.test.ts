@@ -1,8 +1,4 @@
-import { spawn, spawnSync } from 'node:child_process';
-import { createServer as createHttp } from 'node:http';
-import type { AddressInfo } from 'node:net';
-import { gzipSync } from 'node:zlib';
-import { readFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
 import { existsSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
@@ -10,7 +6,7 @@ import { pathToFileURL } from 'node:url';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
-import { defaultConfig, indexPath, loadConfig } from '../src/core/config.js';
+import { defaultConfig, indexPath } from '../src/core/config.js';
 import { META } from '../src/store/schema.js';
 import { Store } from '../src/store/store.js';
 import { rmTree } from './helpers/fs.js';
@@ -68,9 +64,11 @@ describe('kopt CLI', () => {
   it('lists every command in --help', () => {
     const r = kopt(['--help']);
     expect(r.status).toBe(0);
-    for (const c of ['index', 'mcp', 'serve', 'find', 'read', 'outline', 'refs', 'run', 'expand', 'setup', 'doctor', 'uninstall', 'init', 'hook', 'stats', 'telemetry', 'credits', 'sync', 'bench']) {
+    for (const c of ['index', 'mcp', 'find', 'read', 'outline', 'refs', 'run', 'expand', 'setup', 'doctor', 'uninstall', 'init', 'hook', 'stats', 'credits', 'bench']) {
       expect(r.stdout).toMatch(new RegExp(`^  ${c}\\b`, 'm'));
     }
+    // local-only tool: no server, no snapshot download, no telemetry upload
+    for (const c of ['serve', 'sync', 'telemetry']) expect(r.stdout).not.toMatch(new RegExp(`^  ${c}\\b`, 'm'));
   });
 
   it('reports usage errors on stderr with a non-zero exit', () => {
@@ -96,14 +94,6 @@ describe('kopt CLI', () => {
     const r = kopt(['stats', '--days', '7', '--root', repo], undefined, { KOPT_KIRO_HOME: join(repo, 'nokiro') });
     expect(r.status).toBe(0);
     expect(r.stdout.length).toBeGreaterThan(0);
-    rmSync(repo, { recursive: true, force: true });
-  });
-
-  it('sync fails cleanly without a configured snapshot URL', () => {
-    const repo = mkdtempSync(join(tmpdir(), 'kopt-cli-sync-'));
-    const r = kopt(['sync', '--root', repo], undefined, { KOPT_SNAPSHOT_URL: '' });
-    expect(r.status).toBe(1);
-    expect(r.stderr).toContain('snapshotUrl is not configured');
     rmSync(repo, { recursive: true, force: true });
   });
 });
@@ -213,50 +203,6 @@ describe('kopt mcp first build (worker thread, needs indexer + retrieval)', () =
     await client.close();
     rmSync(repo, { recursive: true, force: true });
   }, 60_000);
-});
-
-describe('kopt sync (needs indexer)', () => {
-  it.skipIf(!existsSync(join(ROOT, 'src', 'indexer', 'index.ts')))('downloads a gzipped snapshot, swaps it in and refreshes local changes', async () => {
-    const work = mkdtempSync(join(tmpdir(), 'kopt-cli-sync-'));
-    const snap = join(work, 'snap.db');
-    const s = Store.open(snap);
-    s.setMeta(META.indexedAt, String(Date.now()));
-    s.setMeta(META.origin, 'snapshot');
-    s.setMeta('sync_marker', 'from-snapshot');
-    s.db.exec('PRAGMA journal_mode=DELETE;');
-    s.close();
-    const body = gzipSync(readFileSync(snap));
-    const seen: string[] = [];
-    const server = createHttp((req, res) => {
-      seen.push(req.url ?? '');
-      if (req.url?.endsWith('/latest.db.gz')) return res.end(body);
-      res.writeHead(404).end();
-    });
-    await new Promise<void>((r) => server.listen(0, '127.0.0.1', r));
-    const repo = join(work, 'myrepo');
-    (await import('node:fs')).mkdirSync(repo);
-    writeFileSync(join(repo, 'refund.ts'), 'export function computeRefund(total: number): number {\n  return total;\n}\n');
-    const url = `http://127.0.0.1:${(server.address() as AddressInfo).port}/{repo}/{commit}.db.gz`;
-    // async spawn: the snapshot server lives in this process
-    const r = await new Promise<{ code: number | null; stdout: string; stderr: string }>((resolveRun) => {
-      const p = spawn(process.execPath, ['--no-warnings', '--import', 'tsx', CLI, 'sync', '--root', repo], { cwd: ROOT, env: { ...env(), KOPT_SNAPSHOT_URL: url } });
-      let stdout = '';
-      let stderr = '';
-      p.stdout.on('data', (c) => (stdout += c));
-      p.stderr.on('data', (c) => (stderr += c));
-      p.on('close', (code) => resolveRun({ code, stdout, stderr }));
-    });
-    server.close();
-    if (r.code !== 0) process.stderr.write(`[sync] ${r.stderr}\n`);
-    expect(r.code).toBe(0);
-    expect(seen).toContain('/myrepo/latest.db.gz');
-    expect(r.stdout).toMatch(/^synced myrepo@latest/);
-    const idx = Store.open(indexPath(loadConfig(repo)), { readonly: true });
-    expect(idx.getMeta('sync_marker')).toBe('from-snapshot'); // the downloaded file was swapped in
-    expect(idx.fileByPath('refund.ts')).toBeDefined(); // local file picked up by the refresh
-    idx.close();
-    rmSync(work, { recursive: true, force: true });
-  });
 });
 
 describe('zero-config commands (temp HOME)', () => {

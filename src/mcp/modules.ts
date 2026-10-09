@@ -26,8 +26,6 @@ export interface CompressModule {
 export interface IndexOptions {
   config: KoptConfig;
   paths?: string[];
-  withBlobs?: boolean;
-  repoName?: string;
   onProgress?: (done: number, total: number) => void;
 }
 
@@ -49,7 +47,6 @@ export interface IndexerModule {
 
 export interface TelemetryModule {
   record(event: TelemetryEvent, config: KoptConfig): void;
-  ship(config: KoptConfig): Promise<{ sent: number; failed: number }>;
   stats(config: KoptConfig, opts?: { days?: number }): string;
   collectKiroCredits(config: KoptConfig): TelemetryEvent[];
 }
@@ -77,18 +74,10 @@ export interface HooksModule {
 
 export interface InstallOptions {
   root: string;
-  mode: 'local' | 'remote';
-  remoteUrl?: string;
   scope: 'workspace' | 'user';
   explorerModel?: string;
   dryRun?: boolean;
   force?: boolean;
-  /** Remote mode: pre-registered public OAuth client id (PKCE). */
-  clientId?: string;
-  /** Remote mode: loopback port for the OAuth callback. */
-  oauthPort?: number;
-  /** Remote mode: scopes to request. */
-  oauthScopes?: string[];
 }
 
 export interface KiroModule {

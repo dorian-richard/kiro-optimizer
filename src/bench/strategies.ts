@@ -148,7 +148,7 @@ export interface RetrievalModule {
   read(store: Store, p: ReadParams, ctx: ToolContext): ToolResult;
 }
 
-type IndexOpts = { config: KoptConfig; repoName?: string; onProgress?: (done: number, total: number) => void };
+type IndexOpts = { config: KoptConfig; onProgress?: (done: number, total: number) => void };
 type IndexStatsLike = { filesIndexed: number; symbols: number; durationMs: number };
 
 export interface IndexerModule {

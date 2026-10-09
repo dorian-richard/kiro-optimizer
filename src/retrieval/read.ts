@@ -78,7 +78,7 @@ export interface SymbolSectionOpts {
 /** Body (verbatim, deduped) or skeleton of one symbol. Falls back to a skeleton when the body does not fit. */
 export function symbolSection(store: Store, sym: SymbolRow, file: FileRow, o: SymbolSectionOpts): Section & { overBudget?: { tokens: number; start: number; end: number } } {
   const src = loadSource(store, file.path, file);
-  if (!src) return { kind: 'error', text: `${file.path}: source not available (no checkout and no snapshot blob)` };
+  if (!src) return { kind: 'error', text: `${file.path}: source not available (file missing on disk)` };
   const loc = locate(store, src, sym);
   const handle = h(sym.id);
   const loc0 = `${file.path}:${loc.start}-${loc.end}`;

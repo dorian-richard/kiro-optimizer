@@ -21,8 +21,7 @@ if (port) {
     prepareFile(msg.job).then(
       (r: Prepared) => {
         try {
-          const transfer = r.kind === 'file' && r.blob ? [r.blob.buffer as ArrayBuffer] : [];
-          port.postMessage({ id: msg.id, r }, transfer);
+          port.postMessage({ id: msg.id, r });
         } catch (err) {
           fail(msg.id, err);
         }

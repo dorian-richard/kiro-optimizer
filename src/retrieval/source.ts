@@ -38,7 +38,6 @@ export function loadSource(store: Store, path: string, file?: FileRow): Source |
     } catch {
       st = undefined;
     }
-    // Text came from disk only when the file exists there; blobs are by definition the indexed content.
     if (st) {
       const sameMeta = st.size === row.size && row.mtime_ms > 0 && Math.abs(Math.floor(st.mtimeMs) - row.mtime_ms) <= 1;
       if (!sameMeta) {

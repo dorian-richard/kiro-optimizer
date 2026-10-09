@@ -1,7 +1,6 @@
 // Event recording, kept dependency-light: hooks import this on every tool call.
 
-import { appendFileSync, existsSync, mkdirSync, readdirSync } from 'node:fs';
-import { hostname, userInfo } from 'node:os';
+import { appendFileSync, existsSync, mkdirSync, readdirSync, unlinkSync } from 'node:fs';
 import { basename, join } from 'node:path';
 import type { KoptConfig } from '../core/config.js';
 import type { TelemetryEvent } from '../core/types.js';
@@ -14,47 +13,18 @@ export function dayFileName(ts: number): string {
   return new Date(ts).toISOString().slice(0, 10) + '.jsonl';
 }
 
-let cachedUser: { key: string; value: string | undefined } | undefined;
-
-/**
- * Pseudonymous user id: first 12 hex of sha256(username@hostname). Overrides: env KOPT_USER,
- * or `telemetry.user` in config (string = use as is, false / "none" = omit).
- */
-export function telemetryUser(config: KoptConfig): string | undefined {
-  const override = (config.telemetry as { user?: unknown }).user;
-  const env = process.env.KOPT_USER;
-  const key = `${String(override)}|${env ?? ''}`;
-  if (cachedUser?.key === key) return cachedUser.value;
-  let value: string | undefined;
-  if (env) value = env;
-  else if (override === false || override === 'none' || override === 'off') value = undefined;
-  else if (typeof override === 'string' && override) value = override;
-  else {
-    let name = process.env.USER || process.env.USERNAME || 'unknown';
-    try { name = userInfo().username || name; } catch { /* no passwd entry (containers) */ }
-    // lazy: keeps node:crypto off the hook fast path until an event is actually recorded
-    const { createHash } = process.getBuiltinModule('node:crypto');
-    value = createHash('sha256').update(`${name}@${hostname()}`).digest('hex').slice(0, 12);
-  }
-  cachedUser = { key, value };
-  return value;
-}
-
+/** Repo label of an event: the project folder name. */
 export function telemetryRepo(config: KoptConfig): string {
-  return config.central.repoName || basename(config.root);
+  return basename(config.root);
 }
 
 const madeDirs = new Set<string>();
 
-/** Append one event (sync, never throws). Adds ts/user/repo when missing. */
+/** Append one event (sync, never throws). Adds ts/repo when missing. */
 export function record(event: TelemetryEvent, config: KoptConfig): void {
   try {
     if (!config.telemetry.enabled) return;
     const e: TelemetryEvent = { ...event, ts: event.ts || Date.now() };
-    if (e.user === undefined) {
-      const u = telemetryUser(config);
-      if (u) e.user = u;
-    }
     if (e.repo === undefined) e.repo = telemetryRepo(config);
     const dir = telemetryDir(config);
     const file = join(dir, dayFileName(e.ts));
@@ -81,4 +51,24 @@ export function dayFiles(config: KoptConfig): string[] {
   const dir = telemetryDir(config);
   if (!existsSync(dir)) return [];
   return readdirSync(dir).filter((n) => /^\d{4}-\d{2}-\d{2}\.jsonl$/.test(n)).sort();
+}
+
+/** Day files are deleted after this many days. */
+export const RETAIN_DAYS = 90;
+
+/** Delete day files older than RETAIN_DAYS (one directory listing; never throws). */
+export function pruneTelemetry(config: KoptConfig, now: number = Date.now()): void {
+  try {
+    const cutoff = dayFileName(now - RETAIN_DAYS * 86400_000);
+    for (const name of dayFiles(config)) {
+      if (name >= cutoff) break;
+      try {
+        unlinkSync(join(telemetryDir(config), name));
+      } catch {
+        // retried next time
+      }
+    }
+  } catch {
+    // telemetry must never break the caller
+  }
 }

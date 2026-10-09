@@ -24,8 +24,8 @@ function config(root: string): KoptConfig {
   return cfg;
 }
 
-function open(root: string, name = 'index.db'): Store {
-  return Store.open(join(root, '.kopt', name), { root });
+function open(root: string): Store {
+  return Store.open(join(root, '.kopt', 'index.db'), { root });
 }
 
 /** Touches a file with a distinct mtime (same-second rewrites must still be seen as changes). */
@@ -225,9 +225,7 @@ describe('indexRepo (full build)', () => {
 
   it('sets meta', () => {
     expect(Number(store.getMeta(META.indexedAt))).toBeGreaterThan(0);
-    expect(store.getMeta(META.origin)).toBe('local');
     expect(store.getMeta(META.toolVersion)).toMatch(/^\d+\.\d+\.\d+/);
-    expect(store.getMeta(META.repo)).toBeTruthy();
   });
 });
 
@@ -397,7 +395,7 @@ abstract class AbstractPolicy {
   });
 });
 
-describe('git listing, snapshots and workers', () => {
+describe('git listing and workers', () => {
   const hasGit = (() => {
     try {
       execFileSync('git', ['--version'], { stdio: 'ignore' });
@@ -417,30 +415,16 @@ describe('git listing, snapshots and workers', () => {
     git('commit', '-qm', 'init');
     write(root, 'py/payments/untracked.py', 'def fresh():\n    pass\n');
     const store = open(root);
-    const s = await indexRepo(store, { config: config(root), repoName: 'acme/sample' });
+    const s = await indexRepo(store, { config: config(root) });
     const head = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root }).toString().trim();
     expect(s.commit).toBe(head);
     expect(store.getMeta(META.commit)).toBe(head);
-    expect(store.getMeta(META.repo)).toBe('acme/sample');
     const p = paths(store);
     expect(p).toContain('py/payments/untracked.py');
     expect(p).not.toContain('ignored/gen.py');
     expect(p).not.toContain('secrets/keys.py');
     expect(p).toHaveLength(16);
     store.close();
-  });
-
-  it('stores gzip blobs for snapshots so the index works without a checkout', async () => {
-    const root = copyFixture();
-    const store = open(root, 'snap.db');
-    await indexRepo(store, { config: config(root), withBlobs: true });
-    expect(store.getMeta(META.origin)).toBe('snapshot');
-    const n = (store.db.prepare('SELECT count(*) AS n FROM blobs').get() as { n: number }).n;
-    expect(n).toBe(store.counts().files);
-    store.close();
-    const detached = Store.open(join(root, '.kopt', 'snap.db'), { readonly: true });
-    expect(detached.readText('go/ledger/store.go')).toContain('func (s Store) Save()');
-    detached.close();
   });
 
   it('bulk-loads with secondary indexes dropped, then restores them', async () => {

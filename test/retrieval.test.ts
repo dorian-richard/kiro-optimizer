@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { readFileSync } from 'node:fs';
+import { readFileSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import { defaultConfig } from '../src/core/config.js';
 import { newToolContext, type ToolContext } from '../src/core/context.js';
@@ -334,14 +334,15 @@ describe('read', () => {
     expect(read(s.store, {} as never, ctx).text).toMatch(/empty target/);
   });
 
-  it('reads from snapshot blobs when there is no checkout', () => {
-    const snap = seedStore({ root: false, blobs: true });
+  it('reads file text from disk only: a file deleted since indexing is reported in one line', () => {
+    const gone = seedStore();
     try {
-      const c = newToolContext(defaultConfig(snap.root));
-      const r = read(snap.store, { target: 'RefundService.computeRefund' }, c);
-      expect(r.text).toContain('BigDecimal cap = policy.maxRefundFor(order);');
+      rmSync(join(gone.root, RS));
+      const c = newToolContext(defaultConfig(gone.root));
+      const r = read(gone.store, { target: 'RefundService.computeRefund' }, c);
+      expect(r.text).toContain(`${RS}: source not available (file missing on disk)`);
     } finally {
-      snap.cleanup();
+      gone.cleanup();
     }
   });
 });

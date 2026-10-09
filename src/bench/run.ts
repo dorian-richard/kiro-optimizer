@@ -180,14 +180,13 @@ export async function openKoptIndex(
     if (stale) {
       // checkout moved since the index was built: refresh so that kopt is not measured on stale data
       log(`index is stale (${indexed!.slice(0, 12)} != ${head!.slice(0, 12)}): refreshing`);
-      if (modules.indexer.refreshIndex) await modules.indexer.refreshIndex(store, { config, repoName });
-      else await modules.indexer.indexRepo(store, { config, repoName });
+      if (modules.indexer.refreshIndex) await modules.indexer.refreshIndex(store, { config });
+      else await modules.indexer.indexRepo(store, { config });
     } else {
       log(`indexing ${config.root} -> ${dbPath}`);
       let last = 0;
       await modules.indexer.indexRepo(store, {
         config,
-        repoName,
         onProgress: (done, total) => {
           if (Date.now() - last > 2000) {
             last = Date.now();

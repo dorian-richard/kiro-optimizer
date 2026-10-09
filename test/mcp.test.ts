@@ -1,7 +1,6 @@
 import { mkdtempSync, rmSync, utimesSync, writeFileSync, mkdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { gzipSync } from 'node:zlib';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
@@ -33,7 +32,7 @@ export function computeRefund(order: Order, reason: string): Refund {
 `;
 
 /** Minimal index following src/store/schema.ts. */
-function seedStore(path: string, withBlobs = false): void {
+function seedStore(path: string): void {
   const s = Store.open(path);
   s.transaction(() => {
     s.prepare('INSERT INTO files(id, path, lang, hash, size, line_count, mtime_ms, rank, indexed_at) VALUES (?,?,?,?,?,?,?,?,?)').run(
@@ -47,7 +46,6 @@ function seedStore(path: string, withBlobs = false): void {
     const fts = s.prepare('INSERT INTO symbols_fts(rowid, name_terms, sig_terms, path_terms, doc, body_terms) VALUES (?,?,?,?,?,?)');
     fts.run(1, 'refund', 'refund', 'src billing refund ts', '', 'id amount');
     fts.run(2, 'computerefund compute refund', 'order reason refund', 'src billing refund ts', 'compute the refundable amount of an order', 'order total fees amount');
-    if (withBlobs) s.prepare('INSERT INTO blobs(file_id, content) VALUES (?, ?)').run(1, gzipSync(REFUND_TS));
   });
   s.setMeta(META.indexedAt, String(Date.now()));
   s.close();
@@ -103,8 +101,8 @@ afterAll(() => {
 });
 
 describe('tools/list', () => {
-  it('stdio mode exposes exactly the 6 tools with short descriptions and tiny instructions', async () => {
-    const client = await connect(createServer({ config, repos: () => [staticRepo('r', config, store)], allowRun: true }));
+  it('exposes exactly the 6 tools with short descriptions and tiny instructions', async () => {
+    const client = await connect(createServer({ config, repo: staticRepo('r', config, store) }));
     const { tools } = await client.listTools();
     expect(tools.map((t) => t.name)).toEqual(['kopt_find', 'kopt_read', 'kopt_outline', 'kopt_refs', 'kopt_run', 'kopt_expand']);
     for (const t of tools) {
@@ -115,26 +113,19 @@ describe('tools/list', () => {
     expect(tools.find((t) => t.name === 'kopt_find')!.annotations).toEqual({ readOnlyHint: true });
     expect(tools.find((t) => t.name === 'kopt_run')!.annotations).toBeUndefined();
     const instructions = client.getInstructions()!;
+    expect(instructions).toBe(serverInstructions());
     expect(instructions.length).toBeLessThan(600);
+    expect(instructions).toContain('kopt_run');
 
     const listJson = JSON.stringify({ tools });
-    const httpJson = JSON.stringify({ tools: toolDefinitions({ allowRun: false, multiRepo: true }) });
+    expect(listJson).toBe(JSON.stringify({ tools: toolDefinitions() }));
     // Re-billed on every model turn: keep an eye on it.
     process.stderr.write(
-      `[size] tools/list stdio: ${listJson.length} chars ~${estimateTokens(listJson)} tok; http: ${httpJson.length} chars ~${estimateTokens(httpJson)} tok; ` +
+      `[size] tools/list: ${listJson.length} chars ~${estimateTokens(listJson)} tok; ` +
         `instructions: ${instructions.length} chars ~${estimateTokens(instructions)} tok\n`,
     );
     expect(estimateTokens(listJson)).toBeLessThan(1100);
     await client.close();
-  });
-
-  it('honours KOPT_DISABLE_RUN and multi-repo instructions', () => {
-    expect(toolDefinitions({ allowRun: false, multiRepo: false }).map((t) => t.name)).toEqual(['kopt_find', 'kopt_read', 'kopt_outline', 'kopt_refs']);
-    const defs = toolDefinitions({ allowRun: false, multiRepo: true });
-    expect((defs[0].inputSchema as any).properties.repo).toEqual({ type: 'string' });
-    const text = serverInstructions({ allowRun: false, multiRepo: true, repos: ['a', 'b'] });
-    expect(text).toContain('a, b');
-    expect(text).not.toContain('kopt_run');
   });
 });
 
@@ -150,7 +141,7 @@ describe('tools/call', () => {
     const events: TelemetryEvent[] = [];
     const server = createServer({
       config,
-      repos: () => [staticRepo('r', config, store)],
+      repo: staticRepo('r', config, store),
       modules: { retrieval: async () => retrieval },
       emit: (e) => events.push(e),
       sessionId: 's1',
@@ -170,7 +161,7 @@ describe('tools/call', () => {
   });
 
   it('rejects bad arguments with a one-line isError', async () => {
-    const client = await connect(createServer({ config, repos: () => [staticRepo('r', config, store)], modules: { retrieval: async () => fakeRetrieval() }, emit: () => {} }));
+    const client = await connect(createServer({ config, repo: staticRepo('r', config, store), modules: { retrieval: async () => fakeRetrieval() }, emit: () => {} }));
     const r1 = (await client.callTool({ name: 'kopt_find', arguments: {} })) as any;
     expect(r1.isError).toBe(true);
     expect(r1.content[0].text).toMatch(/^kopt_find: invalid arguments: query/);
@@ -192,7 +183,7 @@ describe('tools/call', () => {
       },
       outline: () => ({ text: huge, tokens: estimateTokens(huge) }),
     };
-    const client = await connect(createServer({ config, repos: () => [staticRepo('r', config, store)], modules: { retrieval: async () => retrieval }, emit: () => {} }));
+    const client = await connect(createServer({ config, repo: staticRepo('r', config, store), modules: { retrieval: async () => retrieval }, emit: () => {} }));
     const r1 = (await client.callTool({ name: 'kopt_read', arguments: { target: '#2' } })) as any;
     expect(r1.isError).toBe(true);
     expect(r1.content[0].text).toBe('kopt_read failed: boom stack line');
@@ -204,7 +195,7 @@ describe('tools/call', () => {
   it('gives each session its own ToolContext (per-session dedup ledger)', async () => {
     const calls = { ctx: [] as ToolContext[] };
     const retrieval = fakeRetrieval(calls);
-    const mk = () => createServer({ config, repos: () => [staticRepo('r', config, store)], modules: { retrieval: async () => retrieval }, emit: () => {} });
+    const mk = () => createServer({ config, repo: staticRepo('r', config, store), modules: { retrieval: async () => retrieval }, emit: () => {} });
     const c1 = await connect(mk());
     const c2 = await connect(mk());
     await c1.callTool({ name: 'kopt_find', arguments: { query: 'refund' } });
@@ -216,22 +207,6 @@ describe('tools/call', () => {
     expect(calls.ctx[2].ledger.callCount).toBe(1);
     await c1.close();
     await c2.close();
-  });
-
-  it('multi-repo: lists repos when ambiguous and routes by repo param', async () => {
-    const repos = [staticRepo('billing', config, store), staticRepo('docs', config, store)];
-    const client = await connect(
-      createServer({ config, repos: () => repos, multiRepo: true, allowRun: false, modules: { retrieval: async () => fakeRetrieval() }, emit: () => {} }),
-    );
-    const r1 = (await client.callTool({ name: 'kopt_find', arguments: { query: 'refund' } })) as any;
-    expect(r1.isError).toBeFalsy();
-    expect(r1.content[0].text).toBe('2 repos: billing, docs – pass repo:"<name>"');
-    const r2 = (await client.callTool({ name: 'kopt_find', arguments: { query: 'refund', repo: 'Billing' } })) as any;
-    expect(r2.content[0].text).toContain('computeRefund');
-    const r3 = (await client.callTool({ name: 'kopt_find', arguments: { query: 'refund', repo: 'nope' } })) as any;
-    expect(r3.isError).toBe(true);
-    expect(r3.content[0].text).toContain('available: billing, docs');
-    await client.close();
   });
 });
 

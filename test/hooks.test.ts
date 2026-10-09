@@ -183,15 +183,11 @@ describe('PreToolUse governor', () => {
     expect(loadSession(c.userDir, 's1').blocks['duplicate-run']).toBe(2);
   });
 
-  it('does not redirect to kopt_run when kopt is a remote server (it cannot run local commands)', async () => {
-    const c = makeConfig('remote-mcp', (x) => { x.governor.blockDuplicateRuns = false; });
+  it('does not redirect to kopt_run when the kopt MCP server is disabled (it counts as absent)', async () => {
+    const c = makeConfig('disabled-mcp', (x) => { x.governor.blockDuplicateRuns = false; });
     mkdirSync(join(c.root, '.kiro', 'settings'), { recursive: true });
-    writeFileSync(join(c.root, '.kiro', 'settings', 'mcp.json'), JSON.stringify({ mcpServers: { kopt: { url: 'https://kopt.example.com/mcp' } } }));
-    expect((await handleHook(pre(c, 'execute_bash', { command: 'mvn test' }), c)).exitCode).toBe(0);
-    const start = await handleHook({ hook_event_name: 'SessionStart', session_id: 'r', cwd: c.root }, c);
-    expect(start.stdout).toBe('kopt: central index. Prefer kopt_find/kopt_read/kopt_outline over grep + whole-file reads.\n');
-    // a disabled server counts as absent
     writeFileSync(join(c.root, '.kiro', 'settings', 'mcp.json'), JSON.stringify({ mcpServers: { kopt: { command: 'node', disabled: true } } }));
+    expect((await handleHook(pre(c, 'execute_bash', { command: 'mvn test' }), c)).exitCode).toBe(0);
     expect(await handleHook({ hook_event_name: 'SessionStart', session_id: 'r2', cwd: c.root }, c)).toEqual({ exitCode: 0 });
   });
 
@@ -336,16 +332,22 @@ describe('SessionStart and Stop', () => {
     expect(await handleHook({ hook_event_name: 'SessionStart', session_id: 'a', cwd: c.root }, c)).toEqual({ exitCode: 0 });
   });
 
-  it('Stop returns immediately and spawns `kopt telemetry ship` detached (throttled)', async () => {
+  it('Stop returns immediately, starts no process and drops telemetry day files older than 90 days', async () => {
     const c = makeConfig('stop');
+    const dir = join(c.userDir, 'telemetry');
+    mkdirSync(dir, { recursive: true });
+    const old = new Date(Date.now() - 91 * 86400_000).toISOString().slice(0, 10) + '.jsonl';
+    const kept = new Date(Date.now() - 89 * 86400_000).toISOString().slice(0, 10) + '.jsonl';
+    for (const f of [old, kept]) writeFileSync(join(dir, f), '{"ts":1,"kind":"hook"}\n');
     const t0 = performance.now();
     const out = await handleHook({ hook_event_name: 'Stop', session_id: 's1', cwd: c.root }, c);
     expect(performance.now() - t0).toBeLessThan(50);
     expect(out).toEqual({ exitCode: 0 });
-    expect(spawned.map((s) => s.argv.slice(-2))).toEqual([['telemetry', 'ship']]);
+    expect(spawned).toHaveLength(0);
+    expect(existsSync(join(dir, old))).toBe(false);
+    expect(existsSync(join(dir, kept))).toBe(true);
     await handleHook({ hook_event_name: 'Stop', session_id: 's1', cwd: c.root }, c);
-    expect(spawned).toHaveLength(1);
-    expect(telemetryLines(c).filter((e) => e.kind === 'session' && e.meta.event === 'stop')).toHaveLength(2);
+    expect(telemetryLines(c).filter((e) => e.kind === 'session' && e.meta?.event === 'stop')).toHaveLength(2);
   });
 });
 

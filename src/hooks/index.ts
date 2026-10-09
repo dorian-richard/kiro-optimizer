@@ -28,7 +28,7 @@ import { estimateTokens } from '../core/tokens.js';
 import type { TelemetryEvent } from '../core/types.js';
 import { kiroHomeDir } from '../kiro/paths.js';
 import { readTextFile, repoRelative } from '../telemetry/fsutil.js';
-import { record } from '../telemetry/record.js';
+import { pruneTelemetry, record } from '../telemetry/record.js';
 import { atomicWrite, readJson, withFileLock } from '../telemetry/fsutil.js';
 import { analyzeCommand } from './commands.js';
 import { loadSession, newSession, pruneSessions, saveSession, sessionFile, withSessionLock, type SessionState } from './session.js';
@@ -77,7 +77,6 @@ export function canonicalEvent(name: unknown): string | undefined {
 }
 
 const SESSION_START_MAX = 250;
-const SHIP_THROTTLE_MS = 60_000;
 const REFRESH_THROTTLE_MS = 60_000;
 const IMAGE_EXT = /\.(png|jpe?g|gif|webp|bmp|ico|svgz)$/i;
 
@@ -112,28 +111,17 @@ export function logHookError(config: KoptConfig | undefined, err: unknown, event
   }
 }
 
-/** The enabled `kopt` MCP server entry (workspace config wins over user config), if any. */
-export function koptMcpEntry(root: string): { command?: string; url?: string } | undefined {
+/** Is the kopt MCP server configured and enabled (workspace config wins over user config)? */
+export function koptMcpInstalled(root: string): boolean {
   const home = kiroHomeDir();
   for (const file of [join(root, '.kiro', 'settings', 'mcp.json'), join(home, 'settings', 'mcp.json')]) {
     try {
       const cfg = JSON.parse(readTextFile(file));
       const s = cfg?.mcpServers?.kopt;
-      if (s && typeof s === 'object') return s.disabled === true ? undefined : s;
+      if (s && typeof s === 'object') return s.disabled !== true;
     } catch { /* missing or invalid */ }
   }
-  return undefined;
-}
-
-/** Is the kopt MCP server configured (and enabled) for this workspace or user-wide? */
-export function koptMcpInstalled(root: string): boolean {
-  return koptMcpEntry(root) !== undefined;
-}
-
-/** kopt_run can only execute the user's commands when the server runs locally (stdio). */
-function koptRunAvailable(root: string): boolean {
-  const e = koptMcpEntry(root);
-  return !!e && typeof e.command === 'string' && !e.url;
+  return false;
 }
 
 /** Line count of a file, or undefined when it cannot exceed `threshold` / is not a text file. */
@@ -205,7 +193,7 @@ function preToolUse(event: HookEvent, config: KoptConfig): HookOutcome {
         }
         if (info.cdDir) cwdRel = cwdRel ? `${cwdRel}/${info.cdDir}` : info.cdDir;
         const key = `${cwdRel}|${info.key}`;
-        if (g.enforceRunForVerbose && !s.redirected[key] && koptRunAvailable(root)) {
+        if (g.enforceRunForVerbose && !s.redirected[key] && koptMcpInstalled(root)) {
           s.redirected[key] = 1;
           reason = 'verbose-cmd';
           const q = info.core.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
@@ -363,18 +351,12 @@ async function sessionStart(event: HookEvent, config: KoptConfig): Promise<HookO
   withSessionLock(config.userDir, sid, () => saveSession(config.userDir, { ...newSession(sid), ...pickPersistent(loadSession(config.userDir, sid)) }));
   record({ ts: Date.now(), kind: 'session', session: sid, meta: { event: 'start' } }, config);
   if (isUnsafeRoot(config.root)) return { exitCode: 0 }; // home dir or filesystem root: not a project
-  const entry = koptMcpEntry(config.root);
-  if (!entry) return { exitCode: 0 };
+  if (!koptMcpInstalled(config.root)) return { exitCode: 0 };
   let info: { commit?: string; symbols?: number } | undefined;
   try { info = await indexSummary(config); } catch (err) { logHookError(config, err, event); }
-  const remote = typeof entry.url === 'string' && !entry.command;
-  const advice = remote
-    ? 'Prefer kopt_find/kopt_read/kopt_outline over grep + whole-file reads.'
-    : 'Prefer kopt_find/kopt_read/kopt_outline over grep + whole-file reads; kopt_run for tests/builds.';
+  const advice = 'Prefer kopt_find/kopt_read/kopt_outline over grep + whole-file reads; kopt_run for tests/builds.';
   let line: string;
-  if (remote && !info) {
-    line = `kopt: central index. ${advice}`;
-  } else if (info) {
+  if (info) {
     const at = info.commit ? ` @${info.commit.slice(0, 7)}` : '';
     const n = typeof info.symbols === 'number' ? `, ${info.symbols} symbols` : '';
     line = `kopt: index${at}${n}. ${advice}`;
@@ -394,9 +376,8 @@ async function stop(event: HookEvent, config: KoptConfig): Promise<HookOutcome> 
   const sid = sessionIdOf(event);
   const s = loadSession(config.userDir, sid);
   record({ ts: Date.now(), kind: 'session', session: sid, meta: { event: 'stop', toolCalls: s.toolCalls, blocks: s.blocks } }, config);
-  if (config.telemetry.enabled && throttle(join(config.userDir, 'telemetry', '.last-ship'), SHIP_THROTTLE_MS)) {
-    (await import('./spawn.js')).spawnKopt(['telemetry', 'ship'], config.root);
-  }
+  // Local retention only (one directory listing). Kiro credits are collected on demand by kopt stats / kopt credits.
+  pruneTelemetry(config);
   return { exitCode: 0 };
 }
 

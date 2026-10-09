@@ -56,7 +56,7 @@ export function stats(config: KoptConfig, opts: { days?: number } = {}): string 
   const from = new Date(Date.now() - (days - 1) * 86400_000).toISOString().slice(0, 10);
   lines.push(`kopt stats · ${from}..${to} (${days}d) · ${events.length} events`);
   if (!events.length) {
-    lines.push('no telemetry yet: use Kiro with kopt installed (kopt init), then re-run.');
+    lines.push('no telemetry yet: use Kiro with kopt installed (kopt setup), then re-run.');
     return lines.join('\n');
   }
 
@@ -91,7 +91,7 @@ export function stats(config: KoptConfig, opts: { days?: number } = {}): string 
     rows.push(['total', calls, fmtTok(out), fmtTok(out / Math.max(1, calls)), base ? fmtTok(base) : '-', base ? Math.round((1 - outB / base) * 100) + '%' : '-']);
     lines.push(...table(['tool', 'calls', 'tok out', 'avg', 'baseline', 'saved'], rows));
   } else {
-    lines.push('kopt tools: no calls recorded (remote server records centrally)');
+    lines.push('kopt tools: no calls recorded');
   }
 
   // governor

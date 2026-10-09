@@ -1,5 +1,5 @@
-# Build, typecheck and test kopt on Linux, macOS and Windows (Node 22 and 24), smoke-test the built CLI through
-# each OS's own shells (bash/sh, PowerShell, cmd.exe), and synth the AWS infrastructure. No secrets are needed.
+# Build, typecheck and test kopt on Linux, macOS and Windows (Node 22 and 24), and smoke-test the built CLI through
+# each OS's own shells (bash/sh, PowerShell, cmd.exe). No secrets are needed.
 
 name: CI
 
@@ -17,7 +17,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  # kopt never ships telemetry from CI
+  # no local telemetry files on the runners
   KOPT_TELEMETRY: '0'
   npm_config_audit: 'false'
   npm_config_fund: 'false'

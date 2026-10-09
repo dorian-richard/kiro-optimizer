@@ -83,7 +83,7 @@ export class Writer {
   private nextId: number;
   private readonly s: Record<string, StatementSync>;
 
-  constructor(private readonly store: Store, private readonly withBlobs: boolean) {
+  constructor(private readonly store: Store) {
     store.db.exec(INDEXER_SQL);
     const max = (store.db.prepare('SELECT coalesce(max(id), 0) AS m FROM symbols').get() as { m: number }).m;
     this.nextId = Math.max(max + 1, Number(store.getMeta(META_NEXT_SYMBOL) ?? '1'));
@@ -98,7 +98,6 @@ export class Writer {
       delHints: p('DELETE FROM idx_ref_hints WHERE ref_id IN (SELECT id FROM refs WHERE file_id = ?)'),
       delRefs: p('DELETE FROM refs WHERE file_id = ?'),
       delImports: p('DELETE FROM file_imports WHERE file_id = ?'),
-      delBlob: p('DELETE FROM blobs WHERE file_id = ?'),
       delFile: p('DELETE FROM files WHERE id = ?'),
       insSym: p(
         'INSERT INTO symbols(id, file_id, name, qname, kind, start_line, end_line, start_byte, end_byte, signature, doc, parent_id, exported, rank) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
@@ -107,7 +106,6 @@ export class Writer {
       insRef: p('INSERT INTO refs(file_id, from_symbol_id, name, qualifier, kind, line) VALUES (?, ?, ?, ?, ?, ?)'),
       insHint: p('INSERT OR REPLACE INTO idx_ref_hints(ref_id, hint) VALUES (?, ?)'),
       insImport: p('INSERT INTO file_imports(file_id, spec) VALUES (?, ?)'),
-      upsBlob: p('INSERT OR REPLACE INTO blobs(file_id, content) VALUES (?, ?)'),
       upsSkip: p('INSERT OR REPLACE INTO idx_skipped(path, size, mtime_ms, reason) VALUES (?, ?, ?, ?)'),
       delSkip: p('DELETE FROM idx_skipped WHERE path = ?'),
     };
@@ -225,8 +223,6 @@ export class Writer {
       if (r.hint) this.s.insHint.run(Number(res.lastInsertRowid), r.hint);
     }
     for (const spec of f.imports) this.s.insImport.run(fileId, spec);
-    if (this.withBlobs && it.blob) this.s.upsBlob.run(fileId, it.blob);
-    else if (row) this.s.delBlob.run(fileId);
   }
 
   /** Must run inside a transaction. */
@@ -237,7 +233,7 @@ export class Writer {
     }
     this.s.delFts.run(row.id);
     this.s.delHints.run(row.id);
-    this.s.delFile.run(row.id); // cascades to symbols, refs, file_imports, blobs
+    this.s.delFile.run(row.id); // cascades to symbols, refs, file_imports
     dbFiles.delete(path);
     t.removedFileIds.add(row.id);
     t.filesDeleted++;

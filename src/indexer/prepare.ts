@@ -2,7 +2,6 @@
 
 import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
-import { gzipSync } from 'node:zlib';
 import type { IxFile } from './extract.js';
 import { ftsRows, type FtsRow } from './fts.js';
 import { extractFile } from './parse.js';
@@ -13,7 +12,6 @@ export interface PrepJob {
   size: number;
   mtimeMs: number;
   maxBytes: number;
-  withBlobs: boolean;
   /** Hash currently stored for this path: identical content skips parsing. */
   knownHash?: string;
   /** Python module name from the package layout. */
@@ -21,7 +19,7 @@ export interface PrepJob {
 }
 
 export type Prepared =
-  | { kind: 'file'; rel: string; hash: string; size: number; mtimeMs: number; file: IxFile; fts?: FtsRow[]; blob?: Uint8Array }
+  | { kind: 'file'; rel: string; hash: string; size: number; mtimeMs: number; file: IxFile; fts?: FtsRow[] }
   | { kind: 'same'; rel: string; hash: string; size: number; mtimeMs: number }
   | { kind: 'skip'; rel: string; size: number; mtimeMs: number; reason: 'large' | 'binary' | 'minified' | 'parse' }
   | { kind: 'gone'; rel: string };
@@ -89,7 +87,5 @@ export async function prepareFile(job: PrepJob): Promise<Prepared> {
       sym.endByte += bom;
     }
   }
-  const out: Prepared = { kind: 'file', ...base, hash, file, fts: ftsRows(file) };
-  if (job.withBlobs) out.blob = gzipSync(buf, { level: 6 });
-  return out;
+  return { kind: 'file', ...base, hash, file, fts: ftsRows(file) };
 }

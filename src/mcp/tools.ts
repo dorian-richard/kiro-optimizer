@@ -4,7 +4,7 @@
 // Every byte of tools/list + instructions is re-sent to the model on every turn, so descriptions are
 // terse, param descriptions are rare, and JSON Schema noise ($schema, additionalProperties) is stripped.
 
-import { z, type ZodRawShape, type ZodTypeAny } from 'zod';
+import { z, type ZodRawShape } from 'zod';
 import { toJsonSchemaCompat } from '@modelcontextprotocol/sdk/server/zod-json-schema-compat.js';
 import type { Budgets } from '../core/config.js';
 import type { ToolContext } from '../core/context.js';
@@ -26,9 +26,6 @@ function runShellName(): string {
 
 export const TOOL_NAMES = ['kopt_find', 'kopt_read', 'kopt_outline', 'kopt_refs', 'kopt_run', 'kopt_expand'] as const;
 export type ToolName = (typeof TOOL_NAMES)[number];
-
-/** Tools that execute commands on the local machine: never registered on the central HTTP server. */
-export const RUN_TOOLS: ReadonlySet<ToolName> = new Set(['kopt_run', 'kopt_expand']);
 
 const SYMBOL_KINDS: readonly SymbolKind[] = [
   'class', 'interface', 'enum', 'type', 'record', 'struct', 'trait', 'module', 'namespace',
@@ -160,13 +157,6 @@ const SPECS: Record<ToolName, ToolSpec> = {
   },
 };
 
-export interface ToolSetOptions {
-  /** Register kopt_run / kopt_expand (local mode only). */
-  allowRun: boolean;
-  /** Add an optional `repo` param (multi-repo HTTP server). */
-  multiRepo: boolean;
-}
-
 export interface ToolDefinition {
   name: ToolName;
   description: string;
@@ -180,55 +170,41 @@ interface CompiledTool {
   definition: ToolDefinition;
 }
 
-const compiledCache = new Map<string, Map<ToolName, CompiledTool>>();
+let compiled: Map<ToolName, CompiledTool> | undefined;
 
 function stripSchemaNoise(schema: Record<string, unknown>): Record<string, unknown> {
   const { $schema: _s, additionalProperties: _a, ...rest } = schema;
   return rest;
 }
 
-/** Tools enabled for a server flavour, in stable order (stable tools/list bytes = cache friendly). */
-export function compileTools(o: ToolSetOptions): Map<ToolName, CompiledTool> {
-  const key = `${o.allowRun ? 1 : 0}${o.multiRepo ? 1 : 0}`;
-  const hit = compiledCache.get(key);
-  if (hit) return hit;
+/** The tools in stable order (stable tools/list bytes = cache friendly), compiled once. */
+export function compileTools(): Map<ToolName, CompiledTool> {
+  if (compiled) return compiled;
   const out = new Map<ToolName, CompiledTool>();
   for (const name of TOOL_NAMES) {
     const spec = SPECS[name];
-    if (RUN_TOOLS.has(name) && !o.allowRun) continue;
-    const shape: Record<string, ZodTypeAny> = { ...spec.shape };
-    if (o.multiRepo) shape.repo = z.string().optional();
-    const schema = z.object(shape);
+    const schema = z.object(spec.shape);
     const json = stripSchemaNoise(toJsonSchemaCompat(schema, { strictUnions: true, pipeStrategy: 'input' }) as Record<string, unknown>);
     const definition: ToolDefinition = { name, description: spec.description, inputSchema: json };
     if (spec.readOnly) definition.annotations = { readOnlyHint: true };
     out.set(name, { spec, schema, definition });
   }
-  compiledCache.set(key, out);
+  compiled = out;
   return out;
 }
 
-export function toolDefinitions(o: ToolSetOptions): ToolDefinition[] {
-  return [...compileTools(o).values()].map((t) => t.definition);
+export function toolDefinitions(): ToolDefinition[] {
+  return [...compileTools().values()].map((t) => t.definition);
 }
 
 /** Server instructions. Kiro injects them into context on every turn: keep them tiny. */
-export function serverInstructions(o: ToolSetOptions & { repos?: string[]; defaultRepo?: string }): string {
-  const lines = [
+export function serverInstructions(): string {
+  return [
     'kopt = budgeted code index, the cheapest way to get context. Flow: kopt_find (search) -> kopt_read #handle ' +
       '(exact code; skeleton for big files) / kopt_refs (callers) / kopt_outline (structure).',
     'Prefer these over grep, directory listings and whole-file reads. Reuse #handles; shown code is not re-sent.',
-  ];
-  if (o.allowRun) lines.push('Run tests/builds via kopt_run (compact output); re-run only after edits.');
-  if (o.multiRepo) {
-    const repos = o.repos ?? [];
-    if (repos.length > 1) {
-      const list = repos.join(', ');
-      const which = list.length <= 200 ? `one of ${list}` : `<name> (${repos.length} repos; omit it to list them)`;
-      lines.push(o.defaultRepo ? `Default repo: ${o.defaultRepo}; pass repo: ${which} for another.` : `Pass repo: ${which}.`);
-    }
-  }
-  return lines.join('\n');
+    'Run tests/builds via kopt_run (compact output); re-run only after edits.',
+  ].join('\n');
 }
 
 export interface ExecuteOptions {
@@ -256,11 +232,11 @@ function zodMessage(err: z.ZodError): string {
 
 const REQUIRED_STRINGS = ['query', 'target', 'command', 'handle'];
 
-export type ParsedArgs = { ok: true; args: Record<string, any>; repo?: string } | { ok: false; message: string };
+export type ParsedArgs = { ok: true; args: Record<string, any> } | { ok: false; message: string };
 
-/** Validate + normalize raw tool arguments. `repo` is split off (it is routing, not a tool param). */
-export function parseToolArgs(name: ToolName, raw: unknown, o: ToolSetOptions): ParsedArgs {
-  const tool = compileTools(o).get(name);
+/** Validate + normalize raw tool arguments. */
+export function parseToolArgs(name: ToolName, raw: unknown): ParsedArgs {
+  const tool = compileTools().get(name);
   if (!tool) return { ok: false, message: `unknown tool ${name}` };
   // Models often send null / "" for optional params; z.coerce would turn them into 0.
   const input: Record<string, unknown> = {};
@@ -269,7 +245,7 @@ export function parseToolArgs(name: ToolName, raw: unknown, o: ToolSetOptions): 
   }
   const parsed = tool.schema.safeParse(input);
   if (!parsed.success) return { ok: false, message: `invalid arguments: ${zodMessage(parsed.error)}` };
-  const { repo, ...args } = parsed.data as Record<string, any>;
+  const args = parsed.data as Record<string, any>;
   // Required string params must be non-blank (checked here, not in the schema, to keep tools/list small).
   for (const k of REQUIRED_STRINGS) {
     if (k in args && !String(args[k]).trim()) return { ok: false, message: `invalid arguments: ${k} must not be empty` };
@@ -285,7 +261,7 @@ export function parseToolArgs(name: ToolName, raw: unknown, o: ToolSetOptions): 
     if (kinds.length) args.kinds = kinds;
     else delete args.kinds;
   }
-  return { ok: true, args, repo: typeof repo === 'string' && repo.trim() ? repo.trim() : undefined };
+  return { ok: true, args };
 }
 
 export function toolNeedsStore(name: ToolName): boolean {

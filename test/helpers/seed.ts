@@ -6,7 +6,6 @@ import { mkdtempSync, rmSync, statSync, writeFileSync, mkdirSync } from 'node:fs
 import { createHash } from 'node:crypto';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
-import { gzipSync } from 'node:zlib';
 import type { RefKind, SymbolKind } from '../../src/core/types.js';
 import { Store } from '../../src/store/store.js';
 import { termsForText } from '../../src/indexer/terms.js';
@@ -111,7 +110,7 @@ function signatureOf(line: string): string {
     .trim();
 }
 
-export function seedStore(opts: { specs?: FileSpec[]; root?: boolean; blobs?: boolean } = {}): Seeded {
+export function seedStore(opts: { specs?: FileSpec[] } = {}): Seeded {
   const specs = opts.specs ?? fixture();
   const root = mkdtempSync(join(tmpdir(), 'kopt-retrieval-'));
   for (const f of specs) {
@@ -119,7 +118,7 @@ export function seedStore(opts: { specs?: FileSpec[]; root?: boolean; blobs?: bo
     mkdirSync(dirname(abs), { recursive: true });
     writeFileSync(abs, f.text);
   }
-  const store = Store.open(':memory:', { root: opts.root === false ? undefined : root });
+  const store = Store.open(':memory:', { root });
   const ids: Record<string, number> = {};
   const fileIds: Record<string, number> = {};
   const ranges: Record<string, { file: string; start: number; end: number }> = {};
@@ -133,7 +132,6 @@ export function seedStore(opts: { specs?: FileSpec[]; root?: boolean; blobs?: bo
   const insFts = store.db.prepare('INSERT INTO symbols_fts(rowid, name_terms, sig_terms, path_terms, doc, body_terms) VALUES (?,?,?,?,?,?)');
   const insRef = store.db.prepare('INSERT INTO refs(file_id, from_symbol_id, name, qualifier, kind, line, to_symbol_id) VALUES (?,?,?,?,?,?,?)');
   const insImp = store.db.prepare('INSERT INTO file_imports(file_id, spec, target_file_id) VALUES (?,?,?)');
-  const insBlob = store.db.prepare('INSERT INTO blobs(file_id, content) VALUES (?, ?)');
 
   store.db.exec('BEGIN');
   for (const f of specs) {
@@ -145,7 +143,6 @@ export function seedStore(opts: { specs?: FileSpec[]; root?: boolean; blobs?: bo
         .lastInsertRowid,
     );
     fileIds[f.path] = fid;
-    if (opts.blobs) insBlob.run(fid, gzipSync(Buffer.from(f.text)));
     const offsets: number[] = [];
     let off = 0;
     for (const l of lines) {

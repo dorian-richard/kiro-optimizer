@@ -234,9 +234,6 @@ export async function runCommand(p: RunParams, ctx: ToolContext): Promise<ToolRe
   const cfg = ctx.config;
   const command = String(p.command ?? '').trim();
   if (!command) return result('kopt_run: empty command');
-  if (process.env.KOPT_DISABLE_RUN === '1') {
-    return result('kopt_run is disabled on this server (central mode) – run the command with the local shell tool', { refused: true });
-  }
   const loc = normalizeRelCwd(cfg.root, p.cwd);
   if (!loc) return result(`kopt_run: cwd must be inside the repo (got ${p.cwd})`);
   if (!existsSync(loc.abs)) return result(`kopt_run: cwd not found: ${loc.rel}`);

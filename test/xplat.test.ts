@@ -623,7 +623,7 @@ describe('parse worker pool', () => {
       const text = `export function fn${i}(x: number): number {\r\n  return x + ${i};\r\n}\r\nexport class C${i} { run() { return fn${i}(1); } }\r\n`;
       mkdirSync(join(root, 'src'), { recursive: true });
       writeFileSync(join(root, rel), text);
-      jobs.push({ abs: join(root, rel), rel, size: text.length, mtimeMs: 0, maxBytes: 1_000_000, withBlobs: false });
+      jobs.push({ abs: join(root, rel), rel, size: text.length, mtimeMs: 0, maxBytes: 1_000_000 });
     }
   });
 

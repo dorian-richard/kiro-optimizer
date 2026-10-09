@@ -58,17 +58,22 @@ is billed again on every turn.
 Kiro's issue tracker shows a session of more than 1,000 credits that included 42 pytest runs, and review→fix loops
 with no circuit breaker.
 
-## 3. Target architecture
+## 3. Architecture
+
+Everything runs on the developer machine:
 
 ```mermaid
 flowchart LR
   subgraph Developer machine
-    K[Kiro IDE / Kiro CLI] -- MCP stdio --> L[kopt mcp<br/>local index + dirty-file overlay]
+    K[Kiro IDE / Kiro CLI] -- MCP stdio --> L[kopt mcp<br/>project index, refreshed from the files the agent writes]
     K -- command hooks, free --> H[kopt hook<br/>session governor]
     K -. steering under 140 words .-> K
     T2[Any terminal / agent] -- shell --> C2[kopt CLI<br/>same tools, same output]
-    H --> T[(local telemetry JSONL)]
+    L --> I[(index.db per project<br/>user cache folder)]
+    C2 --> I
+    H --> T[(local usage log JSONL<br/>kopt stats)]
     L --> T
+    KS[Kiro session files<br/>per-request credits] -. read by kopt stats / kopt credits .-> T
   end
 ```
 
@@ -106,10 +111,16 @@ flowchart LR
      tools advertise;
    - a `kopt-explorer` sub-agent on Haiku 4.5 (0.4x) for exploration, returning file:line spans rather than code.
 
-### 3.2 Why everything stays local
-kopt has no server and needs no cloud account. The index, the command logs and the telemetry stay on the developer
-machine, in the user cache and `~/.kopt`. Each developer installs it with one command, and it starts by itself in
-every Kiro project.
+### 3.2 Why no server
+kopt is a local tool on purpose: everything runs on the developer machine and nothing leaves it.
+- **Kiro already runs there.** The levers that pay most (`kopt_run`, the governor, whole-file read redirects) need the
+  checkout, the developer's shell and Kiro's hooks, which only exist on that machine.
+- **Local indexing is cheap enough.** The first build runs once per project in a background worker thread; after
+  that, only the files the agent writes (reported by the hooks) and the files changed by a pull are re-indexed.
+- **Nothing to operate.** No accounts, tokens, secrets, network access or cloud bill: one `npx` command installs it,
+  `kopt uninstall` removes it.
+- **Privacy.** The code index and the usage log stay in the user's cache and `~/.kopt` folders. `kopt stats` reads
+  them locally; there is no upload. Kiro prompts still go to the Kiro service, which is outside kopt's scope.
 
 ## 4. Surface compatibility
 
@@ -142,15 +153,15 @@ governor needs IDE 1.x.
 
 ## 5. Technical choices
 - **TypeScript / Node ≥ 22, zero native dependencies**: SQLite through `node:sqlite` (FTS5 included) and tree-sitter
-  as WASM. It installs on locked-down laptops (no native prebuild to download) and builds into a simple Docker image.
-- **One SQLite file per repository**, kept in the user cache folder: easy to inspect, delete or rebuild, and it never
-  touches the repository itself.
+  as WASM. It installs on locked-down laptops (no native prebuild to download).
+- **One SQLite file per project**, in the user cache folder (WAL mode): a writer connection for indexing and a reader
+  connection for queries, so tool calls keep answering while a refresh runs. File text is always read from disk.
 - **Tree-sitter** for 12 languages (Java, TS/JS, Python, C#, Go, Kotlin, Rust, PHP, Ruby, Scala). Reference
-  resolution favors precision: an ambiguous reference stays unresolved. Planned next step: SCIP (scip-java,
-  scip-typescript, scip-dotnet) in CI for exact resolution on Java and .NET stacks.
+  resolution favors precision: an ambiguous reference stays unresolved. Planned next step: SCIP indexers
+  (scip-java, scip-typescript, scip-dotnet), run locally, for exact resolution on Java and .NET stacks.
 - **No embeddings in v0.1.** Well-done code-aware lexical search plus centrality covers most agent queries, because
-  agents query with identifiers. Embeddings (Titan v2 at $0.02 per million tokens, in CI) are a v0.2 option if the
-  benchmark shows a recall gap on natural-language queries.
+  agents query with identifiers. A small local embedding model is a v0.2 option if the benchmark shows a recall gap
+  on natural-language queries.
 
 ## 6. Measurement: prove before claiming
 - **Offline benchmark** (`kopt bench`) on two large repositories (spring-framework, django), with verified gold
@@ -168,11 +179,12 @@ governor needs IDE 1.x.
   - bootstrap 95% CI.
 
   **Only this number** supports a savings claim.
-- **In production**: a cohort comparison (difference-in-differences) of daily credits from the Kiro export, plus
-  the fine-grained telemetry.
+- **Day to day**: `kopt stats` reports, from the local usage log, the tokens kopt returned against exact baselines,
+  governor blocks, built-in tool output sizes and per-request Kiro CLI credits. A team that wants a cohort
+  comparison can use Kiro's own usage export (credits per user per day).
 - Rule: `baselineTokens` is only set when the counterfactual is exactly computable (raw command output, full file).
 
-## 7. Open questions
+## 7. Open questions before a team rollout
 1. Target stacks: languages (Java/Spring? .NET?), monorepo or polyrepo, number and size of repositories.
 2. Surfaces in use: Kiro IDE 1.x, CLI 2.x or CLI V3? Some levers differ: Tool Search and `.kiroignore` exist only in
    CLI V3, and `read_code` only in the IDE.
@@ -183,12 +195,12 @@ governor needs IDE 1.x.
 5. Default model (Auto or pinned) and the sub-agent policy.
 
 ## 8. Roadmap
-- **v0.1 (this prototype)**: local index, 6 budgeted tools, output compression, governor, zero-config Kiro setup for
-  IDE and CLI, local telemetry, benchmark harness.
+- **v0.1 (this prototype)**: local index, 6 budgeted tools, output compression, governor, Kiro setup for IDE and CLI,
+  local usage report (`kopt stats`), benchmark harness.
 - **v0.2**:
-  - SCIP indexers for exact references on Java, TS and .NET;
+  - SCIP indexers for Java, TS and .NET, run locally;
   - search across several local repositories;
-  - optional embeddings;
+  - optional local embeddings;
   - "Code Mode": the model writes a script that queries the local index, and only the result enters context.
 - **v0.3**:
   - a "fast apply" step: snippet edits with `// ... existing code ...`, for fewer output tokens;
@@ -198,8 +210,8 @@ governor needs IDE 1.x.
 ## Appendix: main sources
 - Source code read: KiroGraph v1.4.0 (commit 3457727), CodeGraph v1.6.2 (b635dd4), sdl-mcp, CodeGraphContext,
   codegraph-rust.
-- Kiro docs (258 pages, IDE 1.2 and CLI 2.28/V3): hooks, MCP (OAuth, Tool Search), steering, `.kiroignore`, models
-  and credits, enterprise governance.
+- Kiro docs (258 pages, IDE 1.2 and CLI 2.28/V3): hooks, MCP (Tool Search), steering, `.kiroignore`, models and
+  credits, enterprise governance.
 - Read-only analysis of the installed Kiro IDE bundle (0.12 and 1.2.56):
   - hook semantics;
   - MCP instructions injected into context, capped at 2,048 chars;

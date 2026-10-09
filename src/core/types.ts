@@ -106,8 +106,8 @@ export interface TelemetryEvent {
   kind: TelemetryKind;
   /** Kiro session / MCP session id when known. */
   session?: string;
+  /** Project folder name. */
   repo?: string;
-  user?: string;
   /** Tool name (kopt_* or a Kiro built-in observed through hooks). */
   tool?: string;
   /** Tokens actually returned to the model. */

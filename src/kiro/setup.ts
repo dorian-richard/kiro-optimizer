@@ -64,13 +64,12 @@ export function renderTemplate(rel: string, hookCommand: string): Record<string,
 
 export interface McpMergeOptions {
   force?: boolean;
-  /** Keep an existing remote (url) kopt entry instead of replacing it with a local one (team mode). */
-  keepRemote?: boolean;
 }
 
 /**
  * Merge the `kopt` server entry into an mcp.json. User fields (env, disabled, disabledTools, timeouts, autoApprove)
- * and key order are kept; only how the server is reached is refreshed. Invalid JSON is never overwritten.
+ * and key order are kept; only how the server is started (command, args) is refreshed. Invalid JSON is never
+ * overwritten.
  */
 export function mergeMcpServer(plan: Plan, path: string, desired: Record<string, unknown>, o: McpMergeOptions = {}): void {
   let doc: Record<string, any>;
@@ -83,26 +82,13 @@ export function mergeMcpServer(plan: Plan, path: string, desired: Record<string,
   }
   const servers: Record<string, any> = doc.mcpServers && typeof doc.mcpServers === 'object' && !Array.isArray(doc.mcpServers) ? doc.mcpServers : {};
   const current = servers.kopt;
-  const remote = typeof desired.url === 'string';
-  if (o.keepRemote && !remote && current && typeof current === 'object' && typeof current.url === 'string' && !o.force) {
-    plan.skipped.push(path);
-    plan.notes.push(`${path}: kopt is configured as a remote (central) server; kept (use --force to switch to the local server).`);
-    return;
-  }
   let next: Record<string, unknown>;
   if (!current || typeof current !== 'object' || o.force) {
     next = desired;
   } else {
-    const prevOauth = current.oauth && typeof current.oauth === 'object' ? current.oauth : {};
-    const updates: Record<string, unknown> = remote
-      ? { url: desired.url, oauth: { ...prevOauth, ...(desired.oauth as object) }, oauthScopes: desired.oauthScopes }
-      : { command: desired.command, args: desired.args };
-    const drop = remote ? ['command', 'args'] : ['url', 'oauth', 'oauthScopes', 'headers'];
+    const updates: Record<string, unknown> = { command: desired.command, args: desired.args };
     next = {};
-    for (const [k, v] of Object.entries(current)) {
-      if (drop.includes(k)) continue;
-      next[k] = k in updates ? updates[k] : v;
-    }
+    for (const [k, v] of Object.entries(current)) next[k] = k in updates ? updates[k] : v;
     for (const [k, v] of Object.entries(updates)) if (!(k in next)) next[k] = v;
     if (!Array.isArray(current.autoApprove)) next.autoApprove = desired.autoApprove;
   }
@@ -123,8 +109,6 @@ export interface UserConfigOptions {
   state: SetupState;
   forced?: SurfaceChoice;
   explorerModel?: string;
-  /** MCP entry to install instead of the local server (team mode: remote URL + OAuth). */
-  mcpEntry?: Record<string, unknown>;
 }
 
 /** Shared user-level paths kopt may create; recorded in `state.createdPaths` when they did not exist before. */
@@ -161,7 +145,7 @@ function writeUserFiles(o: UserConfigOptions, kh: string, j: (...p: string[]) =>
   const { h, cmd, plan, hooks, state } = o;
 
   // 1. MCP server (no --root: the server finds the project from MCP roots / its cwd)
-  mergeMcpServer(plan, j('settings', 'mcp.json'), o.mcpEntry ?? { ...cmd.mcp, autoApprove: [...AUTO_APPROVE] }, { force: plan.force, keepRemote: true });
+  mergeMcpServer(plan, j('settings', 'mcp.json'), { ...cmd.mcp, autoApprove: [...AUTO_APPROVE] }, { force: plan.force });
 
   // 2. v1 hooks (IDE 1.x, CLI V3)
   if (hooks.globalV1) {

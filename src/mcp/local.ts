@@ -1,4 +1,4 @@
-// Local (checkout) mode: store lifecycle, background indexing, freshness, stdio server, one-shot CLI calls.
+// The local MCP server: store lifecycle, background indexing, freshness, stdio transport, one-shot CLI calls.
 //
 // User-level server (`kopt mcp` with no --root, configured once in ~/.kiro/settings/mcp.json): the project root is
 // only known after `initialize`. Order: the client's MCP roots (roots/list, when it advertises the capability),
@@ -110,14 +110,6 @@ function fileSize(path: string): number {
   }
 }
 
-function inode(path: string): number | undefined {
-  try {
-    return statSync(path).ino;
-  } catch {
-    return undefined;
-  }
-}
-
 /**
  * A repo with a checkout on disk. Uses two SQLite connections: a writer owned by build/refresh and a reader
  * for retrieval, so queries see the last committed state (WAL) while the indexer works.
@@ -129,7 +121,6 @@ export class LocalRepo implements RepoHandle {
   private readonly dirtyPath: string;
   private reader?: Store;
   private writer?: Store;
-  private dbInode?: number;
   private state: State = 'closed';
   private build?: Promise<void>;
   private refreshing?: Promise<void>;
@@ -142,7 +133,7 @@ export class LocalRepo implements RepoHandle {
   private readonly o: Required<Omit<LocalRepoOptions, 'modules' | 'onProgress'>> & Pick<LocalRepoOptions, 'onProgress'>;
 
   constructor(readonly config: KoptConfig, opts: LocalRepoOptions = {}) {
-    this.name = config.central.repoName ?? basename(config.root);
+    this.name = basename(config.root);
     this.modules = withModules(opts.modules);
     this.dbPath = indexPath(config);
     this.dirtyPath = join(config.dataDir, 'dirty');
@@ -223,7 +214,6 @@ export class LocalRepo implements RepoHandle {
     this.writer = Store.open(this.dbPath, { root: this.config.root });
     this.reader = Store.open(this.dbPath, { root: this.config.root });
     for (const s of [this.writer, this.reader]) s.db.exec('PRAGMA busy_timeout=5000');
-    this.dbInode = inode(this.dbPath);
   }
 
   private closeConnections(): void {
@@ -321,15 +311,6 @@ export class LocalRepo implements RepoHandle {
 
   private async refresh(paths?: string[]): Promise<void> {
     try {
-      // `kopt sync` swaps index.db by rename: reattach to the new file.
-      const ino = inode(this.dbPath);
-      if (ino !== undefined && ino !== this.dbInode) {
-        this.openConnections();
-        if (this.needsBuild()) {
-          this.startBuild();
-          return;
-        }
-      }
       const { refreshIndex } = await this.modules.indexer();
       await refreshIndex(this.writer!, { config: this.config, maxFiles: this.o.refreshMaxFiles, paths });
     } catch (err) {
@@ -358,7 +339,7 @@ export async function serveStdio(config: KoptConfig, opts: StdioOptions = {}): P
   repo.start();
   const server = createServer({
     config,
-    repos: () => [repo],
+    repo,
     modules: opts.modules,
     sessionId: `stdio-${randomUUID().slice(0, 8)}`,
   });
@@ -456,7 +437,7 @@ export interface AutoRepoOptions {
 /** The repo of a user-level server: known after `initialize`, may change when the client's roots change. */
 export class AutoRepo implements RepoHandle {
   private current?: LocalRepo;
-  /** Why no tool can run (named so it never collides with pickRepo's `message` discriminator). */
+  /** Why no tool can run (no project folder open). */
   private unavailable?: string;
   private settle!: () => void;
   private readonly decided: Promise<void>;
@@ -467,7 +448,7 @@ export class AutoRepo implements RepoHandle {
   }
 
   get name(): string {
-    return this.current?.name ?? (this.base.central.repoName ?? basename(this.base.root));
+    return this.current?.name ?? basename(this.base.root);
   }
 
   get config(): KoptConfig {
@@ -538,7 +519,7 @@ export function createAutoServer(base: KoptConfig, o: AutoServerOptions = {}): {
   const repo = new AutoRepo(base, o);
   const server = createServer({
     config: base,
-    repos: () => [repo],
+    repo,
     modules: o.modules,
     sessionId: o.sessionId ?? `stdio-${randomUUID().slice(0, 8)}`,
   });
@@ -608,13 +589,13 @@ export interface RunOnceOptions {
 
 /** One tool call outside MCP (CLI). Waits for a full build/refresh instead of answering "retry shortly". */
 export async function runToolOnce(config: KoptConfig, name: ToolName, raw: Record<string, unknown>, o: RunOnceOptions = {}): Promise<ExecuteResult> {
-  const parsed = parseToolArgs(name, raw, { allowRun: true, multiRepo: false });
+  const parsed = parseToolArgs(name, raw);
   if (!parsed.ok) return { text: `${name}: ${parsed.message}`, isError: true };
   const modules = withModules(o.modules);
   const sink = localTelemetrySink(config, modules);
   // Loaded up front so the event is recorded synchronously before the CLI exits.
   await sink.ready;
-  const ctx = newToolContext(config, sink, o.session ?? process.env.KOPT_SESSION ?? 'cli', config.central.repoName ?? basename(config.root));
+  const ctx = newToolContext(config, sink, o.session ?? process.env.KOPT_SESSION ?? 'cli', basename(config.root));
   if (!toolNeedsStore(name)) return executeTool(name, parsed.args, { modules, ctx });
   if (!existsSync(indexPath(config))) process.stderr.write(`kopt: building index for ${config.root} (first run)…\n`);
   const repo = new LocalRepo(config, {

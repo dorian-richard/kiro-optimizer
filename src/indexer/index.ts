@@ -6,7 +6,7 @@
 
 import { execFile } from 'node:child_process';
 import { existsSync, readFileSync, statSync } from 'node:fs';
-import { basename, join } from 'node:path';
+import { join } from 'node:path';
 import type { KoptConfig } from '../core/config.js';
 import { META } from '../store/schema.js';
 import type { Store } from '../store/store.js';
@@ -26,10 +26,6 @@ export interface IndexOptions {
   config: KoptConfig;
   /** Restrict to these repo-relative paths (incremental). Default: walk the whole repo. */
   paths?: string[];
-  /** Store gzip file contents in `blobs` (central snapshots). */
-  withBlobs?: boolean;
-  /** Logical repo name stored in meta. */
-  repoName?: string;
   onProgress?: (done: number, total: number) => void;
 }
 
@@ -129,7 +125,6 @@ interface Plan {
   preSkipped: Prepared[];
   unchanged: number;
   pending: number;
-  needAllBlobs: boolean;
 }
 
 class Timer {
@@ -174,8 +169,6 @@ async function plan(store: Store, opts: IndexOptions, dbFiles: Map<string, DbFil
   }
   timer.mark(`list (${listed.length} files)`);
 
-  // A first snapshot build over a local index needs every blob, so nothing counts as unchanged then.
-  const needAllBlobs = !!opts.withBlobs && store.getMeta(META.origin) !== 'snapshot' && dbFiles.size > 0;
   let unchanged = 0;
   const candidates: Candidate[] = [];
   const preSkipped: Prepared[] = [];
@@ -187,7 +180,7 @@ async function plan(store: Store, opts: IndexOptions, dbFiles: Map<string, DbFil
     }
     const mtime = Math.round(st.mtimeMs);
     const row = dbFiles.get(rel);
-    if (row && row.size === st.size && row.mtime_ms === mtime && !needAllBlobs) {
+    if (row && row.size === st.size && row.mtime_ms === mtime) {
       unchanged++;
       continue;
     }
@@ -221,7 +214,7 @@ async function plan(store: Store, opts: IndexOptions, dbFiles: Map<string, DbFil
     candidates.length = maxFiles;
   }
   timer.mark(`stat (${candidates.length} changed, ${removed.length} removed)`);
-  return { pyPackages, pkgSig, listed, removed, staleSkips, candidates, preSkipped, unchanged, pending, needAllBlobs };
+  return { pyPackages, pkgSig, listed, removed, staleSkips, candidates, preSkipped, unchanged, pending };
 }
 
 /** Parses candidates (workers on big runs) and writes them in batched transactions as results arrive. */
@@ -271,8 +264,7 @@ async function parseAndWrite(
       size: c.size,
       mtimeMs: c.mtimeMs,
       maxBytes: cfg.maxFileBytes,
-      withBlobs: !!opts.withBlobs,
-      knownHash: p.needAllBlobs || c.force ? undefined : dbFiles.get(c.rel)?.hash,
+      knownHash: c.force ? undefined : dbFiles.get(c.rel)?.hash,
     };
     if (c.rel.endsWith('.py') || c.rel.endsWith('.pyi')) job.pythonModule = pythonModule(c.rel, p.pyPackages);
     inflight++;
@@ -334,7 +326,7 @@ async function runPass(store: Store, opts: IndexOptions, maxFiles?: number): Pro
   let rs: ResolveStats | undefined;
   let full = false;
   try {
-    const writer = new Writer(store, !!opts.withBlobs);
+    const writer = new Writer(store);
     writer.deleteFiles(p.removed, dbFiles, tracker);
     writer.forgetSkipped(p.staleSkips);
     writer.writeBatch(p.preSkipped, dbFiles, tracker);
@@ -375,8 +367,6 @@ async function runPass(store: Store, opts: IndexOptions, maxFiles?: number): Pro
 
   const commit = await gitHead(cfg.root);
   if (commit) store.setMeta(META.commit, commit);
-  store.setMeta(META.repo, opts.repoName ?? cfg.central.repoName ?? store.getMeta(META.repo) ?? basename(cfg.root));
-  store.setMeta(META.origin, opts.withBlobs ? 'snapshot' : 'local');
   store.setMeta(META.toolVersion, getToolVersion());
   store.setMeta(META.indexedAt, String(Date.now()));
   // left-over renamed modules are picked up again next pass when this is not recorded yet

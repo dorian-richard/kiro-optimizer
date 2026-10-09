@@ -170,7 +170,6 @@ async function indexStatus(cwd: string): Promise<Check> {
 }
 
 async function mcpCheck(entry: Record<string, any>, scratch: string, hostVars: NodeJS.ProcessEnv, envExtra: Record<string, string>, timeoutMs: number): Promise<Check> {
-  if (typeof entry.url === 'string') return { id: 'mcp', status: 'ok', message: `MCP server: remote ${entry.url} (not started by doctor)` };
   const [{ Client }, { StdioClientTransport, DEFAULT_INHERITED_ENV_VARS }] = await Promise.all([
     import('@modelcontextprotocol/sdk/client/index.js'),
     import('@modelcontextprotocol/sdk/client/stdio.js'),
@@ -260,7 +259,7 @@ export async function runDoctor(o: DoctorOptions = {}): Promise<DoctorReport> {
   if (mcp.error) add({ id: 'mcp.json', status: 'fail', message: `${mcp.path}: invalid JSON (${mcp.error})`, fix: 'fix the JSON, then re-run kopt setup' });
   else if (!mcp.entry) add({ id: 'mcp.json', status: 'fail', message: `${mcp.path}: no "kopt" server`, fix: 'run kopt setup' });
   else if (mcp.entry.disabled === true) add({ id: 'mcp.json', status: 'warn', message: `${mcp.path}: kopt server is disabled`, fix: 'enable it in the Kiro MCP panel' });
-  else add({ id: 'mcp.json', status: 'ok', message: `${mcp.path}: kopt -> ${mcp.entry.url ?? [mcp.entry.command, ...(mcp.entry.args ?? [])].join(' ')}` });
+  else add({ id: 'mcp.json', status: 'ok', message: `${mcp.path}: kopt -> ${[mcp.entry.command, ...(mcp.entry.args ?? [])].join(' ')}` });
 
   const hooksPath = join(kh, 'hooks', 'kopt.json');
   const hooksErr = validHooksFile(readText(hooksPath));

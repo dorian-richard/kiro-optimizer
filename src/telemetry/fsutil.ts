@@ -206,30 +206,6 @@ export function withFileLock<T>(lockPath: string, fn: () => T, opts: { timeoutMs
   }
 }
 
-/** Async variant for work that awaits (network). */
-export async function withFileLockAsync<T>(lockPath: string, fn: () => Promise<T>, staleMs = 120_000): Promise<T | undefined> {
-  mkdirSync(dirname(lockPath), { recursive: true });
-  let fd: number;
-  try {
-    fd = openSync(lockPath, 'wx');
-  } catch (err) {
-    if (!lockBusy(err)) return undefined;
-    try {
-      if (Date.now() - statSync(lockPath).mtimeMs <= staleMs) return undefined;
-      unlinkSync(lockPath);
-      fd = openSync(lockPath, 'wx');
-    } catch {
-      return undefined;
-    }
-  }
-  try {
-    return await fn();
-  } finally {
-    try { closeSync(fd); } catch { /* ignore */ }
-    try { unlinkSync(lockPath); } catch { /* ignore */ }
-  }
-}
-
 /** Write to a temp file next to `path`, then rename over it (retrying transient Windows sharing violations). */
 export function atomicWrite(path: string, data: string): void {
   mkdirSync(dirname(path), { recursive: true });

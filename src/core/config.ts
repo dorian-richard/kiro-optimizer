@@ -51,21 +51,8 @@ export interface KoptConfig {
     blockDuplicateRuns: boolean;
   };
   telemetry: {
+    /** Local usage log under <userDir>/telemetry (read by `kopt stats`); it never leaves the machine. */
     enabled: boolean;
-    /** Central ingestion endpoint (POST JSON lines). */
-    endpoint?: string;
-    /** Name of the env var holding the bearer token for the endpoint. */
-    tokenEnv: string;
-    /** User name attached to shipped events; false = anonymous. Default: the OS user name. */
-    user?: string | false;
-  };
-  central: {
-    /** Remote MCP URL (Streamable HTTP) when the team uses the centralized server. */
-    mcpUrl?: string;
-    /** URL template to download a repo snapshot: `{repo}` and `{commit}` placeholders. */
-    snapshotUrl?: string;
-    /** Logical repo name used centrally (defaults to the git remote name). */
-    repoName?: string;
   };
   charsPerToken: number;
   /** Kiro integration. */
@@ -207,8 +194,7 @@ export function defaultConfig(root: string): KoptConfig {
       enforceRunForVerbose: true,
       blockDuplicateRuns: true,
     },
-    telemetry: { enabled: true, tokenEnv: 'KOPT_TOKEN' },
-    central: {},
+    telemetry: { enabled: true },
     charsPerToken: 3.0,
   };
 }
@@ -246,10 +232,7 @@ export function loadConfig(root: string = process.cwd()): KoptConfig {
       process.stderr.write(`kopt: ignoring invalid config ${file}: ${(err as Error).message}\n`);
     }
   }
-  if (process.env.KOPT_TELEMETRY_ENDPOINT) cfg.telemetry.endpoint = process.env.KOPT_TELEMETRY_ENDPOINT;
   if (process.env.KOPT_TELEMETRY === '0') cfg.telemetry.enabled = false;
-  if (process.env.KOPT_MCP_URL) cfg.central.mcpUrl = process.env.KOPT_MCP_URL;
-  if (process.env.KOPT_SNAPSHOT_URL) cfg.central.snapshotUrl = process.env.KOPT_SNAPSHOT_URL;
   const legacy = process.env.KOPT_LEGACY_WORKSPACE_HOOKS?.toLowerCase();
   if (legacy) {
     const mode = ['1', 'on', 'true', 'yes'].includes(legacy) ? 'on' : ['0', 'off', 'false', 'no'].includes(legacy) ? 'off' : 'auto';

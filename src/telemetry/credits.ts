@@ -239,8 +239,8 @@ function collectUnified(root: string, cursor: Cursor): TelemetryEvent[] {
 }
 
 /**
- * Credit events not collected before (advances the cursor: the caller must record them;
- * see `collectAndRecord` in telemetry/index.ts). Never throws.
+ * Credit events not collected before (advances the cursor: the caller must record them, as `kopt credits` and
+ * `kopt stats` do). Never throws.
  */
 export function collectKiroCredits(config: KoptConfig): TelemetryEvent[] {
   try {

@@ -7,7 +7,8 @@ npx -y github:dorian-richard/kiro-optimizer setup
 ```
 
 Restart Kiro afterwards. This page explains what `setup` does, which files it writes on each OS and for each Kiro
-surface, the optional per-project mode, and troubleshooting.
+surface, the optional per-project mode, and troubleshooting. kopt runs entirely on your machine: there is no server
+to deploy and nothing is sent over the network.
 
 ## 1. Prerequisites
 
@@ -63,7 +64,7 @@ Data kopt writes at run time:
 | Location | Content |
 |---|---|
 | macOS `~/Library/Caches/kopt/`, Linux `$XDG_CACHE_HOME/kopt/` (default `~/.cache/kopt/`), Windows `%LOCALAPPDATA%\kopt\` | one folder per project (`<name>-<hash>`): the index (`index.db`) and the raw logs of `kopt_run` |
-| `~/.kopt/` (`%USERPROFILE%\.kopt`) | local telemetry, governor session state, install state |
+| `~/.kopt/` (`%USERPROFILE%\.kopt`) | the local usage log read by `kopt stats` (kept 90 days, never sent anywhere), governor session state, install state |
 | Kiro IDE 0.x only: `<project>/.kiro/hooks/kopt-prompt.kiro.hook` | see section 4; listed in `.git/info/exclude` so `git status` stays clean |
 
 `kopt setup` never touches your shell profile or `PATH`.
@@ -196,4 +197,4 @@ Environment variables:
 | `KOPT_HOOKS` | `0`: disable all kopt hooks |
 | `KOPT_INSTALL_SPEC` | npm spec `setup` installs globally (default: the copy npx is running; packed, then installed from the tarball) |
 | `KOPT_SHELL` | shell used by `kopt_run` / `kopt run` (default: bash or sh on Linux/macOS; `pwsh`, then Windows PowerShell, then cmd.exe on Windows) |
-| `KOPT_TELEMETRY` | `0`: no local telemetry |
+| `KOPT_TELEMETRY` | `0`: no local usage log (`kopt stats` then has nothing to report) |

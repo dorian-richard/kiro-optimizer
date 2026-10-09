@@ -73,7 +73,7 @@
     },
     {
       "name": "kopt-stop",
-      "description": "kopt: ships telemetry and collects Kiro credit records in a detached background process; returns immediately.",
+      "description": "kopt: records the end of the turn in the local usage log (kopt stats) and drops log days older than 90 days; returns immediately.",
       "trigger": "Stop",
       "action": {
         "type": "command",

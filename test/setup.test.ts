@@ -273,7 +273,7 @@ describe('kopt setup (user level, temp HOME)', () => {
     expect(hooks.version).toBe('v1');
     expect(hooks.hooks.map((x: any) => x.trigger)).toEqual(['SessionStart', 'UserPromptSubmit', 'PreToolUse', 'PostToolUse', 'PostFileSave', 'PostFileCreate', 'PostFileDelete', 'Stop']);
     for (const x of hooks.hooks) expect(x.action).toEqual({ type: 'command', command: 'kopt hook --source global' });
-    expect(hooks.hooks.find((x: any) => x.trigger === 'Stop').description).toContain('collects Kiro credit records');
+    expect(hooks.hooks.find((x: any) => x.trigger === 'Stop').description).toContain('local usage log');
 
     const agent = json(join(b.kiro, 'agents', 'kopt.json'));
     expect(agent.name).toBe('kopt');
@@ -297,10 +297,10 @@ describe('kopt setup (user level, temp HOME)', () => {
     expect(again.written).toEqual([]);
   });
 
-  it('keeps a different Kiro CLI default agent unless --force, keeps a remote kopt server, and supports dry runs', async () => {
+  it('keeps a different Kiro CLI default agent unless --force, keeps user fields of the kopt server, and supports dry runs', async () => {
     const b = sandbox('setup-keep', { cli: true });
     put(kiroCliSettingsPath(b.h), JSON.stringify({ 'chat.defaultAgent': 'my-agent' }));
-    put(join(b.kiro, 'settings', 'mcp.json'), JSON.stringify({ mcpServers: { kopt: { url: 'https://kopt.example.com/mcp', oauth: { clientId: 'x' } } } }));
+    put(join(b.kiro, 'settings', 'mcp.json'), JSON.stringify({ mcpServers: { kopt: { command: 'old-kopt', args: ['mcp'], env: { KOPT_DEBUG: '1' } } } }));
     const dry = await setupUser({ h: b.h, command: SHIM, runVersion: run, noInstallStep: true, dryRun: true });
     expect(dry.notes[0]).toMatch(/dry run/);
     expect(existsSync(join(b.kiro, 'hooks', 'kopt.json'))).toBe(false);
@@ -308,7 +308,7 @@ describe('kopt setup (user level, temp HOME)', () => {
     const r = await setupUser({ h: b.h, command: SHIM, runVersion: run, noInstallStep: true });
     expect(json(kiroCliSettingsPath(b.h))['chat.defaultAgent']).toBe('my-agent');
     expect(r.notes.some((n) => n.includes('"my-agent"'))).toBe(true);
-    expect(json(join(b.kiro, 'settings', 'mcp.json')).mcpServers.kopt.url).toBe('https://kopt.example.com/mcp');
+    expect(json(join(b.kiro, 'settings', 'mcp.json')).mcpServers.kopt).toEqual({ command: 'kopt', args: ['mcp'], env: { KOPT_DEBUG: '1' }, autoApprove: AUTO_APPROVE });
     expect(existsSync(kiroUserSettingsPath(b.h))).toBe(false); // no IDE detected: IDE settings untouched
 
     await setupUser({ h: b.h, command: SHIM, runVersion: run, noInstallStep: true, force: true });
@@ -449,7 +449,7 @@ describe('kopt uninstall', () => {
     process.env.KOPT_KIRO_HOME = join(tmp, 'ws-uninstall-kiro');
     process.env.KOPT_HOOK_COMMAND = 'shim';
     try {
-      await installKiro({ root, mode: 'local', scope: 'workspace' });
+      await installKiro({ root, scope: 'workspace' });
       expect(read(join(root, '.gitignore'))).toBe('node_modules/\n.kopt/\n');
       expect(read(join(root, '.kiroignore'))).toContain('/.kopt/');
       const b = sandbox('ws-uninstall-box');

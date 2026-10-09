@@ -10,7 +10,8 @@ It provides:
 - command-output compression;
 - session-governor hooks.
 
-Everything runs locally on the developer machine: no server, no cloud account, nothing leaves the machine.
+Everything runs on the developer machine: no server to deploy, no cloud account, and kopt makes no network calls at
+run time. The index and the usage log never leave the machine.
 
 It works on three surfaces: **Kiro IDE**, **Kiro CLI** (V3 and legacy 2.x), and the **standalone `kopt` CLI**,
 which any terminal or agent can call.
@@ -54,8 +55,10 @@ against the Kiro documentation.
 
 ## Architecture
 
-`kopt mcp` (stdio MCP server), `kopt hook` (governor), and a local SQLite index (`node:sqlite`,
-  FTS5) built with tree-sitter (WASM). No native dependencies.
+Three local pieces, all in one npm package with no native dependencies:
+- `kopt mcp`: the stdio MCP server Kiro starts for the project you open;
+- `kopt hook`: the session governor, run by Kiro command hooks;
+- a per-project SQLite index (`node:sqlite`, FTS5) built with tree-sitter (WASM), kept in your user cache folder.
 
 See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) and [docs/CONTRACTS.md](docs/CONTRACTS.md).
 
@@ -74,8 +77,7 @@ indexed in the background on first use, and the index is kept in your user cache
 - See what it saves: `kopt stats`
 - Remove it: `kopt uninstall`
 
-Per-project installs, the files written per OS and troubleshooting:
-[docs/INSTALL.md](docs/INSTALL.md).
+Per-project installs, the files written per OS and troubleshooting: [docs/INSTALL.md](docs/INSTALL.md).
 
 ## Measurement
 

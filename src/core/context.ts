@@ -49,7 +49,7 @@ export interface ToolContext {
   ledger: Ledger;
   /** Session id (MCP session or Kiro session) for telemetry. */
   session?: string;
-  /** Logical repo name for telemetry / multi-repo servers. */
+  /** Repo label for telemetry (project folder name). */
   repo?: string;
   /** Fire-and-forget telemetry sink. */
   emit: (event: TelemetryEvent) => void;

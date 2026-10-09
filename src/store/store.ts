@@ -1,6 +1,5 @@
 import { mkdirSync, readFileSync, existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { gunzipSync } from 'node:zlib';
 import { DatabaseSync, type StatementSync } from 'node:sqlite';
 import { META, SCHEMA_SQL, SCHEMA_VERSION, type FileRow, type SymbolRow } from './schema.js';
 
@@ -11,7 +10,7 @@ import { META, SCHEMA_SQL, SCHEMA_VERSION, type FileRow, type SymbolRow } from '
 export class Store {
   readonly db: DatabaseSync;
   readonly path: string;
-  /** Repo root on disk, when a checkout is available (local mode). Undefined for central snapshots. */
+  /** Repo root on disk (file text is read from there). Undefined for connections that only query the index. */
   root?: string;
   private stmts = new Map<string, StatementSync>();
 
@@ -91,20 +90,11 @@ export class Store {
     };
   }
 
-  /**
-   * Current text of a file: from disk when a checkout exists (always fresh), else from the snapshot blob.
-   * Returns undefined when neither is available.
-   */
+  /** Current text of a file, read from disk (always fresh). Undefined without a root or when the file is gone. */
   readText(file: FileRow | string): string | undefined {
-    const row = typeof file === 'string' ? this.fileByPath(file) : file;
-    const rel = typeof file === 'string' ? file : file.path;
-    if (this.root) {
-      const abs = join(this.root, rel);
-      if (existsSync(abs)) return readFileSync(abs, 'utf8');
-    }
-    if (!row) return undefined;
-    const blob = this.prepare('SELECT content FROM blobs WHERE file_id = ?').get(row.id) as { content: Uint8Array } | undefined;
-    return blob ? gunzipSync(blob.content).toString('utf8') : undefined;
+    if (!this.root) return undefined;
+    const abs = join(this.root, typeof file === 'string' ? file : file.path);
+    return existsSync(abs) ? readFileSync(abs, 'utf8') : undefined;
   }
 
   close(): void {

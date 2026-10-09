@@ -66,10 +66,6 @@ export interface IndexOptions {
   config: KoptConfig;
   /** Restrict to these repo-relative paths (incremental). Default: walk the whole repo. */
   paths?: string[];
-  /** Store gzip file contents in `blobs` (central snapshots). */
-  withBlobs?: boolean;
-  /** Logical repo name stored in meta. */
-  repoName?: string;
   onProgress?: (done: number, total: number) => void;
 }
 export interface IndexStats {
@@ -132,10 +128,13 @@ export interface HookOutcome { exitCode: 0 | 2; stdout?: string; stderr?: string
 export async function handleHook(event: HookEvent, config: KoptConfig): Promise<HookOutcome>;
 // src/telemetry/index.ts
 export function record(event: TelemetryEvent, config: KoptConfig): void;            // sync append JSONL, never throws
-export async function ship(config: KoptConfig): Promise<{ sent: number; failed: number }>;
+export function pruneTelemetry(config: KoptConfig, now?: number): void;           // drop day files > RETAIN_DAYS (90)
 export function stats(config: KoptConfig, opts?: { days?: number }): string;     // human report
-export function collectKiroCredits(config: KoptConfig): TelemetryEvent[];        // ~/.kiro/sessions/cli/*.json
+export function collectKiroCredits(config: KoptConfig): TelemetryEvent[];        // ~/.kiro/sessions/**
 ```
+Telemetry is a local log only (`<userDir>/telemetry/<YYYY-MM-DD>.jsonl`, read by `kopt stats`); nothing is sent
+anywhere. Events carry the project folder name as `repo`. The Stop hook records the end of the turn and prunes old
+day files; Kiro credits are collected on demand by `kopt stats` and `kopt credits`.
 Event names accepted (normalized): IDE 1.x / CLI V3 v1 hook files (PascalCase `PreToolUse`…), CLI 2.x agent hooks
 (only `agentSpawn`, `userPromptSubmit`, `preToolUse`, `postToolUse`, `stop`: the triggers `kiro-cli agent validate`
 2.28 accepts), IDE 0.x legacy hooks (`promptSubmit` only is installed, see below). Tool names of all four surfaces
@@ -146,9 +145,7 @@ exit 0 on every surface.
 ```ts
 // src/kiro/index.ts
 // Per-project install (`kopt init`; `--user` = the user-level files without the npm step)
-export interface InstallOptions { root: string; mode: 'local' | 'remote'; remoteUrl?: string;
-  scope: 'workspace' | 'user'; explorerModel?: string; dryRun?: boolean; force?: boolean;
-  clientId?: string; oauthPort?: number /* default 33418 -> http://localhost:33418/oauth/callback */; oauthScopes?: string[] }
+export interface InstallOptions { root: string; scope: 'workspace' | 'user'; explorerModel?: string; dryRun?: boolean; force?: boolean }
 export async function installKiro(o: InstallOptions): Promise<{ written: string[]; skipped: string[]; notes: string[] }>;
 export async function suggestKiroignore(root: string): Promise<{ patterns: string[]; reasons: Record<string, string> }>;
 // User-level, zero-config install (`kopt setup`): global npm install from the npx copy (packed, then
@@ -168,7 +165,8 @@ export function ensureLegacyWorkspaceHooks(root: string, config: KoptConfig, o?:
 
 ### mcp + cli — `src/mcp/`, `src/cli.ts`
 Tools: `kopt_find`, `kopt_read`, `kopt_outline`, `kopt_refs`, `kopt_run`, `kopt_expand`. Descriptions short
-(< 350 chars each), server `instructions` < 600 chars. stdio and Streamable HTTP (multi-repo, OAuth bearer JWT).
+(< 350 chars each), server `instructions` < 600 chars. Transport: stdio only (Kiro starts `kopt mcp` locally); one
+server answers for one project at a time.
 
 ```ts
 // src/mcp/server.ts
@@ -185,9 +183,3 @@ export interface RepoHandle {
 `kopt mcp` without `--root` resolves the root as above and starts the first index build in a worker thread as soon
 as the root is known. The package's bin is `dist/bin.js`, which drops Node's SQLite ExperimentalWarning and
 refuses Node < 22.13 (a hook then exits 0 silently) before loading `cli.js`.
-
-HTTP server (`kopt serve`) options added for the AWS stack:
-- `--auth-telemetry-scopes <list>` (env `KOPT_AUTH_TELEMETRY_SCOPES`): scopes required on `/telemetry` instead of
-  `--auth-scopes`, so a telemetry-only token cannot query code. Unset: `--auth-scopes` applies to every route.
-- env `KOPT_EMF_REPO_DIMENSION=1`: also emit the `[Repo]` EMF dimension set (one metric series per repo and
-  metric). Default off; `Repo` always stays a log property for Logs Insights.
