@@ -3,13 +3,14 @@
 // leak, and IDE 0.x legacy invocations (stdin left open, data in USER_PROMPT) must not wait for stdin.
 
 import { spawn } from 'node:child_process';
-import { mkdirSync, mkdtempSync, realpathSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, realpathSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { loadConfig, indexPath } from '../src/core/config.js';
 import { Store } from '../src/store/store.js';
+import { rmTree } from './helpers/fs.js';
 
 const ROOT = resolve(__dirname, '..');
 const BIN = join(ROOT, 'src', 'bin.ts');
@@ -60,7 +61,8 @@ beforeAll(() => {
 });
 
 afterAll(() => {
-  rmSync(tmp, { recursive: true, force: true });
+  // SessionStart starts a detached `kopt index --refresh` that may still hold the index open (Windows).
+  rmTree(tmp);
 });
 
 describe('kopt hook through a shell', () => {

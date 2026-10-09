@@ -6,12 +6,14 @@ import { readFileSync } from 'node:fs';
 import { existsSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
 import { defaultConfig, indexPath, loadConfig } from '../src/core/config.js';
 import { META } from '../src/store/schema.js';
 import { Store } from '../src/store/store.js';
+import { rmTree } from './helpers/fs.js';
 
 const ROOT = resolve(__dirname, '..');
 const CLI = join(ROOT, 'src', 'cli.ts');
@@ -278,8 +280,9 @@ describe('zero-config commands (temp HOME)', () => {
     const r = kopt(['setup', '--dry-run', '--no-global'], undefined, e);
     if (r.status !== 0) process.stderr.write(`[setup] ${r.stderr}\n`);
     expect(r.status).toBe(0);
-    expect(r.stdout).toMatch(/would write ~\/\.kiro\/settings\/mcp\.json/);
-    expect(r.stdout).toMatch(/would write ~\/\.kiro\/hooks\/kopt\.json/);
+    // user-facing paths use the native separator: ~/.kiro/... on POSIX, ~\.kiro\... on Windows
+    expect(r.stdout).toContain(`would write ${join('~', '.kiro', 'settings', 'mcp.json')}\n`);
+    expect(r.stdout).toContain(`would write ${join('~', '.kiro', 'hooks', 'kopt.json')}\n`);
     expect(r.stdout).toMatch(/dry run/);
     expect(existsSync(join(e.HOME, '.kiro'))).toBe(false);
     rmSync(e.HOME, { recursive: true, force: true });
@@ -293,10 +296,10 @@ describe('zero-config commands (temp HOME)', () => {
     expect(existsSync(join(e.HOME, '.kiro', 'hooks', 'kopt.json'))).toBe(true);
     const d = kopt(['doctor', '--quick'], undefined, e);
     expect(d.stdout).toMatch(/^ok {4}node v/m);
-    expect(d.stdout).toMatch(/hooks\/kopt\.json: valid v1 hooks/);
+    expect(d.stdout).toContain(`${join(e.KOPT_KIRO_HOME, 'hooks', 'kopt.json')}: valid v1 hooks`);
     const u = kopt(['uninstall'], undefined, e);
     expect(u.status).toBe(0);
-    expect(u.stdout).toMatch(/removed ~\/\.kiro\/hooks\/kopt\.json/);
+    expect(u.stdout).toContain(`removed ${join('~', '.kiro', 'hooks', 'kopt.json')}\n`);
     expect(existsSync(join(e.HOME, '.kiro', 'hooks', 'kopt.json'))).toBe(false);
     rmSync(e.HOME, { recursive: true, force: true });
   }, 60_000);
@@ -314,8 +317,8 @@ describe('zero-config commands (temp HOME)', () => {
         env: { ...(env() as Record<string, string>), NODE_OPTIONS: '', ...extra },
         stderr: 'pipe',
       });
-      // tsx must resolve from the repo even when cwd is elsewhere
-      (transport as any)._serverParams.args[2] = join(ROOT, 'node_modules', 'tsx', 'dist', 'loader.mjs');
+      // tsx must resolve from the repo even when cwd is elsewhere; --import takes a URL (a bare C:\ path is not one)
+      (transport as any)._serverParams.args[2] = pathToFileURL(join(ROOT, 'node_modules', 'tsx', 'dist', 'loader.mjs')).href;
       const client = new Client({ name: 'test', version: '0' });
       await client.connect(transport);
       let text = '';
@@ -330,7 +333,8 @@ describe('zero-config commands (temp HOME)', () => {
     expect(existsSync(join(repo, '.kopt'))).toBe(false); // the index lives in the cache dir
     const fakeHome = mkdtempSync(join(tmpdir(), 'kopt-cli-home-'));
     expect(await call(fakeHome, { HOME: fakeHome, USERPROFILE: fakeHome })).toMatch(/^kopt: no project folder is open/);
-    rmSync(repo, { recursive: true, force: true });
-    rmSync(fakeHome, { recursive: true, force: true });
+    // the server children may still be exiting, their cwd inside these dirs (Windows refuses to delete those)
+    rmTree(repo);
+    rmTree(fakeHome);
   }, 60_000);
 });

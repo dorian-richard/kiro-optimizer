@@ -1,5 +1,5 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, utimesSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, utimesSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { performance } from 'node:perf_hooks';
@@ -9,6 +9,7 @@ import { setFrontloadDeps, FRONTLOAD_HEADER } from '../src/hooks/frontload.js';
 import { loadSession, pruneSessions, sessionFile } from '../src/hooks/session.js';
 import { setSpawner } from '../src/hooks/spawn.js';
 import { classifyTool, readRequests } from '../src/hooks/tools.js';
+import { rmTree } from './helpers/fs.js';
 
 let tmp: string;
 let kiroHome: string;
@@ -60,7 +61,7 @@ afterAll(() => {
   setSpawner(undefined);
   if (prevKiroHome === undefined) delete process.env.KOPT_KIRO_HOME;
   else process.env.KOPT_KIRO_HOME = prevKiroHome;
-  rmSync(tmp, { recursive: true, force: true });
+  rmTree(tmp);
 });
 
 beforeEach(() => { spawned.length = 0; });
@@ -444,6 +445,27 @@ describe('UserPromptSubmit front-load', () => {
     expect(performance.now() - t0).toBeLessThan(550);
     setFrontloadDeps({ loadRetrieval: () => Promise.reject(new Error('Cannot find module')) });
     expect(await handleHook(prompt(c, 'refund calculator rounding', 's9'), c)).toEqual({ exitCode: 0 });
+  });
+
+  it('closes the index it opened when retrieval fails or is too slow (an open handle locks index.db on Windows)', async () => {
+    const c = withIndex('fl-close');
+    let opened = 0;
+    let closed = 0;
+    const openStore = async () => {
+      opened++;
+      return { store: {}, close: () => { closed++; } };
+    };
+    setFrontloadDeps({ loadRetrieval: () => Promise.reject(new Error('Cannot find module')), openStore, newContext: async () => ({}) });
+    expect(await handleHook(prompt(c, 'refund calculator rounding', 'c1'), c)).toEqual({ exitCode: 0 });
+    setFrontloadDeps({
+      loadRetrieval: () => new Promise((r) => setTimeout(() => r({ find: () => hit(['#3mv class RefundCalculator  a.java:1-2']) }), 600)),
+      openStore,
+      newContext: async () => ({}),
+    });
+    expect((await handleHook(prompt(c, 'refund calculator rounding', 'c2'), c)).stdout).toBeUndefined();
+    await new Promise((r) => setTimeout(r, 0));
+    expect(opened).toBe(2);
+    expect(closed).toBe(2);
   });
 
   it('works end-to-end with the real retrieval module on a tiny hand-built index', async () => {

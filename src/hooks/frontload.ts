@@ -137,8 +137,14 @@ export async function frontload(prompt: string, config: KoptConfig, opts: { sess
   const t0 = performance.now();
   const left = () => limit - (performance.now() - t0);
 
-  const loaded = await withTimeout(Promise.all([deps.loadRetrieval(), deps.openStore(config), deps.newContext(config, opts.session)]), left());
-  if (!loaded) return undefined;
+  const opening = deps.openStore(config);
+  const loaded = await withTimeout(Promise.all([deps.loadRetrieval(), opening, deps.newContext(config, opts.session)]), left());
+  if (!loaded) {
+    // Too slow, or another dependency failed: the index is (or will be) open all the same, so close it. A handle
+    // left open keeps index.db locked on Windows (kopt uninstall, temp-dir cleanup) for as long as this process lives.
+    opening.then((o) => { try { o.close(); } catch { /* ignore */ } }, () => {});
+    return undefined;
+  }
   const [retrieval, opened, ctx] = loaded;
   let result: ToolResult;
   try {

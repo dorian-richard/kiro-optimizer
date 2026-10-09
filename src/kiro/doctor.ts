@@ -370,7 +370,13 @@ export async function runDoctor(o: DoctorOptions = {}): Promise<DoctorReport> {
         add(await mcpCheck(mcp.entry, scratch, h.env, env, timeoutMs));
       }
     } finally {
-      rmSync(scratch, { recursive: true, force: true });
+      // Windows: the MCP server child may still be exiting (its cwd and files are in `scratch`); a leftover temp dir
+      // must not turn the report into a crash.
+      try {
+        rmSync(scratch, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 });
+      } catch {
+        // temp dir: best effort
+      }
     }
   }
 

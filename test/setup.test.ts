@@ -3,9 +3,9 @@
 // in a temp HOME.
 
 import { execFileSync, spawnSync } from 'node:child_process';
-import { chmodSync, existsSync, lstatSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, realpathSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import { chmodSync, existsSync, lstatSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, realpathSync, symlinkSync, writeFileSync } from 'node:fs';
 import { homedir, tmpdir } from 'node:os';
-import { dirname, join, win32 } from 'node:path';
+import { dirname, join, sep, win32 } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { cacheRoot, defaultConfig, findProjectRoot, isUnsafeRoot, loadConfig, repoCacheKey, usesProjectDataDir } from '../src/core/config.js';
 import { binPath, hookCommandLine, resolveKoptCommand, shellArg, type KoptCommand } from '../src/kiro/command.js';
@@ -15,6 +15,7 @@ import { ideCandidates, kiroCliSettingsPath, kiroHomeDir, kiroUserSettingsPath, 
 import { AUTO_APPROVE, defaultNpmRunner, globalInstall, setupUser } from '../src/kiro/setup.js';
 import { uninstallKiro } from '../src/kiro/uninstall.js';
 import { installKiro } from '../src/kiro/index.js';
+import { childEnv, isInside, rmTree } from './helpers/fs.js';
 
 let tmp: string;
 const savedEnv: Record<string, string | undefined> = {};
@@ -37,7 +38,7 @@ afterAll(() => {
     if (v === undefined) delete process.env[k];
     else process.env[k] = v;
   }
-  rmSync(tmp, { recursive: true, force: true });
+  rmTree(tmp);
 });
 
 interface Box {
@@ -107,12 +108,12 @@ describe('data dir outside the repository', () => {
   it('keys the index by the canonical root and keeps nothing in the repo', () => {
     const root = gitRepo('cache-repo');
     const cfg = defaultConfig(root);
-    expect(cfg.dataDir.startsWith(join(tmp, 'cache') + '/')).toBe(true);
+    expect(cfg.dataDir.startsWith(join(tmp, 'cache') + sep)).toBe(true);
     expect(cfg.dataDir).toMatch(/cache-repo-[0-9a-f]{8}$/);
     expect(usesProjectDataDir(cfg)).toBe(false);
     // a symlinked spelling of the same folder shares the index
     const link = join(tmp, 'cache-link');
-    symlinkSync(root, link);
+    symlinkSync(root, link, 'junction'); // a junction on Windows (no privilege needed); the type is ignored elsewhere
     expect(defaultConfig(link).dataDir).toBe(cfg.dataDir);
     expect(repoCacheKey('C:\\Repos\\App', 'win32')).toBe(repoCacheKey('c:/repos/app', 'win32'));
     expect(existsSync(join(root, '.kopt'))).toBe(false);
@@ -193,34 +194,60 @@ describe('paths and surface detection per OS', () => {
 
 describe('kopt command resolution', () => {
   it('uses the bare kopt shim when it is on PATH with Node >= 22.13, else node + bin.js', () => {
+    // Real files on PATH, so the host's own platform is simulated: a Windows path (C:\...) cannot sit in a POSIX
+    // PATH, whose separator is ':'. Both branches still run everywhere through the pure `force` cases below.
+    const platform: NodeJS.Platform = process.platform === 'win32' ? 'win32' : 'linux';
+    const win = platform === 'win32';
     const dir = join(tmp, 'shimbin');
     const npx = join(tmp, '_npx', 'abc', 'node_modules', '.bin');
     for (const d of [dir, npx]) {
       mkdirSync(d, { recursive: true });
-      writeFileSync(join(d, 'kopt'), '#!/bin/sh\n');
+      // what npm writes on each OS: `kopt` (sh) everywhere, plus `kopt.cmd` / `kopt.ps1` on Windows
+      for (const f of win ? ['kopt', 'kopt.cmd', 'kopt.ps1'] : ['kopt']) writeFileSync(join(d, f), '#!/bin/sh\n');
       chmodSync(join(d, 'kopt'), 0o755);
     }
-    const h = (path: string, platform: NodeJS.Platform = 'linux'): HostEnv => ({ platform, env: { PATH: path }, home: '/home/u' });
-    const shim = resolveKoptCommand({ h: h(dir), bin: '/opt/kopt/dist/bin.js', nodeVersion: 'v22.13.0' });
-    expect(shim).toMatchObject({ shell: 'kopt', mcp: { command: 'kopt', args: ['mcp'] }, kind: 'shim' });
-    expect(hookCommandLine(shim, 'global')).toBe('kopt hook --source global');
+    const pathList = (...dirs: string[]) => dirs.join(win ? ';' : ':');
+    const h = (path: string): HostEnv => ({ platform, env: { PATH: path }, home: win ? 'C:\\Users\\u' : '/home/u' });
+    const bin = win ? 'C:\\kopt\\dist\\bin.js' : '/opt/kopt/dist/bin.js';
+    const shim = resolveKoptCommand({ h: h(dir), bin, nodeVersion: 'v22.13.0' });
+    if (win) {
+      // hooks: kopt.cmd (PowerShell would pick kopt.ps1, blocked by the default execution policy);
+      // MCP: node + bin.js (a native MCP client may not resolve .cmd shims)
+      expect(shim).toMatchObject({ shell: 'kopt.cmd', mcp: { command: 'node', args: [bin, 'mcp'] }, kind: 'shim' });
+      expect(hookCommandLine(shim, 'global')).toBe('kopt.cmd hook --source global');
+    } else {
+      expect(shim).toMatchObject({ shell: 'kopt', mcp: { command: 'kopt', args: ['mcp'] }, kind: 'shim' });
+      expect(hookCommandLine(shim, 'global')).toBe('kopt hook --source global');
+    }
+    expect(shim.shimPath).toBe(join(dir, 'kopt'));
     // the npx cache disappears after the run: never configure it
-    expect(resolveKoptCommand({ h: h(npx), bin: '/opt/kopt/dist/bin.js', nodePath: '/usr/bin/node', nodeVersion: 'v22.13.0' }).kind).toBe('node');
+    expect(resolveKoptCommand({ h: h(npx), bin, nodePath: '/usr/bin/node', nodeVersion: 'v22.13.0' }).kind).toBe('node');
     // a kopt whose node is too old falls back to an explicit node
-    const old = resolveKoptCommand({ h: h(dir), bin: '/opt/my kopt/dist/bin.js', nodePath: '/usr/bin/node', nodeVersion: 'v20.17.0' });
-    expect(old).toMatchObject({ kind: 'node', mcp: { command: '/usr/bin/node', args: ['/opt/my kopt/dist/bin.js', 'mcp'] } });
-    expect(old.shell).toBe("/usr/bin/node '/opt/my kopt/dist/bin.js'");
+    const spaced = win ? 'C:\\my kopt\\dist\\bin.js' : '/opt/my kopt/dist/bin.js';
+    const old = resolveKoptCommand({ h: h(dir), bin: spaced, nodePath: '/usr/bin/node', nodeVersion: 'v20.17.0' });
+    if (win) {
+      expect(old).toMatchObject({ kind: 'node', mcp: { command: 'node', args: [spaced, 'mcp'] } });
+      expect(old.shell).toBe(`node "${spaced}"`);
+    } else {
+      expect(old).toMatchObject({ kind: 'node', mcp: { command: '/usr/bin/node', args: [spaced, 'mcp'] } });
+      expect(old.shell).toBe("/usr/bin/node '/opt/my kopt/dist/bin.js'");
+    }
+    expect(which('kopt', h(pathList(npx, dir)), (d) => d.includes('_npx'))).toBe(join(dir, 'kopt'));
+
+    // POSIX and Windows command lines from any host (no PATH lookup)
+    const posix = resolveKoptCommand({ h: { platform: 'linux', env: { PATH: '' }, home: '/home/u' }, bin: '/opt/my kopt/dist/bin.js', nodePath: '/usr/bin/node', force: 'node' });
+    expect(posix.shell).toBe("/usr/bin/node '/opt/my kopt/dist/bin.js'");
+    expect(resolveKoptCommand({ h: { platform: 'linux', env: { PATH: '' }, home: '/home/u' }, bin: '/opt/kopt/dist/bin.js', force: 'shim' })).toMatchObject({ shell: 'kopt', mcp: { command: 'kopt', args: ['mcp'] } });
     // Windows: bare `node` (valid in cmd.exe and PowerShell), MCP through node + bin.js (no .cmd shim for native clients)
     const winBin = 'C:\\Users\\u\\AppData\\Roaming\\npm\\node_modules\\kiro-optimizer\\dist\\bin.js';
-    const win = resolveKoptCommand({ h: { platform: 'win32', env: { PATH: '' }, home: 'C:\\Users\\u' }, bin: winBin, force: 'node' });
-    expect(win.shell).toBe(`node "${winBin}"`);
-    expect(win.mcp).toEqual({ command: 'node', args: [winBin, 'mcp'] });
+    const winNode = resolveKoptCommand({ h: { platform: 'win32', env: { PATH: '' }, home: 'C:\\Users\\u' }, bin: winBin, force: 'node' });
+    expect(winNode.shell).toBe(`node "${winBin}"`);
+    expect(winNode.mcp).toEqual({ command: 'node', args: [winBin, 'mcp'] });
     const winShim = resolveKoptCommand({ h: { platform: 'win32', env: { PATH: '' }, home: 'C:\\' }, bin: winBin, force: 'shim' });
     expect(winShim.mcp).toEqual({ command: 'node', args: [winBin, 'mcp'] });
     expect(winShim.shell).toBe('kopt.cmd'); // PowerShell would pick kopt.ps1, blocked by the default execution policy
     expect(shellArg('C:\\Program Files\\nodejs\\node.exe', 'win32')).toBe('"C:\\Program Files\\nodejs\\node.exe"');
     expect(binPath('C:\\x\\kiro-optimizer', 'win32')).toBe(win32.join('C:\\x\\kiro-optimizer', 'dist', 'bin.js'));
-    expect(which('kopt', h(`${npx}:${dir}`), (d) => d.includes('_npx'))).toBe(join(dir, 'kopt'));
   });
 });
 
@@ -520,13 +547,17 @@ describe('global install (temp npm prefix)', () => {
     put(join(pkg, 'dist', 'bin.js'), '#!/usr/bin/env node\n');
     mkdirSync(join(pkg, 'templates'), { recursive: true });
     const prefix = join(tmp, 'npm-prefix');
-    const env = { ...process.env, npm_config_prefix: prefix, npm_config_cache: join(tmp, 'npm-cache'), npm_config_update_notifier: 'false', npm_execpath: '' };
+    // childEnv: the runner's own NPM_CONFIG_PREFIX must not win (Windows env names are case-insensitive), or the
+    // test would install into the machine's real global prefix
+    const env = childEnv(process.env, { npm_config_prefix: prefix, npm_config_cache: join(tmp, 'npm-cache'), npm_config_update_notifier: 'false', npm_execpath: '' });
     const npxCopy = join(tmp, '_npx', 'abc', 'node_modules', 'kiro-optimizer');
     mkdirSync(npxCopy, { recursive: true });
     const r = globalInstall({ npm: defaultNpmRunner(env), spec: pkg, pkgRoot: npxCopy });
     expect(r.action, r.detail).toBe('installed');
     expect(r.bin && existsSync(r.bin)).toBe(true);
-    expect(r.bin!.startsWith(prefix)).toBe(true);
+    // <prefix>/lib/node_modules on POSIX, <prefix>\node_modules on Windows; npm may print another spelling of the
+    // same folder (8.3 short names, case)
+    expect(isInside(r.bin!, prefix), `${r.bin} in ${prefix}`).toBe(true);
     // installed globally now: nothing more to do from there
     expect(globalInstall({ npm: defaultNpmRunner(env), pkgRoot: r.packageDir! }).action).toBe('not-needed');
   }, 120_000);
@@ -538,11 +569,11 @@ describe('global install (temp npm prefix)', () => {
     put(join(npxCopy, 'dist', 'bin.js'), '#!/usr/bin/env node\n');
     put(join(npxCopy, 'templates', 'x.json'), '{}');
     const prefix = join(tmp, 'npm-prefix-2');
-    const env = { ...process.env, npm_config_prefix: prefix, npm_config_cache: join(tmp, 'npm-cache-2'), npm_config_update_notifier: 'false', npm_execpath: '' };
+    const env = childEnv(process.env, { npm_config_prefix: prefix, npm_config_cache: join(tmp, 'npm-cache-2'), npm_config_update_notifier: 'false', npm_execpath: '' });
     const r = globalInstall({ npm: defaultNpmRunner(env), pkgRoot: npxCopy });
     expect(r.action, r.detail).toBe('installed');
     expect(r.detail).toMatch(/from the npx copy/);
-    expect(r.packageDir!.startsWith(prefix)).toBe(true);
+    expect(isInside(r.packageDir!, prefix), `${r.packageDir} in ${prefix}`).toBe(true);
     // a real copy, not a link to the npx cache (which npm may purge)
     expect(lstatSync(r.packageDir!).isSymbolicLink()).toBe(false);
     expect(existsSync(join(r.packageDir!, 'templates', 'x.json'))).toBe(true);
