@@ -43,7 +43,6 @@
 | Fixed prefix | 127 tools (~6-13k tokens of schemas), plus `always` steering of 1-8k tokens | 1 tool (good) |
 | Freshness | sync on Stop via `git status`; misses pulls and commits; inactive on the CLI | daemon and watcher (good), 4.3% edge drift |
 | Measurement | hard-coded counterfactuals (1,500 tokens per "avoided" file); failures counted as 100% savings | real A/B, but 1 question on famous repos, with cache reads counted as tokens; at 3 turns: −24%, and **+17% on Django** |
-| Centralization | none (stdio, local index per developer) | none |
 | Output / loop levers | none (only optional "caveman" steering) | none |
 
 CodeGraph also leaves on average **+82% more retrieval context resident** at the end of a session, and that context
@@ -71,16 +70,6 @@ flowchart LR
     H --> T[(local telemetry JSONL)]
     L --> T
   end
-  subgraph Customer AWS account
-    CB[CodeBuild per repo<br/>push webhook + nightly] -->|SQLite snapshot + blobs| S3[(S3 KMS)]
-    S3 --> F[ECS Fargate: kopt serve<br/>multi-repo Streamable HTTP MCP]
-    C[Cognito / corporate IdP] -. OAuth PKCE .-> K
-    F --> CW[CloudWatch EMF<br/>savings dashboard]
-    KU[Kiro usage export<br/>credits per user per day] --> S3
-  end
-  K -- MCP over HTTPS + OAuth --> F
-  T -- POST /telemetry --> F
-  L -- kopt sync: snapshot for this commit --> S3
 ```
 
 ### 3.1 The five levers, by expected impact
@@ -117,21 +106,10 @@ flowchart LR
      tools advertise;
    - a `kopt-explorer` sub-agent on Haiku 4.5 (0.4x) for exploration, returning file:line spans rather than code.
 
-### 3.2 Centralized mode (in the customer's account)
-- **Index once per commit in CI** (CodeBuild webhook) instead of on every laptop. The SQLite snapshot embeds the
-  code (gzip blobs) and is served by **one multi-repository HTTP MCP server** (Fargate). Authentication is OAuth
-  (Cognito or the corporate IdP), with a public PKCE client configured through `oauth.clientId` in `mcp.json`,
-  because Cognito does not support dynamic client registration.
-- **Cross-repository search**: "who consumes this API across all 50 repositories" is a central capability that no
-  local tool offers.
-- **Local overlay**: `kopt sync` downloads the snapshot for the current commit, then re-indexes only locally modified
-  files. A laptop never cold-indexes a 2M-line repository.
-- **Central telemetry**: tool and hook events, plus per-request credits collected locally from Kiro CLI sessions,
-  are posted to `/telemetry`. There they become CloudWatch EMF metrics and feed a dashboard. They are cross-checked
-  with Kiro's usage export (credits per user per day) for cohort comparisons.
-- **No remote execution**: `kopt_run` does not exist in HTTP mode. Commands always run on the developer machine.
-- Data: the code stays in the customer's AWS account (S3 with KMS, VPC). Kiro prompts still go to the Kiro service,
-  which is outside our scope.
+### 3.2 Why everything stays local
+kopt has no server and needs no cloud account. The index, the command logs and the telemetry stay on the developer
+machine, in the user cache and `~/.kopt`. Each developer installs it with one command, and it starts by itself in
+every Kiro project.
 
 ## 4. Surface compatibility
 
@@ -165,8 +143,8 @@ governor needs IDE 1.x.
 ## 5. Technical choices
 - **TypeScript / Node ≥ 22, zero native dependencies**: SQLite through `node:sqlite` (FTS5 included) and tree-sitter
   as WASM. It installs on locked-down laptops (no native prebuild to download) and builds into a simple Docker image.
-- **One SQLite file per repository and commit**: an immutable artifact that is easy to cache, version in S3 and serve
-  read-only. It is the same format as the local index.
+- **One SQLite file per repository**, kept in the user cache folder: easy to inspect, delete or rebuild, and it never
+  touches the repository itself.
 - **Tree-sitter** for 12 languages (Java, TS/JS, Python, C#, Go, Kotlin, Rust, PHP, Ruby, Scala). Reference
   resolution favors precision: an ambiguous reference stays unresolved. Planned next step: SCIP (scip-java,
   scip-typescript, scip-dotnet) in CI for exact resolution on Java and .NET stacks.
@@ -194,7 +172,7 @@ governor needs IDE 1.x.
   the fine-grained telemetry.
 - Rule: `baselineTokens` is only set when the counterfactual is exactly computable (raw command output, full file).
 
-## 7. Open questions before a deployment
+## 7. Open questions
 1. Target stacks: languages (Java/Spring? .NET?), monorepo or polyrepo, number and size of repositories.
 2. Surfaces in use: Kiro IDE 1.x, CLI 2.x or CLI V3? Some levers differ: Tool Search and `.kiroignore` exist only in
    CLI V3, and `read_code` only in the IDE.
@@ -205,15 +183,15 @@ governor needs IDE 1.x.
 5. Default model (Auto or pinned) and the sub-agent policy.
 
 ## 8. Roadmap
-- **v0.1 (this prototype)**: local index, 6 budgeted tools, output compression, governor, Kiro setup for IDE and CLI,
-  telemetry, CDK infrastructure, benchmark harness.
+- **v0.1 (this prototype)**: local index, 6 budgeted tools, output compression, governor, zero-config Kiro setup for
+  IDE and CLI, local telemetry, benchmark harness.
 - **v0.2**:
-  - SCIP in CI for Java, TS and .NET;
-  - cross-repository search;
+  - SCIP indexers for exact references on Java, TS and .NET;
+  - search across several local repositories;
   - optional embeddings;
-  - "Code Mode": the model writes a script that queries the index server-side, and only the result enters context.
+  - "Code Mode": the model writes a script that queries the local index, and only the result enters context.
 - **v0.3**:
-  - a "fast apply" model on Bedrock: snippet edits with `// ... existing code ...`, for fewer output tokens;
+  - a "fast apply" step: snippet edits with `// ... existing code ...`, for fewer output tokens;
   - impacted-test selection (Gradle, Maven, Jest, pytest);
   - a learned output pruner.
 

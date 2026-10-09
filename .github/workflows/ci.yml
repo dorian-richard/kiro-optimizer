@@ -213,25 +213,3 @@ jobs:
           head -n 1 "$RUNNER_TEMP/run-cmd.out" | grep -Fq ' · exit 5 · '
           head -n 1 "$RUNNER_TEMP/run-ps51.out" | grep -Fq ' · exit 6 · '
           head -n 1 "$RUNNER_TEMP/run-ps51-missing.out" | grep -Fq ' · exit 127 · '
-
-  infra:
-    name: infra (CDK)
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    defaults:
-      run:
-        working-directory: infra
-    env:
-      CDK_DISABLE_VERSION_CHECK: 'true'
-      CDK_DISABLE_CLI_TELEMETRY: 'true'
-    steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v5
-        with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: infra/package-lock.json
-      - run: npm ci
-      - run: npm test
-      - name: cdk synth (no AWS credentials, no lookups)
-        run: npx cdk synth -c reposFile=repos.example.json --quiet --no-notices

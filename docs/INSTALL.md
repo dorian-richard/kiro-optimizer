@@ -7,7 +7,7 @@ npx -y github:dorian-richard/kiro-optimizer setup
 ```
 
 Restart Kiro afterwards. This page explains what `setup` does, which files it writes on each OS and for each Kiro
-surface, the optional per-project mode, the team (centralized) mode, and troubleshooting.
+surface, the optional per-project mode, and troubleshooting.
 
 ## 1. Prerequisites
 
@@ -133,20 +133,7 @@ kopt init           # writes the files below; --dry-run to preview, --force to o
 `kopt init --user` writes the user-level files of section 3 without the npm step. Workspace and global
 configurations can coexist: events reported by both hook files are handled once.
 
-## 7. Centralized mode (optional, for teams)
-
-An administrator deploys the AWS stack described in [DEPLOYMENT.md](DEPLOYMENT.md): per-commit indexing in CI, a
-multi-repo MCP server with OAuth, and a telemetry dashboard. Each developer then runs, in their repository:
-
-```bash
-kopt init --remote https://kopt.example.internal/mcp --client-id <cognito-app-client-id>
-kopt sync           # downloads the snapshot for your current commit, then indexes only your local changes
-```
-
-Kiro opens a browser once for the OAuth sign-in. `kopt setup` keeps a remote `kopt` entry it finds in the user
-`mcp.json` (use `--force` to switch back to the local server).
-
-## 8. Check it and see what it saves
+## 7. Check it and see what it saves
 
 ```bash
 kopt doctor               # Node, PATH, Kiro versions, config files, hooks run silently, MCP server, index status
@@ -159,7 +146,7 @@ kopt credits              # per-request Kiro CLI credits collected from local se
 way Kiro does (through a shell, event JSON on stdin) and checks that an allowed call exits 0 with no output at all,
 and that a blocked call exits 2; it starts the MCP server the way Kiro does and lists its tools.
 
-## 9. Uninstall
+## 8. Uninstall
 
 ```bash
 kopt uninstall            # removes what setup / init wrote, and the index caches
