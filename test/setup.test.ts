@@ -247,7 +247,14 @@ describe('kopt command resolution', () => {
     expect(winShim.mcp).toEqual({ command: 'node', args: [winBin, 'mcp'] });
     expect(winShim.shell).toBe('kopt.cmd'); // PowerShell would pick kopt.ps1, blocked by the default execution policy
     expect(shellArg('C:\\Program Files\\nodejs\\node.exe', 'win32')).toBe('"C:\\Program Files\\nodejs\\node.exe"');
-    expect(binPath('C:\\x\\kiro-optimizer', 'win32')).toBe(win32.join('C:\\x\\kiro-optimizer', 'dist', 'bin.js'));
+    // for another OS the entry is computed, not checked on disk
+    if (process.platform === 'win32') expect(binPath('/opt/kopt', 'linux')).toBe('/opt/kopt/dist/bin.js');
+    else expect(binPath('C:\\x\\kiro-optimizer', 'win32')).toBe(win32.join('C:\\x\\kiro-optimizer', 'dist', 'bin.js'));
+    // on the host: dist/bin.js once built, else the dev entry dist/cli.js
+    const pkg = join(tmp, 'binpkg');
+    expect(binPath(pkg)).toBe(join(pkg, 'dist', 'cli.js'));
+    put(join(pkg, 'dist', 'bin.js'), '#!/usr/bin/env node\n');
+    expect(binPath(pkg)).toBe(join(pkg, 'dist', 'bin.js'));
   });
 });
 

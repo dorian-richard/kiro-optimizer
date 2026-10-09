@@ -90,7 +90,8 @@ describe('kopt doctor', () => {
     const report = await runDoctor({ h: b.h, cwd: b.repo, runVersion: () => 'kiro-cli 2.28.0', validateWithCli: false, timeoutMs: 30_000 });
     const byId = Object.fromEntries(report.checks.map((c) => [c.id, c]));
     expect(byId['hook-allow'].status).toBe('fail');
-    expect(byId['hook-allow'].message).toContain('"hello\\n"');
+    // reported as printed: cmd.exe's echo ends the line with CRLF
+    expect(byId['hook-allow'].message).toMatch(/stdout "hello(\\r)?\\n"/);
     expect(byId['hook-allow'].fix).toMatch(/intercepts tool calls/);
     expect(byId['hook-block'].status).toBe('fail');
     expect(byId['mcp.json'].status).toBe('fail');
