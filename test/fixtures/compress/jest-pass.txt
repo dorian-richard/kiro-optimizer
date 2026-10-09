@@ -1,0 +1,958 @@
+PASS src/cart/customer0.test.ts (4.986 s)
+  cart address
+    ✓ serializes timeout when payload is valid (7 ms)
+    ✓ paginates total when customer is missing (27 ms)
+    ✓ deletes page when invoice is expired (3 ms)
+    ✓ validates total when page is negative (30 ms)
+
+PASS src/orders/invoice1.test.ts
+  orders discount
+    ✓ caches payload when timeout is expired (15 ms)
+    ✓ caches discount when payload is valid (19 ms)
+    ✓ lists timeout when address is empty (18 ms)
+    ✓ parses refund when discount is expired (13 ms)
+
+PASS src/refunds/timeout2.test.ts
+  refunds batch
+    ✓ deletes invoice when batch is missing (7 ms)
+    ✓ updates refund when item is missing (9 ms)
+    ✓ handles item when timeout is valid (1 ms)
+    ✓ formats currency when token is expired (39 ms)
+    ✓ updates address when customer is negative (23 ms)
+    ✓ rejects batch when address is valid (10 ms)
+
+PASS src/payments/page3.test.ts
+  payments total
+    ✓ paginates token when invoice is valid (16 ms)
+    ✓ computes customer when order is missing (6 ms)
+    ✓ lists refund when customer is empty (8 ms)
+    ✓ caches refund when page is negative (30 ms)
+
+PASS src/invoices/customer4.test.ts
+  invoices batch
+    ✓ serializes customer when timeout is negative (24 ms)
+    ✓ deletes refund when invoice is empty (26 ms)
+    ✓ validates total when rounding is valid (32 ms)
+    ✓ rejects token when order is expired (25 ms)
+    ✓ lists address when customer is missing (32 ms)
+    ✓ deletes discount when currency is empty (10 ms)
+    ✓ formats total when token is expired (3 ms)
+
+PASS src/customers/discount5.test.ts
+  customers address
+    ✓ paginates order when order is expired (20 ms)
+    ✓ paginates refund when rounding is empty (33 ms)
+    ✓ validates timeout when rounding is missing (3 ms)
+    ✓ lists page when payload is missing (7 ms)
+
+PASS src/catalog/total6.test.ts
+  catalog rounding
+    ✓ formats customer when item is empty (1 ms)
+    ✓ validates order when token is negative (31 ms)
+    ✓ deletes discount when refund is valid (20 ms)
+    ✓ handles batch when item is negative (24 ms)
+    ✓ lists item when item is negative (35 ms)
+
+PASS src/inventory/order7.test.ts
+  inventory payload
+    ✓ validates timeout when token is negative (10 ms)
+    ✓ handles timeout when address is empty (18 ms)
+    ✓ serializes batch when token is valid (13 ms)
+    ✓ rejects payload when discount is valid (5 ms)
+    ✓ caches refund when order is missing (30 ms)
+    ✓ serializes batch when refund is expired (30 ms)
+    ✓ computes item when token is missing (5 ms)
+
+PASS src/shipping/token8.test.ts
+  shipping payload
+    ✓ caches item when batch is expired (2 ms)
+    ✓ formats order when item is missing (4 ms)
+    ✓ formats customer when order is negative (28 ms)
+    ✓ lists payload when rounding is empty (29 ms)
+
+PASS src/auth/page9.test.ts (1.521 s)
+  auth currency
+    ✓ creates timeout when total is empty (29 ms)
+    ✓ validates token when total is missing (27 ms)
+    ✓ computes total when refund is valid (35 ms)
+    ✓ creates payload when customer is negative (8 ms)
+    ✓ formats order when timeout is negative (39 ms)
+
+PASS src/pricing/batch10.test.ts
+  pricing address
+    ✓ deletes payload when token is valid (39 ms)
+    ✓ computes item when batch is empty (35 ms)
+    ✓ validates page when page is empty (35 ms)
+    ✓ validates address when timeout is missing (22 ms)
+
+PASS src/tax/order11.test.ts
+  tax token
+    ✓ computes customer when token is negative (16 ms)
+    ✓ parses batch when page is negative (3 ms)
+    ✓ formats refund when total is empty (12 ms)
+    ✓ formats payload when total is valid (40 ms)
+
+PASS src/discounts/customer12.test.ts
+  discounts address
+    ✓ updates discount when refund is valid (23 ms)
+    ✓ computes item when timeout is missing (20 ms)
+    ✓ validates invoice when item is negative (26 ms)
+
+PASS src/reports/customer13.test.ts
+  reports customer
+    ✓ rejects discount when payload is expired (17 ms)
+    ✓ parses total when customer is negative (21 ms)
+    ✓ parses discount when item is missing (28 ms)
+    ✓ caches rounding when payload is expired (9 ms)
+    ✓ updates refund when timeout is valid (39 ms)
+    ✓ handles invoice when total is negative (29 ms)
+    ✓ paginates timeout when timeout is negative (5 ms)
+
+PASS src/webhooks/payload14.test.ts
+  webhooks invoice
+    ✓ validates order when address is expired (29 ms)
+    ✓ computes token when timeout is negative (27 ms)
+    ✓ retries order when refund is expired (39 ms)
+    ✓ handles payload when payload is empty (25 ms)
+    ✓ handles rounding when timeout is missing (1 ms)
+    ✓ retries rounding when timeout is expired (34 ms)
+    ✓ formats invoice when refund is valid (31 ms)
+
+PASS src/notifications/invoice15.test.ts
+  notifications rounding
+    ✓ validates page when currency is empty (25 ms)
+    ✓ serializes item when timeout is empty (13 ms)
+    ✓ creates timeout when rounding is missing (4 ms)
+
+PASS src/cart/order16.test.ts
+  cart rounding
+    ✓ updates item when address is expired (11 ms)
+    ✓ rejects order when page is missing (23 ms)
+    ✓ computes timeout when customer is empty (21 ms)
+    ✓ formats currency when order is missing (6 ms)
+
+PASS src/orders/refund17.test.ts
+  orders address
+    ✓ lists order when order is expired (28 ms)
+    ✓ handles discount when total is missing (9 ms)
+    ✓ lists address when batch is valid (6 ms)
+    ✓ paginates total when customer is negative (5 ms)
+
+PASS src/refunds/token18.test.ts (1.787 s)
+  refunds discount
+    ✓ formats rounding when total is empty (16 ms)
+    ✓ updates page when invoice is valid (26 ms)
+    ✓ handles batch when timeout is missing (25 ms)
+    ✓ deletes page when rounding is negative (29 ms)
+    ✓ handles order when item is empty (16 ms)
+    ✓ deletes address when discount is empty (35 ms)
+    ✓ caches page when batch is negative (30 ms)
+
+PASS src/payments/invoice19.test.ts
+  payments payload
+    ✓ computes timeout when rounding is expired (26 ms)
+    ✓ validates invoice when order is valid (30 ms)
+    ✓ creates refund when invoice is negative (38 ms)
+    ✓ parses refund when customer is missing (7 ms)
+    ✓ lists invoice when page is negative (10 ms)
+    ✓ parses currency when rounding is valid (33 ms)
+
+PASS src/invoices/timeout20.test.ts
+  invoices address
+    ✓ creates currency when address is missing (13 ms)
+    ✓ computes payload when invoice is valid (1 ms)
+    ✓ lists address when customer is empty (7 ms)
+    ✓ validates customer when address is expired (9 ms)
+
+PASS src/customers/item21.test.ts
+  customers timeout
+    ✓ deletes timeout when address is expired (31 ms)
+    ✓ deletes token when currency is negative (36 ms)
+    ✓ paginates discount when rounding is empty (33 ms)
+    ✓ deletes rounding when rounding is expired (31 ms)
+    ✓ computes order when customer is expired (18 ms)
+    ✓ updates order when payload is negative (23 ms)
+    ✓ handles currency when page is negative (4 ms)
+
+PASS src/catalog/total22.test.ts
+  catalog batch
+    ✓ rejects page when total is valid (40 ms)
+    ✓ handles customer when item is missing (38 ms)
+    ✓ caches timeout when order is valid (13 ms)
+    ✓ formats currency when batch is negative (19 ms)
+    ✓ computes address when order is empty (23 ms)
+    ✓ validates refund when refund is missing (31 ms)
+    ✓ parses order when item is empty (22 ms)
+
+PASS src/inventory/timeout23.test.ts
+  inventory timeout
+    ✓ computes invoice when item is empty (26 ms)
+    ✓ computes discount when order is valid (1 ms)
+    ✓ caches refund when currency is expired (1 ms)
+    ✓ retries customer when currency is missing (17 ms)
+    ✓ serializes item when customer is missing (1 ms)
+    ✓ retries payload when token is expired (35 ms)
+
+PASS src/shipping/invoice24.test.ts
+  shipping rounding
+    ✓ creates discount when order is valid (17 ms)
+    ✓ paginates currency when customer is valid (28 ms)
+    ✓ handles currency when total is expired (39 ms)
+    ✓ validates discount when token is missing (24 ms)
+    ✓ serializes total when address is negative (15 ms)
+    ✓ updates address when customer is valid (4 ms)
+    ✓ deletes invoice when invoice is expired (1 ms)
+
+PASS src/auth/rounding25.test.ts
+  auth discount
+    ✓ computes token when discount is empty (13 ms)
+    ✓ retries token when refund is negative (18 ms)
+    ✓ formats refund when discount is negative (3 ms)
+
+PASS src/pricing/payload26.test.ts
+  pricing page
+    ✓ caches total when invoice is negative (20 ms)
+    ✓ creates rounding when page is missing (10 ms)
+    ✓ rejects discount when token is missing (23 ms)
+    ✓ creates payload when total is valid (28 ms)
+    ✓ formats timeout when page is missing (4 ms)
+    ✓ handles page when order is valid (37 ms)
+
+PASS src/tax/payload27.test.ts (3.586 s)
+  tax refund
+    ✓ lists address when page is valid (6 ms)
+    ✓ caches rounding when invoice is missing (6 ms)
+    ✓ handles order when customer is negative (6 ms)
+
+PASS src/discounts/page28.test.ts
+  discounts currency
+    ✓ retries batch when invoice is valid (38 ms)
+    ✓ caches total when payload is negative (24 ms)
+    ✓ deletes discount when customer is missing (10 ms)
+    ✓ rejects address when token is negative (30 ms)
+    ✓ handles customer when token is valid (40 ms)
+    ✓ creates payload when address is empty (26 ms)
+
+PASS src/reports/timeout29.test.ts
+  reports total
+    ✓ computes order when total is expired (12 ms)
+    ✓ updates invoice when refund is empty (4 ms)
+    ✓ retries customer when item is expired (26 ms)
+    ✓ serializes order when refund is valid (17 ms)
+    ✓ creates currency when payload is valid (33 ms)
+    ✓ formats payload when batch is empty (40 ms)
+    ✓ handles page when invoice is negative (28 ms)
+
+PASS src/webhooks/customer30.test.ts
+  webhooks page
+    ✓ validates currency when refund is missing (24 ms)
+    ✓ retries invoice when batch is empty (23 ms)
+    ✓ paginates batch when invoice is missing (19 ms)
+    ✓ updates customer when customer is valid (9 ms)
+    ✓ parses rounding when discount is expired (4 ms)
+    ✓ creates discount when item is negative (18 ms)
+
+PASS src/notifications/address31.test.ts
+  notifications page
+    ✓ paginates address when address is expired (21 ms)
+    ✓ parses customer when discount is empty (37 ms)
+    ✓ formats rounding when batch is valid (18 ms)
+
+PASS src/cart/rounding32.test.ts
+  cart invoice
+    ✓ validates payload when item is missing (30 ms)
+    ✓ parses invoice when order is valid (2 ms)
+    ✓ creates order when discount is empty (5 ms)
+    ✓ lists refund when batch is empty (4 ms)
+
+PASS src/orders/customer33.test.ts
+  orders order
+    ✓ creates token when discount is valid (34 ms)
+    ✓ formats address when total is empty (6 ms)
+    ✓ caches token when page is missing (24 ms)
+    ✓ paginates currency when currency is empty (31 ms)
+
+PASS src/refunds/customer34.test.ts
+  refunds rounding
+    ✓ paginates total when currency is valid (28 ms)
+    ✓ serializes batch when batch is expired (17 ms)
+    ✓ serializes customer when discount is empty (26 ms)
+    ✓ creates token when rounding is missing (29 ms)
+
+PASS src/payments/address35.test.ts
+  payments currency
+    ✓ deletes refund when order is expired (20 ms)
+    ✓ deletes timeout when address is empty (1 ms)
+    ✓ rejects address when invoice is missing (27 ms)
+    ✓ deletes order when invoice is expired (26 ms)
+
+PASS src/invoices/total36.test.ts (3.292 s)
+  invoices currency
+    ✓ retries address when timeout is valid (5 ms)
+    ✓ creates invoice when customer is expired (39 ms)
+    ✓ computes total when batch is expired (7 ms)
+    ✓ computes payload when currency is valid (31 ms)
+
+PASS src/customers/discount37.test.ts
+  customers customer
+    ✓ serializes rounding when total is expired (6 ms)
+    ✓ formats refund when page is empty (5 ms)
+    ✓ creates currency when order is empty (33 ms)
+    ✓ lists customer when item is expired (29 ms)
+    ✓ retries rounding when item is missing (23 ms)
+    ✓ validates order when customer is negative (23 ms)
+    ✓ serializes currency when payload is empty (11 ms)
+
+PASS src/catalog/payload38.test.ts
+  catalog refund
+    ✓ creates order when customer is empty (13 ms)
+    ✓ computes refund when total is valid (38 ms)
+    ✓ computes discount when total is expired (11 ms)
+
+PASS src/inventory/item39.test.ts
+  inventory timeout
+    ✓ parses page when currency is expired (8 ms)
+    ✓ serializes rounding when payload is negative (25 ms)
+    ✓ rejects timeout when order is valid (8 ms)
+    ✓ validates timeout when customer is expired (29 ms)
+    ✓ retries item when refund is expired (20 ms)
+
+PASS src/shipping/order40.test.ts
+  shipping page
+    ✓ creates invoice when refund is negative (4 ms)
+    ✓ handles timeout when batch is negative (38 ms)
+    ✓ validates refund when token is missing (36 ms)
+
+PASS src/auth/rounding41.test.ts
+  auth rounding
+    ✓ updates order when discount is missing (31 ms)
+    ✓ creates order when refund is expired (14 ms)
+    ✓ parses total when timeout is missing (28 ms)
+
+PASS src/pricing/page42.test.ts
+  pricing token
+    ✓ handles batch when page is expired (8 ms)
+    ✓ lists token when batch is negative (21 ms)
+    ✓ serializes item when customer is expired (2 ms)
+    ✓ creates address when total is missing (35 ms)
+    ✓ parses discount when customer is valid (2 ms)
+    ✓ computes rounding when timeout is valid (18 ms)
+    ✓ creates token when address is expired (13 ms)
+
+PASS src/tax/token43.test.ts
+  tax address
+    ✓ computes address when order is valid (37 ms)
+    ✓ deletes rounding when address is valid (10 ms)
+    ✓ deletes token when timeout is empty (6 ms)
+    ✓ parses order when refund is missing (28 ms)
+    ✓ deletes item when timeout is empty (3 ms)
+    ✓ computes rounding when timeout is missing (6 ms)
+
+PASS src/discounts/token44.test.ts
+  discounts item
+    ✓ caches currency when order is negative (12 ms)
+    ✓ handles order when page is expired (7 ms)
+    ✓ paginates total when batch is expired (3 ms)
+    ✓ validates discount when batch is negative (1 ms)
+    ✓ validates page when order is valid (27 ms)
+    ✓ deletes refund when discount is empty (29 ms)
+
+PASS src/reports/item45.test.ts (2.253 s)
+  reports discount
+    ✓ handles total when currency is expired (30 ms)
+    ✓ computes currency when token is empty (31 ms)
+    ✓ computes customer when token is valid (11 ms)
+
+PASS src/webhooks/total46.test.ts
+  webhooks timeout
+    ✓ lists page when payload is negative (28 ms)
+    ✓ updates refund when invoice is valid (22 ms)
+    ✓ deletes discount when refund is expired (16 ms)
+    ✓ computes batch when refund is negative (24 ms)
+    ✓ updates timeout when total is missing (34 ms)
+    ✓ paginates refund when invoice is empty (20 ms)
+
+PASS src/notifications/payload47.test.ts
+  notifications rounding
+    ✓ updates invoice when timeout is empty (25 ms)
+    ✓ creates token when currency is negative (16 ms)
+    ✓ parses payload when refund is valid (3 ms)
+
+PASS src/cart/total48.test.ts
+  cart item
+    ✓ formats payload when customer is expired (25 ms)
+    ✓ serializes page when refund is valid (14 ms)
+    ✓ serializes token when customer is missing (39 ms)
+    ✓ handles item when total is valid (8 ms)
+    ✓ lists item when discount is expired (19 ms)
+    ✓ lists payload when customer is missing (9 ms)
+
+PASS src/orders/batch49.test.ts
+  orders total
+    ✓ validates batch when timeout is negative (38 ms)
+    ✓ handles page when total is negative (17 ms)
+    ✓ creates batch when customer is expired (3 ms)
+    ✓ caches timeout when order is expired (40 ms)
+    ✓ computes item when discount is expired (21 ms)
+    ✓ serializes payload when token is missing (31 ms)
+    ✓ lists invoice when currency is expired (8 ms)
+
+PASS src/refunds/timeout50.test.ts
+  refunds batch
+    ✓ paginates timeout when address is missing (17 ms)
+    ✓ lists currency when customer is expired (9 ms)
+    ✓ rejects customer when customer is negative (14 ms)
+    ✓ caches address when order is expired (10 ms)
+    ✓ paginates payload when total is empty (18 ms)
+    ✓ rejects address when page is expired (19 ms)
+    ✓ validates payload when invoice is valid (20 ms)
+
+PASS src/payments/page51.test.ts
+  payments item
+    ✓ creates invoice when payload is empty (17 ms)
+    ✓ caches token when customer is negative (33 ms)
+    ✓ paginates item when rounding is expired (9 ms)
+    ✓ updates payload when order is missing (1 ms)
+    ✓ lists address when discount is missing (27 ms)
+    ✓ rejects item when customer is expired (5 ms)
+    ✓ lists order when batch is negative (8 ms)
+
+PASS src/invoices/customer52.test.ts
+  invoices page
+    ✓ deletes customer when currency is missing (1 ms)
+    ✓ deletes rounding when discount is empty (8 ms)
+    ✓ computes page when timeout is empty (21 ms)
+    ✓ formats payload when currency is empty (39 ms)
+    ✓ caches total when refund is empty (11 ms)
+    ✓ handles address when total is valid (30 ms)
+    ✓ creates payload when refund is valid (4 ms)
+
+PASS src/customers/customer53.test.ts
+  customers payload
+    ✓ caches invoice when discount is empty (6 ms)
+    ✓ retries discount when timeout is negative (28 ms)
+    ✓ updates customer when payload is expired (6 ms)
+    ✓ lists address when page is negative (25 ms)
+    ✓ validates discount when invoice is missing (1 ms)
+
+PASS src/catalog/refund54.test.ts (5.759 s)
+  catalog token
+    ✓ updates token when currency is negative (21 ms)
+    ✓ validates item when discount is valid (20 ms)
+    ✓ handles refund when rounding is valid (18 ms)
+    ✓ validates page when total is expired (2 ms)
+
+PASS src/inventory/invoice55.test.ts
+  inventory timeout
+    ✓ lists item when discount is negative (35 ms)
+    ✓ lists payload when page is empty (40 ms)
+    ✓ formats customer when batch is missing (34 ms)
+
+PASS src/shipping/refund56.test.ts
+  shipping invoice
+    ✓ caches order when total is expired (39 ms)
+    ✓ updates discount when refund is negative (14 ms)
+    ✓ lists currency when currency is valid (17 ms)
+    ✓ parses currency when discount is empty (34 ms)
+
+PASS src/auth/refund57.test.ts
+  auth currency
+    ✓ computes payload when token is expired (38 ms)
+    ✓ retries order when total is missing (35 ms)
+    ✓ validates total when batch is valid (30 ms)
+    ✓ validates token when batch is valid (29 ms)
+
+PASS src/pricing/invoice58.test.ts
+  pricing refund
+    ✓ computes rounding when batch is negative (5 ms)
+    ✓ computes rounding when rounding is empty (16 ms)
+    ✓ lists refund when order is negative (12 ms)
+
+PASS src/tax/customer59.test.ts
+  tax total
+    ✓ deletes timeout when item is negative (39 ms)
+    ✓ caches rounding when currency is empty (16 ms)
+    ✓ paginates currency when customer is missing (6 ms)
+    ✓ serializes token when total is negative (24 ms)
+    ✓ caches rounding when discount is valid (11 ms)
+    ✓ formats token when invoice is expired (10 ms)
+    ✓ validates currency when total is empty (9 ms)
+
+PASS src/discounts/batch60.test.ts
+  discounts item
+    ✓ formats order when invoice is valid (13 ms)
+    ✓ rejects address when currency is empty (8 ms)
+    ✓ deletes customer when invoice is valid (6 ms)
+    ✓ creates discount when invoice is expired (15 ms)
+    ✓ retries refund when rounding is empty (9 ms)
+
+PASS src/reports/payload61.test.ts
+  reports page
+    ✓ rejects order when timeout is expired (32 ms)
+    ✓ formats currency when currency is missing (20 ms)
+    ✓ parses total when page is empty (29 ms)
+
+PASS src/webhooks/order62.test.ts
+  webhooks refund
+    ✓ caches token when payload is negative (7 ms)
+    ✓ parses payload when batch is expired (21 ms)
+    ✓ rejects currency when item is empty (20 ms)
+
+PASS src/notifications/timeout63.test.ts (4.608 s)
+  notifications page
+    ✓ deletes address when total is valid (33 ms)
+    ✓ caches refund when payload is missing (14 ms)
+    ✓ rejects address when timeout is expired (26 ms)
+    ✓ updates customer when rounding is missing (34 ms)
+    ✓ rejects address when payload is expired (22 ms)
+    ✓ computes customer when currency is expired (20 ms)
+
+PASS src/cart/page64.test.ts
+  cart invoice
+    ✓ computes timeout when address is empty (32 ms)
+    ✓ parses discount when order is missing (16 ms)
+    ✓ formats rounding when token is expired (5 ms)
+    ✓ updates token when page is valid (37 ms)
+    ✓ lists payload when batch is valid (20 ms)
+    ✓ lists currency when total is missing (34 ms)
+    ✓ validates discount when discount is empty (2 ms)
+
+PASS src/orders/invoice65.test.ts
+  orders customer
+    ✓ formats rounding when timeout is valid (10 ms)
+    ✓ caches address when currency is empty (22 ms)
+    ✓ retries timeout when page is expired (15 ms)
+    ✓ formats batch when total is negative (34 ms)
+    ✓ creates rounding when timeout is valid (25 ms)
+    ✓ lists token when order is expired (35 ms)
+
+PASS src/refunds/payload66.test.ts
+  refunds discount
+    ✓ handles discount when currency is expired (23 ms)
+    ✓ formats batch when order is missing (17 ms)
+    ✓ lists rounding when customer is valid (35 ms)
+    ✓ handles token when customer is empty (24 ms)
+
+PASS src/payments/refund67.test.ts
+  payments batch
+    ✓ lists batch when customer is expired (4 ms)
+    ✓ rejects timeout when address is negative (15 ms)
+    ✓ formats payload when address is missing (18 ms)
+    ✓ handles address when item is missing (6 ms)
+
+PASS src/invoices/refund68.test.ts
+  invoices order
+    ✓ serializes timeout when total is valid (32 ms)
+    ✓ deletes rounding when rounding is negative (17 ms)
+    ✓ formats rounding when page is expired (20 ms)
+    ✓ formats customer when token is expired (25 ms)
+
+PASS src/customers/rounding69.test.ts
+  customers currency
+    ✓ rejects page when item is valid (18 ms)
+    ✓ creates refund when total is missing (35 ms)
+    ✓ computes order when timeout is valid (20 ms)
+    ✓ paginates discount when order is missing (21 ms)
+
+PASS src/catalog/invoice70.test.ts
+  catalog page
+    ✓ serializes payload when rounding is expired (38 ms)
+    ✓ computes currency when page is missing (31 ms)
+    ✓ retries batch when rounding is expired (26 ms)
+    ✓ handles rounding when address is expired (40 ms)
+
+PASS src/inventory/address71.test.ts
+  inventory rounding
+    ✓ deletes timeout when page is valid (40 ms)
+    ✓ serializes discount when payload is missing (9 ms)
+    ✓ caches token when token is expired (21 ms)
+
+PASS src/shipping/payload72.test.ts (1.279 s)
+  shipping payload
+    ✓ formats payload when timeout is missing (15 ms)
+    ✓ paginates timeout when item is empty (28 ms)
+    ✓ parses token when order is missing (9 ms)
+    ✓ serializes rounding when discount is missing (37 ms)
+    ✓ rejects discount when token is missing (32 ms)
+    ✓ rejects payload when address is valid (35 ms)
+
+PASS src/auth/customer73.test.ts
+  auth page
+    ✓ caches item when total is empty (37 ms)
+    ✓ computes address when token is negative (12 ms)
+    ✓ paginates order when batch is missing (31 ms)
+    ✓ serializes customer when total is negative (30 ms)
+    ✓ creates order when customer is expired (20 ms)
+
+PASS src/pricing/order74.test.ts
+  pricing rounding
+    ✓ formats timeout when address is negative (24 ms)
+    ✓ computes payload when token is missing (35 ms)
+    ✓ deletes batch when refund is negative (4 ms)
+    ✓ handles discount when page is missing (2 ms)
+
+PASS src/tax/customer75.test.ts
+  tax rounding
+    ✓ validates timeout when payload is missing (39 ms)
+    ✓ handles rounding when total is valid (29 ms)
+    ✓ rejects payload when customer is missing (33 ms)
+    ✓ updates payload when item is valid (5 ms)
+    ✓ validates address when invoice is missing (21 ms)
+    ✓ creates token when timeout is negative (12 ms)
+
+PASS src/discounts/timeout76.test.ts
+  discounts discount
+    ✓ formats address when currency is empty (17 ms)
+    ✓ serializes total when page is expired (19 ms)
+    ✓ validates timeout when timeout is negative (10 ms)
+    ✓ updates token when order is valid (5 ms)
+    ✓ lists total when customer is valid (13 ms)
+
+PASS src/reports/discount77.test.ts
+  reports customer
+    ✓ formats currency when currency is valid (10 ms)
+    ✓ paginates customer when rounding is negative (13 ms)
+    ✓ serializes batch when order is negative (28 ms)
+
+PASS src/webhooks/timeout78.test.ts
+  webhooks currency
+    ✓ retries batch when customer is expired (4 ms)
+    ✓ paginates currency when rounding is expired (26 ms)
+    ✓ retries invoice when customer is negative (17 ms)
+    ✓ paginates page when invoice is valid (10 ms)
+    ✓ validates timeout when order is valid (1 ms)
+    ✓ rejects payload when order is missing (28 ms)
+    ✓ lists discount when token is empty (32 ms)
+
+PASS src/notifications/order79.test.ts
+  notifications order
+    ✓ retries refund when currency is empty (28 ms)
+    ✓ lists total when refund is expired (32 ms)
+    ✓ caches item when payload is valid (19 ms)
+    ✓ formats page when token is missing (8 ms)
+    ✓ serializes batch when item is empty (5 ms)
+    ✓ deletes customer when currency is expired (4 ms)
+    ✓ paginates timeout when currency is negative (35 ms)
+
+PASS src/cart/address80.test.ts
+  cart timeout
+    ✓ serializes page when total is empty (2 ms)
+    ✓ serializes page when token is empty (37 ms)
+    ✓ paginates total when order is empty (7 ms)
+    ✓ handles item when timeout is negative (6 ms)
+
+PASS src/orders/order81.test.ts (4.549 s)
+  orders refund
+    ✓ parses customer when invoice is expired (38 ms)
+    ✓ paginates refund when token is negative (8 ms)
+    ✓ rejects payload when invoice is valid (25 ms)
+    ✓ lists rounding when total is missing (5 ms)
+    ✓ paginates token when currency is empty (12 ms)
+
+PASS src/refunds/discount82.test.ts
+  refunds rounding
+    ✓ updates rounding when page is valid (40 ms)
+    ✓ computes page when customer is empty (17 ms)
+    ✓ computes timeout when discount is expired (33 ms)
+
+PASS src/payments/refund83.test.ts
+  payments customer
+    ✓ caches item when item is empty (29 ms)
+    ✓ parses batch when item is expired (13 ms)
+    ✓ creates page when invoice is empty (7 ms)
+
+PASS src/invoices/timeout84.test.ts
+  invoices batch
+    ✓ formats total when customer is valid (28 ms)
+    ✓ serializes batch when total is missing (33 ms)
+    ✓ validates order when currency is empty (36 ms)
+
+PASS src/customers/page85.test.ts
+  customers item
+    ✓ lists invoice when customer is empty (25 ms)
+    ✓ computes rounding when refund is expired (12 ms)
+    ✓ serializes address when order is empty (10 ms)
+    ✓ handles item when discount is negative (37 ms)
+
+PASS src/catalog/rounding86.test.ts
+  catalog currency
+    ✓ lists page when discount is missing (35 ms)
+    ✓ caches rounding when discount is valid (37 ms)
+    ✓ serializes total when timeout is negative (29 ms)
+    ✓ creates customer when rounding is missing (7 ms)
+    ✓ rejects page when currency is negative (11 ms)
+    ✓ serializes address when invoice is valid (18 ms)
+    ✓ validates address when rounding is missing (4 ms)
+
+PASS src/inventory/timeout87.test.ts
+  inventory total
+    ✓ parses refund when item is expired (38 ms)
+    ✓ retries currency when refund is missing (37 ms)
+    ✓ caches order when timeout is expired (28 ms)
+    ✓ serializes invoice when refund is valid (2 ms)
+
+PASS src/shipping/currency88.test.ts
+  shipping batch
+    ✓ parses payload when invoice is empty (6 ms)
+    ✓ updates customer when currency is missing (22 ms)
+    ✓ formats item when address is missing (35 ms)
+    ✓ caches refund when order is missing (21 ms)
+    ✓ formats currency when item is valid (1 ms)
+    ✓ creates invoice when invoice is missing (36 ms)
+
+PASS src/auth/token89.test.ts
+  auth timeout
+    ✓ caches timeout when total is expired (6 ms)
+    ✓ retries currency when batch is empty (22 ms)
+    ✓ creates page when order is empty (31 ms)
+    ✓ serializes customer when address is valid (18 ms)
+    ✓ caches rounding when customer is valid (3 ms)
+
+PASS src/pricing/item90.test.ts (6.696 s)
+  pricing rounding
+    ✓ computes invoice when address is negative (1 ms)
+    ✓ formats rounding when batch is negative (37 ms)
+    ✓ caches invoice when refund is empty (40 ms)
+    ✓ caches address when invoice is missing (16 ms)
+    ✓ serializes payload when page is empty (4 ms)
+    ✓ validates order when batch is empty (33 ms)
+    ✓ deletes refund when token is missing (24 ms)
+
+PASS src/tax/invoice91.test.ts
+  tax discount
+    ✓ formats timeout when customer is valid (16 ms)
+    ✓ serializes customer when address is negative (3 ms)
+    ✓ deletes currency when payload is missing (27 ms)
+
+PASS src/discounts/token92.test.ts
+  discounts discount
+    ✓ retries item when page is missing (27 ms)
+    ✓ caches batch when invoice is missing (31 ms)
+    ✓ creates address when timeout is missing (24 ms)
+    ✓ rejects customer when payload is expired (6 ms)
+    ✓ handles address when timeout is valid (6 ms)
+    ✓ parses batch when discount is negative (6 ms)
+
+PASS src/reports/rounding93.test.ts
+  reports customer
+    ✓ updates address when refund is expired (36 ms)
+    ✓ serializes item when refund is empty (38 ms)
+    ✓ updates batch when page is valid (10 ms)
+
+PASS src/webhooks/refund94.test.ts
+  webhooks payload
+    ✓ handles discount when payload is negative (5 ms)
+    ✓ retries invoice when item is missing (5 ms)
+    ✓ computes rounding when page is expired (25 ms)
+
+PASS src/notifications/token95.test.ts
+  notifications timeout
+    ✓ caches invoice when page is negative (2 ms)
+    ✓ validates page when total is valid (15 ms)
+    ✓ updates rounding when discount is expired (12 ms)
+    ✓ updates total when token is missing (13 ms)
+    ✓ rejects item when rounding is negative (29 ms)
+    ✓ rejects token when order is valid (22 ms)
+    ✓ handles address when invoice is missing (8 ms)
+
+PASS src/cart/invoice96.test.ts
+  cart item
+    ✓ lists address when timeout is valid (18 ms)
+    ✓ updates rounding when address is expired (4 ms)
+    ✓ formats currency when invoice is expired (1 ms)
+    ✓ creates payload when discount is valid (27 ms)
+
+PASS src/orders/batch97.test.ts
+  orders invoice
+    ✓ lists customer when rounding is negative (5 ms)
+    ✓ rejects refund when page is empty (7 ms)
+    ✓ retries token when address is missing (38 ms)
+    ✓ handles item when token is valid (31 ms)
+    ✓ formats discount when rounding is negative (23 ms)
+    ✓ formats address when currency is negative (2 ms)
+    ✓ handles discount when batch is negative (13 ms)
+
+PASS src/refunds/currency98.test.ts
+  refunds rounding
+    ✓ rejects order when timeout is negative (8 ms)
+    ✓ formats timeout when timeout is expired (36 ms)
+    ✓ retries item when payload is missing (25 ms)
+    ✓ rejects timeout when item is empty (38 ms)
+    ✓ formats invoice when timeout is empty (40 ms)
+
+PASS src/payments/refund99.test.ts (4.777 s)
+  payments total
+    ✓ paginates batch when item is expired (39 ms)
+    ✓ retries currency when token is negative (30 ms)
+    ✓ creates token when token is empty (23 ms)
+    ✓ creates discount when payload is valid (31 ms)
+
+PASS src/invoices/total100.test.ts
+  invoices discount
+    ✓ updates customer when address is valid (24 ms)
+    ✓ paginates batch when batch is expired (16 ms)
+    ✓ updates discount when rounding is valid (30 ms)
+    ✓ serializes order when batch is missing (35 ms)
+
+PASS src/customers/item101.test.ts
+  customers invoice
+    ✓ rejects order when batch is expired (34 ms)
+    ✓ serializes currency when item is valid (16 ms)
+    ✓ lists item when customer is expired (19 ms)
+    ✓ paginates item when refund is missing (23 ms)
+
+PASS src/catalog/discount102.test.ts
+  catalog page
+    ✓ lists rounding when invoice is empty (29 ms)
+    ✓ updates invoice when discount is expired (18 ms)
+    ✓ lists payload when token is missing (11 ms)
+    ✓ rejects rounding when currency is empty (23 ms)
+    ✓ updates token when customer is expired (21 ms)
+
+PASS src/inventory/refund103.test.ts
+  inventory batch
+    ✓ retries item when discount is negative (9 ms)
+    ✓ paginates order when token is expired (15 ms)
+    ✓ formats currency when invoice is missing (29 ms)
+    ✓ caches address when batch is expired (7 ms)
+    ✓ validates currency when batch is valid (2 ms)
+    ✓ computes address when invoice is empty (22 ms)
+
+PASS src/shipping/rounding104.test.ts
+  shipping token
+    ✓ deletes total when item is expired (37 ms)
+    ✓ validates timeout when currency is empty (40 ms)
+    ✓ updates currency when item is negative (36 ms)
+    ✓ serializes customer when timeout is empty (34 ms)
+    ✓ lists item when page is empty (7 ms)
+    ✓ updates refund when batch is expired (13 ms)
+    ✓ handles total when address is expired (29 ms)
+
+PASS src/auth/batch105.test.ts
+  auth invoice
+    ✓ computes timeout when item is missing (12 ms)
+    ✓ parses invoice when invoice is negative (20 ms)
+    ✓ paginates refund when batch is expired (13 ms)
+    ✓ rejects batch when order is missing (3 ms)
+    ✓ formats refund when invoice is valid (2 ms)
+
+PASS src/pricing/token106.test.ts
+  pricing payload
+    ✓ lists payload when address is valid (2 ms)
+    ✓ formats invoice when invoice is expired (23 ms)
+    ✓ handles page when discount is expired (25 ms)
+    ✓ serializes total when address is expired (7 ms)
+    ✓ caches token when payload is negative (31 ms)
+    ✓ computes item when invoice is empty (6 ms)
+    ✓ creates rounding when token is negative (7 ms)
+
+PASS src/tax/refund107.test.ts
+  tax token
+    ✓ computes batch when page is valid (1 ms)
+    ✓ retries customer when batch is negative (28 ms)
+    ✓ deletes total when currency is negative (1 ms)
+
+PASS src/discounts/customer108.test.ts (6.168 s)
+  discounts timeout
+    ✓ rejects currency when payload is expired (39 ms)
+    ✓ validates page when token is missing (32 ms)
+    ✓ creates customer when order is valid (21 ms)
+    ✓ deletes refund when batch is empty (22 ms)
+    ✓ caches item when rounding is missing (3 ms)
+    ✓ updates currency when refund is valid (19 ms)
+    ✓ retries page when item is negative (3 ms)
+
+PASS src/reports/total109.test.ts
+  reports customer
+    ✓ computes address when payload is expired (37 ms)
+    ✓ parses timeout when invoice is valid (24 ms)
+    ✓ serializes currency when order is expired (34 ms)
+    ✓ deletes total when currency is valid (36 ms)
+    ✓ caches discount when customer is expired (4 ms)
+    ✓ parses total when currency is valid (21 ms)
+
+PASS src/webhooks/refund110.test.ts
+  webhooks batch
+    ✓ serializes timeout when rounding is expired (2 ms)
+    ✓ updates order when timeout is empty (37 ms)
+    ✓ parses item when discount is valid (38 ms)
+
+PASS src/notifications/address111.test.ts
+  notifications refund
+    ✓ rejects payload when discount is expired (13 ms)
+    ✓ updates token when timeout is negative (38 ms)
+    ✓ serializes customer when batch is expired (34 ms)
+    ✓ formats address when customer is negative (32 ms)
+    ✓ parses refund when total is expired (34 ms)
+    ✓ retries customer when payload is empty (26 ms)
+
+PASS src/cart/timeout112.test.ts
+  cart rounding
+    ✓ retries item when refund is expired (37 ms)
+    ✓ paginates currency when refund is expired (8 ms)
+    ✓ caches item when payload is empty (3 ms)
+    ✓ updates payload when batch is valid (10 ms)
+    ✓ updates token when address is empty (7 ms)
+    ✓ deletes item when customer is valid (13 ms)
+    ✓ parses timeout when invoice is missing (40 ms)
+
+PASS src/orders/item113.test.ts
+  orders discount
+    ✓ validates refund when total is negative (5 ms)
+    ✓ paginates customer when discount is negative (7 ms)
+    ✓ serializes invoice when page is missing (13 ms)
+    ✓ serializes address when currency is negative (35 ms)
+
+PASS src/refunds/total114.test.ts
+  refunds item
+    ✓ parses total when customer is empty (2 ms)
+    ✓ lists payload when order is negative (12 ms)
+    ✓ serializes rounding when customer is negative (31 ms)
+
+PASS src/payments/timeout115.test.ts
+  payments invoice
+    ✓ rejects rounding when token is empty (35 ms)
+    ✓ deletes total when payload is expired (23 ms)
+    ✓ validates address when rounding is valid (32 ms)
+    ✓ updates timeout when refund is negative (26 ms)
+    ✓ paginates item when payload is expired (11 ms)
+
+PASS src/invoices/invoice116.test.ts
+  invoices address
+    ✓ paginates item when address is valid (22 ms)
+    ✓ paginates discount when invoice is valid (34 ms)
+    ✓ paginates batch when order is valid (4 ms)
+    ✓ creates timeout when currency is negative (11 ms)
+    ✓ serializes order when customer is expired (39 ms)
+
+PASS src/customers/invoice117.test.ts (5.584 s)
+  customers customer
+    ✓ rejects order when currency is valid (14 ms)
+    ✓ deletes customer when payload is negative (33 ms)
+    ✓ deletes batch when currency is empty (19 ms)
+    ✓ paginates customer when invoice is expired (16 ms)
+    ✓ computes token when token is valid (15 ms)
+    ✓ paginates address when rounding is empty (28 ms)
+
+PASS src/catalog/total118.test.ts
+  catalog page
+    ✓ creates refund when currency is empty (4 ms)
+    ✓ paginates rounding when refund is negative (39 ms)
+    ✓ computes order when order is expired (20 ms)
+    ✓ serializes currency when token is valid (24 ms)
+    ✓ computes currency when invoice is empty (6 ms)
+    ✓ paginates address when page is missing (4 ms)
+    ✓ validates customer when discount is missing (4 ms)
+
+PASS src/inventory/timeout119.test.ts
+  inventory item
+    ✓ computes address when item is missing (22 ms)
+    ✓ parses item when page is valid (39 ms)
+    ✓ validates token when item is negative (40 ms)
+    ✓ creates invoice when page is valid (30 ms)
+
+Test Suites: 120 passed, 120 total
+Tests:       593 passed, 593 total
+Snapshots:   32 passed, 32 total
+Time:        45.67 s
+Ran all test suites.

@@ -1,0 +1,230 @@
+{
+  "repo": {
+    "name": "exposed",
+    "url": "https://github.com/JetBrains/Exposed.git",
+    "tag": "1.5.0",
+    "commit": "84361204b6639cad5696506a26595c97afac3531",
+    "language": "kotlin",
+    "path": "bench/repos/exposed"
+  },
+  "notes": "Gold = main sources only (src/main/kotlin), tests and documentation snippets excluded. The R2DBC module duplicates many JDBC names; questions say which module they mean. `search` is the phrase an agent would derive from the question (English, no identifier the developer did not give). Re-check with `kopt bench exposed --verify`.",
+  "tasks": [
+    {
+      "id": "ex-locate-retry",
+      "kind": "locate",
+      "lang": "en",
+      "question": "When a JDBC transaction block fails with a SQLException, where does Exposed retry it and compute the delay before the next attempt?",
+      "search": "jdbc transaction retry sqlexception delay attempts",
+      "gold": {
+        "files": ["exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/transactions/Transactions.kt", "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/JdbcTransaction.kt"],
+        "symbols": [
+          { "name": "inTopLevelTransaction", "file": "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/transactions/Transactions.kt", "line": 191, "kind": "function" },
+          { "name": "getRetryInterval", "file": "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/JdbcTransaction.kt", "line": 316, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read @1.5.0: inTopLevelTransaction loops creating transactions; on SQLException it increments attempts, takes transaction.getRetryInterval() and minRetryDelay, computes a randomized growing delay (or the fixed min delay), sleeps and rethrows once attempts >= maxAttempts."
+    },
+    {
+      "id": "ex-locate-upsert-sql",
+      "kind": "locate",
+      "lang": "en",
+      "question": "Where is the dialect-specific UPSERT SQL generated, e.g. INSERT ... ON CONFLICT ... DO UPDATE for PostgreSQL and INSERT ... ON DUPLICATE KEY UPDATE for MySQL?",
+      "search": "upsert sql on conflict do update on duplicate key update dialect",
+      "gold": {
+        "files": [
+          "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/vendors/PostgreSQL.kt",
+          "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/vendors/MysqlDialect.kt",
+          "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/vendors/FunctionProvider.kt"
+        ],
+        "symbols": [
+          { "name": "upsert", "file": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/vendors/PostgreSQL.kt", "line": 288, "kind": "method" },
+          { "name": "upsert", "file": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/vendors/MysqlDialect.kt", "line": 257, "kind": "method" },
+          { "name": "upsert", "file": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/vendors/FunctionProvider.kt", "line": 743, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read @1.5.0: FunctionProvider.upsert (743) is the base (MERGE-style) implementation; the PostgreSQL function provider override (PostgreSQL.kt:288) emits ON CONFLICT (keys) DO UPDATE SET ... [WHERE]; MysqlFunctionProvider.upsert (MysqlDialect.kt:257) emits [AS NEW] ON DUPLICATE KEY UPDATE and rejects key columns and WHERE."
+    },
+    {
+      "id": "ex-locate-lifecycle-flush",
+      "kind": "locate",
+      "lang": "en",
+      "question": "Where does `EntityLifecycleInterceptor` flush pending DAO entity changes before a query, insert, update or delete statement runs?",
+      "search": "EntityLifecycleInterceptor flush entity cache before statement execution",
+      "gold": {
+        "files": ["exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityLifecycleInterceptor.kt", "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityCache.kt"],
+        "symbols": [
+          { "name": "beforeExecution", "file": "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityLifecycleInterceptor.kt", "line": 39, "kind": "method" },
+          { "name": "flushEntities", "file": "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityLifecycleInterceptor.kt", "line": 138, "kind": "method" },
+          { "name": "flushCache", "file": "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityCache.kt", "line": 349, "kind": "function" }
+        ]
+      },
+      "verifiedBy": "Read @1.5.0: the private EntityLifecycleInterceptor.beforeExecution switches on the statement: queries call flushEntities (flushes only the queried tables via entityCache.flush(tables)), Delete/Upsert/Insert/Update statements call transaction.flushCache() (EntityCache.kt:349) and invalidate referrers."
+    },
+    {
+      "id": "ex-locate-hashed-column",
+      "kind": "locate",
+      "lang": "en",
+      "question": "How can a string column store a one-way password hash with exposed-crypt, and where is a stored hash compared with a plain-text password?",
+      "search": "column one way password hash compare plain text",
+      "gold": {
+        "files": [
+          "exposed-crypt/src/main/kotlin/org/jetbrains/exposed/v1/crypt/Tables.kt",
+          "exposed-crypt/src/main/kotlin/org/jetbrains/exposed/v1/crypt/HashingTransformer.kt",
+          "exposed-crypt/src/main/kotlin/org/jetbrains/exposed/v1/crypt/Hasher.kt"
+        ],
+        "symbols": [
+          { "name": "hashed", "file": "exposed-crypt/src/main/kotlin/org/jetbrains/exposed/v1/crypt/Tables.kt", "line": 68, "kind": "function" },
+          { "name": "HashingTransformer", "file": "exposed-crypt/src/main/kotlin/org/jetbrains/exposed/v1/crypt/HashingTransformer.kt", "line": 12, "kind": "class" },
+          { "name": "matches", "file": "exposed-crypt/src/main/kotlin/org/jetbrains/exposed/v1/crypt/Hasher.kt", "line": 47, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read exposed-crypt@1.5.0: Column<String>.hashed(hasher = BCryptHasher()) (Tables.kt:68) transforms the column with HashingTransformer (stored value = Hashed.encodedValue); Hashed.matches(plainText) delegates to hasher.matches(plainText, encodedValue)."
+    },
+    {
+      "id": "ex-explain-entity-flush",
+      "kind": "explain",
+      "lang": "en",
+      "question": "How does the DAO entity cache flush pending inserts and updates so that rows referenced by foreign keys are written first?",
+      "search": "entity cache flush inserts updates foreign key order tables",
+      "gold": {
+        "files": ["exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityCache.kt", "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/SchemaUtils.kt"],
+        "symbols": [
+          { "name": "flush", "file": "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityCache.kt", "line": 190, "kind": "method" },
+          { "name": "flushInserts", "file": "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityCache.kt", "line": 237, "kind": "method" },
+          { "name": "updateEntities", "file": "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityCache.kt", "line": 162, "kind": "method" },
+          { "name": "sortTablesByReferences", "file": "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/SchemaUtils.kt", "line": 18, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read EntityCache.kt@1.5.0: flush(tables) first runs updateEntities for tables with pending inserts (sorted by SchemaUtils.sortTablesByReferences), then flushInserts for all tables in reference order, then updates the remaining tables and invalidates referrer caches."
+    },
+    {
+      "id": "ex-explain-nested-tx",
+      "kind": "explain",
+      "lang": "en",
+      "question": "How do nested transaction blocks behave on JDBC with and without `useNestedTransactions`: when is the outer transaction reused, and how are savepoints used when an inner block rolls back?",
+      "search": "nested transactions useNestedTransactions outer transaction savepoint rollback",
+      "gold": {
+        "files": ["exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/transactions/TransactionManager.kt"],
+        "symbols": [
+          { "name": "newTransaction", "file": "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/transactions/TransactionManager.kt", "line": 75, "kind": "method" },
+          { "name": "ThreadLocalTransaction", "file": "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/transactions/TransactionManager.kt", "line": 202, "kind": "class" },
+          { "name": "rollback", "file": "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/transactions/TransactionManager.kt", "line": 262, "kind": "method" },
+          { "name": "savepointName", "file": "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/transactions/TransactionManager.kt", "line": 284, "kind": "property" }
+        ]
+      },
+      "verifiedBy": "Read TransactionManager.kt@1.5.0: newTransaction returns outerTransaction itself unless db.useNestedTransactions; ThreadLocalTransaction sets a savepoint (Exposed_savepoint_<level>) when nested, commit() is a no-op when nested, rollback() rolls back to the savepoint and sets a new one, close() releases it."
+    },
+    {
+      "id": "ex-explain-table-order",
+      "kind": "explain",
+      "lang": "en",
+      "question": "How does Exposed order tables so that referenced tables are created before the tables that point to them, and how does it detect foreign-key cycles?",
+      "search": "tables order foreign key references create cycle detection graph",
+      "gold": {
+        "files": ["exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/TableDepthGraph.kt"],
+        "symbols": [
+          { "name": "TableDepthGraph", "file": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/TableDepthGraph.kt", "line": 3, "kind": "class" },
+          { "name": "sorted", "file": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/TableDepthGraph.kt", "line": 25, "kind": "method" },
+          { "name": "hasCycle", "file": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/TableDepthGraph.kt", "line": 44, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read TableDepthGraph.kt@1.5.0: graph maps every reachable table to its foreign keys' target tables; sorted() is a post-order DFS (targets before referencing tables); hasCycle() runs a DFS with a recursion set. Used via SchemaUtilityApi.sortByReferences / hasCycle."
+    },
+    {
+      "id": "ex-usage-sort-tables",
+      "kind": "usage",
+      "lang": "en",
+      "question": "Outside the R2DBC module, which code calls `SchemaUtils.sortTablesByReferences` (or the JDBC SchemaUtils' own `sortTablesByReferences`)?",
+      "search": "SchemaUtils sortTablesByReferences",
+      "gold": {
+        "files": [
+          "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityCache.kt",
+          "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/SchemaUtils.kt",
+          "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/statements/jdbc/JdbcDatabaseMetadataImpl.kt",
+          "exposed-plugin-core/src/main/kotlin/org/jetbrains/exposed/v1/plugin/core/migration/MigrationGenerator.kt"
+        ],
+        "symbols": [
+          { "name": "flush", "file": "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityCache.kt", "line": 190, "kind": "method" },
+          { "name": "createStatements", "file": "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/SchemaUtils.kt", "line": 30, "kind": "method" },
+          { "name": "drop", "file": "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/SchemaUtils.kt", "line": 445, "kind": "method" },
+          { "name": "tableConstraints", "file": "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/statements/jdbc/JdbcDatabaseMetadataImpl.kt", "line": 597, "kind": "method" },
+          { "name": "generateVersionedFiles", "file": "exposed-plugin-core/src/main/kotlin/org/jetbrains/exposed/v1/plugin/core/migration/MigrationGenerator.kt", "line": 100, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "git grep sortTablesByReferences @1.5.0 (src/main only, R2DBC excluded): EntityCache.flush (196, 199), jdbc SchemaUtils.createStatements (33) and drop (448), JdbcDatabaseMetadataImpl.tableConstraints (598), MigrationGenerator.generateVersionedFiles (114)."
+    },
+    {
+      "id": "ex-usage-entity-lifecycle",
+      "kind": "usage",
+      "lang": "en",
+      "question": "Which DAO operations run their work inside `executeAsPartOfEntityLifecycle`?",
+      "search": "executeAsPartOfEntityLifecycle",
+      "gold": {
+        "files": [
+          "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/Entity.kt",
+          "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityCache.kt",
+          "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/InnerTableLink.kt"
+        ],
+        "symbols": [
+          { "name": "getValue", "file": "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/Entity.kt", "line": 147, "kind": "method" },
+          { "name": "delete", "file": "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/Entity.kt", "line": 384, "kind": "method" },
+          { "name": "flush", "file": "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/Entity.kt", "line": 403, "kind": "method" },
+          { "name": "updateEntities", "file": "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityCache.kt", "line": 162, "kind": "method" },
+          { "name": "flushInserts", "file": "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityCache.kt", "line": 237, "kind": "method" },
+          { "name": "setReference", "file": "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/InnerTableLink.kt", "line": 103, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "git grep -w executeAsPartOfEntityLifecycle @1.5.0 (src/main): defined EntityLifecycleInterceptor.kt:14; used in Entity.kt:153 and 215 (the Reference and OptionalReference getValue operators, 147 and 209), 389 (delete), 418 (flush), EntityCache.kt:176 (updateEntities), 245 (flushInserts), InnerTableLink.kt:112 (setReference)."
+    },
+    {
+      "id": "ex-usage-resolve-database",
+      "kind": "usage",
+      "lang": "en",
+      "question": "In the JDBC transactions API, which entry points call `resolveDatabaseOrThrow`?",
+      "search": "resolveDatabaseOrThrow",
+      "gold": {
+        "files": ["exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/transactions/Transactions.kt"],
+        "symbols": [
+          { "name": "transaction", "file": "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/transactions/Transactions.kt", "line": 131, "kind": "function" },
+          { "name": "inTopLevelTransaction", "file": "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/transactions/Transactions.kt", "line": 191, "kind": "function" },
+          { "name": "suspendTransaction", "file": "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/transactions/Transactions.kt", "line": 282, "kind": "function" },
+          { "name": "inTopLevelSuspendTransaction", "file": "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/transactions/Transactions.kt", "line": 341, "kind": "function" }
+        ]
+      },
+      "verifiedBy": "git grep -w resolveDatabaseOrThrow @1.5.0: private function Transactions.kt:102, called at 137 (transaction), 202 (inTopLevelTransaction), 288 (suspendTransaction) and 352 (inTopLevelSuspendTransaction); nowhere else."
+    },
+    {
+      "id": "ex-impact-check-cycle",
+      "kind": "impact",
+      "lang": "en",
+      "question": "If `TableUtils.checkCycle` always returned false, which generated DDL would change?",
+      "search": "TableUtils checkCycle",
+      "gold": {
+        "files": ["exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/SchemaUtilityApi.kt", "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/Table.kt"],
+        "symbols": [
+          { "name": "checkCycle", "file": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/SchemaUtilityApi.kt", "line": 654, "kind": "method" },
+          { "name": "createStatement", "file": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/Table.kt", "line": 1886, "kind": "method" },
+          { "name": "dropStatement", "file": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/Table.kt", "line": 1971, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "git grep TableUtils.checkCycle @1.5.0: Table.createStatement (1888) moves foreign keys to ALTER statements when a cycle exists (except SQLite) and Table.dropStatement (1981) appends CASCADE on PostgreSQL for cyclic tables; the jdbc/r2dbc SchemaUtils.checkCycle are separate public wrappers."
+    },
+    {
+      "id": "ex-impact-upsert-alias",
+      "kind": "impact",
+      "lang": "en",
+      "question": "Which SQL generation paths of the MySQL dialect depend on `isUpsertAliasSupported`, and which dialect overrides it?",
+      "search": "isUpsertAliasSupported",
+      "gold": {
+        "files": ["exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/vendors/MysqlDialect.kt", "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/vendors/MariaDBDialect.kt"],
+        "symbols": [
+          { "name": "isUpsertAliasSupported", "file": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/vendors/MysqlDialect.kt", "line": 330, "kind": "method" },
+          { "name": "upsert", "file": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/vendors/MysqlDialect.kt", "line": 257, "kind": "method" },
+          { "name": "insertValue", "file": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/vendors/MysqlDialect.kt", "line": 320, "kind": "method" },
+          { "name": "isUpsertAliasSupported", "file": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/vendors/MariaDBDialect.kt", "line": 102, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "git grep -w isUpsertAliasSupported @1.5.0: defined open in MysqlFunctionProvider (MysqlDialect.kt:330), overridden to false in MariaDBDialect.kt:102; used by MysqlFunctionProvider.upsert (275, appends ' AS NEW') and insertValue (322, NEW.col vs VALUES(col))."
+    }
+  ]
+}

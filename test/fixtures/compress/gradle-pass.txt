@@ -1,0 +1,317 @@
+Starting a Gradle Daemon (subsequent builds will be faster)
+> Configure project :
+Configuration on demand is an incubating feature.
+
+> Task :model:compileJava
+> Task :model:processResources NO-SOURCE
+> Task :model:classes UP-TO-DATE
+> Task :model:compileTestJava
+> Task :model:processTestResources
+> Task :model:testClasses
+> Task :model:test
+> Task :model:jar
+RefundServiceTest > updatesRefund() PASSED
+RefundServiceTest > updatesTotal() PASSED
+RefundMapperTest > validatesAddress() PASSED
+RefundServiceTest > rejectsOrder() PASSED
+RefundMapperTest > listsAddress() PASSED
+RefundServiceTest > cachesRefund() PASSED
+RefundMapperTest > listsBatch() PASSED
+OrderServiceTest > listsRounding() PASSED
+OrderMapperTest > validatesRefund() PASSED
+OrderServiceTest > listsAddress() PASSED
+OrderServiceTest > handlesCurrency() PASSED
+InvoiceMapperTest > cachesBatch() PASSED
+OrderMapperTest > computesOrder() PASSED
+RefundServiceTest > parsesOrder() PASSED
+InvoiceMapperTest > validatesAddress() PASSED
+OrderServiceTest > createsInvoice() PASSED
+RefundServiceTest > rejectsTotal() PASSED
+InvoiceMapperTest > retriesCurrency() PASSED
+OrderServiceTest > rejectsPage() PASSED
+OrderServiceTest > cachesCurrency() PASSED
+InvoiceMapperTest > serializesDiscount() PASSED
+RefundServiceTest > listsRefund() PASSED
+OrderServiceTest > cachesDiscount() PASSED
+InvoiceMapperTest > validatesTotal() PASSED
+RefundServiceTest > listsAddress() PASSED
+InvoiceServiceTest > createsOrder() PASSED
+InvoiceServiceTest > cachesCustomer() PASSED
+OrderServiceTest > rejectsTimeout() PASSED
+InvoiceServiceTest > retriesPayload() PASSED
+RefundMapperTest > createsOrder() PASSED
+> Task :core:compileJava
+> Task :core:processResources NO-SOURCE
+> Task :core:classes UP-TO-DATE
+> Task :core:compileTestJava
+> Task :core:processTestResources
+> Task :core:testClasses
+> Task :core:test
+> Task :core:jar
+InvoiceMapperTest > paginatesTotal() PASSED
+RefundMapperTest > deletesAddress() PASSED
+RefundMapperTest > computesTotal() PASSED
+OrderMapperTest > paginatesRounding() PASSED
+InvoiceServiceTest > retriesItem() PASSED
+OrderServiceTest > parsesCustomer() PASSED
+RefundMapperTest > serializesPage() PASSED
+InvoiceMapperTest > deletesRounding() PASSED
+InvoiceMapperTest > serializesTotal() PASSED
+OrderMapperTest > updatesPayload() PASSED
+RefundServiceTest > computesBatch() PASSED
+RefundMapperTest > cachesOrder() PASSED
+RefundMapperTest > createsPage() PASSED
+RefundServiceTest > formatsBatch() PASSED
+InvoiceMapperTest > serializesToken() PASSED
+InvoiceMapperTest > listsInvoice() PASSED
+InvoiceServiceTest > createsToken() PASSED
+InvoiceServiceTest > listsInvoice() PASSED
+OrderMapperTest > deletesToken() PASSED
+OrderServiceTest > createsCustomer() PASSED
+InvoiceMapperTest > deletesInvoice() PASSED
+RefundServiceTest > listsDiscount() PASSED
+InvoiceServiceTest > rejectsToken() PASSED
+InvoiceMapperTest > computesDiscount() PASSED
+InvoiceServiceTest > paginatesOrder() PASSED
+InvoiceServiceTest > handlesCustomer() PASSED
+OrderServiceTest > parsesToken() PASSED
+OrderServiceTest > deletesInvoice() PASSED
+RefundMapperTest > updatesRefund() PASSED
+InvoiceServiceTest > deletesTotal() PASSED
+> Task :persistence:compileJava
+> Task :persistence:processResources NO-SOURCE
+> Task :persistence:classes UP-TO-DATE
+> Task :persistence:compileTestJava
+> Task :persistence:processTestResources
+> Task :persistence:testClasses
+> Task :persistence:test
+> Task :persistence:jar
+RefundServiceTest > computesRounding() PASSED
+OrderMapperTest > updatesInvoice() PASSED
+RefundServiceTest > parsesOrder() PASSED
+OrderMapperTest > parsesTimeout() PASSED
+InvoiceServiceTest > listsRefund() PASSED
+RefundMapperTest > rejectsBatch() PASSED
+OrderServiceTest > createsTotal() PASSED
+RefundServiceTest > retriesOrder() PASSED
+RefundServiceTest > cachesItem() PASSED
+OrderMapperTest > serializesBatch() PASSED
+InvoiceMapperTest > updatesTotal() PASSED
+InvoiceServiceTest > listsCurrency() PASSED
+OrderServiceTest > parsesPage() PASSED
+RefundServiceTest > retriesRounding() PASSED
+RefundServiceTest > formatsItem() PASSED
+OrderServiceTest > computesOrder() PASSED
+RefundServiceTest > serializesTimeout() PASSED
+InvoiceServiceTest > updatesPayload() PASSED
+OrderServiceTest > serializesRefund() PASSED
+OrderMapperTest > retriesTotal() PASSED
+OrderMapperTest > formatsCustomer() PASSED
+OrderServiceTest > rejectsPage() PASSED
+OrderServiceTest > parsesCurrency() PASSED
+InvoiceMapperTest > rejectsItem() PASSED
+OrderMapperTest > rejectsInvoice() PASSED
+OrderServiceTest > listsInvoice() PASSED
+InvoiceServiceTest > cachesOrder() PASSED
+OrderServiceTest > rejectsDiscount() PASSED
+OrderServiceTest > rejectsOrder() PASSED
+RefundServiceTest > retriesRounding() PASSED
+> Task :api:compileJava
+> Task :api:processResources NO-SOURCE
+> Task :api:classes UP-TO-DATE
+> Task :api:compileTestJava
+> Task :api:processTestResources
+> Task :api:testClasses
+> Task :api:test
+> Task :api:jar
+RefundMapperTest > cachesCurrency() PASSED
+InvoiceServiceTest > retriesDiscount() PASSED
+InvoiceMapperTest > retriesBatch() PASSED
+RefundServiceTest > formatsCurrency() PASSED
+InvoiceServiceTest > handlesItem() PASSED
+InvoiceMapperTest > paginatesTotal() PASSED
+RefundMapperTest > computesTotal() PASSED
+RefundMapperTest > computesInvoice() PASSED
+RefundMapperTest > updatesTimeout() PASSED
+InvoiceServiceTest > parsesItem() PASSED
+InvoiceMapperTest > updatesAddress() PASSED
+RefundServiceTest > cachesDiscount() PASSED
+OrderMapperTest > paginatesRefund() PASSED
+InvoiceMapperTest > handlesPayload() PASSED
+InvoiceServiceTest > computesAddress() PASSED
+OrderServiceTest > rejectsRefund() PASSED
+RefundServiceTest > validatesCurrency() PASSED
+OrderMapperTest > rejectsItem() PASSED
+RefundMapperTest > updatesDiscount() PASSED
+OrderServiceTest > serializesRefund() PASSED
+OrderMapperTest > validatesInvoice() PASSED
+InvoiceMapperTest > rejectsItem() PASSED
+RefundServiceTest > createsBatch() PASSED
+InvoiceServiceTest > computesAddress() PASSED
+InvoiceMapperTest > computesItem() PASSED
+RefundMapperTest > handlesPage() PASSED
+OrderMapperTest > formatsAddress() PASSED
+InvoiceServiceTest > serializesCustomer() PASSED
+InvoiceMapperTest > listsToken() PASSED
+OrderServiceTest > formatsPayload() PASSED
+> Task :web:compileJava
+> Task :web:processResources NO-SOURCE
+> Task :web:classes UP-TO-DATE
+> Task :web:compileTestJava
+> Task :web:processTestResources
+> Task :web:testClasses
+> Task :web:test
+> Task :web:jar
+InvoiceMapperTest > deletesDiscount() PASSED
+OrderServiceTest > deletesDiscount() PASSED
+InvoiceServiceTest > validatesRounding() PASSED
+InvoiceServiceTest > paginatesAddress() PASSED
+RefundServiceTest > cachesCurrency() PASSED
+OrderServiceTest > retriesRounding() PASSED
+InvoiceServiceTest > computesToken() PASSED
+InvoiceServiceTest > cachesAddress() PASSED
+OrderServiceTest > paginatesAddress() PASSED
+InvoiceMapperTest > cachesBatch() PASSED
+OrderServiceTest > handlesInvoice() PASSED
+InvoiceServiceTest > retriesDiscount() PASSED
+InvoiceServiceTest > formatsItem() PASSED
+OrderServiceTest > parsesBatch() PASSED
+RefundMapperTest > validatesToken() PASSED
+InvoiceServiceTest > updatesRefund() PASSED
+RefundServiceTest > listsToken() PASSED
+OrderServiceTest > updatesRounding() PASSED
+InvoiceServiceTest > computesToken() PASSED
+InvoiceMapperTest > paginatesDiscount() PASSED
+OrderServiceTest > formatsInvoice() PASSED
+RefundMapperTest > rejectsInvoice() PASSED
+RefundMapperTest > formatsTotal() PASSED
+OrderServiceTest > formatsRefund() PASSED
+InvoiceServiceTest > updatesRefund() PASSED
+OrderMapperTest > createsItem() PASSED
+OrderServiceTest > paginatesCustomer() PASSED
+RefundServiceTest > cachesAddress() PASSED
+RefundServiceTest > retriesCurrency() PASSED
+InvoiceServiceTest > validatesPayload() PASSED
+> Task :batch:compileJava
+> Task :batch:processResources NO-SOURCE
+> Task :batch:classes UP-TO-DATE
+> Task :batch:compileTestJava
+> Task :batch:processTestResources
+> Task :batch:testClasses
+> Task :batch:test
+> Task :batch:jar
+RefundServiceTest > handlesCustomer() PASSED
+OrderMapperTest > deletesDiscount() PASSED
+OrderMapperTest > parsesOrder() PASSED
+RefundServiceTest > rejectsToken() PASSED
+RefundServiceTest > deletesPage() PASSED
+InvoiceMapperTest > parsesTotal() PASSED
+InvoiceServiceTest > deletesAddress() PASSED
+OrderServiceTest > cachesTotal() PASSED
+RefundMapperTest > listsAddress() PASSED
+RefundServiceTest > updatesOrder() PASSED
+OrderServiceTest > serializesTimeout() PASSED
+InvoiceMapperTest > parsesCustomer() PASSED
+InvoiceMapperTest > serializesPage() PASSED
+RefundServiceTest > createsToken() PASSED
+OrderMapperTest > formatsTimeout() PASSED
+RefundMapperTest > deletesPayload() PASSED
+InvoiceMapperTest > validatesDiscount() PASSED
+OrderServiceTest > handlesInvoice() PASSED
+OrderServiceTest > parsesAddress() PASSED
+RefundServiceTest > retriesItem() PASSED
+RefundServiceTest > handlesItem() PASSED
+InvoiceMapperTest > deletesBatch() PASSED
+InvoiceMapperTest > validatesRounding() PASSED
+InvoiceMapperTest > formatsBatch() PASSED
+OrderServiceTest > formatsItem() PASSED
+RefundMapperTest > paginatesInvoice() PASSED
+OrderServiceTest > cachesDiscount() PASSED
+InvoiceMapperTest > paginatesRefund() PASSED
+OrderMapperTest > serializesBatch() PASSED
+OrderMapperTest > computesAddress() PASSED
+> Task :notifications:compileJava
+> Task :notifications:processResources NO-SOURCE
+> Task :notifications:classes UP-TO-DATE
+> Task :notifications:compileTestJava
+> Task :notifications:processTestResources
+> Task :notifications:testClasses
+> Task :notifications:test
+> Task :notifications:jar
+OrderServiceTest > deletesDiscount() PASSED
+OrderMapperTest > cachesPayload() PASSED
+OrderServiceTest > listsPage() PASSED
+InvoiceServiceTest > retriesAddress() PASSED
+InvoiceServiceTest > computesInvoice() PASSED
+OrderMapperTest > cachesTotal() PASSED
+InvoiceServiceTest > serializesCurrency() PASSED
+RefundMapperTest > serializesCustomer() PASSED
+RefundMapperTest > validatesCustomer() PASSED
+InvoiceServiceTest > validatesItem() PASSED
+InvoiceMapperTest > parsesCurrency() PASSED
+OrderServiceTest > updatesCurrency() PASSED
+RefundMapperTest > computesTotal() PASSED
+InvoiceServiceTest > handlesPage() PASSED
+RefundMapperTest > cachesPage() PASSED
+OrderServiceTest > computesCustomer() PASSED
+RefundMapperTest > handlesCustomer() PASSED
+RefundMapperTest > deletesItem() PASSED
+InvoiceMapperTest > formatsBatch() PASSED
+RefundMapperTest > rejectsPayload() PASSED
+RefundServiceTest > parsesTotal() PASSED
+InvoiceServiceTest > updatesInvoice() PASSED
+RefundMapperTest > serializesTimeout() PASSED
+InvoiceServiceTest > parsesAddress() PASSED
+InvoiceServiceTest > formatsAddress() PASSED
+OrderMapperTest > rejectsCurrency() PASSED
+RefundMapperTest > formatsTotal() PASSED
+OrderServiceTest > handlesRefund() PASSED
+OrderMapperTest > serializesToken() PASSED
+OrderMapperTest > computesAddress() PASSED
+> Task :reporting:compileJava
+> Task :reporting:processResources NO-SOURCE
+> Task :reporting:classes UP-TO-DATE
+> Task :reporting:compileTestJava
+> Task :reporting:processTestResources
+> Task :reporting:testClasses
+> Task :reporting:test
+> Task :reporting:jar
+RefundServiceTest > formatsCustomer() PASSED
+InvoiceMapperTest > retriesItem() PASSED
+OrderMapperTest > serializesCurrency() PASSED
+RefundMapperTest > listsRounding() PASSED
+RefundServiceTest > createsRounding() PASSED
+InvoiceMapperTest > computesInvoice() PASSED
+RefundServiceTest > rejectsToken() PASSED
+RefundServiceTest > formatsAddress() PASSED
+InvoiceMapperTest > paginatesRounding() PASSED
+InvoiceMapperTest > rejectsRounding() PASSED
+RefundMapperTest > createsRounding() PASSED
+RefundServiceTest > validatesDiscount() PASSED
+OrderMapperTest > updatesPage() PASSED
+RefundMapperTest > validatesRounding() PASSED
+InvoiceMapperTest > rejectsAddress() PASSED
+RefundMapperTest > retriesCurrency() PASSED
+InvoiceMapperTest > paginatesDiscount() PASSED
+OrderServiceTest > handlesPayload() PASSED
+InvoiceServiceTest > parsesAddress() PASSED
+OrderServiceTest > handlesPage() PASSED
+InvoiceMapperTest > createsTimeout() PASSED
+InvoiceMapperTest > handlesCustomer() PASSED
+OrderServiceTest > createsTimeout() PASSED
+OrderMapperTest > computesBatch() PASSED
+InvoiceServiceTest > formatsInvoice() PASSED
+InvoiceServiceTest > deletesTotal() PASSED
+InvoiceMapperTest > paginatesDiscount() PASSED
+RefundServiceTest > rejectsBatch() PASSED
+RefundMapperTest > createsAddress() PASSED
+RefundServiceTest > paginatesRefund() PASSED
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.7/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 1m 4s
+64 actionable tasks: 64 executed

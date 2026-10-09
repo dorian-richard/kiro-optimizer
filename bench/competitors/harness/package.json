@@ -1,0 +1,10 @@
+{
+  "name": "bench-competitor-harness",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "MCP stdio client that drives a competitor's MCP server inside its container.",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.32.1"
+  }
+}

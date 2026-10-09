@@ -1,0 +1,282 @@
+{
+  "repo": {
+    "name": "spring-framework",
+    "url": "https://github.com/spring-projects/spring-framework.git",
+    "tag": "v7.0.9",
+    "commit": "82a6b40b9366ec181ededdad282b307ee5381a52",
+    "language": "java",
+    "path": "bench/repos/spring-framework"
+  },
+  "notes": "Gold = main sources only (src/main/java). Several tasks target APIs new in 7.0 (core.retry, resilience @Retryable/@ConcurrencyLimit, API versioning) that older model training data cannot answer from memory. `search` is the phrase an agent would derive from the question (English, no identifier the developer did not give). Re-check with `kopt bench spring-framework --verify`.",
+  "tasks": [
+    {
+      "id": "sf-locate-retry-loop",
+      "kind": "locate",
+      "lang": "en",
+      "question": "Where is the core retry loop that backs off between attempts and aborts early when the retry policy timeout would be exceeded?",
+      "search": "retry loop back off attempts timeout exceeded",
+      "gold": {
+        "files": ["spring-core/src/main/java/org/springframework/core/retry/RetryTemplate.java"],
+        "symbols": [
+          { "name": "RetryTemplate", "file": "spring-core/src/main/java/org/springframework/core/retry/RetryTemplate.java", "line": 56, "kind": "class" },
+          { "name": "execute", "file": "spring-core/src/main/java/org/springframework/core/retry/RetryTemplate.java", "line": 126, "kind": "method" },
+          { "name": "checkIfTimeoutExceeded", "file": "spring-core/src/main/java/org/springframework/core/retry/RetryTemplate.java", "line": 209, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read RetryTemplate.java@v7.0.9: execute() runs the initial attempt, then loops while retryPolicy.shouldRetry, taking backOffExecution.nextBackOff() and Thread.sleep; checkIfTimeoutExceeded(timeout, startTime, sleepTime, ...) preemptively throws RetryException when elapsed + pending sleep >= timeout."
+    },
+    {
+      "id": "sf-locate-api-version",
+      "kind": "locate",
+      "lang": "en",
+      "question": "In Spring MVC, where is the API version of a request (header, query parameter...) resolved and then validated before the handler is chosen?",
+      "search": "api version request resolve parse validate handler mapping",
+      "gold": {
+        "files": [
+          "spring-web/src/main/java/org/springframework/web/accept/ApiVersionStrategy.java",
+          "spring-web/src/main/java/org/springframework/web/accept/DefaultApiVersionStrategy.java",
+          "spring-webmvc/src/main/java/org/springframework/web/servlet/handler/AbstractHandlerMapping.java"
+        ],
+        "symbols": [
+          { "name": "resolveParseAndValidateVersion", "file": "spring-web/src/main/java/org/springframework/web/accept/ApiVersionStrategy.java", "line": 71, "kind": "method" },
+          { "name": "DefaultApiVersionStrategy", "file": "spring-web/src/main/java/org/springframework/web/accept/DefaultApiVersionStrategy.java", "line": 38, "kind": "class" },
+          { "name": "validateVersion", "file": "spring-web/src/main/java/org/springframework/web/accept/DefaultApiVersionStrategy.java", "line": 171, "kind": "method" },
+          { "name": "initApiVersion", "file": "spring-webmvc/src/main/java/org/springframework/web/servlet/handler/AbstractHandlerMapping.java", "line": 593, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read @v7.0.9: AbstractHandlerMapping.getHandler (webmvc) calls initApiVersion(request), which calls versionStrategy.resolveParseAndValidateVersion(request) (default method in ApiVersionStrategy: resolveVersion -> parseVersion -> validateVersion) and stores an ApiVersionHolder attribute; DefaultApiVersionStrategy.resolveVersion iterates the ApiVersionResolvers and validateVersion throws Missing/InvalidApiVersionException."
+    },
+    {
+      "id": "sf-locate-sqlstate-lock",
+      "kind": "locate",
+      "lang": "en",
+      "question": "Our driver reports SQL state 40001 on deadlocks. Where does spring-jdbc turn that into a CannotAcquireLockException?",
+      "search": "SQL state 40001 CannotAcquireLockException translate",
+      "gold": {
+        "files": [
+          "spring-jdbc/src/main/java/org/springframework/jdbc/support/SQLStateSQLExceptionTranslator.java",
+          "spring-jdbc/src/main/java/org/springframework/jdbc/support/SQLExceptionSubclassTranslator.java"
+        ],
+        "symbols": [
+          { "name": "indicatesCannotAcquireLock", "file": "spring-jdbc/src/main/java/org/springframework/jdbc/support/SQLStateSQLExceptionTranslator.java", "line": 207, "kind": "method" },
+          { "name": "SQLStateSQLExceptionTranslator", "file": "spring-jdbc/src/main/java/org/springframework/jdbc/support/SQLStateSQLExceptionTranslator.java", "line": 57, "kind": "class" },
+          { "name": "SQLExceptionSubclassTranslator", "file": "spring-jdbc/src/main/java/org/springframework/jdbc/support/SQLExceptionSubclassTranslator.java", "line": 68, "kind": "class" }
+        ]
+      },
+      "verifiedBy": "Read @v7.0.9: indicatesCannotAcquireLock(sqlState) returns \"40001\".equals(sqlState); used by SQLStateSQLExceptionTranslator.doTranslate (line 143, PESSIMISTIC_LOCKING_FAILURE_CODES branch) and SQLExceptionSubclassTranslator.doTranslate (line 86, SQLTransactionRollbackException branch)."
+    },
+    {
+      "id": "sf-locate-advice-order",
+      "kind": "locate",
+      "lang": "en",
+      "question": "Where does Spring AOP decide the execution order of two advices declared in the same aspect?",
+      "search": "advice precedence same aspect declaration order comparator",
+      "gold": {
+        "files": ["spring-aop/src/main/java/org/springframework/aop/aspectj/autoproxy/AspectJPrecedenceComparator.java"],
+        "symbols": [
+          { "name": "AspectJPrecedenceComparator", "file": "spring-aop/src/main/java/org/springframework/aop/aspectj/autoproxy/AspectJPrecedenceComparator.java", "line": 51, "kind": "class" },
+          { "name": "comparePrecedenceWithinAspect", "file": "spring-aop/src/main/java/org/springframework/aop/aspectj/autoproxy/AspectJPrecedenceComparator.java", "line": 90, "kind": "method" },
+          { "name": "getAspectDeclarationOrder", "file": "spring-aop/src/main/java/org/springframework/aop/aspectj/autoproxy/AspectJPrecedenceComparator.java", "line": 142, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read AspectJPrecedenceComparator.java@v7.0.9: compare() falls back to comparePrecedenceWithinAspect when both advisors come from the same aspect; it uses getAspectDeclarationOrder(advisor) deltas and after-advice inversion."
+    },
+    {
+      "id": "sf-explain-concurrency-limit",
+      "kind": "explain",
+      "lang": "en",
+      "question": "How does @ConcurrencyLimit throttle method invocations at runtime, and is the limit tracked per method, per class or per bean instance?",
+      "search": "ConcurrencyLimit annotation throttle method invocations limit",
+      "gold": {
+        "files": [
+          "spring-context/src/main/java/org/springframework/resilience/annotation/ConcurrencyLimitBeanPostProcessor.java",
+          "spring-core/src/main/java/org/springframework/util/ConcurrencyThrottleSupport.java"
+        ],
+        "symbols": [
+          { "name": "ConcurrencyLimitBeanPostProcessor", "file": "spring-context/src/main/java/org/springframework/resilience/annotation/ConcurrencyLimitBeanPostProcessor.java", "line": 54, "kind": "class" },
+          { "name": "ConcurrencyLimitInterceptor", "file": "spring-context/src/main/java/org/springframework/resilience/annotation/ConcurrencyLimitBeanPostProcessor.java", "line": 77, "kind": "class" },
+          { "name": "ConcurrencyThrottleHolder", "file": "spring-context/src/main/java/org/springframework/resilience/annotation/ConcurrencyLimitBeanPostProcessor.java", "line": 149, "kind": "class" },
+          { "name": "beforeAccess", "file": "spring-core/src/main/java/org/springframework/util/ConcurrencyThrottleSupport.java", "line": 119, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read @v7.0.9: ConcurrencyLimitInterceptor.invoke keys a ConcurrencyThrottleHolder per proxy instance (IdentityHashMap), then one interceptor per method (method-level annotation) or a shared class-level one; Resilience/RejectingConcurrencyThrottleInterceptor extend ConcurrencyThrottleInterceptor whose ConcurrencyThrottleSupport.beforeAccess counts under a lock and calls onLimitReached (block or reject)."
+    },
+    {
+      "id": "sf-explain-retryable",
+      "kind": "explain",
+      "lang": "en",
+      "question": "How is a method annotated with @Retryable retried at runtime? Which interceptor builds the retry policy and runs the attempts?",
+      "search": "Retryable annotation retry interceptor retry policy",
+      "gold": {
+        "files": [
+          "spring-context/src/main/java/org/springframework/resilience/annotation/RetryAnnotationBeanPostProcessor.java",
+          "spring-context/src/main/java/org/springframework/resilience/retry/AbstractRetryInterceptor.java",
+          "spring-core/src/main/java/org/springframework/core/retry/RetryTemplate.java"
+        ],
+        "symbols": [
+          { "name": "RetryAnnotationBeanPostProcessor", "file": "spring-context/src/main/java/org/springframework/resilience/annotation/RetryAnnotationBeanPostProcessor.java", "line": 56, "kind": "class" },
+          { "name": "getRetrySpec", "file": "spring-context/src/main/java/org/springframework/resilience/annotation/RetryAnnotationBeanPostProcessor.java", "line": 89, "kind": "method" },
+          { "name": "AbstractRetryInterceptor", "file": "spring-context/src/main/java/org/springframework/resilience/retry/AbstractRetryInterceptor.java", "line": 57, "kind": "class" },
+          { "name": "RetryTemplate", "file": "spring-core/src/main/java/org/springframework/core/retry/RetryTemplate.java", "line": 56, "kind": "class" }
+        ]
+      },
+      "verifiedBy": "Read @v7.0.9: RetryAnnotationBeanPostProcessor installs RetryAnnotationInterceptor (extends AbstractRetryInterceptor) whose getRetrySpec reads @Retryable into a MethodRetrySpec; AbstractRetryInterceptor.invoke builds RetryPolicy.builder()...build(), wraps invocation.proceed() in a Retryable and runs new RetryTemplate(retryPolicy).execute(...) (reactive return types go through ReactorDelegate)."
+    },
+    {
+      "id": "sf-explain-config-full-lite",
+      "kind": "explain",
+      "lang": "en",
+      "question": "How does Spring decide whether a @Configuration class is 'full' (CGLIB-enhanced) or 'lite', and where is the enhancement applied?",
+      "search": "configuration class full lite proxyBeanMethods enhance cglib",
+      "gold": {
+        "files": [
+          "spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassUtils.java",
+          "spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassPostProcessor.java",
+          "spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassEnhancer.java"
+        ],
+        "symbols": [
+          { "name": "checkConfigurationClassCandidate", "file": "spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassUtils.java", "line": 106, "kind": "method" },
+          { "name": "enhanceConfigurationClasses", "file": "spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassPostProcessor.java", "line": 514, "kind": "method" },
+          { "name": "ConfigurationClassEnhancer", "file": "spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassEnhancer.java", "line": 78, "kind": "class" },
+          { "name": "enhance", "file": "spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassEnhancer.java", "line": 102, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read @v7.0.9: checkConfigurationClassCandidate sets CONFIGURATION_CLASS_ATTRIBUTE to CONFIGURATION_CLASS_FULL when @Configuration has proxyBeanMethods != false, else LITE; ConfigurationClassPostProcessor.enhanceConfigurationClasses collects FULL definitions and calls enhancer.enhance(configClass, beanClassLoader) (line 576)."
+    },
+    {
+      "id": "sf-explain-exponential-backoff",
+      "kind": "explain",
+      "lang": "en",
+      "question": "How does `ExponentialBackOff` compute the next interval (multiplier, jitter, maxInterval, maxElapsedTime)?",
+      "search": "ExponentialBackOff next interval multiplier jitter max interval",
+      "gold": {
+        "files": ["spring-core/src/main/java/org/springframework/util/backoff/ExponentialBackOff.java"],
+        "symbols": [
+          { "name": "ExponentialBackOff", "file": "spring-core/src/main/java/org/springframework/util/backoff/ExponentialBackOff.java", "line": 63, "kind": "class" },
+          { "name": "nextBackOff", "file": "spring-core/src/main/java/org/springframework/util/backoff/ExponentialBackOff.java", "line": 288, "kind": "method" },
+          { "name": "computeNextInterval", "file": "spring-core/src/main/java/org/springframework/util/backoff/ExponentialBackOff.java", "line": 298, "kind": "method" },
+          { "name": "applyJitter", "file": "spring-core/src/main/java/org/springframework/util/backoff/ExponentialBackOff.java", "line": 314, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read ExponentialBackOff.java@v7.0.9: ExponentialBackOffExecution.nextBackOff returns STOP past maxElapsedTime/maxAttempts, else computeNextInterval (initial, then currentInterval * multiplier capped at maxInterval) then applyJitter (jitter scaled by interval/initialInterval, bounded by initialInterval and maxInterval)."
+    },
+    {
+      "id": "sf-usage-fail-early",
+      "kind": "usage",
+      "lang": "en",
+      "question": "Who calls `isFailEarlyOnGlobalRollbackOnly()` and how does it change commit and rollback processing?",
+      "search": "isFailEarlyOnGlobalRollbackOnly",
+      "gold": {
+        "files": ["spring-tx/src/main/java/org/springframework/transaction/support/AbstractPlatformTransactionManager.java"],
+        "symbols": [
+          { "name": "isFailEarlyOnGlobalRollbackOnly", "file": "spring-tx/src/main/java/org/springframework/transaction/support/AbstractPlatformTransactionManager.java", "line": 324, "kind": "method" },
+          { "name": "processCommit", "file": "spring-tx/src/main/java/org/springframework/transaction/support/AbstractPlatformTransactionManager.java", "line": 766, "kind": "method" },
+          { "name": "processRollback", "file": "spring-tx/src/main/java/org/springframework/transaction/support/AbstractPlatformTransactionManager.java", "line": 874, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "git grep @v7.0.9 (main sources): only callers are AbstractPlatformTransactionManager.processCommit (line 796, unexpectedRollback) and processRollback (line 917, participating transaction marked rollback-only)."
+    },
+    {
+      "id": "sf-usage-trigger-flush",
+      "kind": "usage",
+      "lang": "en",
+      "question": "Who calls `TransactionSynchronizationUtils.triggerFlush()`? I want to know which transaction objects propagate the flush to the synchronizations.",
+      "search": "TransactionSynchronizationUtils triggerFlush",
+      "gold": {
+        "files": [
+          "spring-tx/src/main/java/org/springframework/transaction/support/TransactionSynchronizationUtils.java",
+          "spring-jdbc/src/main/java/org/springframework/jdbc/datasource/DataSourceTransactionManager.java",
+          "spring-tx/src/main/java/org/springframework/transaction/jta/JtaTransactionObject.java"
+        ],
+        "symbols": [
+          { "name": "triggerFlush", "file": "spring-tx/src/main/java/org/springframework/transaction/support/TransactionSynchronizationUtils.java", "line": 83, "kind": "method" },
+          { "name": "DataSourceTransactionObject", "file": "spring-jdbc/src/main/java/org/springframework/jdbc/datasource/DataSourceTransactionManager.java", "line": 485, "kind": "class" },
+          { "name": "JtaTransactionObject", "file": "spring-tx/src/main/java/org/springframework/transaction/jta/JtaTransactionObject.java", "line": 38, "kind": "class" }
+        ]
+      },
+      "verifiedBy": "git grep triggerFlush @v7.0.9 (main sources): called from DataSourceTransactionManager.DataSourceTransactionObject.flush() (line 519) and JtaTransactionObject.flush() (line 83); defined in TransactionSynchronizationUtils:83."
+    },
+    {
+      "id": "sf-usage-imported-by",
+      "kind": "usage",
+      "lang": "en",
+      "question": "Where is `ConfigurationClass.getImportedBy()` used, and for what?",
+      "search": "ConfigurationClass getImportedBy",
+      "gold": {
+        "files": [
+          "spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClass.java",
+          "spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassBeanDefinitionReader.java",
+          "spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassParser.java"
+        ],
+        "symbols": [
+          { "name": "getImportedBy", "file": "spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClass.java", "line": 199, "kind": "method" },
+          { "name": "TrackedConditionEvaluator", "file": "spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassBeanDefinitionReader.java", "line": 503, "kind": "class" },
+          { "name": "getEnclosingConfigurationClass", "file": "spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassParser.java", "line": 743, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "git grep getImportedBy @v7.0.9 (main sources): ConfigurationClassBeanDefinitionReader.TrackedConditionEvaluator.shouldSkip (line 512: skip when all importers are skipped) and ConfigurationClassParser.getEnclosingConfigurationClass (line 746); defined ConfigurationClass:199."
+    },
+    {
+      "id": "sf-usage-lru-drain",
+      "kind": "usage",
+      "lang": "en",
+      "question": "In spring-core's concurrent LRU cache, what triggers draining of the buffered read and write operations?",
+      "search": "concurrent lru cache drain buffered read write operations",
+      "gold": {
+        "files": ["spring-core/src/main/java/org/springframework/util/ConcurrentLruCache.java"],
+        "symbols": [
+          { "name": "drainOperations", "file": "spring-core/src/main/java/org/springframework/util/ConcurrentLruCache.java", "line": 143, "kind": "method" },
+          { "name": "processRead", "file": "spring-core/src/main/java/org/springframework/util/ConcurrentLruCache.java", "line": 129, "kind": "method" },
+          { "name": "processWrite", "file": "spring-core/src/main/java/org/springframework/util/ConcurrentLruCache.java", "line": 137, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read ConcurrentLruCache.java@v7.0.9: drainOperations() is called from processRead (line 133, when the read buffer asks for a drain) and processWrite (line 140, after each write task is queued); both are invoked from get()/put()/remove()."
+    },
+    {
+      "id": "sf-impact-shortcut",
+      "kind": "impact",
+      "lang": "en",
+      "question": "If I change the signature of `ConstructorResolver.setShortcutIfPossible`, what breaks?",
+      "search": "ConstructorResolver setShortcutIfPossible",
+      "gold": {
+        "files": ["spring-beans/src/main/java/org/springframework/beans/factory/support/ConstructorResolver.java"],
+        "symbols": [
+          { "name": "setShortcutIfPossible", "file": "spring-beans/src/main/java/org/springframework/beans/factory/support/ConstructorResolver.java", "line": 935, "kind": "method" },
+          { "name": "createArgumentArray", "file": "spring-beans/src/main/java/org/springframework/beans/factory/support/ConstructorResolver.java", "line": 720, "kind": "method" },
+          { "name": "resolvePreparedArguments", "file": "spring-beans/src/main/java/org/springframework/beans/factory/support/ConstructorResolver.java", "line": 817, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "git grep @v7.0.9: private method, called only at ConstructorResolver.java:794 (inside createArgumentArray, lines 720-816) and :851 (inside resolvePreparedArguments, from 817)."
+    },
+    {
+      "id": "sf-impact-primary-conflict",
+      "kind": "impact",
+      "lang": "en",
+      "question": "What is affected if I change how Spring detects a conflicting primary bean in a parent BeanFactory during autowiring?",
+      "search": "primary bean conflict parent bean factory autowiring",
+      "gold": {
+        "files": ["spring-beans/src/main/java/org/springframework/beans/factory/support/DefaultListableBeanFactory.java"],
+        "symbols": [
+          { "name": "hasPrimaryConflict", "file": "spring-beans/src/main/java/org/springframework/beans/factory/support/DefaultListableBeanFactory.java", "line": 2279, "kind": "method" },
+          { "name": "doResolveDependency", "file": "spring-beans/src/main/java/org/springframework/beans/factory/support/DefaultListableBeanFactory.java", "line": 1662, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read DefaultListableBeanFactory.java@v7.0.9: hasPrimaryConflict(beanName, dependencyType) checks local primary beans then recurses into the parent DefaultListableBeanFactory (line 2290); its only other caller is doResolveDependency (line 1706, shortcut resolution by dependency name)."
+    },
+    {
+      "id": "sf-impact-cleanup-txinfo",
+      "kind": "impact",
+      "lang": "en",
+      "question": "If I modify `cleanupTransactionInfo` in TransactionAspectSupport, which transactional execution paths are affected?",
+      "search": "TransactionAspectSupport cleanupTransactionInfo",
+      "gold": {
+        "files": ["spring-tx/src/main/java/org/springframework/transaction/interceptor/TransactionAspectSupport.java"],
+        "symbols": [
+          { "name": "cleanupTransactionInfo", "file": "spring-tx/src/main/java/org/springframework/transaction/interceptor/TransactionAspectSupport.java", "line": 744, "kind": "method" },
+          { "name": "invokeWithinTransaction", "file": "spring-tx/src/main/java/org/springframework/transaction/interceptor/TransactionAspectSupport.java", "line": 333, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "git grep cleanupTransactionInfo @v7.0.9 (all files, incl. .aj): two calls, both inside invokeWithinTransaction: the standard PlatformTransactionManager path finally block (line 379) and the CallbackPreferringPlatformTransactionManager lambda finally block (line 446)."
+    }
+  ]
+}

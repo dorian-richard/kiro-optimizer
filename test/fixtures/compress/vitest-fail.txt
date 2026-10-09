@@ -1,0 +1,115 @@
+ RUN  v1.6.0 /home/dev/shop
+
+ ✓ src/cart/refund0.test.ts  (2 tests) 10ms
+ ✓ src/orders/order1.test.ts  (3 tests) 11ms
+ ✓ src/refunds/order2.test.ts  (4 tests) 12ms
+ ✓ src/payments/refund3.test.ts  (5 tests) 13ms
+ ✓ src/invoices/payload4.test.ts  (6 tests) 14ms
+ ✓ src/customers/rounding5.test.ts  (7 tests) 15ms
+ ✓ src/catalog/item6.test.ts  (8 tests) 16ms
+ ✓ src/inventory/token7.test.ts  (2 tests) 17ms
+ ✓ src/shipping/page8.test.ts  (3 tests) 18ms
+ ✓ src/auth/refund9.test.ts  (4 tests) 19ms
+ ✓ src/pricing/item10.test.ts  (5 tests) 20ms
+ ✓ src/tax/invoice11.test.ts  (6 tests) 21ms
+ ✓ src/discounts/total12.test.ts  (7 tests) 22ms
+ ✓ src/reports/address13.test.ts  (8 tests) 23ms
+ ✓ src/webhooks/payload14.test.ts  (2 tests) 24ms
+ ✓ src/notifications/invoice15.test.ts  (3 tests) 25ms
+ ✓ src/cart/order16.test.ts  (4 tests) 26ms
+ ✓ src/orders/page17.test.ts  (5 tests) 27ms
+ ✓ src/refunds/timeout18.test.ts  (6 tests) 28ms
+ ✓ src/payments/item19.test.ts  (7 tests) 29ms
+ ✓ src/invoices/page20.test.ts  (8 tests) 30ms
+ ✓ src/customers/token21.test.ts  (2 tests) 31ms
+ ✓ src/catalog/item22.test.ts  (3 tests) 32ms
+ ✓ src/inventory/refund23.test.ts  (4 tests) 33ms
+ ✓ src/shipping/invoice24.test.ts  (5 tests) 34ms
+ ✓ src/auth/timeout25.test.ts  (6 tests) 35ms
+ ✓ src/pricing/currency26.test.ts  (7 tests) 36ms
+ ✓ src/tax/refund27.test.ts  (8 tests) 37ms
+ ✓ src/discounts/item28.test.ts  (2 tests) 38ms
+ ✓ src/reports/customer29.test.ts  (3 tests) 39ms
+ ✓ src/webhooks/item30.test.ts  (4 tests) 40ms
+ ✓ src/notifications/rounding31.test.ts  (5 tests) 41ms
+ ✓ src/cart/total32.test.ts  (6 tests) 42ms
+ ✓ src/orders/payload33.test.ts  (7 tests) 43ms
+ ✓ src/refunds/total34.test.ts  (8 tests) 44ms
+ ✓ src/payments/rounding35.test.ts  (2 tests) 45ms
+ ✓ src/invoices/currency36.test.ts  (3 tests) 46ms
+ ✓ src/customers/refund37.test.ts  (4 tests) 47ms
+ ✓ src/catalog/payload38.test.ts  (5 tests) 48ms
+ ✓ src/inventory/rounding39.test.ts  (6 tests) 49ms
+ ✓ src/shipping/rounding40.test.ts  (7 tests) 50ms
+ ✓ src/auth/batch41.test.ts  (8 tests) 51ms
+ ✓ src/pricing/timeout42.test.ts  (2 tests) 52ms
+ ✓ src/tax/item43.test.ts  (3 tests) 53ms
+ ✓ src/discounts/rounding44.test.ts  (4 tests) 54ms
+ ✓ src/reports/total45.test.ts  (5 tests) 55ms
+ ✓ src/webhooks/rounding46.test.ts  (6 tests) 56ms
+ ✓ src/notifications/token47.test.ts  (7 tests) 57ms
+ ✓ src/cart/rounding48.test.ts  (8 tests) 58ms
+ ✓ src/orders/refund49.test.ts  (2 tests) 59ms
+ ✓ src/refunds/customer50.test.ts  (3 tests) 60ms
+ ✓ src/payments/customer51.test.ts  (4 tests) 61ms
+ ✓ src/invoices/token52.test.ts  (5 tests) 62ms
+ ✓ src/customers/refund53.test.ts  (6 tests) 63ms
+ ✓ src/catalog/batch54.test.ts  (7 tests) 64ms
+ ✓ src/inventory/total55.test.ts  (8 tests) 65ms
+ ✓ src/shipping/currency56.test.ts  (2 tests) 66ms
+ ✓ src/auth/refund57.test.ts  (3 tests) 67ms
+ ✓ src/pricing/customer58.test.ts  (4 tests) 68ms
+ ✓ src/tax/customer59.test.ts  (5 tests) 69ms
+ ✓ src/discounts/total60.test.ts  (6 tests) 70ms
+ ✓ src/reports/invoice61.test.ts  (7 tests) 71ms
+ ✓ src/webhooks/page62.test.ts  (8 tests) 72ms
+ ✓ src/notifications/rounding63.test.ts  (2 tests) 73ms
+ ✓ src/cart/address64.test.ts  (3 tests) 74ms
+ ✓ src/orders/address65.test.ts  (4 tests) 75ms
+ ✓ src/refunds/total66.test.ts  (5 tests) 76ms
+ ✓ src/payments/page67.test.ts  (6 tests) 77ms
+ ✓ src/invoices/payload68.test.ts  (7 tests) 78ms
+ ✓ src/customers/token69.test.ts  (8 tests) 79ms
+ ✓ src/catalog/order70.test.ts  (2 tests) 80ms
+ ✓ src/inventory/page71.test.ts  (3 tests) 81ms
+ ✓ src/shipping/address72.test.ts  (4 tests) 82ms
+ ✓ src/auth/item73.test.ts  (5 tests) 83ms
+ ✓ src/pricing/token74.test.ts  (6 tests) 84ms
+ ✓ src/tax/invoice75.test.ts  (7 tests) 85ms
+ ✓ src/discounts/currency76.test.ts  (8 tests) 86ms
+ ✓ src/reports/batch77.test.ts  (2 tests) 87ms
+ ✓ src/webhooks/batch78.test.ts  (3 tests) 88ms
+ ✓ src/notifications/total79.test.ts  (4 tests) 89ms
+ ❯ src/cart/cart.test.ts  (3 tests | 2 failed) 15ms
+   × Cart > computes total with discount
+     → expected 100 to be 90 // Object.is equality
+   × Cart > computes total with coupon
+     → expected 100 to be 90 // Object.is equality
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/cart/cart.test.ts > Cart > computes total with discount
+ FAIL  src/cart/cart.test.ts > Cart > computes total with coupon
+AssertionError: expected 100 to be 90 // Object.is equality
+
+- Expected
++ Received
+
+- 90
++ 100
+
+ ❯ src/cart/cart.test.ts:14:26
+     12|     const cart = new Cart([{ price: 100 }]);
+     13|     cart.applyDiscount(0.1);
+     14|     expect(cart.total()).toBe(90);
+       |                          ^
+     15|   });
+     16|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+ Test Files  1 failed | 80 passed (81)
+      Tests  2 failed | 498 passed (500)
+   Start at  10:12:01
+   Duration  4.52s (transform 1.20s, setup 0ms, collect 3.40s, tests 2.10s, environment 5ms, prepare 3.10s)
+

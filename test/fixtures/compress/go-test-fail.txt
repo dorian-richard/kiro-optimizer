@@ -1,0 +1,123 @@
+ok  	github.com/acme/shop/internal/cart	(cached)
+ok  	github.com/acme/shop/internal/catalog	(cached)
+ok  	github.com/acme/shop/internal/customer	(cached)
+=== RUN   TestOrderLookup0
+--- PASS: TestOrderLookup0 (0.00s)
+=== RUN   TestOrderLookup1
+--- PASS: TestOrderLookup1 (0.00s)
+=== RUN   TestOrderLookup2
+--- PASS: TestOrderLookup2 (0.00s)
+=== RUN   TestOrderLookup3
+--- PASS: TestOrderLookup3 (0.00s)
+=== RUN   TestOrderLookup4
+--- PASS: TestOrderLookup4 (0.00s)
+=== RUN   TestOrderLookup5
+--- PASS: TestOrderLookup5 (0.00s)
+=== RUN   TestOrderLookup6
+--- PASS: TestOrderLookup6 (0.00s)
+=== RUN   TestOrderLookup7
+--- PASS: TestOrderLookup7 (0.00s)
+=== RUN   TestOrderLookup8
+--- PASS: TestOrderLookup8 (0.00s)
+=== RUN   TestOrderLookup9
+--- PASS: TestOrderLookup9 (0.00s)
+=== RUN   TestOrderLookup10
+--- PASS: TestOrderLookup10 (0.00s)
+=== RUN   TestOrderLookup11
+--- PASS: TestOrderLookup11 (0.00s)
+=== RUN   TestOrderLookup12
+--- PASS: TestOrderLookup12 (0.00s)
+=== RUN   TestOrderLookup13
+--- PASS: TestOrderLookup13 (0.00s)
+=== RUN   TestOrderLookup14
+--- PASS: TestOrderLookup14 (0.00s)
+=== RUN   TestOrderLookup15
+--- PASS: TestOrderLookup15 (0.00s)
+=== RUN   TestOrderLookup16
+--- PASS: TestOrderLookup16 (0.00s)
+=== RUN   TestOrderLookup17
+--- PASS: TestOrderLookup17 (0.00s)
+=== RUN   TestOrderLookup18
+--- PASS: TestOrderLookup18 (0.00s)
+=== RUN   TestOrderLookup19
+--- PASS: TestOrderLookup19 (0.00s)
+=== RUN   TestOrderLookup20
+--- PASS: TestOrderLookup20 (0.00s)
+=== RUN   TestOrderLookup21
+--- PASS: TestOrderLookup21 (0.00s)
+=== RUN   TestOrderLookup22
+--- PASS: TestOrderLookup22 (0.00s)
+=== RUN   TestOrderLookup23
+--- PASS: TestOrderLookup23 (0.00s)
+=== RUN   TestOrderLookup24
+--- PASS: TestOrderLookup24 (0.00s)
+=== RUN   TestOrderLookup25
+--- PASS: TestOrderLookup25 (0.00s)
+=== RUN   TestOrderLookup26
+--- PASS: TestOrderLookup26 (0.00s)
+=== RUN   TestOrderLookup27
+--- PASS: TestOrderLookup27 (0.00s)
+=== RUN   TestOrderLookup28
+--- PASS: TestOrderLookup28 (0.00s)
+=== RUN   TestOrderLookup29
+--- PASS: TestOrderLookup29 (0.00s)
+=== RUN   TestOrderLookup30
+--- PASS: TestOrderLookup30 (0.00s)
+=== RUN   TestOrderLookup31
+--- PASS: TestOrderLookup31 (0.00s)
+=== RUN   TestOrderLookup32
+--- PASS: TestOrderLookup32 (0.00s)
+=== RUN   TestOrderLookup33
+--- PASS: TestOrderLookup33 (0.00s)
+=== RUN   TestOrderLookup34
+--- PASS: TestOrderLookup34 (0.00s)
+=== RUN   TestOrderLookup35
+--- PASS: TestOrderLookup35 (0.00s)
+=== RUN   TestOrderLookup36
+--- PASS: TestOrderLookup36 (0.00s)
+=== RUN   TestOrderLookup37
+--- PASS: TestOrderLookup37 (0.00s)
+=== RUN   TestOrderLookup38
+--- PASS: TestOrderLookup38 (0.00s)
+=== RUN   TestOrderLookup39
+--- PASS: TestOrderLookup39 (0.00s)
+=== RUN   TestRefundPartial
+    refund_test.go:42: compute refund: got 60.00, want 70.00
+--- FAIL: TestRefundPartial (0.00s)
+=== RUN   TestRefundTable
+=== RUN   TestRefundTable/zero_amount
+=== RUN   TestRefundTable/negative_amount
+    refund_test.go:88: expected ErrInvalidAmount, got <nil>
+=== RUN   TestRefundTable/full_amount
+--- FAIL: TestRefundTable (0.00s)
+    --- PASS: TestRefundTable/zero_amount (0.00s)
+    --- FAIL: TestRefundTable/negative_amount (0.00s)
+    --- PASS: TestRefundTable/full_amount (0.00s)
+=== RUN   TestCreateOrder
+--- FAIL: TestCreateOrder (0.00s)
+panic: runtime error: invalid memory address or nil pointer dereference [recovered]
+	panic: runtime error: invalid memory address or nil pointer dereference
+[signal SIGSEGV: segmentation violation code=0x1 addr=0x0 pc=0x5f3a1c]
+
+goroutine 7 [running]:
+testing.tRunner.func1.2({0x6a1b20, 0x8e5c40})
+	/usr/local/go/src/testing/testing.go:1631 +0x24a
+testing.tRunner.func1()
+	/usr/local/go/src/testing/testing.go:1634 +0x377
+panic({0x6a1b20?, 0x8e5c40?})
+	/usr/local/go/src/runtime/panic.go:770 +0x132
+github.com/acme/shop/internal/order.(*Service).Create(0x0, {0xc0000a6000, 0x2, 0x2})
+	/home/dev/shop/internal/order/service.go:57 +0x1c
+github.com/acme/shop/internal/order.TestCreateOrder(0xc000103520)
+	/home/dev/shop/internal/order/service_test.go:30 +0x45
+testing.tRunner(0xc000103520, 0x6f1e88)
+	/usr/local/go/src/testing/testing.go:1689 +0xfb
+created by testing.(*T).Run in goroutine 1
+	/usr/local/go/src/testing/testing.go:1742 +0x390
+FAIL	github.com/acme/shop/internal/order	0.015s
+# github.com/acme/shop/internal/invoice [github.com/acme/shop/internal/invoice.test]
+internal/invoice/pdf.go:42:17: undefined: renderTotal
+internal/invoice/pdf.go:57:9: cannot use req.Quantity (variable of type string) as int value in assignment
+FAIL	github.com/acme/shop/internal/invoice [build failed]
+ok  	github.com/acme/shop/internal/pricing	0.104s
+FAIL

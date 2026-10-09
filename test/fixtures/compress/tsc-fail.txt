@@ -1,0 +1,90 @@
+src/cart/cart.ts(22,23): error TS2339: Property 'reduce' does not exist on type 'CartItems'.
+src/orders/orderService.ts(57,9): error TS2322: Type 'string' is not assignable to type 'number'.
+src/orders/orderService.ts(88,5): error TS2345: Argument of type '{ id: string; }' is not assignable to parameter of type 'Order'.
+  Type '{ id: string; }' is missing the following properties from type 'Order': total, items, customer
+src/generated/api/model0.ts(3,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model1.ts(4,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model2.ts(5,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model3.ts(6,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model4.ts(7,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model5.ts(8,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model6.ts(9,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model7.ts(10,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model8.ts(11,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model9.ts(12,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model10.ts(13,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model11.ts(14,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model12.ts(15,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model13.ts(16,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model14.ts(17,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model15.ts(18,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model16.ts(19,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model17.ts(20,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model18.ts(21,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model19.ts(22,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model20.ts(23,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model21.ts(24,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model22.ts(25,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model23.ts(26,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model24.ts(27,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model25.ts(28,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model26.ts(29,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model27.ts(30,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model28.ts(31,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model29.ts(32,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model30.ts(33,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model31.ts(34,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model32.ts(35,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model33.ts(36,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model34.ts(37,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model35.ts(38,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model36.ts(39,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model37.ts(40,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model38.ts(41,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model39.ts(42,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model40.ts(43,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model41.ts(44,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model42.ts(45,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model43.ts(46,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model44.ts(47,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model45.ts(48,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model46.ts(49,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model47.ts(50,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model48.ts(51,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model49.ts(52,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model50.ts(53,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model51.ts(54,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model52.ts(55,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model53.ts(56,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model54.ts(57,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model55.ts(58,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model56.ts(59,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model57.ts(60,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model58.ts(61,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/generated/api/model59.ts(62,14): error TS2307: Cannot find module '@acme/contracts' or its corresponding type declarations.
+src/api/client.ts(100,7): error TS7006: Parameter 'res' implicitly has an 'any' type.
+src/api/client.ts(103,8): error TS7006: Parameter 'res' implicitly has an 'any' type.
+src/api/client.ts(106,9): error TS7006: Parameter 'res' implicitly has an 'any' type.
+src/api/client.ts(109,10): error TS7006: Parameter 'res' implicitly has an 'any' type.
+src/api/client.ts(112,7): error TS7006: Parameter 'res' implicitly has an 'any' type.
+src/api/client.ts(115,8): error TS7006: Parameter 'res' implicitly has an 'any' type.
+src/api/client.ts(118,9): error TS7006: Parameter 'res' implicitly has an 'any' type.
+src/api/client.ts(121,10): error TS7006: Parameter 'res' implicitly has an 'any' type.
+src/api/client.ts(124,7): error TS7006: Parameter 'res' implicitly has an 'any' type.
+src/api/client.ts(127,8): error TS7006: Parameter 'res' implicitly has an 'any' type.
+src/api/client.ts(130,9): error TS7006: Parameter 'res' implicitly has an 'any' type.
+src/api/client.ts(133,10): error TS7006: Parameter 'res' implicitly has an 'any' type.
+src/api/client.ts(136,7): error TS7006: Parameter 'res' implicitly has an 'any' type.
+src/api/client.ts(139,8): error TS7006: Parameter 'res' implicitly has an 'any' type.
+src/api/client.ts(142,9): error TS7006: Parameter 'res' implicitly has an 'any' type.
+src/api/client.ts(145,10): error TS7006: Parameter 'res' implicitly has an 'any' type.
+src/api/client.ts(148,7): error TS7006: Parameter 'res' implicitly has an 'any' type.
+src/api/client.ts(151,8): error TS7006: Parameter 'res' implicitly has an 'any' type.
+src/api/client.ts(154,9): error TS7006: Parameter 'res' implicitly has an 'any' type.
+src/api/client.ts(157,10): error TS7006: Parameter 'res' implicitly has an 'any' type.
+src/api/client.ts(160,7): error TS7006: Parameter 'res' implicitly has an 'any' type.
+src/api/client.ts(163,8): error TS7006: Parameter 'res' implicitly has an 'any' type.
+src/api/client.ts(166,9): error TS7006: Parameter 'res' implicitly has an 'any' type.
+src/api/client.ts(169,10): error TS7006: Parameter 'res' implicitly has an 'any' type.
+src/api/client.ts(172,7): error TS7006: Parameter 'res' implicitly has an 'any' type.
+src/refunds/policy.ts(14,3): error TS2741: Property 'rate' is missing in type '{ name: string; }' but required in type 'FeePolicy'.

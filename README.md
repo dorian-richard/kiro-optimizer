@@ -1,5 +1,7 @@
 # kiro-optimizer (`kopt`)
 
+[![CI](https://github.com/dorian-richard/kiro-optimizer/actions/workflows/ci.yml/badge.svg)](https://github.com/dorian-richard/kiro-optimizer/actions/workflows/ci.yml)
+
 Token optimizer for [Kiro](https://kiro.dev). It cuts both input and output tokens on large codebases. It does
 not proxy Kiro's LLM traffic, because Kiro does not allow that.
 
@@ -61,15 +63,23 @@ against the Kiro documentation.
 
 See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) and [docs/CONTRACTS.md](docs/CONTRACTS.md).
 
-## Quick start (v0.1 target)
+## Install (one command)
+
+You need [Node.js 22.13+](https://nodejs.org) and git. On Linux, macOS or Windows, run once:
 
 ```bash
-nvm use 22            # Node >= 22.13
-npm install && npm run build
-npx kopt index        # index the current repository into .kopt/index.db
-npx kopt init         # configure Kiro: mcp.json, steering, hooks, explorer agent, .kiroignore
-npx kopt stats        # tokens returned, measured savings, governor blocks
+npx -y github:dorian-richard/kiro-optimizer setup
 ```
+
+Then restart Kiro. kopt now starts by itself in every project you open in Kiro IDE or Kiro CLI. Each project is
+indexed in the background on first use, and the index is kept in your user cache folder, outside your repositories.
+
+- Check it at any time: `kopt doctor`
+- See what it saves: `kopt stats`
+- Remove it: `kopt uninstall`
+
+Per-project installs, team (centralized) mode, the files written per OS and troubleshooting:
+[docs/INSTALL.md](docs/INSTALL.md).
 
 ## Measurement
 

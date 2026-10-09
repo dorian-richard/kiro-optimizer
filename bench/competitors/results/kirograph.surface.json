@@ -1,0 +1,276 @@
+{
+  "serverInfo": {
+    "name": "kirograph",
+    "version": "0.1.0"
+  },
+  "startupMs": 586,
+  "toolCount": 7,
+  "toolNames": [
+    "kirograph_search",
+    "kirograph_context",
+    "kirograph_node",
+    "kirograph_gain",
+    "kirograph_read",
+    "kirograph_retrieve",
+    "kirograph_budget"
+  ],
+  "toolsChars": 4418,
+  "toolsEstTokens": 1473,
+  "instructionsChars": 0,
+  "instructionsEstTokens": 0,
+  "primaryToolListed": true,
+  "tools": [
+    {
+      "name": "kirograph_search",
+      "description": "Quick symbol search by name. Returns locations only (no code). Use kirograph_context for comprehensive task context.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Symbol name or partial name (e.g., \"auth\", \"signIn\", \"UserService\")"
+          },
+          "mode": {
+            "type": "string",
+            "description": "Search mode: \"name\" (default, FTS prefix match) or \"similar\" (fuzzy substring match, broader results)",
+            "enum": [
+              "name",
+              "similar"
+            ],
+            "default": "name"
+          },
+          "kind": {
+            "type": "string",
+            "description": "Filter by node kind",
+            "enum": [
+              "function",
+              "method",
+              "class",
+              "interface",
+              "type_alias",
+              "variable",
+              "route",
+              "component"
+            ]
+          },
+          "limit": {
+            "type": "number",
+            "description": "Max results 1-100 (default: 10)",
+            "default": 10
+          },
+          "projectPath": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "kirograph_context",
+      "description": "Build comprehensive context for a task or feature request.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "task": {
+            "type": "string",
+            "description": "Task description or feature name"
+          },
+          "maxNodes": {
+            "type": "number",
+            "description": "Max symbols to include",
+            "default": 20
+          },
+          "includeCode": {
+            "type": "boolean",
+            "description": "Include code snippets. Deprecated — prefer detail.",
+            "default": true
+          },
+          "detail": {
+            "type": "string",
+            "description": "Code verbosity: full, signatures, or summary",
+            "enum": [
+              "full",
+              "signatures",
+              "summary"
+            ],
+            "default": "full"
+          },
+          "projectPath": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "task"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "kirograph_node",
+      "description": "Get details about a specific symbol.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "description": "Symbol name or fully-qualified name to look up"
+          },
+          "qualified": {
+            "type": "boolean",
+            "description": "When true, treat symbol as a fully-qualified name (exact match, bypasses FTS — use when you have the exact qualifiedName from a previous result)",
+            "default": false
+          },
+          "includeCode": {
+            "type": "boolean",
+            "description": "Include full source code. Deprecated — prefer detail.",
+            "default": false
+          },
+          "detail": {
+            "type": "string",
+            "description": "Output level: summary, signatures, or full",
+            "enum": [
+              "summary",
+              "signatures",
+              "full"
+            ],
+            "default": "summary"
+          },
+          "projectPath": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "symbol"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "kirograph_gain",
+      "description": "Show token savings from graph tools and shell compression.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "type": "string",
+            "description": "Time window: session, hour, day, week, all",
+            "enum": [
+              "session",
+              "today",
+              "week",
+              "all"
+            ],
+            "default": "session"
+          },
+          "projectPath": {
+            "type": "string"
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "kirograph_read",
+      "description": "Read a file with caching; unchanged files return cache marker.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "File path to read (absolute or relative to project root)"
+          },
+          "mode": {
+            "type": "string",
+            "description": "Read mode: \"full\" (default), \"map\" (structure overview), \"signatures\" (function signatures), \"diff\" (changes since last read), \"lines\" (line range), \"imports\", \"exports\"",
+            "enum": [
+              "full",
+              "map",
+              "signatures",
+              "diff",
+              "lines",
+              "imports",
+              "exports"
+            ],
+            "default": "full"
+          },
+          "start": {
+            "type": "number",
+            "description": "Start line (for lines mode)"
+          },
+          "end": {
+            "type": "number",
+            "description": "End line (for lines mode)"
+          },
+          "noCache": {
+            "type": "boolean",
+            "description": "Force fresh read, bypass cache",
+            "default": false
+          },
+          "projectPath": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "path"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "kirograph_retrieve",
+      "description": "Retrieve cached file content by path (CCR — Cached Content Retrieval). Returns the full content stored in the session cache, or reads and caches the file if not yet seen. Use after kirograph_read returns a \"[cached: file unchanged]\" marker to get the actual content without a redundant filesystem read.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "File path to retrieve (absolute or relative to project root)"
+          },
+          "projectPath": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "path"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "kirograph_budget",
+      "description": "Show session context budget: tokens used, remaining, utilization.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "reset": {
+            "type": "boolean",
+            "description": "Reset session budget counters",
+            "default": false
+          },
+          "projectPath": {
+            "type": "string"
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true
+      }
+    }
+  ],
+  "instructions": ""
+}

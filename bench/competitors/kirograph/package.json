@@ -1,0 +1,9 @@
+{
+  "name": "bench-kirograph-image",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Pins KiroGraph for the sandboxed competitor benchmark (installed inside Docker only).",
+  "dependencies": {
+    "kirograph": "1.4.0"
+  }
+}

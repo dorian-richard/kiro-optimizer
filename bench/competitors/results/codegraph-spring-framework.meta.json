@@ -1,0 +1,91 @@
+{
+  "label": "codegraph",
+  "tool": "codegraph",
+  "package": "@colbymchenry/codegraph",
+  "version": "1.6.2",
+  "mode": "default",
+  "repo": {
+    "name": "spring-framework",
+    "url": "https://github.com/spring-projects/spring-framework.git",
+    "tag": "v7.0.9",
+    "commit": "82a6b40b9366ec181ededdad282b307ee5381a52",
+    "language": "java",
+    "path": "bench/repos/spring-framework"
+  },
+  "headCommit": "82a6b40b9366ec181ededdad282b307ee5381a52",
+  "commitMatchesTasks": true,
+  "date": "2026-10-09T11:15:12.493Z",
+  "container": {
+    "node": "v22.23.3",
+    "arch": "arm64",
+    "platform": "linux",
+    "cpus": 10,
+    "memBytes": 8214851584,
+    "network": "none"
+  },
+  "primaryTool": "codegraph_explore",
+  "toolArgsExample": {
+    "query": "<input>"
+  },
+  "serverCommand": {
+    "command": "codegraph",
+    "args": [
+      "serve",
+      "--mcp"
+    ]
+  },
+  "oneSessionPerTask": true,
+  "indexOk": true,
+  "indexMs": 138515,
+  "indexSteps": [
+    {
+      "command": "codegraph init --yes /work/spring-framework",
+      "ms": 138515,
+      "exit": 0,
+      "signal": null
+    }
+  ],
+  "copyMs": 741,
+  "indexDirs": [
+    "<repo>/.codegraph"
+  ],
+  "indexSizeBytes": 863383781,
+  "modelBytes": 0,
+  "indexStatus": "CodeGraph Status\n\nProject: /work/spring-framework\n\nIndex Statistics:\n  Files:     10,387\n  Nodes:     250,218\n  Edges:     620,125\n  DB Size:   823.39 MB\n  Backend:   node:sqlite — built-in (full WAL)\n  Journal:   wal\n\nNodes by Kind:\n  method          94,169\n  import          90,339\n  field           19,179\n  class           17,198\n  file            10,266\n  namespace       9,558\n  constant        4,879\n  interface       2,751\n  enum_member     851\n  route           750\n  enum            185\n  function        90\n  variable        3\n\nFiles by Language:\n  java            9,170\n  xml             694\n  kotlin          388\n  properties      89\n  yaml            32\n  javascript      10\n  python          2\n  ruby            2\n\n✓ Index is up to date",
+  "surface": {
+    "serverInfo": {
+      "name": "codegraph",
+      "version": "1.6.2"
+    },
+    "toolCount": 1,
+    "toolNames": [
+      "codegraph_explore"
+    ],
+    "toolsChars": 1725,
+    "toolsEstTokens": 575,
+    "instructionsChars": 6718,
+    "instructionsEstTokens": 2240,
+    "primaryToolListed": true,
+    "file": "codegraph.surface.json"
+  },
+  "inputs": {
+    "search": {
+      "file": "codegraph-spring-framework.jsonl",
+      "tasks": 15,
+      "failures": 0,
+      "queryMsMedian": 866,
+      "queryMsP90": 1469,
+      "startupMsMedian": 161
+    },
+    "question": {
+      "file": "codegraph-spring-framework-question.jsonl",
+      "tasks": 15,
+      "failures": 0,
+      "queryMsMedian": 1686,
+      "queryMsP90": 3968,
+      "startupMsMedian": 179
+    }
+  },
+  "charsPerToken": 3,
+  "errors": []
+}

@@ -1,0 +1,213 @@
+{
+  "serverInfo": {
+    "name": "kopt",
+    "version": "0.1.0"
+  },
+  "startupMs": 255,
+  "toolCount": 6,
+  "toolNames": [
+    "kopt_find",
+    "kopt_read",
+    "kopt_outline",
+    "kopt_refs",
+    "kopt_run",
+    "kopt_expand"
+  ],
+  "toolsChars": 2809,
+  "toolsEstTokens": 937,
+  "instructionsChars": 374,
+  "instructionsEstTokens": 125,
+  "primaryToolListed": true,
+  "tools": [
+    {
+      "name": "kopt_find",
+      "description": "Search code by identifiers or plain words (case- and camelCase-insensitive). Use before grep or opening files. Returns ranked path:lines + #handles. mode \"pack\" adds the best bodies (task context in one call). path: prefix/glob; kinds: e.g. [\"class\",\"function\"].",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "hits",
+              "pack"
+            ]
+          },
+          "kinds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "path": {
+            "type": "string"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "maxTokens": {
+            "type": "integer"
+          },
+          "fresh": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "query"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "kopt_read",
+      "description": "Read exact code by #handle, Class.method, path or path:start-end. mode: body (default), skeleton (signatures only; big files/classes), card (~60 tok). Use instead of whole-file reads. Already-shown code returns 'unchanged' (fresh:true resends).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "target": {
+            "type": "string"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "body",
+              "skeleton",
+              "card"
+            ]
+          },
+          "maxTokens": {
+            "type": "integer"
+          },
+          "fresh": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "target"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "kopt_outline",
+      "description": "Structure map with #handles of the repo (no path), a directory or a file (much cheaper than reading it). focus: task words ranked first.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "focus": {
+            "type": "string"
+          },
+          "maxTokens": {
+            "type": "integer"
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "kopt_refs",
+      "description": "Callers/usages (direction in, default), callees (out) or both of a #handle or Class.method. depth 2 = transitive impact.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "target": {
+            "type": "string"
+          },
+          "direction": {
+            "type": "string",
+            "enum": [
+              "in",
+              "out",
+              "both"
+            ]
+          },
+          "depth": {
+            "type": "number",
+            "enum": [
+              1,
+              2
+            ]
+          },
+          "maxTokens": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "target"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "kopt_run",
+      "description": "Run a shell command (tests, build, lint) in the repo; returns only failures, errors and summary. Use instead of the shell for verbose commands. An identical re-run with no file change returns the cached verdict (fresh:true forces). Full log: kopt_expand.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "command": {
+            "type": "string"
+          },
+          "cwd": {
+            "type": "string"
+          },
+          "timeoutSec": {
+            "type": "integer"
+          },
+          "maxTokens": {
+            "type": "integer"
+          },
+          "fresh": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "command"
+        ]
+      }
+    },
+    {
+      "name": "kopt_expand",
+      "description": "More of a kopt_run log by handle: grep (regex, with context) or startLine/endLine.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "handle": {
+            "type": "string"
+          },
+          "grep": {
+            "type": "string"
+          },
+          "startLine": {
+            "type": "integer"
+          },
+          "endLine": {
+            "type": "integer"
+          },
+          "maxTokens": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "handle"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true
+      }
+    }
+  ],
+  "instructions": "kopt = budgeted code index, the cheapest way to get context. Flow: kopt_find (search) -> kopt_read #handle (exact code; skeleton for big files) / kopt_refs (callers) / kopt_outline (structure).\nPrefer these over grep, directory listings and whole-file reads. Reuse #handles; shown code is not re-sent.\nRun tests/builds via kopt_run (compact output); re-run only after edits."
+}

@@ -8,10 +8,30 @@ Never write to stdout from library code (stdout is the MCP stdio channel); log t
 Shared, already written (do not change signatures without coordination):
 - `src/core/types.ts` – domain types (`ExtractedFile`, `ToolResult`, `TelemetryEvent`...).
 - `src/core/api.ts` – parameter shapes of the 6 tools.
-- `src/core/config.ts` – `KoptConfig`, `loadConfig(root)`, `indexPath(cfg)`.
+- `src/core/config.ts` – `KoptConfig`, `loadConfig(root)`, `indexPath(cfg)`, plus the location helpers below.
 - `src/core/tokens.ts` – `estimateTokens`, `truncateLines`, `truncateMiddle`, `packSections`.
 - `src/core/context.ts` – `Ledger` (dedup), `ToolContext`, `newToolContext`.
 - `src/store/schema.ts`, `src/store/store.ts` – SQLite schema + `Store` (open, prepare, transaction, meta, readText, `symbolHandle`/`parseSymbolHandle`).
+
+### Where kopt keeps its data (`src/core/config.ts`)
+```ts
+/** Parent of every per-repo data dir: macOS ~/Library/Caches/kopt, Linux $XDG_CACHE_HOME/kopt (~/.cache/kopt),
+ *  Windows %LOCALAPPDATA%\kopt. KOPT_CACHE_DIR overrides it. */
+export function cacheRoot(o?: PlatformEnv): string;
+/** `<basename>-<sha1(realpath)[:8]>` (case-folded on Windows): the per-repo folder name under cacheRoot(). */
+export function repoCacheKey(root: string, platform?: NodeJS.Platform): string;
+/** KOPT_DATA_DIR, else <root>/.kopt when that folder already exists (per-project mode), else cacheRoot()/<key>. */
+export function defaultDataDir(root: string): string;
+/** Per-user dir (telemetry, governor sessions, install state): KOPT_HOME, else ~/.kopt. */
+export function userDirFor(o?: PlatformEnv): string;
+/** Nearest ancestor with .git (or a per-project .kopt/index.db), never climbing into HOME. */
+export function findProjectRoot(start: string, home?: string): string;
+/** HOME or a filesystem root: never indexed, never written to. */
+export function isUnsafeRoot(root: string, home?: string): boolean;
+export function usesProjectDataDir(cfg: Pick<KoptConfig, 'root' | 'dataDir'>): boolean;
+```
+Nothing is written into a repository by default: the index (`index.db`) and the `kopt_run` logs live in
+`defaultDataDir(root)`. A config file's `dataDir` and `KOPT_DATA_DIR` still win.
 
 ## Output conventions (everything that reaches the model)
 
@@ -102,7 +122,10 @@ with `full output: kopt_expand <handle>` when something was elided.
 
 ### hooks + telemetry — `src/hooks/`, `src/telemetry/`
 ```ts
-// src/hooks/index.ts
+// src/hooks/index.ts – entry point `kopt hook [event] [--source <name>] [--legacy]`
+//   event:    used when the payload has no hook_event_name (CLI 2.x agent hooks, IDE 0.x legacy hooks)
+//   --source: global | workspace | agent | legacy; the same event from two sources within 2 s is handled once
+//   --legacy: Kiro IDE 0.x `.kiro.hook` runCommand (no stdin; data in env USER_PROMPT)
 export interface HookEvent { hook_event_name: string; session_id?: string; cwd?: string; tool_name?: string;
   tool_input?: any; tool_response?: any; prompt?: string; [k: string]: unknown }
 export interface HookOutcome { exitCode: 0 | 2; stdout?: string; stderr?: string }
@@ -113,16 +136,58 @@ export async function ship(config: KoptConfig): Promise<{ sent: number; failed: 
 export function stats(config: KoptConfig, opts?: { days?: number }): string;     // human report
 export function collectKiroCredits(config: KoptConfig): TelemetryEvent[];        // ~/.kiro/sessions/cli/*.json
 ```
+Event names accepted (normalized): IDE 1.x / CLI V3 v1 hook files (PascalCase `PreToolUse`…), CLI 2.x agent hooks
+(only `agentSpawn`, `userPromptSubmit`, `preToolUse`, `postToolUse`, `stop`: the triggers `kiro-cli agent validate`
+2.28 accepts), IDE 0.x legacy hooks (`promptSubmit` only is installed, see below). Tool names of all four surfaces
+are normalized (`read_file`/`read_code`/`read`/`fs_read`, `execute_bash`/`shell`, …). The allow path is a silent
+exit 0 on every surface.
 
 ### kiro integration — `src/kiro/`, `templates/`
 ```ts
 // src/kiro/index.ts
+// Per-project install (`kopt init`; `--user` = the user-level files without the npm step)
 export interface InstallOptions { root: string; mode: 'local' | 'remote'; remoteUrl?: string;
-  scope: 'workspace' | 'user'; explorerModel?: string; dryRun?: boolean; force?: boolean }
+  scope: 'workspace' | 'user'; explorerModel?: string; dryRun?: boolean; force?: boolean;
+  clientId?: string; oauthPort?: number /* default 33418 -> http://localhost:33418/oauth/callback */; oauthScopes?: string[] }
 export async function installKiro(o: InstallOptions): Promise<{ written: string[]; skipped: string[]; notes: string[] }>;
 export async function suggestKiroignore(root: string): Promise<{ patterns: string[]; reasons: Record<string, string> }>;
+// User-level, zero-config install (`kopt setup`): global npm install from the npx copy (packed, then
+// `npm install -g <tarball>`), then ~/.kiro/settings/mcp.json (`kopt mcp`, no --root), ~/.kiro/hooks/kopt.json
+// (IDE 1.x, CLI V3), ~/.kiro/agents/kopt.json + chat.defaultAgent (CLI 2.x), global steering and kiroignore,
+// kiroAgent.agentIgnoreFiles in the IDE user settings. Idempotent; records what it wrote in ~/.kopt.
+export async function setupUser(o?: SetupOptions): Promise<SetupResult>;
+export function globalInstall(o?: { want?: boolean; spec?: string; npm?: NpmRunner; pkgRoot?: string; dryRun?: boolean }): GlobalInstall;
+export async function uninstallKiro(o?: UninstallOptions): Promise<InstallResult>;   // `kopt uninstall`
+export async function runDoctor(o?: DoctorOptions): Promise<DoctorReport>;           // `kopt doctor`
+export function detectSurfaces(h?: HostEnv, o?: { surface?: SurfaceChoice }): Surfaces; // IDE: resources/app/package.json; CLI: kiro-cli --version
+export function resolveKoptCommand(o?: ResolveOptions): KoptCommand;  // `kopt` shim, else node + absolute bin.js
+// IDE 0.x has no global hooks: the MCP server writes <workspace>/.kiro/hooks/kopt-prompt.kiro.hook (promptSubmit
+// only; tool-call hooks would cost a model turn per call there) and lists it in .git/info/exclude.
+export function ensureLegacyWorkspaceHooks(root: string, config: KoptConfig, o?: { cmd?: KoptCommand; h?: HostEnv }): LegacyResult;
 ```
 
 ### mcp + cli — `src/mcp/`, `src/cli.ts`
 Tools: `kopt_find`, `kopt_read`, `kopt_outline`, `kopt_refs`, `kopt_run`, `kopt_expand`. Descriptions short
 (< 350 chars each), server `instructions` < 600 chars. stdio and Streamable HTTP (multi-repo, OAuth bearer JWT).
+
+```ts
+// src/mcp/server.ts
+export interface RepoHandle {
+  readonly name: string;
+  readonly config: KoptConfig;
+  acquire(): Promise<Store | string>;
+  /** Optional: wait until the repo is known (a user-level stdio server learns its root after `initialize`, from the
+   *  client's MCP roots, else KOPT_ROOT, else the git root of its cwd), then return a one-line message when no tool
+   *  can run (no project folder open: HOME or `/`), else undefined. */
+  prepare?(): Promise<string | undefined>;
+}
+```
+`kopt mcp` without `--root` resolves the root as above and starts the first index build in a worker thread as soon
+as the root is known. The package's bin is `dist/bin.js`, which drops Node's SQLite ExperimentalWarning and
+refuses Node < 22.13 (a hook then exits 0 silently) before loading `cli.js`.
+
+HTTP server (`kopt serve`) options added for the AWS stack:
+- `--auth-telemetry-scopes <list>` (env `KOPT_AUTH_TELEMETRY_SCOPES`): scopes required on `/telemetry` instead of
+  `--auth-scopes`, so a telemetry-only token cannot query code. Unset: `--auth-scopes` applies to every route.
+- env `KOPT_EMF_REPO_DIMENSION=1`: also emit the `[Repo]` EMF dimension set (one metric series per repo and
+  metric). Default off; `Repo` always stays a log property for Logs Insights.

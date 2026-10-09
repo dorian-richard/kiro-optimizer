@@ -1,0 +1,257 @@
+{
+  "repo": {
+    "name": "django",
+    "url": "https://github.com/django/django.git",
+    "tag": "6.1.2",
+    "commit": "2212534bae393714e1e51db2341d4fd5545e19f6",
+    "language": "python",
+    "path": "bench/repos/django"
+  },
+  "notes": "Gold = non-test code only. `search` is the phrase an agent would derive from the question (English, no identifier the developer did not give). Line numbers are definition lines at the pinned commit; re-check with `kopt bench django --verify`.",
+  "tasks": [
+    {
+      "id": "dj-locate-db-cache-cull",
+      "kind": "locate",
+      "lang": "en",
+      "question": "Our cache table keeps growing. Where does the database cache backend delete expired or excess entries when it reaches MAX_ENTRIES?",
+      "search": "database cache backend delete expired entries max entries cull",
+      "gold": {
+        "files": ["django/core/cache/backends/db.py", "django/db/backends/base/operations.py"],
+        "symbols": [
+          { "name": "_cull", "file": "django/core/cache/backends/db.py", "line": 258, "kind": "method" },
+          { "name": "_base_set", "file": "django/core/cache/backends/db.py", "line": 113, "kind": "method" },
+          { "name": "cache_key_culling_sql", "file": "django/db/backends/base/operations.py", "line": 104, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read db.py@6.1.2: DatabaseCache._base_set calls self._cull(db, cursor, now, num) at line 132 when num > _max_entries; _cull deletes expired rows then uses connection.ops.cache_key_culling_sql() (defined in base/operations.py:104, overridden for Oracle)."
+    },
+    {
+      "id": "dj-locate-accept-language",
+      "kind": "locate",
+      "lang": "en",
+      "question": "Where is the user's language determined from the browser's Accept-Language header?",
+      "search": "language from request Accept-Language header",
+      "gold": {
+        "files": ["django/utils/translation/trans_real.py"],
+        "symbols": [
+          { "name": "get_language_from_request", "file": "django/utils/translation/trans_real.py", "line": 572, "kind": "function" },
+          { "name": "parse_accept_lang_header", "file": "django/utils/translation/trans_real.py", "line": 644, "kind": "function" }
+        ]
+      },
+      "verifiedBy": "Read trans_real.py@6.1.2: get_language_from_request checks path, then LANGUAGE_COOKIE_NAME cookie, then iterates parse_accept_lang_header(request.META['HTTP_ACCEPT_LANGUAGE']) through get_supported_language_variant. django/utils/translation/__init__.py only delegates."
+    },
+    {
+      "id": "dj-locate-test-shuffle",
+      "kind": "locate",
+      "lang": "en",
+      "question": "Where is the test-order shuffling used by `manage.py test --shuffle` implemented? I need to know how the order stays reproducible for a seed.",
+      "search": "test runner shuffle seed order",
+      "gold": {
+        "files": ["django/test/runner.py"],
+        "symbols": [
+          { "name": "Shuffler", "file": "django/test/runner.py", "line": 639, "kind": "class" },
+          { "name": "shuffle", "file": "django/test/runner.py", "line": 676, "kind": "method" },
+          { "name": "shuffle_tests", "file": "django/test/runner.py", "line": 1193, "kind": "function" }
+        ]
+      },
+      "verifiedBy": "Read runner.py@6.1.2: Shuffler hashes seed+key with md5 (_hash_item/_hash_text) and Shuffler.shuffle sorts by hash; shuffle_tests groups by class and calls shuffler.shuffle; DiscoverRunner.setup_shuffler builds the Shuffler from --shuffle."
+    },
+    {
+      "id": "dj-locate-session-vary-cookie",
+      "kind": "locate",
+      "lang": "en",
+      "question": "Where does Django add the Vary: Cookie header to the response when the session was read during the request?",
+      "search": "session middleware vary cookie header accessed",
+      "gold": {
+        "files": ["django/contrib/sessions/middleware.py", "django/utils/cache.py"],
+        "symbols": [
+          { "name": "SessionMiddleware", "file": "django/contrib/sessions/middleware.py", "line": 12, "kind": "class" },
+          { "name": "process_response", "file": "django/contrib/sessions/middleware.py", "line": 22, "kind": "method" },
+          { "name": "patch_vary_headers", "file": "django/utils/cache.py", "line": 303, "kind": "function" }
+        ]
+      },
+      "verifiedBy": "Read sessions/middleware.py@6.1.2: process_response sets need_vary_cookie = request.session.accessed and calls patch_vary_headers(response, ('Cookie',)) at line 81; patch_vary_headers defined in utils/cache.py:303."
+    },
+    {
+      "id": "dj-explain-migration-optimizer",
+      "kind": "explain",
+      "lang": "en",
+      "question": "How does Django merge a sequence of migration operations into fewer ones (e.g. CreateModel followed by AddField) when squashing? Explain the algorithm.",
+      "search": "migration optimizer merge operations reduce",
+      "gold": {
+        "files": ["django/db/migrations/optimizer.py", "django/db/migrations/operations/base.py"],
+        "symbols": [
+          { "name": "MigrationOptimizer", "file": "django/db/migrations/optimizer.py", "line": 1, "kind": "class" },
+          { "name": "optimize", "file": "django/db/migrations/optimizer.py", "line": 12, "kind": "method" },
+          { "name": "optimize_inner", "file": "django/db/migrations/optimizer.py", "line": 40, "kind": "method" },
+          { "name": "reduce", "file": "django/db/migrations/operations/base.py", "line": 160, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read optimizer.py@6.1.2: optimize() loops optimize_inner() until a fixed point; optimize_inner compares each operation with later ones via operation.reduce(other, app_label), honoring 'right'/'left' reductions; Operation.reduce base contract in operations/base.py:160, overridden in operations/models.py and fields.py."
+    },
+    {
+      "id": "dj-explain-template-lookup",
+      "kind": "explain",
+      "lang": "en",
+      "question": "In the template engine, how does `Variable._resolve_lookup` resolve something like {{ user.profile.0 }}? Which lookups does it try and in what order?",
+      "search": "Variable _resolve_lookup template variable lookup",
+      "gold": {
+        "files": ["django/template/base.py"],
+        "symbols": [
+          { "name": "Variable", "file": "django/template/base.py", "line": 866, "kind": "class" },
+          { "name": "_resolve_lookup", "file": "django/template/base.py", "line": 964, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read template/base.py@6.1.2: Variable._resolve_lookup tries dictionary lookup current[bit], then getattr, then list-index int(bit), calls callables unless do_not_call_in_templates/alters_data; Variable.resolve (940) delegates to it."
+    },
+    {
+      "id": "dj-explain-password-upgrade",
+      "kind": "explain",
+      "lang": "en",
+      "question": "How does Django check a password and decide that it must be re-hashed (algorithm change or a different number of iterations)?",
+      "search": "check password hasher must update iterations rehash",
+      "gold": {
+        "files": ["django/contrib/auth/hashers.py"],
+        "symbols": [
+          { "name": "check_password", "file": "django/contrib/auth/hashers.py", "line": 75, "kind": "function" },
+          { "name": "verify_password", "file": "django/contrib/auth/hashers.py", "line": 39, "kind": "function" },
+          { "name": "identify_hasher", "file": "django/contrib/auth/hashers.py", "line": 172, "kind": "function" },
+          { "name": "must_update", "file": "django/contrib/auth/hashers.py", "line": 361, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read hashers.py@6.1.2: check_password calls verify_password, which identify_hasher(encoded), computes must_update = algorithm changed or preferred.must_update(encoded) (PBKDF2PasswordHasher.must_update at 361 compares iterations and salt entropy), and calls setter when correct and must_update."
+    },
+    {
+      "id": "dj-explain-autoreload-stat",
+      "kind": "explain",
+      "lang": "en",
+      "question": "How does the runserver autoreloader detect code changes when Watchman is not installed?",
+      "search": "autoreload reloader detect file changes without watchman",
+      "gold": {
+        "files": ["django/utils/autoreload.py"],
+        "symbols": [
+          { "name": "get_reloader", "file": "django/utils/autoreload.py", "line": 658, "kind": "function" },
+          { "name": "StatReloader", "file": "django/utils/autoreload.py", "line": 401, "kind": "class" },
+          { "name": "tick", "file": "django/utils/autoreload.py", "line": 404, "kind": "method" },
+          { "name": "snapshot_files", "file": "django/utils/autoreload.py", "line": 425, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read autoreload.py@6.1.2: get_reloader returns StatReloader when WatchmanReloader.check_availability raises WatchmanUnavailable; StatReloader.tick polls snapshot_files() (st_mtime of watched_files) every SLEEP_TIME=1s and calls notify_file_changed on newer mtimes."
+    },
+    {
+      "id": "dj-usage-add-new-csrf-cookie",
+      "kind": "usage",
+      "lang": "en",
+      "question": "Who calls `_add_new_csrf_cookie`? I want every caller before I change what it stores in request.META.",
+      "search": "_add_new_csrf_cookie",
+      "gold": {
+        "files": ["django/middleware/csrf.py"],
+        "symbols": [
+          { "name": "get_token", "file": "django/middleware/csrf.py", "line": 96, "kind": "function" },
+          { "name": "rotate_token", "file": "django/middleware/csrf.py", "line": 117, "kind": "function" },
+          { "name": "process_request", "file": "django/middleware/csrf.py", "line": 401, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "git grep _add_new_csrf_cookie in django/ @6.1.2: defined csrf.py:84, called at 113 (get_token), 122 (rotate_token), 405 (CsrfViewMiddleware.process_request); no other non-test caller."
+    },
+    {
+      "id": "dj-usage-construct-instance",
+      "kind": "usage",
+      "lang": "en",
+      "question": "Who calls `construct_instance`? I want to know where the model instance is filled in from a ModelForm.",
+      "search": "construct_instance",
+      "gold": {
+        "files": ["django/forms/models.py"],
+        "symbols": [
+          { "name": "construct_instance", "file": "django/forms/models.py", "line": 50, "kind": "function" },
+          { "name": "_post_clean", "file": "django/forms/models.py", "line": 479, "kind": "method" },
+          { "name": "BaseModelForm", "file": "django/forms/models.py", "line": 347, "kind": "class" }
+        ]
+      },
+      "verifiedBy": "git grep construct_instance in django/ @6.1.2: single non-test call at forms/models.py:496 inside BaseModelForm._post_clean (self.instance = construct_instance(...)); definition at 50."
+    },
+    {
+      "id": "dj-usage-same-domain",
+      "kind": "usage",
+      "lang": "en",
+      "question": "Which parts of Django check whether a host matches an allowed domain pattern like '.example.com'? List the call sites.",
+      "search": "host matches domain pattern",
+      "gold": {
+        "files": ["django/utils/http.py", "django/http/request.py", "django/middleware/csrf.py"],
+        "symbols": [
+          { "name": "is_same_domain", "file": "django/utils/http.py", "line": 256, "kind": "function" },
+          { "name": "validate_host", "file": "django/http/request.py", "line": 863, "kind": "function" },
+          { "name": "_origin_verified", "file": "django/middleware/csrf.py", "line": 271, "kind": "method" },
+          { "name": "_check_referer", "file": "django/middleware/csrf.py", "line": 297, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "git grep is_same_domain @6.1.2: defined utils/http.py:256; called in http/request.py:879 (validate_host, ALLOWED_HOSTS), middleware/csrf.py:293 (CsrfViewMiddleware._origin_verified), 316 and 339 (_check_referer)."
+    },
+    {
+      "id": "dj-usage-resolve-callables",
+      "kind": "usage",
+      "lang": "en",
+      "question": "Where is `resolve_callables` used, and what does each caller pass to it?",
+      "search": "resolve_callables",
+      "gold": {
+        "files": ["django/db/models/utils.py", "django/db/models/query.py", "django/db/models/fields/related_descriptors.py"],
+        "symbols": [
+          { "name": "resolve_callables", "file": "django/db/models/utils.py", "line": 28, "kind": "function" },
+          { "name": "get_or_create", "file": "django/db/models/query.py", "line": 1060, "kind": "method" },
+          { "name": "update_or_create", "file": "django/db/models/query.py", "line": 1095, "kind": "method" },
+          { "name": "_add_items", "file": "django/db/models/fields/related_descriptors.py", "line": 1582, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "git grep resolve_callables @6.1.2: defined models/utils.py:28; called in QuerySet.get_or_create (query.py:1076, params), QuerySet.update_or_create (1117, update_defaults) and ManyRelatedManager._add_items (related_descriptors.py:1598, through_defaults)."
+    },
+    {
+      "id": "dj-impact-naive-now",
+      "kind": "impact",
+      "lang": "en",
+      "question": "If I change `_get_naive_now` so that it returns an aware datetime, which date/time field checks are affected?",
+      "search": "_get_naive_now",
+      "gold": {
+        "files": ["django/db/models/fields/__init__.py"],
+        "symbols": [
+          { "name": "_get_naive_now", "file": "django/db/models/fields/__init__.py", "line": 1387, "kind": "function" },
+          { "name": "_check_if_value_fixed", "file": "django/db/models/fields/__init__.py", "line": 1429, "kind": "method" },
+          { "name": "_check_fix_default_value", "file": "django/db/models/fields/__init__.py", "line": 2624, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "git grep _get_naive_now @6.1.2: called by DateTimeCheckMixin._check_if_value_fixed (1437) and TimeField._check_fix_default_value (2636); _check_if_value_fixed is reached from DateField/DateTimeField._check_fix_default_value (1504, 1630)."
+    },
+    {
+      "id": "dj-impact-same-field-operation",
+      "kind": "impact",
+      "lang": "en",
+      "question": "In migrations, what is affected if I change the rule that decides two field operations target the same field (same model name and field name)?",
+      "search": "field operation same field model name",
+      "gold": {
+        "files": ["django/db/migrations/operations/fields.py"],
+        "symbols": [
+          { "name": "is_same_field_operation", "file": "django/db/migrations/operations/fields.py", "line": 26, "kind": "method" },
+          { "name": "AddField", "file": "django/db/migrations/operations/fields.py", "line": 83, "kind": "class" },
+          { "name": "AlterField", "file": "django/db/migrations/operations/fields.py", "line": 204, "kind": "class" }
+        ]
+      },
+      "verifiedBy": "Read operations/fields.py@6.1.2: FieldOperation.is_same_field_operation (model_name_lower + name_lower) is called only in AddField.reduce (140) and AlterField.reduce (260, 264), i.e. the optimizer merging AddField/AlterField with later AlterField/RemoveField/RenameField."
+    },
+    {
+      "id": "dj-impact-migrations-module",
+      "kind": "impact",
+      "lang": "en",
+      "question": "I want `MigrationLoader.migrations_module` to return only the module path instead of a (path, explicit) tuple. What code breaks?",
+      "search": "MigrationLoader migrations_module",
+      "gold": {
+        "files": ["django/db/migrations/loader.py", "django/db/migrations/questioner.py", "django/db/migrations/writer.py"],
+        "symbols": [
+          { "name": "migrations_module", "file": "django/db/migrations/loader.py", "line": 62, "kind": "method" },
+          { "name": "load_disk", "file": "django/db/migrations/loader.py", "line": 74, "kind": "method" },
+          { "name": "ask_initial", "file": "django/db/migrations/questioner.py", "line": 27, "kind": "method" },
+          { "name": "basedir", "file": "django/db/migrations/writer.py", "line": 219, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "git grep migrations_module @6.1.2: all three non-test callers unpack the tuple: MigrationLoader.load_disk (loader.py:81), MigrationQuestioner.ask_initial (questioner.py:40), MigrationWriter.basedir property (writer.py:220)."
+    }
+  ]
+}

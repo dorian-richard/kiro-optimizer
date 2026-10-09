@@ -1,0 +1,97 @@
+{
+  "label": "kirograph",
+  "tool": "kirograph",
+  "package": "kirograph",
+  "version": "1.4.0",
+  "mode": "default",
+  "repo": {
+    "name": "django",
+    "url": "https://github.com/django/django.git",
+    "tag": "6.1.2",
+    "commit": "2212534bae393714e1e51db2341d4fd5545e19f6",
+    "language": "python",
+    "path": "bench/repos/django"
+  },
+  "headCommit": "2212534bae393714e1e51db2341d4fd5545e19f6",
+  "commitMatchesTasks": true,
+  "date": "2026-10-09T11:13:26.516Z",
+  "container": {
+    "node": "v22.23.3",
+    "arch": "arm64",
+    "platform": "linux",
+    "cpus": 10,
+    "memBytes": 8214851584,
+    "network": "none"
+  },
+  "primaryTool": "kirograph_context",
+  "toolArgsExample": {
+    "task": "<input>"
+  },
+  "serverCommand": {
+    "command": "kirograph",
+    "args": [
+      "serve",
+      "--mcp",
+      "--path",
+      "/work/<repo>"
+    ]
+  },
+  "oneSessionPerTask": true,
+  "indexOk": true,
+  "indexMs": 1040920,
+  "indexSteps": [
+    {
+      "command": "kirograph init /work/django",
+      "ms": 452,
+      "exit": 0,
+      "signal": null
+    },
+    {
+      "command": "kirograph index /work/django",
+      "ms": 1040468,
+      "exit": 0,
+      "signal": null
+    }
+  ],
+  "copyMs": 914,
+  "indexDirs": [
+    "<repo>/.kirograph"
+  ],
+  "indexSizeBytes": 267550539,
+  "modelBytes": 0,
+  "indexStatus": "Graph\n  Files      3464\n  Symbols    122447\n  Edges      462734\n  Frameworks django\n\n  By kind\n  ┌──────────┬──────────────────┐\n  │ variable │ 66043            │\n  ├──────────┼──────────────────┤\n  │ function │ 32860            │\n  ├──────────┼──────────────────┤\n  │ import   │ 12012            │\n  ├──────────┼──────────────────┤\n  │ class    │ 11056            │\n  ├──────────┼──────────────────┤\n  │ constant │ 466              │\n  ├──────────┼──────────────────┤\n  │ method   │ 10               │\n  └──────────┴──────────────────┘\n\n  By language\n  ┌────────────┬──────────────────┐\n  │ python     │ 2919             │\n  ├────────────┼──────────────────┤\n  │ html       │ 373              │\n  ├────────────┼──────────────────┤\n  │ javascript │ 108              │\n  ├────────────┼──────────────────┤\n  │ css        │ 46               │\n  ├────────────┼──────────────────┤\n  │ yaml       │ 16               │\n  ├────────────┼──────────────────┤\n  │ bash       │ 2                │\n  └────────────┴──────────────────┘\n\n  Sync\n  Status     idle\n  Pending    6 files pending\n\n  Semantic Search\n  Status     disabled",
+  "surface": {
+    "serverInfo": {
+      "name": "kirograph",
+      "version": "0.1.0"
+    },
+    "toolCount": 7,
+    "toolNames": [
+      "kirograph_search",
+      "kirograph_context",
+      "kirograph_node",
+      "kirograph_gain",
+      "kirograph_read",
+      "kirograph_retrieve",
+      "kirograph_budget"
+    ],
+    "toolsChars": 4418,
+    "toolsEstTokens": 1473,
+    "instructionsChars": 0,
+    "instructionsEstTokens": 0,
+    "primaryToolListed": true,
+    "file": "kirograph.surface.json"
+  },
+  "inputs": {
+    "search": {
+      "file": "kirograph-django.jsonl",
+      "tasks": 2,
+      "failures": 0,
+      "queryMsMedian": 967,
+      "queryMsP90": 1605,
+      "startupMsMedian": 358
+    }
+  },
+  "charsPerToken": 3,
+  "errors": []
+}

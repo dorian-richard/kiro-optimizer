@@ -5,19 +5,25 @@
   "type": "module",
   "license": "MIT",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dorian-richard/kiro-optimizer.git"
+  },
   "engines": {
     "node": ">=22.13"
   },
   "bin": {
-    "kopt": "dist/cli.js"
+    "kopt": "dist/bin.js"
   },
   "files": [
     "dist",
     "templates",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "prepare": "npm run build",
     "dev": "tsx src/cli.ts",
     "test": "vitest run",
     "typecheck": "tsc -p tsconfig.json --noEmit",

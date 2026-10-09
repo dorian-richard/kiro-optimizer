@@ -1,0 +1,2641 @@
+{
+  "meta": {
+    "label": "django",
+    "repo": {
+      "name": "django",
+      "url": "https://github.com/django/django.git",
+      "tag": "6.1.2",
+      "commit": "2212534bae393714e1e51db2341d4fd5545e19f6",
+      "language": "python",
+      "path": "bench/repos/django"
+    },
+    "repoRoot": "bench/repos/django",
+    "headCommit": "2212534bae393714e1e51db2341d4fd5545e19f6",
+    "date": "2026-10-09T09:44:21.509Z",
+    "input": "search",
+    "charsPerToken": 3,
+    "strategies": [
+      "native-naive",
+      "native-ranged",
+      "kopt-pack",
+      "kopt-hits+read"
+    ],
+    "grepLimits": {
+      "maxMatches": 100,
+      "maxChars": 10000,
+      "maxLineChars": 250
+    },
+    "readLimits": {
+      "naiveTopFiles": 3,
+      "naiveMaxLines": 2000,
+      "rangedMatches": 4,
+      "rangedContext": 60
+    },
+    "koptBudgets": {
+      "find": 700,
+      "pack": 2500,
+      "read": 2000
+    },
+    "index": {
+      "built": false,
+      "durationMs": 0,
+      "files": 2964,
+      "symbols": 50978,
+      "path": "bench/repos/.kopt-django/index.db"
+    },
+    "notes": [],
+    "durationMs": 6329
+  },
+  "results": [
+    {
+      "taskId": "dj-locate-db-cache-cull",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 48894,
+      "chars": 146677,
+      "toolCalls": 4,
+      "durationMs": 333,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "_base_set"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "cull",
+          "chars": 5016,
+          "tokens": 1672
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/cache/tests.py",
+          "chars": 76819,
+          "tokens": 25607
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/topics/cache.txt",
+          "chars": 59045,
+          "tokens": 19682
+        },
+        {
+          "tool": "read_file",
+          "args": "django/core/cache/backends/filebased.py",
+          "chars": 5797,
+          "tokens": 1933
+        }
+      ]
+    },
+    {
+      "taskId": "dj-locate-db-cache-cull",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 6737,
+      "chars": 20205,
+      "toolCalls": 5,
+      "durationMs": 1,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "_base_set"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "cull",
+          "chars": 5016,
+          "tokens": 1672
+        },
+        {
+          "tool": "read_file",
+          "args": "django/core/cache/backends/db.py:198-296",
+          "chars": 3536,
+          "tokens": 1179
+        },
+        {
+          "tool": "read_file",
+          "args": "django/core/cache/backends/filebased.py:41-161",
+          "chars": 4375,
+          "tokens": 1459
+        },
+        {
+          "tool": "read_file",
+          "args": "django/core/cache/backends/locmem.py:32-119",
+          "chars": 3053,
+          "tokens": 1018
+        },
+        {
+          "tool": "read_file",
+          "args": "django/db/backends/base/operations.py:44-164",
+          "chars": 4225,
+          "tokens": 1409
+        }
+      ]
+    },
+    {
+      "taskId": "dj-locate-db-cache-cull",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1050,
+      "chars": 3150,
+      "toolCalls": 1,
+      "durationMs": 58,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "_base_set"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"database cache backend delete expired entries max entries cull\"",
+          "chars": 3150,
+          "tokens": 1050
+        }
+      ]
+    },
+    {
+      "taskId": "dj-locate-db-cache-cull",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 904,
+      "chars": 2707,
+      "toolCalls": 3,
+      "durationMs": 18,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "_base_set"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"database cache backend delete expired entries max entries cull\"",
+          "chars": 1412,
+          "tokens": 471
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#4rl",
+          "chars": 787,
+          "tokens": 263
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#4rp",
+          "chars": 508,
+          "tokens": 170
+        }
+      ]
+    },
+    {
+      "taskId": "dj-locate-accept-language",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 48259,
+      "chars": 144771,
+      "toolCalls": 4,
+      "durationMs": 131,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "get_language_from_request"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "accept",
+          "chars": 9982,
+          "tokens": 3328
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/ref/contrib/gis/functions.txt",
+          "chars": 23695,
+          "tokens": 7899
+        },
+        {
+          "tool": "read_file",
+          "args": "django/contrib/admin/static/admin/js/vendor/jquery/jquery.js",
+          "chars": 55277,
+          "tokens": 18426
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/ref/request-response.txt",
+          "chars": 55817,
+          "tokens": 18606
+        }
+      ]
+    },
+    {
+      "taskId": "dj-locate-accept-language",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 7992,
+      "chars": 23971,
+      "toolCalls": 5,
+      "durationMs": 1,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "accept",
+          "chars": 9982,
+          "tokens": 3328
+        },
+        {
+          "tool": "read_file",
+          "args": "django/contrib/admin/static/admin/js/vendor/jquery/jquery.js:3896-4016",
+          "chars": 2480,
+          "tokens": 827
+        },
+        {
+          "tool": "read_file",
+          "args": "django/utils/translation/trans_real.py:560-666",
+          "chars": 3683,
+          "tokens": 1228
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/ref/contrib/gis/functions.txt:1-95",
+          "chars": 3512,
+          "tokens": 1171
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/ref/request-response.txt:468-588",
+          "chars": 4314,
+          "tokens": 1438
+        }
+      ]
+    },
+    {
+      "taskId": "dj-locate-accept-language",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1053,
+      "chars": 3158,
+      "toolCalls": 1,
+      "durationMs": 26,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"language from request Accept-Language header\"",
+          "chars": 3158,
+          "tokens": 1053
+        }
+      ]
+    },
+    {
+      "taskId": "dj-locate-accept-language",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 1277,
+      "chars": 3828,
+      "toolCalls": 3,
+      "durationMs": 10,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"language from request Accept-Language header\"",
+          "chars": 1842,
+          "tokens": 614
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#cd8",
+          "chars": 1159,
+          "tokens": 387
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#cd7",
+          "chars": 827,
+          "tokens": 276
+        }
+      ]
+    },
+    {
+      "taskId": "dj-locate-test-shuffle",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 37719,
+      "chars": 113152,
+      "toolCalls": 4,
+      "durationMs": 2285,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "seed",
+          "chars": 9487,
+          "tokens": 3163
+        },
+        {
+          "tool": "read_file",
+          "args": "django/contrib/admin/static/admin/js/vendor/jquery/jquery.js",
+          "chars": 55277,
+          "tokens": 18426
+        },
+        {
+          "tool": "read_file",
+          "args": "django/test/runner.py",
+          "chars": 44605,
+          "tokens": 14869
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/test_runner/test_shuffler.py",
+          "chars": 3783,
+          "tokens": 1261
+        }
+      ]
+    },
+    {
+      "taskId": "dj-locate-test-shuffle",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 7757,
+      "chars": 23263,
+      "toolCalls": 5,
+      "durationMs": 1,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "shuffle_tests"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "seed",
+          "chars": 9487,
+          "tokens": 3163
+        },
+        {
+          "tool": "read_file",
+          "args": "django/contrib/admin/static/admin/js/vendor/jquery/jquery.js:745-865",
+          "chars": 3316,
+          "tokens": 1106
+        },
+        {
+          "tool": "read_file",
+          "args": "django/contrib/admin/static/admin/js/vendor/jquery/jquery.js:1020-1140",
+          "chars": 4231,
+          "tokens": 1411
+        },
+        {
+          "tool": "read_file",
+          "args": "django/contrib/admin/static/admin/js/vendor/jquery/jquery.js:1774-1894",
+          "chars": 3319,
+          "tokens": 1107
+        },
+        {
+          "tool": "read_file",
+          "args": "django/contrib/admin/static/admin/js/vendor/jquery/jquery.js:2222-2342",
+          "chars": 2910,
+          "tokens": 970
+        }
+      ]
+    },
+    {
+      "taskId": "dj-locate-test-shuffle",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 627,
+      "chars": 1880,
+      "toolCalls": 1,
+      "durationMs": 22,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"test runner shuffle seed order\"",
+          "chars": 1880,
+          "tokens": 627
+        }
+      ]
+    },
+    {
+      "taskId": "dj-locate-test-shuffle",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 715,
+      "chars": 2140,
+      "toolCalls": 3,
+      "durationMs": 11,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"test runner shuffle seed order\"",
+          "chars": 1087,
+          "tokens": 363
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#bdl",
+          "chars": 170,
+          "tokens": 57
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#bdc",
+          "chars": 883,
+          "tokens": 295
+        }
+      ]
+    },
+    {
+      "taskId": "dj-locate-session-vary-cookie",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 15045,
+      "chars": 45130,
+      "toolCalls": 4,
+      "durationMs": 193,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "django/utils/cache.py"
+        ],
+        "symbolsMissed": [
+          "SessionMiddleware",
+          "process_response",
+          "patch_vary_headers"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "accessed",
+          "chars": 9919,
+          "tokens": 3307
+        },
+        {
+          "tool": "read_file",
+          "args": "django/core/files/storage/memory.py",
+          "chars": 9874,
+          "tokens": 3292
+        },
+        {
+          "tool": "read_file",
+          "args": "django/core/files/storage/base.py",
+          "chars": 8297,
+          "tokens": 2766
+        },
+        {
+          "tool": "read_file",
+          "args": "django/contrib/sessions/backends/base.py",
+          "chars": 17040,
+          "tokens": 5680
+        }
+      ]
+    },
+    {
+      "taskId": "dj-locate-session-vary-cookie",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 7674,
+      "chars": 23015,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "django/utils/cache.py"
+        ],
+        "symbolsMissed": [
+          "SessionMiddleware",
+          "process_response",
+          "patch_vary_headers"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "accessed",
+          "chars": 9919,
+          "tokens": 3307
+        },
+        {
+          "tool": "read_file",
+          "args": "django/core/files/storage/base.py:121-207",
+          "chars": 3263,
+          "tokens": 1088
+        },
+        {
+          "tool": "read_file",
+          "args": "django/core/files/storage/memory.py:1-93",
+          "chars": 2693,
+          "tokens": 898
+        },
+        {
+          "tool": "read_file",
+          "args": "django/core/files/storage/memory.py:223-294",
+          "chars": 2371,
+          "tokens": 791
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/ref/files/storage.txt:92-212",
+          "chars": 4769,
+          "tokens": 1590
+        }
+      ]
+    },
+    {
+      "taskId": "dj-locate-session-vary-cookie",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1385,
+      "chars": 4155,
+      "toolCalls": 1,
+      "durationMs": 25,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"session middleware vary cookie header accessed\"",
+          "chars": 4155,
+          "tokens": 1385
+        }
+      ]
+    },
+    {
+      "taskId": "dj-locate-session-vary-cookie",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 1734,
+      "chars": 5197,
+      "toolCalls": 3,
+      "durationMs": 11,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"session middleware vary cookie header accessed\"",
+          "chars": 1645,
+          "tokens": 549
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#4lz",
+          "chars": 3448,
+          "tokens": 1150
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#4m2",
+          "chars": 104,
+          "tokens": 35
+        }
+      ]
+    },
+    {
+      "taskId": "dj-explain-migration-optimizer",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 31689,
+      "chars": 95063,
+      "toolCalls": 4,
+      "durationMs": 148,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "optimize_inner",
+          "reduce"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "optimizer",
+          "chars": 3197,
+          "tokens": 1066
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/migrations/test_optimizer.py",
+          "chars": 52241,
+          "tokens": 17414
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/migrations/base.py",
+          "chars": 17066,
+          "tokens": 5689
+        },
+        {
+          "tool": "read_file",
+          "args": "django/core/management/commands/makemigrations.py",
+          "chars": 22559,
+          "tokens": 7520
+        }
+      ]
+    },
+    {
+      "taskId": "dj-explain-migration-optimizer",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 5219,
+      "chars": 15649,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.75,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "optimizer",
+          "chars": 3197,
+          "tokens": 1066
+        },
+        {
+          "tool": "read_file",
+          "args": "django/db/migrations/optimizer.py:1-61",
+          "chars": 2926,
+          "tokens": 976
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/migrations/base.py:360-453",
+          "chars": 3571,
+          "tokens": 1191
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/migrations/test_optimizer.py:1-70",
+          "chars": 2168,
+          "tokens": 723
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/postgres_tests/test_operations.py:1-94",
+          "chars": 3787,
+          "tokens": 1263
+        }
+      ]
+    },
+    {
+      "taskId": "dj-explain-migration-optimizer",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 584,
+      "chars": 1751,
+      "toolCalls": 1,
+      "durationMs": 22,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"migration optimizer merge operations reduce\"",
+          "chars": 1751,
+          "tokens": 584
+        }
+      ]
+    },
+    {
+      "taskId": "dj-explain-migration-optimizer",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 1562,
+      "chars": 4680,
+      "toolCalls": 3,
+      "durationMs": 10,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"migration optimizer merge operations reduce\"",
+          "chars": 1282,
+          "tokens": 428
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#79x",
+          "chars": 3298,
+          "tokens": 1100
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#79z",
+          "chars": 100,
+          "tokens": 34
+        }
+      ]
+    },
+    {
+      "taskId": "dj-explain-template-lookup",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 43481,
+      "chars": 130440,
+      "toolCalls": 3,
+      "durationMs": 137,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "resolve_lookup",
+          "chars": 489,
+          "tokens": 163
+        },
+        {
+          "tool": "read_file",
+          "args": "django/db/models/sql/query.py",
+          "chars": 85309,
+          "tokens": 28437
+        },
+        {
+          "tool": "read_file",
+          "args": "django/template/base.py",
+          "chars": 44642,
+          "tokens": 14881
+        }
+      ]
+    },
+    {
+      "taskId": "dj-explain-template-lookup",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 5505,
+      "chars": 16511,
+      "toolCalls": 4,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "resolve_lookup",
+          "chars": 489,
+          "tokens": 163
+        },
+        {
+          "tool": "read_file",
+          "args": "django/db/models/sql/query.py:1262-1382",
+          "chars": 5188,
+          "tokens": 1730
+        },
+        {
+          "tool": "read_file",
+          "args": "django/db/models/sql/query.py:1499-1619",
+          "chars": 5003,
+          "tokens": 1668
+        },
+        {
+          "tool": "read_file",
+          "args": "django/template/base.py:904-1024",
+          "chars": 5831,
+          "tokens": 1944
+        }
+      ]
+    },
+    {
+      "taskId": "dj-explain-template-lookup",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 234,
+      "chars": 702,
+      "toolCalls": 1,
+      "durationMs": 26,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"Variable _resolve_lookup template variable lookup\"",
+          "chars": 702,
+          "tokens": 234
+        }
+      ]
+    },
+    {
+      "taskId": "dj-explain-template-lookup",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 1800,
+      "chars": 5398,
+      "toolCalls": 3,
+      "durationMs": 13,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"Variable _resolve_lookup template variable lookup\"",
+          "chars": 531,
+          "tokens": 177
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#azc",
+          "chars": 4092,
+          "tokens": 1364
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#az9",
+          "chars": 775,
+          "tokens": 259
+        }
+      ]
+    },
+    {
+      "taskId": "dj-explain-password-upgrade",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 788,
+      "chars": 2361,
+      "toolCalls": 3,
+      "durationMs": 190,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "django/contrib/auth/hashers.py"
+        ],
+        "symbolsMissed": [
+          "check_password",
+          "verify_password",
+          "identify_hasher",
+          "must_update"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "rehash",
+          "chars": 238,
+          "tokens": 80
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/releases/1.4.9.txt",
+          "chars": 704,
+          "tokens": 235
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/releases/1.5.5.txt",
+          "chars": 1419,
+          "tokens": 473
+        }
+      ]
+    },
+    {
+      "taskId": "dj-explain-password-upgrade",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 788,
+      "chars": 2361,
+      "toolCalls": 3,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "django/contrib/auth/hashers.py"
+        ],
+        "symbolsMissed": [
+          "check_password",
+          "verify_password",
+          "identify_hasher",
+          "must_update"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "rehash",
+          "chars": 238,
+          "tokens": 80
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/releases/1.4.9.txt:1-22",
+          "chars": 704,
+          "tokens": 235
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/releases/1.5.5.txt:1-40",
+          "chars": 1419,
+          "tokens": 473
+        }
+      ]
+    },
+    {
+      "taskId": "dj-explain-password-upgrade",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 476,
+      "chars": 1426,
+      "toolCalls": 1,
+      "durationMs": 25,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "verify_password",
+          "identify_hasher"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"check password hasher must update iterations rehash\"",
+          "chars": 1426,
+          "tokens": 476
+        }
+      ]
+    },
+    {
+      "taskId": "dj-explain-password-upgrade",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 652,
+      "chars": 1953,
+      "toolCalls": 3,
+      "durationMs": 12,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "verify_password",
+          "identify_hasher"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"check password hasher must update iterations rehash\"",
+          "chars": 1587,
+          "tokens": 529
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#1wk",
+          "chars": 266,
+          "tokens": 89
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#1wa",
+          "chars": 100,
+          "tokens": 34
+        }
+      ]
+    },
+    {
+      "taskId": "dj-explain-autoreload-stat",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 46394,
+      "chars": 139177,
+      "toolCalls": 4,
+      "durationMs": 174,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "watchman",
+          "chars": 7076,
+          "tokens": 2359
+        },
+        {
+          "tool": "read_file",
+          "args": "django/utils/autoreload.py",
+          "chars": 25043,
+          "tokens": 8348
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/utils_tests/test_autoreload.py",
+          "chars": 38497,
+          "tokens": 12833
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/ref/django-admin.txt",
+          "chars": 68561,
+          "tokens": 22854
+        }
+      ]
+    },
+    {
+      "taskId": "dj-explain-autoreload-stat",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 8352,
+      "chars": 25051,
+      "toolCalls": 4,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.75,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "watchman",
+          "chars": 7076,
+          "tokens": 2359
+        },
+        {
+          "tool": "read_file",
+          "args": "django/utils/autoreload.py:384-504",
+          "chars": 4414,
+          "tokens": 1472
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/utils_tests/test_autoreload.py:288-408",
+          "chars": 5253,
+          "tokens": 1751
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/utils_tests/test_autoreload.py:729-934",
+          "chars": 8308,
+          "tokens": 2770
+        }
+      ]
+    },
+    {
+      "taskId": "dj-explain-autoreload-stat",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 679,
+      "chars": 2037,
+      "toolCalls": 1,
+      "durationMs": 19,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.75,
+        "defRecall": 0.75,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "snapshot_files"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"autoreload reloader detect file changes without watchman\"",
+          "chars": 2037,
+          "tokens": 679
+        }
+      ]
+    },
+    {
+      "taskId": "dj-explain-autoreload-stat",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 795,
+      "chars": 2383,
+      "toolCalls": 3,
+      "durationMs": 11,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.75,
+        "defRecall": 0.75,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "snapshot_files"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"autoreload reloader detect file changes without watchman\"",
+          "chars": 1046,
+          "tokens": 349
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#bnq",
+          "chars": 1065,
+          "tokens": 355
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#bo7",
+          "chars": 272,
+          "tokens": 91
+        }
+      ]
+    },
+    {
+      "taskId": "dj-usage-add-new-csrf-cookie",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 6602,
+      "chars": 19805,
+      "toolCalls": 2,
+      "durationMs": 165,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "add_new_csrf_cookie",
+          "chars": 284,
+          "tokens": 95
+        },
+        {
+          "tool": "read_file",
+          "args": "django/middleware/csrf.py",
+          "chars": 19521,
+          "tokens": 6507
+        }
+      ]
+    },
+    {
+      "taskId": "dj-usage-add-new-csrf-cookie",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 3485,
+      "chars": 10451,
+      "toolCalls": 3,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "add_new_csrf_cookie",
+          "chars": 284,
+          "tokens": 95
+        },
+        {
+          "tool": "read_file",
+          "args": "django/middleware/csrf.py:24-144",
+          "chars": 4459,
+          "tokens": 1487
+        },
+        {
+          "tool": "read_file",
+          "args": "django/middleware/csrf.py:345-465",
+          "chars": 5708,
+          "tokens": 1903
+        }
+      ]
+    },
+    {
+      "taskId": "dj-usage-add-new-csrf-cookie",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 251,
+      "chars": 752,
+      "toolCalls": 1,
+      "durationMs": 19,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"_add_new_csrf_cookie\"",
+          "chars": 752,
+          "tokens": 251
+        }
+      ]
+    },
+    {
+      "taskId": "dj-usage-add-new-csrf-cookie",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 713,
+      "chars": 2135,
+      "toolCalls": 3,
+      "durationMs": 11,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "get_token"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"_add_new_csrf_cookie\"",
+          "chars": 451,
+          "tokens": 151
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#aj9",
+          "chars": 351,
+          "tokens": 117
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#aji",
+          "chars": 1333,
+          "tokens": 445
+        }
+      ]
+    },
+    {
+      "taskId": "dj-usage-construct-instance",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 44674,
+      "chars": 134019,
+      "toolCalls": 3,
+      "durationMs": 107,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "construct_instance",
+          "chars": 587,
+          "tokens": 196
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/model_forms/tests.py",
+          "chars": 71120,
+          "tokens": 23707
+        },
+        {
+          "tool": "read_file",
+          "args": "django/forms/models.py",
+          "chars": 62312,
+          "tokens": 20771
+        }
+      ]
+    },
+    {
+      "taskId": "dj-usage-construct-instance",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 4854,
+      "chars": 14559,
+      "toolCalls": 5,
+      "durationMs": 1,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "construct_instance",
+          "chars": 587,
+          "tokens": 196
+        },
+        {
+          "tool": "read_file",
+          "args": "django/forms/models.py:1-110",
+          "chars": 3389,
+          "tokens": 1130
+        },
+        {
+          "tool": "read_file",
+          "args": "django/forms/models.py:391-511",
+          "chars": 4836,
+          "tokens": 1612
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/model_forms/tests.py:1-80",
+          "chars": 1731,
+          "tokens": 577
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/model_forms/tests.py:209-329",
+          "chars": 4016,
+          "tokens": 1339
+        }
+      ]
+    },
+    {
+      "taskId": "dj-usage-construct-instance",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 681,
+      "chars": 2041,
+      "toolCalls": 1,
+      "durationMs": 22,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"construct_instance\"",
+          "chars": 2041,
+          "tokens": 681
+        }
+      ]
+    },
+    {
+      "taskId": "dj-usage-construct-instance",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 872,
+      "chars": 2611,
+      "toolCalls": 3,
+      "durationMs": 10,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.3333333333333333,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "_post_clean",
+          "BaseModelForm"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"construct_instance\"",
+          "chars": 584,
+          "tokens": 195
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#a1s",
+          "chars": 1576,
+          "tokens": 526
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#ub0",
+          "chars": 451,
+          "tokens": 151
+        }
+      ]
+    },
+    {
+      "taskId": "dj-usage-same-domain",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 65803,
+      "chars": 197405,
+      "toolCalls": 4,
+      "durationMs": 115,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "django/utils/http.py",
+          "django/http/request.py",
+          "django/middleware/csrf.py"
+        ],
+        "symbolsMissed": [
+          "is_same_domain",
+          "validate_host",
+          "_origin_verified",
+          "_check_referer"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "matches",
+          "chars": 10017,
+          "tokens": 3339
+        },
+        {
+          "tool": "read_file",
+          "args": "django/contrib/admin/static/admin/js/vendor/jquery/jquery.js",
+          "chars": 55277,
+          "tokens": 18426
+        },
+        {
+          "tool": "read_file",
+          "args": "django/contrib/admin/static/admin/js/vendor/xregexp/xregexp.js",
+          "chars": 76769,
+          "tokens": 25590
+        },
+        {
+          "tool": "read_file",
+          "args": "django/contrib/admin/static/admin/js/vendor/select2/select2.full.js",
+          "chars": 55342,
+          "tokens": 18448
+        }
+      ]
+    },
+    {
+      "taskId": "dj-usage-same-domain",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 7988,
+      "chars": 23960,
+      "toolCalls": 5,
+      "durationMs": 1,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "django/utils/http.py",
+          "django/http/request.py",
+          "django/middleware/csrf.py"
+        ],
+        "symbolsMissed": [
+          "is_same_domain",
+          "validate_host",
+          "_origin_verified",
+          "_check_referer"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "matches",
+          "chars": 10017,
+          "tokens": 3339
+        },
+        {
+          "tool": "read_file",
+          "args": "django/contrib/admin/static/admin/js/vendor/jquery/jquery.js:1020-1140",
+          "chars": 4231,
+          "tokens": 1411
+        },
+        {
+          "tool": "read_file",
+          "args": "django/contrib/admin/static/admin/js/vendor/jquery/jquery.js:1357-1477",
+          "chars": 3504,
+          "tokens": 1168
+        },
+        {
+          "tool": "read_file",
+          "args": "django/contrib/admin/static/admin/js/vendor/jquery/jquery.js:1774-1894",
+          "chars": 3319,
+          "tokens": 1107
+        },
+        {
+          "tool": "read_file",
+          "args": "django/contrib/admin/static/admin/js/vendor/jquery/jquery.js:2738-2858",
+          "chars": 2889,
+          "tokens": 963
+        }
+      ]
+    },
+    {
+      "taskId": "dj-usage-same-domain",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 779,
+      "chars": 2337,
+      "toolCalls": 1,
+      "durationMs": 18,
+      "recall": {
+        "fileRecall": 0.6666666666666666,
+        "symbolRecall": 1,
+        "defRecall": 0.25,
+        "filesMissed": [
+          "django/middleware/csrf.py"
+        ],
+        "symbolsMissed": [],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"host matches domain pattern\"",
+          "chars": 2337,
+          "tokens": 779
+        }
+      ]
+    },
+    {
+      "taskId": "dj-usage-same-domain",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 729,
+      "chars": 2186,
+      "toolCalls": 3,
+      "durationMs": 10,
+      "recall": {
+        "fileRecall": 0.6666666666666666,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [
+          "django/middleware/csrf.py"
+        ],
+        "symbolsMissed": [
+          "_origin_verified",
+          "_check_referer"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"host matches domain pattern\"",
+          "chars": 1452,
+          "tokens": 484
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#c40",
+          "chars": 591,
+          "tokens": 197
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#5uq",
+          "chars": 143,
+          "tokens": 48
+        }
+      ]
+    },
+    {
+      "taskId": "dj-usage-resolve-callables",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 50072,
+      "chars": 150210,
+      "toolCalls": 4,
+      "durationMs": 153,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "resolve_callables",
+          "chars": 520,
+          "tokens": 174
+        },
+        {
+          "tool": "read_file",
+          "args": "django/db/models/query.py",
+          "chars": 77277,
+          "tokens": 25759
+        },
+        {
+          "tool": "read_file",
+          "args": "django/db/models/fields/related_descriptors.py",
+          "chars": 69853,
+          "tokens": 23285
+        },
+        {
+          "tool": "read_file",
+          "args": "django/db/models/utils.py",
+          "chars": 2560,
+          "tokens": 854
+        }
+      ]
+    },
+    {
+      "taskId": "dj-usage-resolve-callables",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 5566,
+      "chars": 16692,
+      "toolCalls": 5,
+      "durationMs": 1,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.75,
+        "defRecall": 0.75,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "_add_items"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "resolve_callables",
+          "chars": 520,
+          "tokens": 174
+        },
+        {
+          "tool": "read_file",
+          "args": "django/db/models/fields/related_descriptors.py:23-143",
+          "chars": 4992,
+          "tokens": 1664
+        },
+        {
+          "tool": "read_file",
+          "args": "django/db/models/query.py:1-97",
+          "chars": 3248,
+          "tokens": 1083
+        },
+        {
+          "tool": "read_file",
+          "args": "django/db/models/query.py:1016-1136",
+          "chars": 5372,
+          "tokens": 1791
+        },
+        {
+          "tool": "read_file",
+          "args": "django/db/models/utils.py:1-82",
+          "chars": 2560,
+          "tokens": 854
+        }
+      ]
+    },
+    {
+      "taskId": "dj-usage-resolve-callables",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 229,
+      "chars": 685,
+      "toolCalls": 1,
+      "durationMs": 14,
+      "recall": {
+        "fileRecall": 0.3333333333333333,
+        "symbolRecall": 0.75,
+        "defRecall": 0.25,
+        "filesMissed": [
+          "django/db/models/query.py",
+          "django/db/models/fields/related_descriptors.py"
+        ],
+        "symbolsMissed": [
+          "_add_items"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"resolve_callables\"",
+          "chars": 685,
+          "tokens": 229
+        }
+      ]
+    },
+    {
+      "taskId": "dj-usage-resolve-callables",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 265,
+      "chars": 793,
+      "toolCalls": 3,
+      "durationMs": 8,
+      "recall": {
+        "fileRecall": 0.3333333333333333,
+        "symbolRecall": 0.25,
+        "defRecall": 0.25,
+        "filesMissed": [
+          "django/db/models/query.py",
+          "django/db/models/fields/related_descriptors.py"
+        ],
+        "symbolsMissed": [
+          "get_or_create",
+          "update_or_create",
+          "_add_items"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"resolve_callables\"",
+          "chars": 360,
+          "tokens": 120
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#94f",
+          "chars": 267,
+          "tokens": 89
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#bee",
+          "chars": 166,
+          "tokens": 56
+        }
+      ]
+    },
+    {
+      "taskId": "dj-impact-naive-now",
+      "kind": "impact",
+      "strategy": "native-naive",
+      "tokens": 23996,
+      "chars": 71984,
+      "toolCalls": 2,
+      "durationMs": 128,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "get_naive_now",
+          "chars": 217,
+          "tokens": 73
+        },
+        {
+          "tool": "read_file",
+          "args": "django/db/models/fields/__init__.py",
+          "chars": 71767,
+          "tokens": 23923
+        }
+      ]
+    },
+    {
+      "taskId": "dj-impact-naive-now",
+      "kind": "impact",
+      "strategy": "native-ranged",
+      "tokens": 2892,
+      "chars": 8670,
+      "toolCalls": 3,
+      "durationMs": 1,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "get_naive_now",
+          "chars": 217,
+          "tokens": 73
+        },
+        {
+          "tool": "read_file",
+          "args": "django/db/models/fields/__init__.py:1327-1447",
+          "chars": 4135,
+          "tokens": 1379
+        },
+        {
+          "tool": "read_file",
+          "args": "django/db/models/fields/__init__.py:2576-2696",
+          "chars": 4318,
+          "tokens": 1440
+        }
+      ]
+    },
+    {
+      "taskId": "dj-impact-naive-now",
+      "kind": "impact",
+      "strategy": "kopt-pack",
+      "tokens": 162,
+      "chars": 484,
+      "toolCalls": 1,
+      "durationMs": 16,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"_get_naive_now\"",
+          "chars": 484,
+          "tokens": 162
+        }
+      ]
+    },
+    {
+      "taskId": "dj-impact-naive-now",
+      "kind": "impact",
+      "strategy": "kopt-hits+read",
+      "tokens": 217,
+      "chars": 647,
+      "toolCalls": 3,
+      "durationMs": 9,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.3333333333333333,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "_check_if_value_fixed",
+          "_check_fix_default_value"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"_get_naive_now\"",
+          "chars": 335,
+          "tokens": 112
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#9gq",
+          "chars": 109,
+          "tokens": 37
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#c87",
+          "chars": 203,
+          "tokens": 68
+        }
+      ]
+    },
+    {
+      "taskId": "dj-impact-same-field-operation",
+      "kind": "impact",
+      "strategy": "native-naive",
+      "tokens": 77892,
+      "chars": 233674,
+      "toolCalls": 4,
+      "durationMs": 1156,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "django/db/migrations/operations/fields.py"
+        ],
+        "symbolsMissed": [
+          "is_same_field_operation",
+          "AddField",
+          "AlterField"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "same",
+          "chars": 9993,
+          "tokens": 3331
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/ref/models/querysets.txt",
+          "chars": 79602,
+          "tokens": 26534
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/ref/settings.txt",
+          "chars": 63549,
+          "tokens": 21183
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/ref/contrib/admin/index.txt",
+          "chars": 80530,
+          "tokens": 26844
+        }
+      ]
+    },
+    {
+      "taskId": "dj-impact-same-field-operation",
+      "kind": "impact",
+      "strategy": "native-ranged",
+      "tokens": 9094,
+      "chars": 27278,
+      "toolCalls": 5,
+      "durationMs": 1,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "django/db/migrations/operations/fields.py"
+        ],
+        "symbolsMissed": [
+          "is_same_field_operation",
+          "AddField",
+          "AlterField"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "same",
+          "chars": 9993,
+          "tokens": 3331
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/ref/contrib/admin/index.txt:951-1071",
+          "chars": 4775,
+          "tokens": 1592
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/ref/contrib/admin/index.txt:2206-2326",
+          "chars": 4265,
+          "tokens": 1422
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/ref/models/querysets.txt:4310-4430",
+          "chars": 4695,
+          "tokens": 1565
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/ref/settings.txt:121-241",
+          "chars": 3550,
+          "tokens": 1184
+        }
+      ]
+    },
+    {
+      "taskId": "dj-impact-same-field-operation",
+      "kind": "impact",
+      "strategy": "kopt-pack",
+      "tokens": 710,
+      "chars": 2129,
+      "toolCalls": 1,
+      "durationMs": 53,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "AddField"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"field operation same field model name\"",
+          "chars": 2129,
+          "tokens": 710
+        }
+      ]
+    },
+    {
+      "taskId": "dj-impact-same-field-operation",
+      "kind": "impact",
+      "strategy": "kopt-hits+read",
+      "tokens": 717,
+      "chars": 2147,
+      "toolCalls": 3,
+      "durationMs": 34,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "AddField"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"field operation same field model name\"",
+          "chars": 1741,
+          "tokens": 581
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#7i5",
+          "chars": 169,
+          "tokens": 57
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#7i6",
+          "chars": 237,
+          "tokens": 79
+        }
+      ]
+    },
+    {
+      "taskId": "dj-impact-migrations-module",
+      "kind": "impact",
+      "strategy": "native-naive",
+      "tokens": 43715,
+      "chars": 131138,
+      "toolCalls": 4,
+      "durationMs": 128,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.75,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "basedir"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "MigrationLoader|migrations_module",
+          "chars": 7162,
+          "tokens": 2388
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/migrations/test_loader.py",
+          "chars": 29443,
+          "tokens": 9815
+        },
+        {
+          "tool": "read_file",
+          "args": "django/db/migrations/questioner.py",
+          "chars": 13568,
+          "tokens": 4523
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/migrations/test_commands.py",
+          "chars": 80965,
+          "tokens": 26989
+        }
+      ]
+    },
+    {
+      "taskId": "dj-impact-migrations-module",
+      "kind": "impact",
+      "strategy": "native-ranged",
+      "tokens": 8073,
+      "chars": 24214,
+      "toolCalls": 5,
+      "durationMs": 1,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "MigrationLoader|migrations_module",
+          "chars": 7162,
+          "tokens": 2388
+        },
+        {
+          "tool": "read_file",
+          "args": "django/db/migrations/loader.py:1-81",
+          "chars": 2961,
+          "tokens": 987
+        },
+        {
+          "tool": "read_file",
+          "args": "django/db/migrations/questioner.py:1-100",
+          "chars": 3945,
+          "tokens": 1315
+        },
+        {
+          "tool": "read_file",
+          "args": "django/db/migrations/writer.py:160-280",
+          "chars": 5020,
+          "tokens": 1674
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/migrations/test_commands.py:2371-2491",
+          "chars": 5126,
+          "tokens": 1709
+        }
+      ]
+    },
+    {
+      "taskId": "dj-impact-migrations-module",
+      "kind": "impact",
+      "strategy": "kopt-pack",
+      "tokens": 323,
+      "chars": 967,
+      "toolCalls": 1,
+      "durationMs": 13,
+      "recall": {
+        "fileRecall": 0.3333333333333333,
+        "symbolRecall": 1,
+        "defRecall": 0.25,
+        "filesMissed": [
+          "django/db/migrations/questioner.py",
+          "django/db/migrations/writer.py"
+        ],
+        "symbolsMissed": [],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"MigrationLoader migrations_module\"",
+          "chars": 967,
+          "tokens": 323
+        }
+      ]
+    },
+    {
+      "taskId": "dj-impact-migrations-module",
+      "kind": "impact",
+      "strategy": "kopt-hits+read",
+      "tokens": 705,
+      "chars": 2114,
+      "toolCalls": 3,
+      "durationMs": 10,
+      "recall": {
+        "fileRecall": 0.3333333333333333,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [
+          "django/db/migrations/questioner.py",
+          "django/db/migrations/writer.py"
+        ],
+        "symbolsMissed": [
+          "ask_initial",
+          "basedir"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"MigrationLoader migrations_module\"",
+          "chars": 426,
+          "tokens": 142
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#7a3",
+          "chars": 575,
+          "tokens": 192
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#7a1",
+          "chars": 1113,
+          "tokens": 371
+        }
+      ]
+    }
+  ],
+  "aggregates": [
+    {
+      "strategy": "native-naive",
+      "tasks": 15,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 43715,
+      "meanTokens": 39002,
+      "p90Tokens": 65803,
+      "totalTokens": 585023,
+      "totalChars": 1755006,
+      "meanToolCalls": 3.533333333333333,
+      "meanFileRecall": 0.7666666666666667,
+      "meanSymbolRecall": 0.6277777777777778,
+      "meanDefRecall": 0.611111111111111,
+      "found": 7,
+      "foundRate": 0.4666666666666667,
+      "tokensPerFound": 83575
+    },
+    {
+      "strategy": "native-ranged",
+      "tasks": 15,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 6737,
+      "meanTokens": 6132,
+      "p90Tokens": 8352,
+      "totalTokens": 91976,
+      "totalChars": 275850,
+      "meanToolCalls": 4.466666666666667,
+      "meanFileRecall": 0.7666666666666667,
+      "meanSymbolRecall": 0.6722222222222222,
+      "meanDefRecall": 0.5388888888888889,
+      "found": 8,
+      "foundRate": 0.5333333333333333,
+      "tokensPerFound": 11497
+    },
+    {
+      "strategy": "kopt-pack",
+      "tasks": 15,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 627,
+      "meanTokens": 615,
+      "p90Tokens": 1053,
+      "totalTokens": 9223,
+      "totalChars": 27654,
+      "meanToolCalls": 1,
+      "meanFileRecall": 0.888888888888889,
+      "meanSymbolRecall": 0.8888888888888888,
+      "meanDefRecall": 0.5777777777777777,
+      "found": 8,
+      "foundRate": 0.5333333333333333,
+      "tokensPerFound": 1153
+    },
+    {
+      "strategy": "kopt-hits+read",
+      "tasks": 15,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 729,
+      "meanTokens": 910,
+      "p90Tokens": 1734,
+      "totalTokens": 13657,
+      "totalChars": 40919,
+      "meanToolCalls": 3,
+      "meanFileRecall": 0.888888888888889,
+      "meanSymbolRecall": 0.6777777777777777,
+      "meanDefRecall": 0.6333333333333333,
+      "found": 5,
+      "foundRate": 0.3333333333333333,
+      "tokensPerFound": 2731
+    }
+  ],
+  "paired": [
+    {
+      "a": "native-naive",
+      "b": "kopt-pack",
+      "nRun": 15,
+      "nBoth": 5,
+      "onlyA": 2,
+      "onlyB": 3,
+      "medianRatio": 0.015243765948874066,
+      "geoMeanRatio": 0.012847483477103289,
+      "bCheaper": 5
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-pack",
+      "nRun": 15,
+      "nBoth": 6,
+      "onlyA": 2,
+      "onlyB": 2,
+      "medianRatio": 0.09196089335869408,
+      "geoMeanRatio": 0.08413602646823105,
+      "bCheaper": 6
+    },
+    {
+      "a": "native-naive",
+      "b": "kopt-hits+read",
+      "nRun": 15,
+      "nBoth": 2,
+      "onlyA": 5,
+      "onlyB": 3,
+      "medianRatio": 0.030176677901079925,
+      "geoMeanRatio": 0.028012987435417178,
+      "bCheaper": 2
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-hits+read",
+      "nRun": 15,
+      "nBoth": 3,
+      "onlyA": 5,
+      "onlyB": 2,
+      "medianRatio": 0.29929105192565625,
+      "geoMeanRatio": 0.25006223712459347,
+      "bCheaper": 3
+    },
+    {
+      "a": "native-naive",
+      "b": "native-ranged",
+      "nRun": 15,
+      "nBoth": 5,
+      "onlyA": 2,
+      "onlyB": 3,
+      "medianRatio": 0.12660702375750327,
+      "geoMeanRatio": 0.17357357936784273,
+      "bCheaper": 5
+    }
+  ],
+  "byKind": [
+    {
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tasks": 4,
+      "found": 1,
+      "medianTokens": 42989
+    },
+    {
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tasks": 4,
+      "found": 1,
+      "medianTokens": 7715.5
+    },
+    {
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tasks": 4,
+      "found": 3,
+      "medianTokens": 1051.5
+    },
+    {
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tasks": 4,
+      "found": 3,
+      "medianTokens": 1090.5
+    },
+    {
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tasks": 4,
+      "found": 2,
+      "medianTokens": 37585
+    },
+    {
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tasks": 4,
+      "found": 3,
+      "medianTokens": 5362
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tasks": 4,
+      "found": 2,
+      "medianTokens": 530
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tasks": 4,
+      "found": 2,
+      "medianTokens": 1178.5
+    },
+    {
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tasks": 4,
+      "found": 3,
+      "medianTokens": 47373
+    },
+    {
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tasks": 4,
+      "found": 2,
+      "medianTokens": 5210
+    },
+    {
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tasks": 4,
+      "found": 2,
+      "medianTokens": 466
+    },
+    {
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tasks": 4,
+      "found": 0,
+      "medianTokens": 721
+    },
+    {
+      "kind": "impact",
+      "strategy": "native-naive",
+      "tasks": 3,
+      "found": 1,
+      "medianTokens": 43715
+    },
+    {
+      "kind": "impact",
+      "strategy": "native-ranged",
+      "tasks": 3,
+      "found": 2,
+      "medianTokens": 8073
+    },
+    {
+      "kind": "impact",
+      "strategy": "kopt-pack",
+      "tasks": 3,
+      "found": 1,
+      "medianTokens": 323
+    },
+    {
+      "kind": "impact",
+      "strategy": "kopt-hits+read",
+      "tasks": 3,
+      "found": 0,
+      "medianTokens": 705
+    }
+  ]
+}

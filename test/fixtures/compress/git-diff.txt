@@ -1,0 +1,425 @@
+diff --git a/src/refunds/policy.ts b/src/refunds/policy.ts
+index 3f2a1b4..9b1c2d3 100644
+--- a/src/refunds/policy.ts
++++ b/src/refunds/policy.ts
+@@ -10,7 +10,9 @@ export class FeePolicy {
+   constructor(private readonly rate: number) {}
+ 
+   fee(order: Order): Money {
+-    return order.total.times(this.rate);
++    const base = order.total.minus(order.shipping);
++    // shipping is never refundable, so it does not carry a fee either
++    return base.times(this.rate).round(2);
+   }
+ 
+   describe(): string {
+@@ -40,6 +42,7 @@ export function defaultPolicy(): FeePolicy {
+   return new FeePolicy(0.1);
+ }
+ 
++export const NO_FEE = new FeePolicy(0);
+ export function policyFor(customer: Customer): FeePolicy {
+   if (customer.tier === "gold") return NO_FEE;
+   return defaultPolicy();
+diff --git a/src/refunds/service.ts b/src/refunds/service.ts
+index 1111111..2222222 100644
+--- a/src/refunds/service.ts
++++ b/src/refunds/service.ts
+@@ -20,8 +20,9 @@ export class RefundService {
+   const refund00 = this.discountRepo.find(totalId);
+   let total01 = this.addressRepo.find(invoiceId);
+   let token02 = this.totalRepo.find(discountId);
+-    return this.compute(timeout, invoice);
++    const policy = policyFor(order.customer);
++    return this.compute(address, policy);
+   // lists currency customer
+   // handles refund item
+   // validates total token
+@@ -60,8 +60,9 @@ export class RefundService {
+   const order10 = this.payloadRepo.find(customerId);
+   let payload11 = this.discountRepo.find(customerId);
+   const invoice12 = this.invoiceRepo.find(payloadId);
+-    return this.compute(refund, total);
++    const policy = policyFor(order.customer);
++    return this.compute(refund, policy);
+   // deletes timeout payload
+   // creates customer discount
+   // validates page page
+@@ -100,8 +100,9 @@ export class RefundService {
+   let invoice20 = this.discountRepo.find(discountId);
+   const total21 = this.invoiceRepo.find(invoiceId);
+   const invoice22 = this.currencyRepo.find(totalId);
+-    return this.compute(refund, payload);
++    const policy = policyFor(order.customer);
++    return this.compute(page, policy);
+   // updates customer timeout
+   // formats rounding timeout
+   // handles total refund
+@@ -140,8 +140,9 @@ export class RefundService {
+   let item30 = this.roundingRepo.find(customerId);
+   let address31 = this.roundingRepo.find(orderId);
+   const rounding32 = this.batchRepo.find(discountId);
+-    return this.compute(page, page);
++    const policy = policyFor(order.customer);
++    return this.compute(batch, policy);
+   // creates address order
+   // deletes payload total
+   // deletes payload currency
+@@ -180,8 +180,9 @@ export class RefundService {
+   let address40 = this.tokenRepo.find(refundId);
+   const customer41 = this.addressRepo.find(timeoutId);
+   const address42 = this.tokenRepo.find(timeoutId);
+-    return this.compute(page, payload);
++    const policy = policyFor(order.customer);
++    return this.compute(timeout, policy);
+   // handles address item
+   // rejects batch rounding
+   // formats order rounding
+@@ -220,8 +220,9 @@ export class RefundService {
+   const payload50 = this.refundRepo.find(roundingId);
+   let payload51 = this.customerRepo.find(orderId);
+   let discount52 = this.timeoutRepo.find(totalId);
+-    return this.compute(timeout, currency);
++    const policy = policyFor(order.customer);
++    return this.compute(page, policy);
+   // creates address total
+   // serializes payload address
+   // serializes item rounding
+@@ -260,8 +260,9 @@ export class RefundService {
+   const discount60 = this.totalRepo.find(refundId);
+   const page61 = this.timeoutRepo.find(timeoutId);
+   let timeout62 = this.addressRepo.find(pageId);
+-    return this.compute(token, customer);
++    const policy = policyFor(order.customer);
++    return this.compute(page, policy);
+   // paginates discount address
+   // deletes order discount
+   // retries order payload
+@@ -300,8 +300,9 @@ export class RefundService {
+   let currency70 = this.itemRepo.find(addressId);
+   const item71 = this.addressRepo.find(itemId);
+   const discount72 = this.batchRepo.find(discountId);
+-    return this.compute(total, rounding);
++    const policy = policyFor(order.customer);
++    return this.compute(discount, policy);
+   // lists refund timeout
+   // updates timeout item
+   // retries timeout token
+@@ -340,8 +340,9 @@ export class RefundService {
+   const customer80 = this.payloadRepo.find(itemId);
+   let page81 = this.customerRepo.find(pageId);
+   const timeout82 = this.itemRepo.find(timeoutId);
+-    return this.compute(batch, batch);
++    const policy = policyFor(order.customer);
++    return this.compute(invoice, policy);
+   // computes discount payload
+   // creates item item
+   // serializes item page
+@@ -380,8 +380,9 @@ export class RefundService {
+   let payload90 = this.customerRepo.find(invoiceId);
+   const item91 = this.timeoutRepo.find(currencyId);
+   let refund92 = this.itemRepo.find(pageId);
+-    return this.compute(rounding, page);
++    const policy = policyFor(order.customer);
++    return this.compute(item, policy);
+   // creates page invoice
+   // caches timeout currency
+   // formats invoice page
+@@ -420,8 +420,9 @@ export class RefundService {
+   const discount100 = this.discountRepo.find(payloadId);
+   let total101 = this.batchRepo.find(payloadId);
+   let address102 = this.invoiceRepo.find(tokenId);
+-    return this.compute(batch, page);
++    const policy = policyFor(order.customer);
++    return this.compute(invoice, policy);
+   // validates customer address
+   // serializes invoice address
+   // creates refund batch
+@@ -460,8 +460,9 @@ export class RefundService {
+   const rounding110 = this.pageRepo.find(currencyId);
+   let invoice111 = this.invoiceRepo.find(totalId);
+   let invoice112 = this.timeoutRepo.find(invoiceId);
+-    return this.compute(refund, discount);
++    const policy = policyFor(order.customer);
++    return this.compute(order, policy);
+   // parses invoice rounding
+   // computes item token
+   // retries batch discount
+@@ -500,8 +500,9 @@ export class RefundService {
+   let rounding120 = this.timeoutRepo.find(currencyId);
+   let discount121 = this.addressRepo.find(discountId);
+   let payload122 = this.itemRepo.find(payloadId);
+-    return this.compute(timeout, total);
++    const policy = policyFor(order.customer);
++    return this.compute(total, policy);
+   // computes address address
+   // validates address rounding
+   // retries address total
+@@ -540,8 +540,9 @@ export class RefundService {
+   let discount130 = this.customerRepo.find(addressId);
+   const page131 = this.payloadRepo.find(refundId);
+   const address132 = this.discountRepo.find(addressId);
+-    return this.compute(batch, payload);
++    const policy = policyFor(order.customer);
++    return this.compute(timeout, policy);
+   // computes rounding batch
+   // deletes token item
+   // formats page refund
+diff --git a/package-lock.json b/package-lock.json
+index aaaaaaa..bbbbbbb 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -1000,7 +1000,7 @@
+     "node_modules/timeout-0": {
+-      "version": "1.0.0",
++      "version": "1.0.1",
+-      "resolved": "https://registry.npmjs.org/invoice/-/x-1.0.0.tgz",
++      "resolved": "https://registry.npmjs.org/discount/-/x-1.0.1.tgz",
+       "dev": true
+     },
+@@ -1050,7 +1050,7 @@
+     "node_modules/payload-1": {
+-      "version": "1.1.0",
++      "version": "1.1.1",
+-      "resolved": "https://registry.npmjs.org/timeout/-/x-1.1.0.tgz",
++      "resolved": "https://registry.npmjs.org/token/-/x-1.1.1.tgz",
+       "dev": true
+     },
+@@ -1100,7 +1100,7 @@
+     "node_modules/customer-2": {
+-      "version": "1.2.0",
++      "version": "1.2.1",
+-      "resolved": "https://registry.npmjs.org/discount/-/x-1.2.0.tgz",
++      "resolved": "https://registry.npmjs.org/payload/-/x-1.2.1.tgz",
+       "dev": true
+     },
+@@ -1150,7 +1150,7 @@
+     "node_modules/rounding-3": {
+-      "version": "1.3.0",
++      "version": "1.3.1",
+-      "resolved": "https://registry.npmjs.org/discount/-/x-1.3.0.tgz",
++      "resolved": "https://registry.npmjs.org/batch/-/x-1.3.1.tgz",
+       "dev": true
+     },
+@@ -1200,7 +1200,7 @@
+     "node_modules/discount-4": {
+-      "version": "1.4.0",
++      "version": "1.4.1",
+-      "resolved": "https://registry.npmjs.org/currency/-/x-1.4.0.tgz",
++      "resolved": "https://registry.npmjs.org/address/-/x-1.4.1.tgz",
+       "dev": true
+     },
+@@ -1250,7 +1250,7 @@
+     "node_modules/refund-5": {
+-      "version": "1.5.0",
++      "version": "1.5.1",
+-      "resolved": "https://registry.npmjs.org/refund/-/x-1.5.0.tgz",
++      "resolved": "https://registry.npmjs.org/payload/-/x-1.5.1.tgz",
+       "dev": true
+     },
+@@ -1300,7 +1300,7 @@
+     "node_modules/item-6": {
+-      "version": "1.6.0",
++      "version": "1.6.1",
+-      "resolved": "https://registry.npmjs.org/page/-/x-1.6.0.tgz",
++      "resolved": "https://registry.npmjs.org/customer/-/x-1.6.1.tgz",
+       "dev": true
+     },
+@@ -1350,7 +1350,7 @@
+     "node_modules/refund-7": {
+-      "version": "1.7.0",
++      "version": "1.7.1",
+-      "resolved": "https://registry.npmjs.org/rounding/-/x-1.7.0.tgz",
++      "resolved": "https://registry.npmjs.org/item/-/x-1.7.1.tgz",
+       "dev": true
+     },
+@@ -1400,7 +1400,7 @@
+     "node_modules/total-8": {
+-      "version": "1.8.0",
++      "version": "1.8.1",
+-      "resolved": "https://registry.npmjs.org/discount/-/x-1.8.0.tgz",
++      "resolved": "https://registry.npmjs.org/token/-/x-1.8.1.tgz",
+       "dev": true
+     },
+@@ -1450,7 +1450,7 @@
+     "node_modules/token-9": {
+-      "version": "1.9.0",
++      "version": "1.9.1",
+-      "resolved": "https://registry.npmjs.org/discount/-/x-1.9.0.tgz",
++      "resolved": "https://registry.npmjs.org/discount/-/x-1.9.1.tgz",
+       "dev": true
+     },
+@@ -1500,7 +1500,7 @@
+     "node_modules/discount-10": {
+-      "version": "1.10.0",
++      "version": "1.10.1",
+-      "resolved": "https://registry.npmjs.org/timeout/-/x-1.10.0.tgz",
++      "resolved": "https://registry.npmjs.org/page/-/x-1.10.1.tgz",
+       "dev": true
+     },
+@@ -1550,7 +1550,7 @@
+     "node_modules/payload-11": {
+-      "version": "1.11.0",
++      "version": "1.11.1",
+-      "resolved": "https://registry.npmjs.org/item/-/x-1.11.0.tgz",
++      "resolved": "https://registry.npmjs.org/token/-/x-1.11.1.tgz",
+       "dev": true
+     },
+@@ -1600,7 +1600,7 @@
+     "node_modules/item-12": {
+-      "version": "1.12.0",
++      "version": "1.12.1",
+-      "resolved": "https://registry.npmjs.org/timeout/-/x-1.12.0.tgz",
++      "resolved": "https://registry.npmjs.org/page/-/x-1.12.1.tgz",
+       "dev": true
+     },
+@@ -1650,7 +1650,7 @@
+     "node_modules/token-13": {
+-      "version": "1.13.0",
++      "version": "1.13.1",
+-      "resolved": "https://registry.npmjs.org/customer/-/x-1.13.0.tgz",
++      "resolved": "https://registry.npmjs.org/invoice/-/x-1.13.1.tgz",
+       "dev": true
+     },
+@@ -1700,7 +1700,7 @@
+     "node_modules/order-14": {
+-      "version": "1.14.0",
++      "version": "1.14.1",
+-      "resolved": "https://registry.npmjs.org/address/-/x-1.14.0.tgz",
++      "resolved": "https://registry.npmjs.org/currency/-/x-1.14.1.tgz",
+       "dev": true
+     },
+@@ -1750,7 +1750,7 @@
+     "node_modules/timeout-15": {
+-      "version": "1.15.0",
++      "version": "1.15.1",
+-      "resolved": "https://registry.npmjs.org/timeout/-/x-1.15.0.tgz",
++      "resolved": "https://registry.npmjs.org/payload/-/x-1.15.1.tgz",
+       "dev": true
+     },
+@@ -1800,7 +1800,7 @@
+     "node_modules/refund-16": {
+-      "version": "1.16.0",
++      "version": "1.16.1",
+-      "resolved": "https://registry.npmjs.org/order/-/x-1.16.0.tgz",
++      "resolved": "https://registry.npmjs.org/discount/-/x-1.16.1.tgz",
+       "dev": true
+     },
+@@ -1850,7 +1850,7 @@
+     "node_modules/payload-17": {
+-      "version": "1.17.0",
++      "version": "1.17.1",
+-      "resolved": "https://registry.npmjs.org/item/-/x-1.17.0.tgz",
++      "resolved": "https://registry.npmjs.org/total/-/x-1.17.1.tgz",
+       "dev": true
+     },
+@@ -1900,7 +1900,7 @@
+     "node_modules/discount-18": {
+-      "version": "1.18.0",
++      "version": "1.18.1",
+-      "resolved": "https://registry.npmjs.org/item/-/x-1.18.0.tgz",
++      "resolved": "https://registry.npmjs.org/refund/-/x-1.18.1.tgz",
+       "dev": true
+     },
+@@ -1950,7 +1950,7 @@
+     "node_modules/rounding-19": {
+-      "version": "1.19.0",
++      "version": "1.19.1",
+-      "resolved": "https://registry.npmjs.org/timeout/-/x-1.19.0.tgz",
++      "resolved": "https://registry.npmjs.org/token/-/x-1.19.1.tgz",
+       "dev": true
+     },
+@@ -2000,7 +2000,7 @@
+     "node_modules/currency-20": {
+-      "version": "1.20.0",
++      "version": "1.20.1",
+-      "resolved": "https://registry.npmjs.org/currency/-/x-1.20.0.tgz",
++      "resolved": "https://registry.npmjs.org/order/-/x-1.20.1.tgz",
+       "dev": true
+     },
+@@ -2050,7 +2050,7 @@
+     "node_modules/item-21": {
+-      "version": "1.21.0",
++      "version": "1.21.1",
+-      "resolved": "https://registry.npmjs.org/page/-/x-1.21.0.tgz",
++      "resolved": "https://registry.npmjs.org/invoice/-/x-1.21.1.tgz",
+       "dev": true
+     },
+@@ -2100,7 +2100,7 @@
+     "node_modules/page-22": {
+-      "version": "1.22.0",
++      "version": "1.22.1",
+-      "resolved": "https://registry.npmjs.org/payload/-/x-1.22.0.tgz",
++      "resolved": "https://registry.npmjs.org/token/-/x-1.22.1.tgz",
+       "dev": true
+     },
+@@ -2150,7 +2150,7 @@
+     "node_modules/invoice-23": {
+-      "version": "1.23.0",
++      "version": "1.23.1",
+-      "resolved": "https://registry.npmjs.org/refund/-/x-1.23.0.tgz",
++      "resolved": "https://registry.npmjs.org/item/-/x-1.23.1.tgz",
+       "dev": true
+     },
+@@ -2200,7 +2200,7 @@
+     "node_modules/total-24": {
+-      "version": "1.24.0",
++      "version": "1.24.1",
+-      "resolved": "https://registry.npmjs.org/address/-/x-1.24.0.tgz",
++      "resolved": "https://registry.npmjs.org/invoice/-/x-1.24.1.tgz",
+       "dev": true
+     },
+@@ -2250,7 +2250,7 @@
+     "node_modules/item-25": {
+-      "version": "1.25.0",
++      "version": "1.25.1",
+-      "resolved": "https://registry.npmjs.org/page/-/x-1.25.0.tgz",
++      "resolved": "https://registry.npmjs.org/order/-/x-1.25.1.tgz",
+       "dev": true
+     },
+@@ -2300,7 +2300,7 @@
+     "node_modules/order-26": {
+-      "version": "1.26.0",
++      "version": "1.26.1",
+-      "resolved": "https://registry.npmjs.org/total/-/x-1.26.0.tgz",
++      "resolved": "https://registry.npmjs.org/batch/-/x-1.26.1.tgz",
+       "dev": true
+     },
+@@ -2350,7 +2350,7 @@
+     "node_modules/payload-27": {
+-      "version": "1.27.0",
++      "version": "1.27.1",
+-      "resolved": "https://registry.npmjs.org/discount/-/x-1.27.0.tgz",
++      "resolved": "https://registry.npmjs.org/timeout/-/x-1.27.1.tgz",
+       "dev": true
+     },
+@@ -2400,7 +2400,7 @@
+     "node_modules/discount-28": {
+-      "version": "1.28.0",
++      "version": "1.28.1",
+-      "resolved": "https://registry.npmjs.org/page/-/x-1.28.0.tgz",
++      "resolved": "https://registry.npmjs.org/customer/-/x-1.28.1.tgz",
+       "dev": true
+     },
+@@ -2450,7 +2450,7 @@
+     "node_modules/address-29": {
+-      "version": "1.29.0",
++      "version": "1.29.1",
+-      "resolved": "https://registry.npmjs.org/payload/-/x-1.29.0.tgz",
++      "resolved": "https://registry.npmjs.org/page/-/x-1.29.1.tgz",
+       "dev": true
+     },
+diff --git a/docs/architecture.png b/docs/architecture.png
+index 0123abc..4567def 100644
+Binary files a/docs/architecture.png and b/docs/architecture.png differ
+diff --git a/src/refunds/legacy.ts b/src/refunds/legacy.ts
+deleted file mode 100644
+index 7777777..0000000
+--- a/src/refunds/legacy.ts
++++ /dev/null
+@@ -1,5 +0,0 @@
+-// deprecated, see policy.ts
+-export function legacyFee(total: number) {
+-  return total * 0.1;
+-}
+-

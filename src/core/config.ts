@@ -1,6 +1,8 @@
-import { existsSync, readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { existsSync, realpathSync, statSync } from 'node:fs';
 import { homedir } from 'node:os';
-import { join, resolve } from 'node:path';
+import { dirname, isAbsolute, join, parse, posix, resolve, win32 } from 'node:path';
+import { readTextFile, samePath } from '../telemetry/fsutil.js';
 import { setCharsPerToken } from './tokens.js';
 
 export interface Budgets {
@@ -20,7 +22,11 @@ export interface Budgets {
 export interface KoptConfig {
   /** Absolute repo root. */
   root: string;
-  /** Per-repo data dir (index, outputs). Default `<root>/.kopt`. */
+  /**
+   * Per-repo data dir (index, command logs). Default: an OS cache dir keyed by the root
+   * (`cacheRoot()/<name>-<hash8>`), so nothing is written into the repository; `<root>/.kopt` when that
+   * directory already exists (per-project mode); `KOPT_DATA_DIR` or a config file override both.
+   */
   dataDir: string;
   /** Per-user dir (telemetry, session state). Default `~/.kopt`. */
   userDir: string;
@@ -50,6 +56,8 @@ export interface KoptConfig {
     endpoint?: string;
     /** Name of the env var holding the bearer token for the endpoint. */
     tokenEnv: string;
+    /** User name attached to shipped events; false = anonymous. Default: the OS user name. */
+    user?: string | false;
   };
   central: {
     /** Remote MCP URL (Streamable HTTP) when the team uses the centralized server. */
@@ -60,6 +68,14 @@ export interface KoptConfig {
     repoName?: string;
   };
   charsPerToken: number;
+  /** Kiro integration. */
+  kiro?: {
+    /**
+     * Kiro IDE 0.x only loads hooks from `<workspace>/.kiro/hooks/*.kiro.hook`. `auto` (default): the MCP server
+     * writes kopt's legacy hook files into a workspace when the installed IDE is 0.x. Env: KOPT_LEGACY_WORKSPACE_HOOKS.
+     */
+    legacyWorkspaceHooks?: 'auto' | 'on' | 'off';
+  };
 }
 
 export const DEFAULT_EXCLUDES = [
@@ -69,12 +85,118 @@ export const DEFAULT_EXCLUDES = [
   '*.generated.*', '*.g.cs', '*.designer.cs', '*_pb2.py', '*.pb.go',
 ];
 
+export interface PlatformEnv {
+  platform?: NodeJS.Platform;
+  env?: NodeJS.ProcessEnv;
+  home?: string;
+}
+
+/** `path` flavour of a (possibly simulated) platform. */
+export function pathFor(platform: NodeJS.Platform = process.platform): typeof posix {
+  return platform === 'win32' ? win32 : posix;
+}
+
+/**
+ * Base directory of kopt's per-repo caches, outside every repository:
+ * macOS `~/Library/Caches/kopt`, Linux `$XDG_CACHE_HOME/kopt` (default `~/.cache/kopt`),
+ * Windows `%LOCALAPPDATA%\kopt`. `KOPT_CACHE_DIR` overrides it.
+ */
+export function cacheRoot(o: PlatformEnv = {}): string {
+  const platform = o.platform ?? process.platform;
+  const env = o.env ?? process.env;
+  const home = o.home ?? homedir();
+  const p = pathFor(platform);
+  if (env.KOPT_CACHE_DIR) return p.resolve(env.KOPT_CACHE_DIR);
+  if (platform === 'darwin') return p.join(home, 'Library', 'Caches', 'kopt');
+  if (platform === 'win32') return p.join(env.LOCALAPPDATA || p.join(home, 'AppData', 'Local'), 'kopt');
+  return p.join(env.XDG_CACHE_HOME || p.join(home, '.cache'), 'kopt');
+}
+
+/** Per-user dir (telemetry, governor sessions, install manifest): `KOPT_HOME`, else `~/.kopt` (`%USERPROFILE%\.kopt`). */
+export function userDirFor(o: PlatformEnv = {}): string {
+  const env = o.env ?? process.env;
+  return env.KOPT_HOME || pathFor(o.platform).join(o.home ?? homedir(), '.kopt');
+}
+
+function realpathOr(p: string): string {
+  try {
+    return realpathSync.native(p);
+  } catch {
+    return p;
+  }
+}
+
+/**
+ * Stable cache key of a repo root: `<name>-<sha1(path)[:8]>`. The path is canonicalized (symlinks resolved,
+ * case-folded on Windows) so the MCP server, the hooks and the CLI agree whatever spelling they were given.
+ */
+export function repoCacheKey(root: string, platform: NodeJS.Platform = process.platform): string {
+  let canonical = realpathOr(root);
+  if (platform === 'win32') canonical = canonical.replace(/\//g, '\\').toLowerCase();
+  const hash = createHash('sha1').update(canonical).digest('hex').slice(0, 8);
+  const name = pathFor(platform).basename(canonical).replace(/[^A-Za-z0-9._-]+/g, '_').slice(0, 40) || 'root';
+  return `${name}-${hash}`;
+}
+
+function isDir(p: string): boolean {
+  try {
+    return statSync(p).isDirectory();
+  } catch {
+    return false;
+  }
+}
+
+/** Default data dir of a repo (see `KoptConfig.dataDir`). */
+export function defaultDataDir(root: string): string {
+  const absRoot = resolve(root);
+  const fromEnv = process.env.KOPT_DATA_DIR;
+  if (fromEnv) return isAbsolute(fromEnv) ? fromEnv : resolve(absRoot, fromEnv);
+  const local = join(absRoot, '.kopt');
+  // ~/.kopt is the user dir, never a project's data dir.
+  if (!isUnsafeRoot(absRoot) && isDir(local)) return local;
+  return join(cacheRoot(), repoCacheKey(absRoot));
+}
+
+/** Home dir or filesystem root: never treated as a project (nothing is indexed there). */
+export function isUnsafeRoot(root: string, home: string = homedir()): boolean {
+  const abs = resolve(root);
+  if (abs === parse(abs).root) return true;
+  // compare canonical paths: a cwd is reported through symlinks resolved (/private/var vs /var on macOS), and
+  // case-insensitively where the filesystem is (c:\users\me vs C:\Users\me on Windows)
+  return samePath(abs, resolve(home)) || samePath(realpathOr(abs), realpathOr(resolve(home)));
+}
+
+/**
+ * Project root of a directory: the nearest ancestor holding `.git` or a per-project `.kopt/index.db`, else the
+ * directory itself. Used alike by the CLI, the hooks and the MCP server so they all key the same index.
+ */
+export function findProjectRoot(start: string, home: string = homedir()): string {
+  const begin = resolve(start);
+  const homeAbs = resolve(home);
+  const homeReal = realpathOr(homeAbs);
+  let dir = begin;
+  for (;;) {
+    // never climb into the home dir (a dotfiles repo there is not the user's project)
+    if (dir !== begin && (dir === homeAbs || dir === homeReal)) return begin;
+    if (existsSync(join(dir, '.git'))) return dir;
+    if (dir !== homeAbs && dir !== homeReal && existsSync(join(dir, '.kopt', 'index.db'))) return dir;
+    const parent = dirname(dir);
+    if (parent === dir) return begin;
+    dir = parent;
+  }
+}
+
+/** True when the repo keeps its data in `<root>/.kopt` (per-project mode) rather than in the user cache. */
+export function usesProjectDataDir(cfg: Pick<KoptConfig, 'root' | 'dataDir'>): boolean {
+  return resolve(cfg.dataDir) === join(resolve(cfg.root), '.kopt');
+}
+
 export function defaultConfig(root: string): KoptConfig {
   const absRoot = resolve(root);
   return {
     root: absRoot,
-    dataDir: join(absRoot, '.kopt'),
-    userDir: process.env.KOPT_HOME || join(homedir(), '.kopt'),
+    dataDir: defaultDataDir(absRoot),
+    userDir: userDirFor(),
     exclude: [...DEFAULT_EXCLUDES],
     maxFileBytes: 1_000_000,
     budgets: { find: 700, pack: 2500, read: 2000, outline: 1200, refs: 900, run: 900, expand: 1500, frontload: 350 },
@@ -107,15 +229,19 @@ function merge<T>(base: T, over: DeepPartial<T> | undefined): T {
 }
 
 /**
- * Load config: defaults < ~/.kopt/config.json < <root>/.kopt/config.json < <root>/kopt.config.json < env.
+ * Load config: defaults < ~/.kopt/config.json < <dataDir>/config.json < <root>/kopt.config.json < env.
+ * A relative `dataDir` in a config file is resolved against the repo root.
  */
 export function loadConfig(root: string = process.cwd()): KoptConfig {
   let cfg = defaultConfig(root);
   const candidates = [join(cfg.userDir, 'config.json'), join(cfg.dataDir, 'config.json'), join(cfg.root, 'kopt.config.json')];
-  for (const file of candidates) {
+  for (const file of [...new Set(candidates)]) {
     if (!existsSync(file)) continue;
     try {
-      cfg = merge(cfg, JSON.parse(readFileSync(file, 'utf8')));
+      const over = JSON.parse(readTextFile(file));
+      if (over && typeof over.dataDir === 'string' && !process.env.KOPT_DATA_DIR) over.dataDir = resolve(cfg.root, over.dataDir);
+      else if (over && 'dataDir' in over) delete over.dataDir;
+      cfg = merge(cfg, over);
     } catch (err) {
       process.stderr.write(`kopt: ignoring invalid config ${file}: ${(err as Error).message}\n`);
     }
@@ -124,6 +250,11 @@ export function loadConfig(root: string = process.cwd()): KoptConfig {
   if (process.env.KOPT_TELEMETRY === '0') cfg.telemetry.enabled = false;
   if (process.env.KOPT_MCP_URL) cfg.central.mcpUrl = process.env.KOPT_MCP_URL;
   if (process.env.KOPT_SNAPSHOT_URL) cfg.central.snapshotUrl = process.env.KOPT_SNAPSHOT_URL;
+  const legacy = process.env.KOPT_LEGACY_WORKSPACE_HOOKS?.toLowerCase();
+  if (legacy) {
+    const mode = ['1', 'on', 'true', 'yes'].includes(legacy) ? 'on' : ['0', 'off', 'false', 'no'].includes(legacy) ? 'off' : 'auto';
+    cfg.kiro = { ...cfg.kiro, legacyWorkspaceHooks: mode };
+  }
   setCharsPerToken(cfg.charsPerToken);
   return cfg;
 }

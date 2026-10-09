@@ -1,0 +1,155 @@
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] shop-parent                                         [jar]
+[INFO] shop-model                                          [jar]
+[INFO] shop-core                                           [jar]
+[INFO] shop-persistence                                    [jar]
+[INFO] shop-api                                            [jar]
+[INFO] shop-web                                            [jar]
+[INFO] 
+[INFO] -----------------------< com.acme.shop:shop-parent >--------------------
+[INFO] Building shop-parent 1.4.0-SNAPSHOT                                  [1/6]
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-enforcer-plugin:3.4.1:enforce (enforce-versions) @ shop-parent ---
+[INFO] 
+[INFO] -----------------------< com.acme.shop:shop-model >---------------------
+[INFO] Building shop-model 1.4.0-SNAPSHOT                                  [2/6]
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/spring-core/6.1.0/spring-core-6.1.0.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/spring-core/6.1.0/spring-core-6.1.0.pom (2.1 kB at 45 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/spring-core/6.1.1/spring-core-6.1.1.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/spring-core/6.1.1/spring-core-6.1.1.pom (2.1 kB at 45 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/spring-core/6.1.2/spring-core-6.1.2.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/spring-core/6.1.2/spring-core-6.1.2.pom (2.1 kB at 45 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/spring-core/6.1.3/spring-core-6.1.3.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/spring-core/6.1.3/spring-core-6.1.3.pom (2.1 kB at 45 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/spring-core/6.1.4/spring-core-6.1.4.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/spring-core/6.1.4/spring-core-6.1.4.pom (2.1 kB at 45 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/spring-core/6.1.5/spring-core-6.1.5.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/spring-core/6.1.5/spring-core-6.1.5.pom (2.1 kB at 45 kB/s)
+[INFO] 
+[INFO] --- maven-resources-plugin:3.3.1:resources (default-resources) @ shop-model ---
+[INFO] Copying 4 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.11.0:compile (default-compile) @ shop-model ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 53 source files with javac [debug release 17] to target/classes
+[WARNING] /home/dev/shop/shop-model/src/main/java/com/acme/shop/legacy/LegacyMapper.java:[33,18] [deprecation] getRawValue() in Field has been deprecated
+[INFO] 
+[INFO] --- maven-surefire-plugin:3.2.5:test (default-test) @ shop-model ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.acme.shop.orders.InvoiceMapperTest
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.651 s -- in com.acme.shop.orders.InvoiceMapperTest
+[INFO] Running com.acme.shop.refunds.InvoiceRepositoryTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.670 s -- in com.acme.shop.refunds.InvoiceRepositoryTest
+[INFO] Running com.acme.shop.payments.CustomerMapperTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.503 s -- in com.acme.shop.payments.CustomerMapperTest
+[INFO] Running com.acme.shop.invoices.OrderMapperTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.395 s -- in com.acme.shop.invoices.OrderMapperTest
+[INFO] Running com.acme.shop.customers.InvoiceMapperTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.130 s -- in com.acme.shop.customers.InvoiceMapperTest
+[INFO] Running com.acme.shop.catalog.CustomerServiceTest
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.436 s -- in com.acme.shop.catalog.CustomerServiceTest
+[INFO] Running com.acme.shop.inventory.CustomerRepositoryTest
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.455 s -- in com.acme.shop.inventory.CustomerRepositoryTest
+[INFO] Running com.acme.shop.shipping.OrderMapperTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.217 s -- in com.acme.shop.shipping.OrderMapperTest
+[INFO] Running com.acme.shop.auth.RefundRepositoryTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.178 s -- in com.acme.shop.auth.RefundRepositoryTest
+[INFO] Running com.acme.shop.pricing.OrderRepositoryTest
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.449 s -- in com.acme.shop.pricing.OrderRepositoryTest
+[INFO] Running com.acme.shop.tax.RefundRepositoryTest
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.580 s -- in com.acme.shop.tax.RefundRepositoryTest
+[INFO] Running com.acme.shop.discounts.InvoiceServiceTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.693 s -- in com.acme.shop.discounts.InvoiceServiceTest
+[INFO] Running com.acme.shop.reports.InvoiceMapperTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.526 s -- in com.acme.shop.reports.InvoiceMapperTest
+[INFO] Running com.acme.shop.webhooks.PriceServiceTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.777 s -- in com.acme.shop.webhooks.PriceServiceTest
+[INFO] Running com.acme.shop.notifications.RefundValidatorTest
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.260 s -- in com.acme.shop.notifications.RefundValidatorTest
+[INFO] Running com.acme.shop.cart.OrderMapperTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.252 s -- in com.acme.shop.cart.OrderMapperTest
+[INFO] Running com.acme.shop.orders.InvoiceServiceTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.624 s -- in com.acme.shop.orders.InvoiceServiceTest
+[INFO] Running com.acme.shop.refunds.RefundServiceTest
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.454 s -- in com.acme.shop.refunds.RefundServiceTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 154, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- maven-jar-plugin:3.3.0:jar (default-jar) @ shop-model ---
+[INFO] Building jar: /home/dev/shop/shop-model/target/shop-model-1.4.0-SNAPSHOT.jar
+[INFO] 
+[INFO] -----------------------< com.acme.shop:shop-core >----------------------
+[INFO] Building shop-core 1.4.0-SNAPSHOT                                  [3/6]
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/spring-core/6.1.0/spring-core-6.1.0.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/spring-core/6.1.0/spring-core-6.1.0.pom (2.1 kB at 45 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/spring-core/6.1.1/spring-core-6.1.1.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/spring-core/6.1.1/spring-core-6.1.1.pom (2.1 kB at 45 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/spring-core/6.1.2/spring-core-6.1.2.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/spring-core/6.1.2/spring-core-6.1.2.pom (2.1 kB at 45 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/spring-core/6.1.3/spring-core-6.1.3.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/spring-core/6.1.3/spring-core-6.1.3.pom (2.1 kB at 45 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/spring-core/6.1.4/spring-core-6.1.4.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/spring-core/6.1.4/spring-core-6.1.4.pom (2.1 kB at 45 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/spring-core/6.1.5/spring-core-6.1.5.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/spring-core/6.1.5/spring-core-6.1.5.pom (2.1 kB at 45 kB/s)
+[INFO] 
+[INFO] --- maven-resources-plugin:3.3.1:resources (default-resources) @ shop-core ---
+[INFO] Copying 4 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.11.0:compile (default-compile) @ shop-core ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 66 source files with javac [debug release 17] to target/classes
+[INFO] -------------------------------------------------------------
+[ERROR] COMPILATION ERROR :
+[INFO] -------------------------------------------------------------
+[ERROR] /home/dev/shop/shop-core/src/main/java/com/acme/shop/orders/OrderService.java:[42,17] cannot find symbol
+  symbol:   method computeTotal(java.util.List<com.acme.shop.model.Item>)
+  location: variable calculator of type com.acme.shop.pricing.PriceCalculator
+[ERROR] /home/dev/shop/shop-core/src/main/java/com/acme/shop/orders/OrderService.java:[57,29] incompatible types: java.lang.String cannot be converted to int
+[ERROR] /home/dev/shop/shop-core/src/main/java/com/acme/shop/refunds/RefundService.java:[88,9] method does not override or implement a method from a supertype
+[INFO] 3 errors
+[INFO] -------------------------------------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for shop-parent 1.4.0-SNAPSHOT:
+[INFO] 
+[INFO] shop-parent ....................................... SUCCESS [  0.655 s]
+[INFO] shop-model ........................................ SUCCESS [  8.712 s]
+[INFO] shop-core ......................................... FAILURE [  3.217 s]
+[INFO] shop-persistence .................................. SKIPPED
+[INFO] shop-api .......................................... SKIPPED
+[INFO] shop-web .......................................... SKIPPED
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  14.902 s
+[INFO] Finished at: 2026-10-09T10:15:42+02:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.11.0:compile (default-compile) on project shop-core: Compilation failure: Compilation failure:
+[ERROR] /home/dev/shop/shop-core/src/main/java/com/acme/shop/orders/OrderService.java:[42,17] cannot find symbol
+[ERROR]   symbol:   method computeTotal(java.util.List<com.acme.shop.model.Item>)
+[ERROR]   location: variable calculator of type com.acme.shop.pricing.PriceCalculator
+[ERROR] /home/dev/shop/shop-core/src/main/java/com/acme/shop/orders/OrderService.java:[57,29] incompatible types: java.lang.String cannot be converted to int
+[ERROR] /home/dev/shop/shop-core/src/main/java/com/acme/shop/refunds/RefundService.java:[88,9] method does not override or implement a method from a supertype
+[ERROR] -> [Help 1]
+[ERROR]
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR]
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
+[ERROR]
+[ERROR] After correcting the problems, you can resume the build with the command
+[ERROR]   mvn <args> -rf :shop-core

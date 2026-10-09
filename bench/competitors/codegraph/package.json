@@ -1,0 +1,9 @@
+{
+  "name": "bench-codegraph-image",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Pins CodeGraph for the sandboxed competitor benchmark (installed inside Docker only).",
+  "dependencies": {
+    "@colbymchenry/codegraph": "1.6.2"
+  }
+}

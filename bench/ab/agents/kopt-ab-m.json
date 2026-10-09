@@ -1,0 +1,12 @@
+{
+  "name": "kopt-ab-m",
+  "description": "A/B memory probe: no tools at all. A task this arm answers correctly is answerable from model memory and is flagged (or excluded with --exclude-memorized).",
+  "prompt": "You answer developer questions about the code in the current workspace. Do not modify any file.",
+  "tools": [],
+  "allowedTools": [],
+  "includeMcpJson": false,
+  "includePowers": false,
+  "hooks": {
+    "stop": [{ "command": "cat > \"${KOPT_AB_RUN_DIR:-/tmp}/stop-hook.json\"" }]
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "session_id": "7d1e5f00-cli-session",
+  "cwd": "/work/acme-api",
+  "session_state": {
+    "conversation_metadata": {
+      "user_turn_metadatas": [
+        {
+          "loop_id": { "rand": 1 },
+          "model_id": "claude-sonnet-4.6",
+          "metering_usage": [ { "value": 0.026, "unit": "credit", "unit_plural": "credits" }, { "value": 0.077, "unit": "credit", "unit_plural": "credits" } ],
+          "total_request_count": 2,
+          "builtin_tool_uses": 3,
+          "turn_duration": { "secs": 12, "nanos": 500000000 },
+          "end_reason": "UserTurnEnd",
+          "context_usage_percentage": 7.25,
+          "input_token_count": 0,
+          "output_token_count": 0,
+          "request_start_timestamp_ms": 1791000000000
+        },
+        {
+          "model_id": "claude-sonnet-4.6",
+          "metering_usage": [ { "value": 0.5, "unit": "credit" } ],
+          "total_request_count": 1,
+          "builtin_tool_uses": 0,
+          "turn_duration": 4.2,
+          "context_usage_percentage": 9.0,
+          "request_start_timestamp_ms": 1791000100000
+        }
+      ]
+    }
+  }
+}

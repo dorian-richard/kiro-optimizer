@@ -1,0 +1,20 @@
+MSBuild version 17.9.8+b34f75857 for .NET
+  Determining projects to restore...
+  Restored /home/dev/shop/src/Shop.Api/Shop.Api.csproj (in 312 ms).
+  2 of 3 projects are up-to-date for restore.
+  Shop.Domain -> /home/dev/shop/src/Shop.Domain/bin/Debug/net8.0/Shop.Domain.dll
+/home/dev/shop/src/Shop.Core/Refunds/RefundPolicy.cs(18,9): warning CS8602: Dereference of a possibly null reference. [/home/dev/shop/src/Shop.Core/Shop.Core.csproj]
+/home/dev/shop/src/Shop.Core/Orders/OrderService.cs(42,17): error CS0103: The name 'ComputeTotal' does not exist in the current context [/home/dev/shop/src/Shop.Core/Shop.Core.csproj]
+/home/dev/shop/src/Shop.Core/Orders/OrderService.cs(57,29): error CS0029: Cannot implicitly convert type 'string' to 'int' [/home/dev/shop/src/Shop.Core/Shop.Core.csproj]
+/home/dev/shop/src/Shop.Api/Controllers/OrdersController.cs(23,13): error CS0246: The type or namespace name 'IOrderQueue' could not be found (are you missing a using directive or an assembly reference?) [/home/dev/shop/src/Shop.Api/Shop.Api.csproj]
+
+Build FAILED.
+
+/home/dev/shop/src/Shop.Core/Refunds/RefundPolicy.cs(18,9): warning CS8602: Dereference of a possibly null reference. [/home/dev/shop/src/Shop.Core/Shop.Core.csproj]
+/home/dev/shop/src/Shop.Core/Orders/OrderService.cs(42,17): error CS0103: The name 'ComputeTotal' does not exist in the current context [/home/dev/shop/src/Shop.Core/Shop.Core.csproj]
+/home/dev/shop/src/Shop.Core/Orders/OrderService.cs(57,29): error CS0029: Cannot implicitly convert type 'string' to 'int' [/home/dev/shop/src/Shop.Core/Shop.Core.csproj]
+/home/dev/shop/src/Shop.Api/Controllers/OrdersController.cs(23,13): error CS0246: The type or namespace name 'IOrderQueue' could not be found (are you missing a using directive or an assembly reference?) [/home/dev/shop/src/Shop.Api/Shop.Api.csproj]
+    1 Warning(s)
+    3 Error(s)
+
+Time Elapsed 00:00:07.91

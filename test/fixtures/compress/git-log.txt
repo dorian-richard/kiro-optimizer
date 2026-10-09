@@ -1,0 +1,484 @@
+commit 29971a1581d5f6a330d3791b18c01ee751d0bbb1 (HEAD -> main, origin/main)
+Author: Ana Silva <ana@acme.com>
+Date:   Mon Oct 1 10:10:00 2026 +0200
+
+    Add timeout handling in cart
+
+    The previous implementation rejects the token twice when the
+    payload was missing. This change makes it idempotent and adds
+    regression tests.
+
+    Refs: SHOP-1000
+
+commit 116c712e63ae7cb94194ccd78d92acd9e13cd540
+Author: Marc Petit <marc@acme.com>
+Date:   Tue Oct 2 11:11:00 2026 +0200
+
+    Document batch validation in customers
+
+commit a373b782d2c0f3b187c698e748c7999bdbbd661f
+Author: Jane Doe <jane@acme.com>
+Date:   Tue Oct 3 12:12:00 2026 +0200
+
+    Refactor total handling in orders
+
+commit bc422331dfa95a297cb4f8c7de68bf5800d91fd3
+Author: Ana Silva <ana@acme.com>
+Date:   Tue Oct 4 13:13:00 2026 +0200
+
+    Add discount validation in notifications
+
+    The previous implementation handles the invoice twice when the
+    discount was empty. This change makes it idempotent and adds
+    regression tests.
+
+    Refs: SHOP-1003
+
+commit 977e17c0733fb7774db78c957782a3f6ab9cd42d
+Author: Marc Petit <marc@acme.com>
+Date:   Thu Oct 5 14:14:00 2026 +0200
+
+    Add refund caching in discounts
+
+commit c96f5a935532bdc2f63e95ed2460c77abea04fd7
+Merge: c96f5a9 35532bd
+Author: Marc Petit <marc@acme.com>
+Date:   Mon Oct 6 15:15:00 2026 +0200
+
+    Document discount rounding in catalog
+
+commit 9b9709c6391630e34eb2f620a6a43282b3a46561
+Author: Jane Doe <jane@acme.com>
+Date:   Tue Oct 7 16:16:00 2026 +0200
+
+    Refactor page validation in inventory
+
+    The previous implementation serializes the invoice twice when the
+    discount was empty. This change makes it idempotent and adds
+    regression tests.
+
+    Refs: SHOP-1006
+
+commit b5b95f4d71f2bc4e242760d6a678deac5a747292
+Author: Jane Doe <jane@acme.com>
+Date:   Mon Oct 8 17:17:00 2026 +0200
+
+    Refactor total validation in payments
+
+commit 902f6ea7fd16d333b8e7a032ac025e073863ac52
+Author: Jane Doe <jane@acme.com>
+Date:   Thu Oct 9 18:18:00 2026 +0200
+
+    Fix address validation in shipping
+
+commit cbc173e871b71206b1497ed16d9e741334ca3b66
+Author: Jane Doe <jane@acme.com>
+Date:   Fri Oct 1 10:19:00 2026 +0200
+
+    Fix discount rounding in notifications
+
+    The previous implementation validates the address twice when the
+    page was expired. This change makes it idempotent and adds
+    regression tests.
+
+    Refs: SHOP-1009
+
+commit 5b0a382e4b1e18bbd53f23660b42aaf60597502a
+Author: Marc Petit <marc@acme.com>
+Date:   Mon Oct 2 11:20:00 2026 +0200
+
+    Add rounding handling in pricing
+
+commit ca834c63f959dcf8ad23fa9771a365301f49617a
+Author: Jane Doe <jane@acme.com>
+Date:   Fri Oct 3 12:21:00 2026 +0200
+
+    Speed up token caching in pricing
+
+commit 92cbf6aa487f49e50303e5f6510e04d082246ce0
+Author: Ana Silva <ana@acme.com>
+Date:   Fri Oct 4 13:22:00 2026 +0200
+
+    Fix customer handling in cart
+
+    The previous implementation creates the token twice when the
+    address was empty. This change makes it idempotent and adds
+    regression tests.
+
+    Refs: SHOP-1012
+
+commit 732de2c9eaa7a4a3ea8d6008b87517412461d9ea
+Author: Marc Petit <marc@acme.com>
+Date:   Wed Oct 5 14:23:00 2026 +0200
+
+    Add customer caching in reports
+
+commit e1cb7dcd936050c9d5757f49974b5096dacf568f
+Author: Ana Silva <ana@acme.com>
+Date:   Tue Oct 6 15:24:00 2026 +0200
+
+    Add payload caching in reports
+
+commit 3fe4687018e5ef3536ee6399e952e056e34f28e0
+Author: Ana Silva <ana@acme.com>
+Date:   Tue Oct 7 16:25:00 2026 +0200
+
+    Speed up item handling in auth
+
+    The previous implementation paginates the payload twice when the
+    total was empty. This change makes it idempotent and adds
+    regression tests.
+
+    Refs: SHOP-1015
+
+commit a8aa0f0d15a7d9f162afcee50ba827fdf979a897
+Author: Jane Doe <jane@acme.com>
+Date:   Tue Oct 8 17:26:00 2026 +0200
+
+    Add rounding caching in webhooks
+
+commit a270af8409050d1dc06306740b25f62f8f649666
+Author: Ana Silva <ana@acme.com>
+Date:   Fri Oct 9 18:27:00 2026 +0200
+
+    Add batch handling in shipping
+
+commit 5d6530d23a79265833e4b8f5ad0c3f8ddcbd3c39
+Author: Ana Silva <ana@acme.com>
+Date:   Mon Oct 1 10:28:00 2026 +0200
+
+    Speed up invoice caching in customers
+
+    The previous implementation validates the page twice when the
+    discount was expired. This change makes it idempotent and adds
+    regression tests.
+
+    Refs: SHOP-1018
+
+commit 157794a08ceed5a438269d49da99026accb50f2c
+Author: Jane Doe <jane@acme.com>
+Date:   Thu Oct 2 11:29:00 2026 +0200
+
+    Document timeout caching in discounts
+
+commit 97f13abd2742fac2b0ec9364eed8aeb7a2896371
+Author: Jane Doe <jane@acme.com>
+Date:   Mon Oct 3 12:30:00 2026 +0200
+
+    Fix refund rounding in auth
+
+commit 81a1b7ca6d621fa383cbe1e37525234443d886a5
+Author: Marc Petit <marc@acme.com>
+Date:   Thu Oct 4 13:31:00 2026 +0200
+
+    Fix payload handling in shipping
+
+    The previous implementation rejects the refund twice when the
+    payload was empty. This change makes it idempotent and adds
+    regression tests.
+
+    Refs: SHOP-1021
+
+commit 1a4109b4ddcb269a7580546ad33f4f7331295247
+Merge: 1a4109b 4ddcb26
+Author: Jane Doe <jane@acme.com>
+Date:   Mon Oct 5 14:32:00 2026 +0200
+
+    Add rounding handling in auth
+
+commit ff053142d1d03daaa9888095e8ddc79cd4a55fc3
+Author: Ana Silva <ana@acme.com>
+Date:   Thu Oct 6 15:33:00 2026 +0200
+
+    Add address caching in catalog
+
+commit 982084527f0ad491f5bb314eb360591b803f6bfe
+Author: Ana Silva <ana@acme.com>
+Date:   Fri Oct 7 16:34:00 2026 +0200
+
+    Fix batch validation in customers
+
+    The previous implementation handles the order twice when the
+    address was empty. This change makes it idempotent and adds
+    regression tests.
+
+    Refs: SHOP-1024
+
+commit 76dffd044805adc15c3b14932d87c9234f79e2f5
+Author: Marc Petit <marc@acme.com>
+Date:   Tue Oct 8 17:35:00 2026 +0200
+
+    Document total caching in auth
+
+commit b717dc12f30ad2a94d76fd359fff778233550526
+Author: Ana Silva <ana@acme.com>
+Date:   Mon Oct 9 18:36:00 2026 +0200
+
+    Document refund rounding in orders
+
+commit 91f66d170d34fd475fd398eac82d692c7b0934a8
+Author: Jane Doe <jane@acme.com>
+Date:   Wed Oct 1 10:37:00 2026 +0200
+
+    Speed up token validation in notifications
+
+    The previous implementation computes the total twice when the
+    payload was missing. This change makes it idempotent and adds
+    regression tests.
+
+    Refs: SHOP-1027
+
+commit 48b134e2d6f4de0ad8da339be3ef306764ea7568
+Author: Ana Silva <ana@acme.com>
+Date:   Mon Oct 2 11:38:00 2026 +0200
+
+    Add token handling in reports
+
+commit 78800bcd0c00baca3c84b6d6924195b316c8fdcd
+Author: Jane Doe <jane@acme.com>
+Date:   Mon Oct 3 12:39:00 2026 +0200
+
+    Document page handling in inventory
+
+commit 871fc6920fe4bf1d2bd5588d94cc937e29d5182e
+Author: Jane Doe <jane@acme.com>
+Date:   Tue Oct 4 13:40:00 2026 +0200
+
+    Add batch validation in orders
+
+    The previous implementation caches the invoice twice when the
+    total was empty. This change makes it idempotent and adds
+    regression tests.
+
+    Refs: SHOP-1030
+
+commit 7765f57a991a695f2a3670883fbda0271f9367bd
+Author: Marc Petit <marc@acme.com>
+Date:   Fri Oct 5 14:41:00 2026 +0200
+
+    Document address rounding in reports
+
+commit a60e365547d3ba222570645861b5cfbc32c08dea
+Author: Marc Petit <marc@acme.com>
+Date:   Tue Oct 6 15:42:00 2026 +0200
+
+    Document currency handling in catalog
+
+commit 63da0be9a076805b1da1988440d19cba3630a293
+Author: Marc Petit <marc@acme.com>
+Date:   Tue Oct 7 16:43:00 2026 +0200
+
+    Refactor customer handling in catalog
+
+    The previous implementation computes the token twice when the
+    order was empty. This change makes it idempotent and adds
+    regression tests.
+
+    Refs: SHOP-1033
+
+commit 178ef3793f6949aefb10c0535b9510ab88f055ae
+Author: Ana Silva <ana@acme.com>
+Date:   Tue Oct 8 17:44:00 2026 +0200
+
+    Refactor currency handling in webhooks
+
+commit d8c2ccc0b9dd4bd17797dc3fc109448a0320b00c
+Author: Ana Silva <ana@acme.com>
+Date:   Wed Oct 9 18:45:00 2026 +0200
+
+    Speed up discount rounding in payments
+
+commit f722ee37dde596304f155e955953fd114c600f66
+Author: Ana Silva <ana@acme.com>
+Date:   Mon Oct 1 10:46:00 2026 +0200
+
+    Add payload handling in invoices
+
+    The previous implementation formats the payload twice when the
+    timeout was empty. This change makes it idempotent and adds
+    regression tests.
+
+    Refs: SHOP-1036
+
+commit f9a0b623c60469229dc29164640eeb7244a6fc04
+Author: Marc Petit <marc@acme.com>
+Date:   Tue Oct 2 11:47:00 2026 +0200
+
+    Document page rounding in auth
+
+commit 358ee04b1501a5a12bae6d62dbaa33d50bd85bb2
+Author: Ana Silva <ana@acme.com>
+Date:   Wed Oct 3 12:48:00 2026 +0200
+
+    Speed up total caching in reports
+
+commit 5cad44c6d624a749a64d098840170891d8af78c4
+Merge: 5cad44c 6d624a7
+Author: Ana Silva <ana@acme.com>
+Date:   Thu Oct 4 13:49:00 2026 +0200
+
+    Document rounding handling in discounts
+
+    The previous implementation creates the item twice when the
+    page was missing. This change makes it idempotent and adds
+    regression tests.
+
+    Refs: SHOP-1039
+
+commit 1ab2f2a154694ba7246b46bea06a0bd702359029
+Author: Ana Silva <ana@acme.com>
+Date:   Tue Oct 5 14:50:00 2026 +0200
+
+    Speed up refund validation in customers
+
+commit d72f20b3b0f6b819dea42275d92deafb0ddc581d
+Author: Marc Petit <marc@acme.com>
+Date:   Tue Oct 6 15:51:00 2026 +0200
+
+    Fix address rounding in orders
+
+commit 0ce5c1bbcd7f152ae9bfb8fa5ae267e03a9f02d9
+Author: Jane Doe <jane@acme.com>
+Date:   Thu Oct 7 16:52:00 2026 +0200
+
+    Speed up order rounding in discounts
+
+    The previous implementation formats the order twice when the
+    timeout was expired. This change makes it idempotent and adds
+    regression tests.
+
+    Refs: SHOP-1042
+
+commit 04b71618d6eb712e9f57a2ccd713580b2863ca45
+Author: Marc Petit <marc@acme.com>
+Date:   Thu Oct 8 17:53:00 2026 +0200
+
+    Add total rounding in tax
+
+commit ab09b5ad06c7400a60eef03d1c8a00363b3bdba9
+Author: Marc Petit <marc@acme.com>
+Date:   Wed Oct 9 18:54:00 2026 +0200
+
+    Document invoice rounding in discounts
+
+commit 06a47d298c2024797cc8ca2ad83375e56cf7fedb
+Author: Ana Silva <ana@acme.com>
+Date:   Tue Oct 1 10:55:00 2026 +0200
+
+    Add customer caching in refunds
+
+    The previous implementation formats the token twice when the
+    address was empty. This change makes it idempotent and adds
+    regression tests.
+
+    Refs: SHOP-1045
+
+commit 9397e98fb0bff7a337012f5f722aa5757a2968fe
+Author: Marc Petit <marc@acme.com>
+Date:   Fri Oct 2 11:56:00 2026 +0200
+
+    Document customer validation in tax
+
+commit 8c7ced545479e8eb112511f647dcdc3a8789d60e
+Author: Jane Doe <jane@acme.com>
+Date:   Wed Oct 3 12:57:00 2026 +0200
+
+    Fix currency caching in payments
+
+commit 86338b441761f73c78f742d40a3a454503f46f10
+Author: Marc Petit <marc@acme.com>
+Date:   Fri Oct 4 13:58:00 2026 +0200
+
+    Refactor currency handling in auth
+
+    The previous implementation parses the token twice when the
+    rounding was empty. This change makes it idempotent and adds
+    regression tests.
+
+    Refs: SHOP-1048
+
+commit 37207f7aabc138ac25b9d293ac69156d6bba4900
+Author: Ana Silva <ana@acme.com>
+Date:   Wed Oct 5 14:59:00 2026 +0200
+
+    Add item validation in shipping
+
+commit 72d46f0f182c4f6169e1aeba4e9a2546b2d64f88
+Author: Marc Petit <marc@acme.com>
+Date:   Tue Oct 6 15:60:00 2026 +0200
+
+    Speed up address rounding in notifications
+
+commit f49de674ee54c96c458f765679685987e12c574e
+Author: Jane Doe <jane@acme.com>
+Date:   Wed Oct 7 16:61:00 2026 +0200
+
+    Speed up batch caching in cart
+
+    The previous implementation parses the total twice when the
+    currency was empty. This change makes it idempotent and adds
+    regression tests.
+
+    Refs: SHOP-1051
+
+commit 7ace68bf0aab173a398de24d2e47118e1840a0fd
+Author: Ana Silva <ana@acme.com>
+Date:   Mon Oct 8 17:62:00 2026 +0200
+
+    Fix order rounding in catalog
+
+commit 3302b26b0e3836b15dde801edc87ec7006461f22
+Author: Jane Doe <jane@acme.com>
+Date:   Wed Oct 9 18:63:00 2026 +0200
+
+    Refactor order handling in auth
+
+commit a818c7b1ee817fcbf011a900be320a3d3ded4fc6
+Author: Marc Petit <marc@acme.com>
+Date:   Tue Oct 1 10:64:00 2026 +0200
+
+    Refactor customer rounding in customers
+
+    The previous implementation formats the item twice when the
+    token was empty. This change makes it idempotent and adds
+    regression tests.
+
+    Refs: SHOP-1054
+
+commit f373c2f5e30be02595f626678894beccdcaf31e8
+Author: Jane Doe <jane@acme.com>
+Date:   Fri Oct 2 11:65:00 2026 +0200
+
+    Document rounding validation in refunds
+
+commit 189e59369d9fe01116eca4a16340b6b168affb8a
+Merge: 189e593 69d9fe0
+Author: Jane Doe <jane@acme.com>
+Date:   Tue Oct 3 12:66:00 2026 +0200
+
+    Refactor address rounding in tax
+
+commit 4d98202325f07faf76fefc428e304322f103f8ae
+Author: Ana Silva <ana@acme.com>
+Date:   Thu Oct 4 13:67:00 2026 +0200
+
+    Refactor currency rounding in reports
+
+    The previous implementation parses the refund twice when the
+    payload was expired. This change makes it idempotent and adds
+    regression tests.
+
+    Refs: SHOP-1057
+
+commit 41fc6f871b41f88f6d1cd58901dc6f37965ca7b6
+Author: Jane Doe <jane@acme.com>
+Date:   Tue Oct 5 14:68:00 2026 +0200
+
+    Add page rounding in shipping
+
+commit 9cda60417375a6b10cad3cf1254e454e0ab61fda
+Author: Ana Silva <ana@acme.com>
+Date:   Thu Oct 6 15:69:00 2026 +0200
+
+    Speed up page caching in inventory
+

@@ -1,0 +1,12 @@
+{
+  "name": "kopt-ab-a",
+  "description": "A/B arm A (control): stock Kiro exploration with built-in read/grep/glob only. No MCP, no kopt hooks or steering.",
+  "prompt": "You answer developer questions about the code in the current workspace. Do not modify any file.",
+  "tools": ["read"],
+  "allowedTools": ["read"],
+  "includeMcpJson": false,
+  "includePowers": false,
+  "hooks": {
+    "stop": [{ "command": "cat > \"${KOPT_AB_RUN_DIR:-/tmp}/stop-hook.json\"" }]
+  }
+}

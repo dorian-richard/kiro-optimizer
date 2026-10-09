@@ -1,0 +1,225 @@
+{
+  "repo": {
+    "name": "gitea",
+    "url": "https://github.com/go-gitea/gitea.git",
+    "tag": "v28.1.0",
+    "commit": "4ebd5e319b6a9e629bfd7a04292a6fe85b08dee9",
+    "language": "go",
+    "path": "bench/repos/gitea"
+  },
+  "notes": "Gold = non-test Go code only (*_test.go excluded). Several tasks target packages added in 2026 (modules/egress, services/audit) that models cannot answer from memory. `search` is the phrase an agent would derive from the question (English, no identifier the developer did not give). Re-check with `kopt bench gitea --verify`.",
+  "tasks": [
+    {
+      "id": "gt-locate-git-proxy",
+      "kind": "locate",
+      "lang": "en",
+      "question": "Where does Gitea choose the HTTP proxy for git network operations the way git itself would (git config http.proxy first, then the [proxy] setting, then the environment including ALL_PROXY)?",
+      "search": "git proxy selection http.proxy config environment all_proxy",
+      "gold": {
+        "files": ["modules/egress/policies.go"],
+        "symbols": [
+          { "name": "gitProxySelector", "file": "modules/egress/policies.go", "line": 37, "kind": "function" },
+          { "name": "normalizeGitProxy", "file": "modules/egress/policies.go", "line": 61, "kind": "function" }
+        ]
+      },
+      "verifiedBy": "Read modules/egress/policies.go@v28.1.0: gitProxySelector uses [git.config] http.proxy (normalized by normalizeGitProxy: default http scheme, port 1080), else setting.Proxy.ProxyURL, else httpproxy.FromEnvironment with all_proxy/ALL_PROXY fallback; NewGitPolicy wraps it."
+    },
+    {
+      "id": "gt-locate-runner-pick",
+      "kind": "locate",
+      "lang": "en",
+      "question": "When an Actions runner asks for work, where does Gitea pick a waiting job whose labels match the runner and claim it so that two runners cannot take the same job?",
+      "search": "actions runner pick waiting job labels claim task",
+      "gold": {
+        "files": ["models/actions/task.go", "models/actions/runner.go"],
+        "symbols": [
+          { "name": "CreateTaskForRunner", "file": "models/actions/task.go", "line": 264, "kind": "function" },
+          { "name": "claimJobForRunner", "file": "models/actions/task.go", "line": 332, "kind": "function" },
+          { "name": "CanMatchLabels", "file": "models/actions/runner.go", "line": 202, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read models/actions/task.go@v28.1.0: CreateTaskForRunner pages through waiting jobs (task_id = 0) of the runner's repo/owner, skips jobs whose RunsOn fail runner.CanMatchLabels, and calls claimJobForRunner, which inserts the ActionTask and updates the job with a task_id = 0 AND status = waiting condition inside a transaction."
+    },
+    {
+      "id": "gt-locate-protected-branch",
+      "kind": "locate",
+      "lang": "en",
+      "question": "Where does `ProtectedBranch.Match` decide whether a branch name matches a protection rule (plain name versus glob), and where is the first matching rule chosen for a branch?",
+      "search": "ProtectedBranch Match branch rule glob first matched",
+      "gold": {
+        "files": ["models/git/protected_branch.go", "models/git/protected_branch_list.go"],
+        "symbols": [
+          { "name": "Match", "file": "models/git/protected_branch.go", "line": 108, "kind": "method" },
+          { "name": "loadGlob", "file": "models/git/protected_branch.go", "line": 89, "kind": "method" },
+          { "name": "GetFirstMatched", "file": "models/git/protected_branch_list.go", "line": 17, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read @v28.1.0: ProtectedBranch.Match calls loadGlob, compares case-insensitively when isPlainName, else uses globRule.Match; ProtectedBranchRules.GetFirstMatched returns the first rule whose Match(branchName) is true."
+    },
+    {
+      "id": "gt-locate-audit-origin",
+      "kind": "locate",
+      "lang": "en",
+      "question": "For audit log events, where do the origin (web, API, CLI or system) and the client IP address come from?",
+      "search": "audit event origin web api cli system client ip address",
+      "gold": {
+        "files": ["services/audit/event.go", "routers/common/audit.go"],
+        "symbols": [
+          { "name": "getOrigin", "file": "services/audit/event.go", "line": 91, "kind": "function" },
+          { "name": "getIPAddress", "file": "services/audit/event.go", "line": 84, "kind": "function" },
+          { "name": "SetRequestInfo", "file": "services/audit/event.go", "line": 53, "kind": "function" },
+          { "name": "AuditOrigin", "file": "routers/common/audit.go", "line": 17, "kind": "function" }
+        ]
+      },
+      "verifiedBy": "Read @v28.1.0: the AuditOrigin middleware calls audit_service.SetRequestInfo(store, origin, httplib.RemoteHost(req)); getIPAddress/getOrigin read that requestInfo from the context (getOrigin prefers a WithOrigin value, used by the CLI, and defaults to OriginSystem)."
+    },
+    {
+      "id": "gt-explain-egress",
+      "kind": "explain",
+      "lang": "en",
+      "question": "How does Gitea decide whether an outgoing HTTP request (webhook, migration, OpenID) may reach a host: block list, allow list, lax versus strict mode, and protection against DNS rebinding?",
+      "search": "outgoing http request host allow block list lax strict dns rebinding",
+      "gold": {
+        "files": ["modules/egress/policy/policy.go"],
+        "symbols": [
+          { "name": "checkAddr", "file": "modules/egress/policy/policy.go", "line": 109, "kind": "method" },
+          { "name": "gate", "file": "modules/egress/policy/policy.go", "line": 119, "kind": "method" },
+          { "name": "allowCheck", "file": "modules/egress/policy/policy.go", "line": 130, "kind": "method" },
+          { "name": "dialContext", "file": "modules/egress/policy/policy.go", "line": 205, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read modules/egress/policy/policy.go@v28.1.0: checkAddr rejects reserved addresses then calls gate; gate applies blockReason, lets public targets through in Lax mode, else allowCheck (IP or hostname allow entries, localNeedsIPAllow); dialContext installs a dialer.Control that re-runs checkAddr on the resolved IP at connect time (DNS rebinding)."
+    },
+    {
+      "id": "gt-explain-audit",
+      "kind": "explain",
+      "lang": "en",
+      "question": "How is an audit log event recorded: how are the actor, the impersonator, the scope and the human-readable message filled in before the event is stored?",
+      "search": "audit log event record actor impersonator scope message",
+      "gold": {
+        "files": ["services/audit/event.go", "services/audit/message.go"],
+        "symbols": [
+          { "name": "Record", "file": "services/audit/event.go", "line": 113, "kind": "function" },
+          { "name": "RecordAs", "file": "services/audit/event.go", "line": 119, "kind": "function" },
+          { "name": "buildEvent", "file": "services/audit/event.go", "line": 62, "kind": "function" },
+          { "name": "renderMessage", "file": "services/audit/message.go", "line": 24, "kind": "function" }
+        ]
+      },
+      "verifiedBy": "Read services/audit@v28.1.0: Record resolves the doer from the context and calls RecordAs, which builds RecordParams (actorRef, actorCredential, impersonatorRef, scopeRef, metaPairs) for writeEvent; buildEvent fills the model.Event, rendering Message with renderMessage (template placeholders resolved by resolvePlaceholder)."
+    },
+    {
+      "id": "gt-explain-globallock",
+      "kind": "explain",
+      "lang": "en",
+      "question": "How does Gitea's global lock work when several instances share Redis: how is a lock acquired, how long does it live, and how is it kept alive while held?",
+      "search": "global lock redis acquire expiry extend held",
+      "gold": {
+        "files": ["modules/globallock/redis_locker.go", "modules/globallock/globallock.go"],
+        "symbols": [
+          { "name": "lock", "file": "modules/globallock/redis_locker.go", "line": 75, "kind": "method" },
+          { "name": "startExtend", "file": "modules/globallock/redis_locker.go", "line": 106, "kind": "method" },
+          { "name": "NewRedisLocker", "file": "modules/globallock/redis_locker.go", "line": 37, "kind": "function" },
+          { "name": "initDefaultLocker", "file": "modules/globallock/globallock.go", "line": 19, "kind": "function" }
+        ]
+      },
+      "verifiedBy": "Read modules/globallock@v28.1.0: initDefaultLocker picks NewRedisLocker when [global_lock] SERVICE_TYPE is redis; redisLocker.lock creates a redsync mutex with redisLockExpiry (tries for TryLock) and stores it in mutexM; startExtend re-schedules itself every redisLockExpiry/2 and calls Extend on every held, unexpired mutex."
+    },
+    {
+      "id": "gt-usage-egress-transport",
+      "kind": "usage",
+      "lang": "en",
+      "question": "Which parts of Gitea build their HTTP transport from an egress policy with `NewHTTPTransport`?",
+      "search": "egress policy NewHTTPTransport",
+      "gold": {
+        "files": [
+          "modules/auth/openid/openid.go",
+          "routers/web/auth/oauth.go",
+          "services/gitproxy/server.go",
+          "services/migrations/http_client.go",
+          "services/webhook/deliver.go"
+        ],
+        "symbols": [
+          { "name": "openIDInstance", "file": "modules/auth/openid/openid.go", "line": 28, "kind": "variable" },
+          { "name": "oauth2AvatarHTTPClient", "file": "routers/web/auth/oauth.go", "line": 302, "kind": "function" },
+          { "name": "newServer", "file": "services/gitproxy/server.go", "line": 61, "kind": "function" },
+          { "name": "NewMigrationHTTPTransport", "file": "services/migrations/http_client.go", "line": 24, "kind": "function" },
+          { "name": "Init", "file": "services/webhook/deliver.go", "line": 274, "kind": "function" }
+        ]
+      },
+      "verifiedBy": "git grep -w NewHTTPTransport @v28.1.0 (tests excluded): openid.go:31 (package var openIDInstance, sync.OnceValue), oauth.go:305 (oauth2AvatarHTTPClient), gitproxy/server.go:63 (newServer), migrations/http_client.go:25 (NewMigrationHTTPTransport), webhook/deliver.go:277 (Init); defined policy.go:242."
+    },
+    {
+      "id": "gt-usage-automerge-check",
+      "kind": "usage",
+      "lang": "en",
+      "question": "What triggers an auto-merge check of a pull request through `StartAutoMergeCheckByPullHead`? List every caller.",
+      "search": "StartAutoMergeCheckByPullHead",
+      "gold": {
+        "files": ["services/automerge/automerge.go", "services/automerge/notify.go", "services/pull/check.go"],
+        "symbols": [
+          { "name": "populateRecentAutoMergeItems", "file": "services/automerge/automerge.go", "line": 53, "kind": "function" },
+          { "name": "ScheduleAutoMerge", "file": "services/automerge/automerge.go", "line": 71, "kind": "function" },
+          { "name": "PullRequestReview", "file": "services/automerge/notify.go", "line": 31, "kind": "method" },
+          { "name": "PullReviewDismiss", "file": "services/automerge/notify.go", "line": 38, "kind": "method" },
+          { "name": "CreateCommitStatus", "file": "services/automerge/notify.go", "line": 51, "kind": "method" },
+          { "name": "markPullRequestAsMergeable", "file": "services/pull/check.go", "line": 271, "kind": "function" }
+        ]
+      },
+      "verifiedBy": "git grep -w StartAutoMergeCheckByPullHead @v28.1.0 (tests excluded): automerge.go:66 (populateRecentAutoMergeItems), 85 (ScheduleAutoMerge), notify.go:34 (automergeNotifier.PullRequestReview), 48 (PullReviewDismiss), 62 (CreateCommitStatus), pull/check.go:298 (markPullRequestAsMergeable); defined automergequeue.go:33."
+    },
+    {
+      "id": "gt-usage-pull-working-lock",
+      "kind": "usage",
+      "lang": "en",
+      "question": "Which operations take the per-pull-request working lock built by `getPullWorkingLockKey`?",
+      "search": "getPullWorkingLockKey",
+      "gold": {
+        "files": ["services/pull/check.go", "services/pull/merge.go", "services/pull/pull.go", "services/pull/update.go"],
+        "symbols": [
+          { "name": "StartPullRequestCheckOnView", "file": "services/pull/check.go", "line": 106, "kind": "function" },
+          { "name": "checkPullRequestMergeable", "file": "services/pull/check.go", "line": 471, "kind": "function" },
+          { "name": "Merge", "file": "services/pull/merge.go", "line": 294, "kind": "function" },
+          { "name": "MergedManually", "file": "services/pull/merge.go", "line": 726, "kind": "function" },
+          { "name": "ChangeTargetBranch", "file": "services/pull/pull.go", "line": 224, "kind": "function" },
+          { "name": "Update", "file": "services/pull/update.go", "line": 24, "kind": "function" }
+        ]
+      },
+      "verifiedBy": "git grep -w getPullWorkingLockKey @v28.1.0 (tests excluded): defined pull.go:41; used in check.go:118 (StartPullRequestCheckOnView, TryLockAndDo), check.go:477 (checkPullRequestMergeable), merge.go:310 (Merge), merge.go:727 (MergedManually), pull.go:225 (ChangeTargetBranch), update.go:31 (Update)."
+    },
+    {
+      "id": "gt-impact-remove-scheduled-automerge",
+      "kind": "impact",
+      "lang": "en",
+      "question": "If `automerge.RemoveScheduledAutoMerge` needed an extra parameter, which HTTP handlers would have to change?",
+      "search": "RemoveScheduledAutoMerge",
+      "gold": {
+        "files": ["services/automerge/automerge.go", "routers/api/v1/repo/pull.go", "routers/web/repo/pull.go"],
+        "symbols": [
+          { "name": "RemoveScheduledAutoMerge", "file": "services/automerge/automerge.go", "line": 91, "kind": "function" },
+          { "name": "CancelScheduledAutoMerge", "file": "routers/api/v1/repo/pull.go", "line": 1285, "kind": "function" },
+          { "name": "CancelAutoMergePullRequest", "file": "routers/web/repo/pull.go", "line": 1248, "kind": "function" }
+        ]
+      },
+      "verifiedBy": "git grep -w RemoveScheduledAutoMerge @v28.1.0 (tests excluded): defined services/automerge/automerge.go:91; called by the API handler CancelScheduledAutoMerge (api/v1/repo/pull.go:1351) and the web handler CancelAutoMergePullRequest (web/repo/pull.go:1276). models/pull has a different lower-level function."
+    },
+    {
+      "id": "gt-impact-migration-policy",
+      "kind": "impact",
+      "lang": "en",
+      "question": "If `newMigrationPolicy` in modules/egress stopped applying the migrations blocked host list, which constructors and features would be affected?",
+      "search": "newMigrationPolicy migrations blocked host list",
+      "gold": {
+        "files": ["modules/egress/policies.go", "services/migrations/migrate.go", "services/migrations/http_client.go", "services/gitproxy/server.go"],
+        "symbols": [
+          { "name": "newMigrationPolicy", "file": "modules/egress/policies.go", "line": 78, "kind": "function" },
+          { "name": "NewMigrationPolicy", "file": "modules/egress/policies.go", "line": 23, "kind": "function" },
+          { "name": "NewGitPolicy", "file": "modules/egress/policies.go", "line": 28, "kind": "function" },
+          { "name": "IsMigrateURLAllowed", "file": "services/migrations/migrate.go", "line": 38, "kind": "function" },
+          { "name": "NewMigrationHTTPTransport", "file": "services/migrations/http_client.go", "line": 24, "kind": "function" },
+          { "name": "Run", "file": "services/gitproxy/server.go", "line": 78, "kind": "function" }
+        ]
+      },
+      "verifiedBy": "Read modules/egress/policies.go@v28.1.0: newMigrationPolicy (WithBlock migrations.BLOCKED_HOST_LIST) is called by NewMigrationPolicy and NewGitPolicy; git grep: NewMigrationPolicy is used by IsMigrateURLAllowed (migrate.go:73) and NewMigrationHTTPTransport (http_client.go:25), NewGitPolicy by the git proxy Run (gitproxy/server.go:79)."
+    }
+  ]
+}

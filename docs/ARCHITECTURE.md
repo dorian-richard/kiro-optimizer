@@ -135,19 +135,32 @@ flowchart LR
 
 ## 4. Surface compatibility
 
-| Capability | Kiro IDE 1.x | Kiro CLI V3 | Kiro CLI 2.x (legacy) | Standalone `kopt` CLI |
-|---|---|---|---|---|
-| MCP tools | `.kiro/settings/mcp.json` (+ `autoApprove`) | `mcp.json` through the agent (`includeMcpJson`) + `allowedTools` | same as V3 | n/a: same operations as commands (`kopt find/read/outline/refs/run/expand`) |
-| Hooks | `.kiro/hooks/kopt.json` (v1 schema) | same file | hooks embedded in agent config (object form: `agentSpawn`, `userPromptSubmit`, `preToolUse`, `postToolUse`, `stop`) | n/a |
-| Block semantics | exit 2 (the IDE also treats other non-zero codes as blocking) | exit 2 only | exit 2 | n/a |
-| Allow path | **must be silent**: in the IDE, any PreToolUse output intercepts the tool call | silent | silent | n/a |
-| Steering | all inclusion modes | all modes | only `always` loads automatically | n/a |
-| `.kiroignore` | yes (+ `kiroAgent.agentIgnoreFiles` setting) | yes (workspace) | no | the indexer honors it |
-| Built-in tool names | `read_file`, `read_code`, `grep_search`, … | `read`, `grep`, `glob`, `shell`, `write`, … | `fs_read`, `execute_bash`, `fs_write`, … | n/a |
-| Credit telemetry | daily admin export | per request (session files) | per request (session files) | n/a |
+One command (`npx -y github:dorian-richard/kiro-optimizer setup`) installs kopt globally and writes **user-level**
+Kiro configuration only, so kopt starts by itself in every project; nothing is written into repositories. The index
+of each project lives in the per-user cache folder (macOS `~/Library/Caches/kopt`, Linux `~/.cache/kopt`, Windows
+`%LOCALAPPDATA%\kopt`), keyed by the repository path. The user-level MCP server learns its project from the client's
+MCP roots, else `KOPT_ROOT`, else the git root of the folder Kiro starts it in, and never indexes HOME or `/`.
+
+| Capability | Kiro IDE 1.x | Kiro IDE 0.x (0.12) | Kiro CLI V3 | Kiro CLI 2.x (legacy) | Standalone `kopt` CLI |
+|---|---|---|---|---|---|
+| Written by `kopt setup` | `~/.kiro/settings/mcp.json`, `~/.kiro/hooks/kopt.json`, global steering, `~/.kiro/settings/kiroignore`, IDE user setting `kiroAgent.agentIgnoreFiles` | same files (0.x ignores the global hooks) | `mcp.json`, `~/.kiro/hooks/kopt.json` | `~/.kiro/agents/kopt.json` (hooks embedded, `includeMcpJson`) set as `chat.defaultAgent` | the global `kopt` command |
+| MCP tools | `mcp.json` (+ `autoApprove`) | same | `mcp.json` through the agent (`includeMcpJson`) + `allowedTools` | same as V3 | n/a: same operations as commands (`kopt find/read/outline/refs/run/expand`) |
+| Hooks | global v1 hooks (`~/.kiro/hooks/kopt.json`) | workspace `.kiro.hook` files only; the MCP server writes one `promptSubmit` hook per workspace (no tool-call governor, see below) | same file as IDE 1.x | object form in the agent: `agentSpawn`, `userPromptSubmit`, `preToolUse`, `postToolUse`, `stop` (the only triggers `kiro-cli agent validate` 2.28 accepts) | n/a |
+| Block semantics | exit 2 (the IDE also treats other non-zero codes as blocking) | n/a | exit 2 only | exit 2 | n/a |
+| Allow path | **must be silent**: in the IDE, any PreToolUse output intercepts the tool call | n/a | silent | silent | n/a |
+| Steering | all inclusion modes | all modes | all modes | only `always` loads automatically | n/a |
+| `.kiroignore` | yes (+ `kiroAgent.agentIgnoreFiles` setting) | yes (+ setting) | yes (workspace) | no | the indexer honors it |
+| Built-in tool names | `read_file`, `read_code`, `grep_search`, … | same as 1.x | `read`, `grep`, `glob`, `shell`, `write`, … | `fs_read`, `execute_bash`, `fs_write`, … | n/a |
+| Credit telemetry | daily admin export | daily admin export | per request (session files) | per request (session files) | n/a |
 
 The governor normalizes tool names and payload shapes across surfaces, and de-duplicates events in case both hook
-formats are active.
+formats are active (events tagged with different `--source` values within 2 s are handled once).
+
+Kiro IDE 0.x limits (verified in the 0.12.318 bundle): hooks load only from `<workspace>/.kiro/hooks`; `runCommand`
+hooks get no stdin (data comes in env `USER_PROMPT`); and any matched `preToolUse` hook blocks the tool call even
+when it prints nothing (one extra model turn per call), while `postToolUse` output is appended to every matched tool
+result. kopt therefore installs only the `promptSubmit` pointer hook there, listed in `.git/info/exclude`. The full
+governor needs IDE 1.x.
 
 ## 5. Technical choices
 - **TypeScript / Node ≥ 22, zero native dependencies**: SQLite through `node:sqlite` (FTS5 included) and tree-sitter

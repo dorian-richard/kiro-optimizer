@@ -1,0 +1,14 @@
+# Allowlist: the image only needs sources, lockfile, templates and the docker/ scripts.
+# (Keeps node_modules, .git, infra/ incl. cdk.out, bench data and local indexes out of the build context.)
+*
+!Dockerfile
+!.dockerignore
+!package.json
+!package-lock.json
+!tsconfig.json
+!src
+!templates
+!docker
+src/**/*.test.ts
+**/.DS_Store
+**/.kopt

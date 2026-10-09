@@ -1,0 +1,204 @@
+{
+  "repo": {
+    "name": "webpack",
+    "url": "https://github.com/webpack/webpack.git",
+    "tag": "v5.111.1",
+    "commit": "5a106753839fd7e1b86138c3a5f6b348341147a7",
+    "language": "javascript",
+    "path": "bench/repos/webpack"
+  },
+  "notes": "Gold = non-test code only (lib/). Several tasks target features added late in webpack 5 (DotenvPlugin, CircularModulesPlugin, lazy barrel optimization) so that the answer cannot come from model memory. `search` is the phrase an agent would derive from the question (English, no identifier the developer did not give). Re-check with `kopt bench webpack --verify`.",
+  "tasks": [
+    {
+      "id": "wp-locate-dotenv-expand",
+      "kind": "locate",
+      "lang": "en",
+      "question": "With the built-in .env support, where are references like ${API_URL} or ${PORT:-3000} inside a value expanded, including the default-value operators?",
+      "search": "dotenv expand variable references default value",
+      "gold": {
+        "files": ["lib/DotenvPlugin.js"],
+        "symbols": [
+          { "name": "expandValue", "file": "lib/DotenvPlugin.js", "line": 136, "kind": "function" },
+          { "name": "expand", "file": "lib/DotenvPlugin.js", "line": 203, "kind": "function" }
+        ]
+      },
+      "verifiedBy": "Read lib/DotenvPlugin.js@v5.111.1: expand() walks parsed keys and calls expandValue(value, processEnv, runningParsed), which matches ${...}/$NAME with a regex and handles the :+, +, :- and - operators (defaults), with a self-reference guard."
+    },
+    {
+      "id": "wp-locate-semver-satisfy",
+      "kind": "locate",
+      "lang": "en",
+      "question": "In module federation, where is a shared module's version checked against the required semver range, both at build time and in the generated runtime code?",
+      "search": "shared module version satisfies required semver range runtime code",
+      "gold": {
+        "files": ["lib/util/semver.js"],
+        "symbols": [
+          { "name": "satisfy", "file": "lib/util/semver.js", "line": 393, "kind": "function" },
+          { "name": "satisfyRuntimeCode", "file": "lib/util/semver.js", "line": 616, "kind": "function" }
+        ]
+      },
+      "verifiedBy": "Read lib/util/semver.js@v5.111.1: satisfy(range, version) evaluates a parsed range against a version; satisfyRuntimeCode(runtimeTemplate) emits the minified `var satisfy = ...` used by ConsumeSharedRuntimeModule (`if (!satisfy(requiredVersion, version))`)."
+    },
+    {
+      "id": "wp-locate-case-mismatch",
+      "kind": "locate",
+      "lang": "en",
+      "question": "When an import cannot be resolved, where does webpack detect that the path only differs from a real file or folder by letter case, to suggest the correct spelling?",
+      "search": "resolve error path differs letter case suggestion",
+      "gold": {
+        "files": ["lib/util/findCaseMismatch.js", "lib/NormalModuleFactory.js"],
+        "symbols": [
+          { "name": "findCaseMismatch", "file": "lib/util/findCaseMismatch.js", "line": 40, "kind": "function" },
+          { "name": "_resolveResourceErrorHints", "file": "lib/NormalModuleFactory.js", "line": 1456, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read @v5.111.1: NormalModuleFactory.resolveResource returns this._resolveResourceErrorHints(...) on failure; that method (1456) calls findCaseMismatch(this.fs, directory, ...) at 1619 and applyCaseCorrections; findCaseMismatch walks path segments comparing lower-cased directory entries."
+    },
+    {
+      "id": "wp-locate-circular-hints",
+      "kind": "locate",
+      "lang": "en",
+      "question": "When `CircularModulesPlugin` runs with `hints` enabled, where is the circular-dependency problem built and pushed as a warning, an error or a stats hint?",
+      "search": "CircularModulesPlugin hints circular dependencies warning",
+      "gold": {
+        "files": ["lib/CircularModulesPlugin.js", "lib/errors/CircularDependenciesWarning.js"],
+        "symbols": [
+          { "name": "apply", "file": "lib/CircularModulesPlugin.js", "line": 383, "kind": "method" },
+          { "name": "CircularDependenciesWarning", "file": "lib/errors/CircularDependenciesWarning.js", "line": 16, "kind": "class" }
+        ]
+      },
+      "verifiedBy": "Read @v5.111.1: CircularModulesPlugin.apply creates `new CircularDependenciesWarning(groups, circularGroups.length)` in optimizeDependencies when hints is set, and in afterSeal pushes it to compilation.errors (hints === 'error'), compilation.hints ('stats') or compilation.warnings."
+    },
+    {
+      "id": "wp-explain-lazy-barrel",
+      "kind": "explain",
+      "lang": "en",
+      "question": "How does webpack avoid building every module re-exported by a side-effect-free barrel file until one of its exports is actually requested? Explain the deferred-request bookkeeping.",
+      "search": "lazy barrel side effect free re-export deferred requests",
+      "gold": {
+        "files": ["lib/LazyBarrel.js"],
+        "symbols": [
+          { "name": "LazyBarrelController", "file": "lib/LazyBarrel.js", "line": 200, "kind": "class" },
+          { "name": "classify", "file": "lib/LazyBarrel.js", "line": 244, "kind": "method" },
+          { "name": "request", "file": "lib/LazyBarrel.js", "line": 336, "kind": "method" },
+          { "name": "LazyBarrelInfo", "file": "lib/LazyBarrel.js", "line": 62, "kind": "class" }
+        ]
+      },
+      "verifiedBy": "Read lib/LazyBarrel.js@v5.111.1: LazyBarrelController.classify records, for sideEffectFree modules, deferrable dependencies (getLazyUntil) in a LazyBarrelInfo keyed by request; LazyBarrelController.request(module, deps) collects forwarded export ids and returns the factory groups to build now, replaying ids recorded before classification."
+    },
+    {
+      "id": "wp-explain-deterministic-grouping",
+      "kind": "explain",
+      "lang": "en",
+      "question": "When splitChunks.maxSize splits a big chunk, how are the modules divided into parts so that adding or removing a file only invalidates a few parts?",
+      "search": "split chunks max size deterministic grouping similarity",
+      "gold": {
+        "files": ["lib/util/deterministicGrouping.js"],
+        "symbols": [
+          { "name": "similarity", "file": "lib/util/deterministicGrouping.js", "line": 33, "kind": "function" },
+          { "name": "getSimilarities", "file": "lib/util/deterministicGrouping.js", "line": 286, "kind": "function" },
+          { "name": "Group", "file": "lib/util/deterministicGrouping.js", "line": 224, "kind": "class" },
+          { "name": "popNodes", "file": "lib/util/deterministicGrouping.js", "line": 247, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read lib/util/deterministicGrouping.js@v5.111.1 (used by SplitChunksPlugin for maxSize): nodes sorted by key, getSimilarities computes similarity() of neighbouring keys, Group.popNodes removes too-small nodes, and groups that are too big are split at the minimum similarity between the minSize-bounded left and right areas."
+    },
+    {
+      "id": "wp-explain-circular-scc",
+      "kind": "explain",
+      "lang": "en",
+      "question": "How does webpack decide which modules are part of a synchronous circular import chain, and which of them can observe a live export binding?",
+      "search": "circular modules synchronous import cycle strongly connected binding",
+      "gold": {
+        "files": ["lib/CircularModulesPlugin.js"],
+        "symbols": [
+          { "name": "CycleGraph", "file": "lib/CircularModulesPlugin.js", "line": 166, "kind": "class" },
+          { "name": "build", "file": "lib/CircularModulesPlugin.js", "line": 190, "kind": "method" },
+          { "name": "getSynchronousTarget", "file": "lib/CircularModulesPlugin.js", "line": 53, "kind": "function" },
+          { "name": "isBindingRead", "file": "lib/CircularModulesPlugin.js", "line": 147, "kind": "function" }
+        ]
+      },
+      "verifiedBy": "Read lib/CircularModulesPlugin.js@v5.111.1: CycleGraph.build collects sync edges via getSynchronousTarget(connection), records binding reads via isBindingRead, runs an iterative Tarjan SCC (nodeIndex/nodeLowLink/sccStack) and marks members of SCCs larger than one (or self-loops) as synchronous; binding modules are derived from the binding-read edges."
+    },
+    {
+      "id": "wp-usage-process-async-tree",
+      "kind": "usage",
+      "lang": "en",
+      "question": "Who calls the `processAsyncTree` helper? List every caller in lib/ before I change its concurrency semantics.",
+      "search": "processAsyncTree",
+      "gold": {
+        "files": ["lib/CleanPlugin.js", "lib/Compilation.js", "lib/FileSystemInfo.js"],
+        "symbols": [
+          { "name": "applyDiff", "file": "lib/CleanPlugin.js", "line": 180, "kind": "function" },
+          { "name": "executeModule", "file": "lib/Compilation.js", "line": 6146, "kind": "method" },
+          { "name": "resolveBuildDependencies", "file": "lib/FileSystemInfo.js", "line": 1891, "kind": "method" },
+          { "name": "_resolveContextTimestamp", "file": "lib/FileSystemInfo.js", "line": 4127, "kind": "method" },
+          { "name": "_resolveContextHash", "file": "lib/FileSystemInfo.js", "line": 4260, "kind": "method" },
+          { "name": "_resolveContextTsh", "file": "lib/FileSystemInfo.js", "line": 4442, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "git grep -w processAsyncTree @v5.111.1 outside test/: calls at CleanPlugin.js:201 (applyDiff), Compilation.js:6149 (executeModule), FileSystemInfo.js:1977 (resolveBuildDependencies), 4133 (_resolveContextTimestamp), 4265 (_resolveContextHash), 4450 (_resolveContextTsh); enclosing methods checked by reading each file."
+    },
+    {
+      "id": "wp-usage-unlazy-for-dependency",
+      "kind": "usage",
+      "lang": "en",
+      "question": "Where is `unlazyForDependency` of the lazy barrel controller called during module dependency processing?",
+      "search": "unlazyForDependency",
+      "gold": {
+        "files": ["lib/Compilation.js", "lib/LazyBarrel.js"],
+        "symbols": [
+          { "name": "unlazyForDependency", "file": "lib/LazyBarrel.js", "line": 381, "kind": "method" },
+          { "name": "_processModuleDependencies", "file": "lib/Compilation.js", "line": 1924, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "git grep -w unlazyForDependency @v5.111.1: defined LazyBarrel.js:381; the only calls are Compilation.js:2037, 2055 and 2120, all inside the processDependency closure of Compilation._processModuleDependencies (1924)."
+    },
+    {
+      "id": "wp-usage-implicit-type-fallback",
+      "kind": "usage",
+      "lang": "en",
+      "question": "Which plugins use the `implicitTypeLoaderFallback` utility to handle files when the experiment is set to 'auto'?",
+      "search": "implicitTypeLoaderFallback",
+      "gold": {
+        "files": ["lib/css/CssModulesPlugin.js", "lib/html/HtmlModulesPlugin.js"],
+        "symbols": [
+          { "name": "CssModulesPlugin", "file": "lib/css/CssModulesPlugin.js", "line": 257, "kind": "class" },
+          { "name": "HtmlModulesPlugin", "file": "lib/html/HtmlModulesPlugin.js", "line": 441, "kind": "class" }
+        ]
+      },
+      "verifiedBy": "git grep -w implicitTypeLoaderFallback @v5.111.1 outside test/: called in CssModulesPlugin.apply (277, experiments.css === 'auto') and HtmlModulesPlugin.apply (823, experiments.html === 'auto'); no other caller."
+    },
+    {
+      "id": "wp-impact-legacy-is-circular",
+      "kind": "impact",
+      "lang": "en",
+      "question": "CircularModulesPlugin still sets the legacy boolean `buildInfo.isCircular`. If I stop setting it, which code generation paths change behaviour?",
+      "search": "buildInfo isCircular",
+      "gold": {
+        "files": ["lib/dependencies/HarmonyExportExpressionDependency.js", "lib/dependencies/HarmonyExportSpecifierDependency.js"],
+        "symbols": [
+          { "name": "HarmonyExportDependencyTemplate", "file": "lib/dependencies/HarmonyExportExpressionDependency.js", "line": 166, "kind": "class" },
+          { "name": "HarmonyExportSpecifierDependencyTemplate", "file": "lib/dependencies/HarmonyExportSpecifierDependency.js", "line": 133, "kind": "class" }
+        ]
+      },
+      "verifiedBy": "git grep isCircular in lib/@v5.111.1: the boolean is only read as `buildInfo.isCircular === false` in HarmonyExportDependencyTemplate.apply (HarmonyExportExpressionDependency.js:269) and HarmonyExportSpecifierDependencyTemplate.apply (HarmonyExportSpecifierDependency.js:175) to pick the const value export format; ConstExportsPlugin uses CircularModulesPlugin.isCircular (circularKind) instead."
+    },
+    {
+      "id": "wp-impact-synchronous-target",
+      "kind": "impact",
+      "lang": "en",
+      "question": "If `getSynchronousTarget` in CircularModulesPlugin started following dynamic import() connections too, which parts of the cycle detection and reporting would be affected?",
+      "search": "CircularModulesPlugin getSynchronousTarget",
+      "gold": {
+        "files": ["lib/CircularModulesPlugin.js"],
+        "symbols": [
+          { "name": "getSynchronousTarget", "file": "lib/CircularModulesPlugin.js", "line": 53, "kind": "function" },
+          { "name": "build", "file": "lib/CircularModulesPlugin.js", "line": 190, "kind": "method" },
+          { "name": "formatShortestCycle", "file": "lib/CircularModulesPlugin.js", "line": 93, "kind": "function" }
+        ]
+      },
+      "verifiedBy": "git grep -w getSynchronousTarget @v5.111.1: defined CircularModulesPlugin.js:53 and called only by formatShortestCycle (106, BFS for the reported shortest cycle) and CycleGraph.build (217, SCC edges)."
+    }
+  ]
+}

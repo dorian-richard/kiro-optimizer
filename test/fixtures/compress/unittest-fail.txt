@@ -1,0 +1,38 @@
+Creating test database for alias 'default'...
+System check identified no issues (0 silenced).
+......................................................................
+......................................................................
+......................................................................
+......................................................................
+......................................................................
+......................................................................
+.....F.........E..................s...........
+======================================================================
+ERROR: test_invoice_pdf (billing.tests.test_invoices.InvoicePdfTests.test_invoice_pdf)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dev/shop/billing/tests/test_invoices.py", line 58, in test_invoice_pdf
+    pdf = render_invoice(self.invoice)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dev/shop/billing/pdf.py", line 21, in render_invoice
+    return HTML(string=html).write_pdf()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dev/shop/.venv/lib/python3.11/site-packages/weasyprint/__init__.py", line 252, in write_pdf
+    self.render(font_config, counter_style, **options)
+  File "/home/dev/shop/.venv/lib/python3.11/site-packages/weasyprint/document.py", line 112, in render
+    raise OSError("cannot load library 'gobject-2.0-0'")
+OSError: cannot load library 'gobject-2.0-0'
+
+======================================================================
+FAIL: test_refund_rounding (billing.tests.test_refunds.RefundTests.test_refund_rounding)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dev/shop/billing/tests/test_refunds.py", line 31, in test_refund_rounding
+    self.assertEqual(refund.amount, Decimal("33.34"))
+AssertionError: Decimal('33.33') != Decimal('33.34')
+
+----------------------------------------------------------------------
+Ran 466 tests in 8.512s
+
+FAILED (failures=1, errors=1, skipped=1)
+Destroying test database for alias 'default'...

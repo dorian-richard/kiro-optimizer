@@ -1,0 +1,4 @@
+# Build context is bench/competitors: only the Dockerfiles' inputs are needed.
+results
+**/node_modules
+*.md

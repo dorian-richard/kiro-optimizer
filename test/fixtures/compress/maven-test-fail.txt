@@ -1,0 +1,154 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------------< com.acme.shop:shop-core >----------------------
+[INFO] Building shop-core 1.4.0-SNAPSHOT                                  [3/6]
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/spring-core/6.1.0/spring-core-6.1.0.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/spring-core/6.1.0/spring-core-6.1.0.pom (2.1 kB at 45 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/spring-core/6.1.1/spring-core-6.1.1.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/spring-core/6.1.1/spring-core-6.1.1.pom (2.1 kB at 45 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/spring-core/6.1.2/spring-core-6.1.2.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/spring-core/6.1.2/spring-core-6.1.2.pom (2.1 kB at 45 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/spring-core/6.1.3/spring-core-6.1.3.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/spring-core/6.1.3/spring-core-6.1.3.pom (2.1 kB at 45 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/spring-core/6.1.4/spring-core-6.1.4.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/spring-core/6.1.4/spring-core-6.1.4.pom (2.1 kB at 45 kB/s)
+[INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/spring-core/6.1.5/spring-core-6.1.5.pom
+[INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/spring-core/6.1.5/spring-core-6.1.5.pom (2.1 kB at 45 kB/s)
+[INFO] 
+[INFO] --- maven-resources-plugin:3.3.1:resources (default-resources) @ shop-core ---
+[INFO] Copying 4 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.11.0:compile (default-compile) @ shop-core ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 66 source files with javac [debug release 17] to target/classes
+[WARNING] /home/dev/shop/shop-core/src/main/java/com/acme/shop/legacy/LegacyMapper.java:[33,18] [deprecation] getRawValue() in Field has been deprecated
+[INFO] 
+[INFO] --- maven-surefire-plugin:3.2.5:test (default-test) @ shop-core ---
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.acme.shop.cart.PriceServiceTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.100 s -- in com.acme.shop.cart.PriceServiceTest
+[INFO] Running com.acme.shop.orders.InvoiceMapperTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.101 s -- in com.acme.shop.orders.InvoiceMapperTest
+[INFO] Running com.acme.shop.refunds.InvoiceServiceTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.102 s -- in com.acme.shop.refunds.InvoiceServiceTest
+[INFO] Running com.acme.shop.payments.OrderServiceTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.103 s -- in com.acme.shop.payments.OrderServiceTest
+[INFO] Running com.acme.shop.invoices.OrderServiceTest
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.104 s -- in com.acme.shop.invoices.OrderServiceTest
+[INFO] Running com.acme.shop.customers.OrderServiceTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.105 s -- in com.acme.shop.customers.OrderServiceTest
+[INFO] Running com.acme.shop.catalog.OrderMapperTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.106 s -- in com.acme.shop.catalog.OrderMapperTest
+[INFO] Running com.acme.shop.inventory.OrderServiceTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.107 s -- in com.acme.shop.inventory.OrderServiceTest
+[INFO] Running com.acme.shop.shipping.PriceMapperTest
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.108 s -- in com.acme.shop.shipping.PriceMapperTest
+[INFO] Running com.acme.shop.auth.OrderMapperTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.109 s -- in com.acme.shop.auth.OrderMapperTest
+[INFO] Running com.acme.shop.pricing.PriceMapperTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.110 s -- in com.acme.shop.pricing.PriceMapperTest
+[INFO] Running com.acme.shop.tax.PriceMapperTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.111 s -- in com.acme.shop.tax.PriceMapperTest
+[INFO] Running com.acme.shop.discounts.PriceMapperTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.112 s -- in com.acme.shop.discounts.PriceMapperTest
+[INFO] Running com.acme.shop.refunds.RefundServiceTest
+[ERROR] Tests run: 14, Failures: 1, Errors: 1, Skipped: 0, Time elapsed: 0.612 s <<< FAILURE! -- in com.acme.shop.refunds.RefundServiceTest
+[ERROR] com.acme.shop.refunds.RefundServiceTest.refundPartial -- Time elapsed: 0.012 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <70.00> but was: <60.00>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:197)
+	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:182)
+	at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:1156)
+	at com.acme.shop.refunds.RefundServiceTest.refundPartial(RefundServiceTest.java:42)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:728)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:218)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:142)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:507)
+
+[ERROR] com.acme.shop.refunds.RefundServiceTest.refundForUnknownOrder -- Time elapsed: 0.003 s <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "com.acme.shop.model.Order.getCustomer()" because "order" is null
+	at com.acme.shop.refunds.RefundService.refund(RefundService.java:57)
+	at com.acme.shop.refunds.RefundServiceTest.refundForUnknownOrder(RefundServiceTest.java:77)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:728)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:218)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:142)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:507)
+
+[INFO] Running com.acme.shop.reports.PriceServiceTest
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.113 s -- in com.acme.shop.reports.PriceServiceTest
+[INFO] Running com.acme.shop.webhooks.InvoiceServiceTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.114 s -- in com.acme.shop.webhooks.InvoiceServiceTest
+[INFO] Running com.acme.shop.notifications.PriceMapperTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.115 s -- in com.acme.shop.notifications.PriceMapperTest
+[INFO] Running com.acme.shop.cart.OrderServiceTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.116 s -- in com.acme.shop.cart.OrderServiceTest
+[INFO] Running com.acme.shop.orders.PriceServiceTest
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.117 s -- in com.acme.shop.orders.PriceServiceTest
+[INFO] Running com.acme.shop.refunds.OrderServiceTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.118 s -- in com.acme.shop.refunds.OrderServiceTest
+[INFO] Running com.acme.shop.payments.OrderMapperTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.119 s -- in com.acme.shop.payments.OrderMapperTest
+[INFO] Running com.acme.shop.invoices.PriceMapperTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.120 s -- in com.acme.shop.invoices.PriceMapperTest
+[INFO] Running com.acme.shop.customers.OrderMapperTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.121 s -- in com.acme.shop.customers.OrderMapperTest
+[INFO] Running com.acme.shop.catalog.OrderServiceTest
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.122 s -- in com.acme.shop.catalog.OrderServiceTest
+[INFO] Running com.acme.shop.inventory.OrderMapperTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.123 s -- in com.acme.shop.inventory.OrderMapperTest
+[INFO] Running com.acme.shop.shipping.PriceServiceTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.124 s -- in com.acme.shop.shipping.PriceServiceTest
+[INFO] Running com.acme.shop.auth.PriceServiceTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.125 s -- in com.acme.shop.auth.PriceServiceTest
+[INFO] Running com.acme.shop.pricing.OrderServiceTest
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.126 s -- in com.acme.shop.pricing.OrderServiceTest
+[INFO] Running com.acme.shop.tax.OrderServiceTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.127 s -- in com.acme.shop.tax.OrderServiceTest
+[INFO] Running com.acme.shop.discounts.OrderServiceTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.128 s -- in com.acme.shop.discounts.OrderServiceTest
+[INFO] Running com.acme.shop.reports.InvoiceServiceTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.129 s -- in com.acme.shop.reports.InvoiceServiceTest
+[INFO]
+[INFO] Results:
+[INFO]
+[ERROR] Failures:
+[ERROR]   RefundServiceTest.refundPartial:42 expected: <70.00> but was: <60.00>
+[ERROR] Errors:
+[ERROR]   RefundServiceTest.refundForUnknownOrder:77 NullPointer Cannot invoke "com.acme.shop.model.Order.getCustomer()" because "order" is null
+[INFO]
+[ERROR] Tests run: 312, Failures: 1, Errors: 1, Skipped: 0
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  21.338 s
+[INFO] Finished at: 2026-10-09T10:15:42+02:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.2.5:test (default-test) on project shop-core: There are test failures.
+[ERROR]
+[ERROR] Please refer to /home/dev/shop/shop-core/target/surefire-reports for the individual test results.
+[ERROR] Please refer to dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR]
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR]
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

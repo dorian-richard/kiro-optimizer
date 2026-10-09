@@ -1,0 +1,2747 @@
+{
+  "meta": {
+    "label": "django-question",
+    "repo": {
+      "name": "django",
+      "url": "https://github.com/django/django.git",
+      "tag": "6.1.2",
+      "commit": "2212534bae393714e1e51db2341d4fd5545e19f6",
+      "language": "python",
+      "path": "bench/repos/django"
+    },
+    "repoRoot": "bench/repos/django",
+    "headCommit": "2212534bae393714e1e51db2341d4fd5545e19f6",
+    "date": "2026-10-09T11:37:47.292Z",
+    "input": "question",
+    "charsPerToken": 3,
+    "strategies": [
+      "native-naive",
+      "native-ranged",
+      "kopt-pack",
+      "kopt-hits+read"
+    ],
+    "grepLimits": {
+      "maxMatches": 100,
+      "maxChars": 10000,
+      "maxLineChars": 250
+    },
+    "readLimits": {
+      "naiveTopFiles": 3,
+      "naiveMaxLines": 2000,
+      "rangedMatches": 4,
+      "rangedContext": 60
+    },
+    "koptBudgets": {
+      "find": 700,
+      "pack": 2500,
+      "read": 2000
+    },
+    "index": {
+      "built": false,
+      "durationMs": 0,
+      "files": 2964,
+      "symbols": 50978,
+      "path": "bench/repos/.kopt-django/index.db"
+    },
+    "notes": [],
+    "durationMs": 10948
+  },
+  "results": [
+    {
+      "taskId": "dj-locate-db-cache-cull",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 65961,
+      "chars": 197877,
+      "toolCalls": 4,
+      "durationMs": 644,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0.3333333333333333,
+        "defRecall": 0,
+        "filesMissed": [
+          "django/db/backends/base/operations.py"
+        ],
+        "symbolsMissed": [
+          "_base_set",
+          "cache_key_culling_sql"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "MAX_ENTRIES|keeps|growing",
+          "chars": 6736,
+          "tokens": 2246
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/cache/tests.py",
+          "chars": 76819,
+          "tokens": 25607
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/topics/cache.txt",
+          "chars": 59045,
+          "tokens": 19682
+        },
+        {
+          "tool": "read_file",
+          "args": "django/contrib/admin/static/admin/js/vendor/jquery/jquery.js",
+          "chars": 55277,
+          "tokens": 18426
+        }
+      ]
+    },
+    {
+      "taskId": "dj-locate-db-cache-cull",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 7006,
+      "chars": 21011,
+      "toolCalls": 5,
+      "durationMs": 2,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "django/db/backends/base/operations.py"
+        ],
+        "symbolsMissed": [
+          "_cull",
+          "_base_set",
+          "cache_key_culling_sql"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "MAX_ENTRIES|keeps|growing",
+          "chars": 6736,
+          "tokens": 2246
+        },
+        {
+          "tool": "read_file",
+          "args": "django/contrib/admin/static/admin/js/vendor/jquery/jquery.js:10081-10201",
+          "chars": 3128,
+          "tokens": 1043
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/internals/contributing/index.txt:1-65",
+          "chars": 2620,
+          "tokens": 874
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/ref/models/fields.txt:103-223",
+          "chars": 4000,
+          "tokens": 1334
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/topics/class-based-views/mixins.txt:528-648",
+          "chars": 4527,
+          "tokens": 1509
+        }
+      ]
+    },
+    {
+      "taskId": "dj-locate-db-cache-cull",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 991,
+      "chars": 2971,
+      "toolCalls": 1,
+      "durationMs": 67,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [
+          "django/db/backends/base/operations.py"
+        ],
+        "symbolsMissed": [
+          "cache_key_culling_sql"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"Our cache table keeps growing. Where does the database cache backend delete expired or excess entries when it reaches MAX_ENTRIES?\"",
+          "chars": 2971,
+          "tokens": 991
+        }
+      ]
+    },
+    {
+      "taskId": "dj-locate-db-cache-cull",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 917,
+      "chars": 2749,
+      "toolCalls": 3,
+      "durationMs": 18,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [
+          "django/db/backends/base/operations.py"
+        ],
+        "symbolsMissed": [
+          "cache_key_culling_sql"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"Our cache table keeps growing. Where does the database cache backend delete expired or excess entries when it reaches MAX_ENTRIES?\"",
+          "chars": 1467,
+          "tokens": 489
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#4sc",
+          "chars": 1088,
+          "tokens": 363
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#4sk",
+          "chars": 194,
+          "tokens": 65
+        }
+      ]
+    },
+    {
+      "taskId": "dj-locate-accept-language",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 24066,
+      "chars": 72193,
+      "toolCalls": 4,
+      "durationMs": 179,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "django/utils/translation/trans_real.py"
+        ],
+        "symbolsMissed": [
+          "get_language_from_request",
+          "parse_accept_lang_header"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "determined",
+          "chars": 9982,
+          "tokens": 3328
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/ref/class-based-views/mixins-date-based.txt",
+          "chars": 12186,
+          "tokens": 4062
+        },
+        {
+          "tool": "read_file",
+          "args": "django/conf/locale/en_AU/LC_MESSAGES/django.po",
+          "chars": 28012,
+          "tokens": 9338
+        },
+        {
+          "tool": "read_file",
+          "args": "django/conf/locale/en_GB/LC_MESSAGES/django.po",
+          "chars": 22013,
+          "tokens": 7338
+        }
+      ]
+    },
+    {
+      "taskId": "dj-locate-accept-language",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 7376,
+      "chars": 22123,
+      "toolCalls": 4,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "django/utils/translation/trans_real.py"
+        ],
+        "symbolsMissed": [
+          "get_language_from_request",
+          "parse_accept_lang_header"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "determined",
+          "chars": 9982,
+          "tokens": 3328
+        },
+        {
+          "tool": "read_file",
+          "args": "django/conf/locale/en_AU/LC_MESSAGES/django.po:601-721",
+          "chars": 2985,
+          "tokens": 995
+        },
+        {
+          "tool": "read_file",
+          "args": "django/conf/locale/en_GB/LC_MESSAGES/django.po:540-660",
+          "chars": 2569,
+          "tokens": 857
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/ref/class-based-views/mixins-date-based.txt:1-195",
+          "chars": 6587,
+          "tokens": 2196
+        }
+      ]
+    },
+    {
+      "taskId": "dj-locate-accept-language",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1080,
+      "chars": 3238,
+      "toolCalls": 1,
+      "durationMs": 27,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"Where is the user's language determined from the browser's Accept-Language header?\"",
+          "chars": 3238,
+          "tokens": 1080
+        }
+      ]
+    },
+    {
+      "taskId": "dj-locate-accept-language",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 1360,
+      "chars": 4077,
+      "toolCalls": 3,
+      "durationMs": 11,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"Where is the user's language determined from the browser's Accept-Language header?\"",
+          "chars": 2091,
+          "tokens": 697
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#cd8",
+          "chars": 1159,
+          "tokens": 387
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#cd7",
+          "chars": 827,
+          "tokens": 276
+        }
+      ]
+    },
+    {
+      "taskId": "dj-locate-test-shuffle",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 45933,
+      "chars": 137795,
+      "toolCalls": 4,
+      "durationMs": 3472,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "shuffling|stays",
+          "chars": 1211,
+          "tokens": 404
+        },
+        {
+          "tool": "read_file",
+          "args": "django/test/runner.py",
+          "chars": 44605,
+          "tokens": 14869
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/csrf_tests/tests.py",
+          "chars": 58761,
+          "tokens": 19587
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/test_runner/test_discover_runner.py",
+          "chars": 33218,
+          "tokens": 11073
+        }
+      ]
+    },
+    {
+      "taskId": "dj-locate-test-shuffle",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 6111,
+      "chars": 18329,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "shuffle_tests"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "shuffling|stays",
+          "chars": 1211,
+          "tokens": 404
+        },
+        {
+          "tool": "read_file",
+          "args": "django/template/loader_tags.py:97-217",
+          "chars": 4879,
+          "tokens": 1627
+        },
+        {
+          "tool": "read_file",
+          "args": "django/test/runner.py:581-701",
+          "chars": 4137,
+          "tokens": 1379
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/csrf_tests/tests.py:1422-1494",
+          "chars": 2903,
+          "tokens": 968
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/test_runner/test_discover_runner.py:380-500",
+          "chars": 5199,
+          "tokens": 1733
+        }
+      ]
+    },
+    {
+      "taskId": "dj-locate-test-shuffle",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 489,
+      "chars": 1466,
+      "toolCalls": 1,
+      "durationMs": 37,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "shuffle_tests"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"Where is the test-order shuffling used by `manage.py test --shuffle` implemented? I need to know how the order stays reproducible for a seed.\"",
+          "chars": 1466,
+          "tokens": 489
+        }
+      ]
+    },
+    {
+      "taskId": "dj-locate-test-shuffle",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 1188,
+      "chars": 3562,
+      "toolCalls": 3,
+      "durationMs": 19,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "shuffle_tests"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"Where is the test-order shuffling used by `manage.py test --shuffle` implemented? I need to know how the order stays reproducible for a seed.\"",
+          "chars": 1220,
+          "tokens": 407
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#bdl",
+          "chars": 170,
+          "tokens": 57
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#bd6",
+          "chars": 2172,
+          "tokens": 724
+        }
+      ]
+    },
+    {
+      "taskId": "dj-locate-session-vary-cookie",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 42302,
+      "chars": 126902,
+      "toolCalls": 4,
+      "durationMs": 837,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 1,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [
+          "django/contrib/sessions/middleware.py"
+        ],
+        "symbolsMissed": [],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "vary",
+          "chars": 8435,
+          "tokens": 2812
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/topics/cache.txt",
+          "chars": 59045,
+          "tokens": 19682
+        },
+        {
+          "tool": "read_file",
+          "args": "django/utils/cache.py",
+          "chars": 16706,
+          "tokens": 5569
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/ref/utils.txt",
+          "chars": 42716,
+          "tokens": 14239
+        }
+      ]
+    },
+    {
+      "taskId": "dj-locate-session-vary-cookie",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 9294,
+      "chars": 27879,
+      "toolCalls": 5,
+      "durationMs": 1,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0.3333333333333333,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [
+          "django/contrib/sessions/middleware.py"
+        ],
+        "symbolsMissed": [
+          "SessionMiddleware",
+          "process_response"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "vary",
+          "chars": 8435,
+          "tokens": 2812
+        },
+        {
+          "tool": "read_file",
+          "args": "django/utils/cache.py:243-363",
+          "chars": 4497,
+          "tokens": 1499
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/ref/utils.txt:14-134",
+          "chars": 4910,
+          "tokens": 1637
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/topics/cache.txt:794-914",
+          "chars": 4701,
+          "tokens": 1567
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/topics/cache.txt:1307-1427",
+          "chars": 5336,
+          "tokens": 1779
+        }
+      ]
+    },
+    {
+      "taskId": "dj-locate-session-vary-cookie",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 2218,
+      "chars": 6652,
+      "toolCalls": 1,
+      "durationMs": 34,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"Where does Django add the Vary: Cookie header to the response when the session was read during the request?\"",
+          "chars": 6652,
+          "tokens": 2218
+        }
+      ]
+    },
+    {
+      "taskId": "dj-locate-session-vary-cookie",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 1102,
+      "chars": 3302,
+      "toolCalls": 3,
+      "durationMs": 24,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "SessionMiddleware"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"Where does Django add the Vary: Cookie header to the response when the session was read during the request?\"",
+          "chars": 1698,
+          "tokens": 566
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#bt1",
+          "chars": 1222,
+          "tokens": 408
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#bt2",
+          "chars": 382,
+          "tokens": 128
+        }
+      ]
+    },
+    {
+      "taskId": "dj-explain-migration-optimizer",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 59173,
+      "chars": 177514,
+      "toolCalls": 4,
+      "durationMs": 551,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "django/db/migrations/operations/base.py"
+        ],
+        "symbolsMissed": [
+          "MigrationOptimizer",
+          "optimize",
+          "optimize_inner",
+          "reduce"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "AddField",
+          "chars": 8344,
+          "tokens": 2782
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/migrations/test_operations.py",
+          "chars": 83459,
+          "tokens": 27820
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/migrations/test_autodetector.py",
+          "chars": 70136,
+          "tokens": 23379
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/howto/writing-migrations.txt",
+          "chars": 15575,
+          "tokens": 5192
+        }
+      ]
+    },
+    {
+      "taskId": "dj-explain-migration-optimizer",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 8999,
+      "chars": 26990,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0.5,
+        "defRecall": 0.25,
+        "filesMissed": [
+          "django/db/migrations/operations/base.py"
+        ],
+        "symbolsMissed": [
+          "MigrationOptimizer",
+          "optimize_inner"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "AddField",
+          "chars": 8344,
+          "tokens": 2782
+        },
+        {
+          "tool": "read_file",
+          "args": "django/db/migrations/operations/fields.py:23-143",
+          "chars": 4303,
+          "tokens": 1435
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/howto/writing-migrations.txt:31-151",
+          "chars": 4009,
+          "tokens": 1337
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/ref/migration-operations.txt:96-216",
+          "chars": 4487,
+          "tokens": 1496
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/topics/migrations.txt:692-812",
+          "chars": 5847,
+          "tokens": 1949
+        }
+      ]
+    },
+    {
+      "taskId": "dj-explain-migration-optimizer",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 2460,
+      "chars": 7378,
+      "toolCalls": 1,
+      "durationMs": 57,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.25,
+        "defRecall": 0.25,
+        "filesMissed": [
+          "django/db/migrations/optimizer.py",
+          "django/db/migrations/operations/base.py"
+        ],
+        "symbolsMissed": [
+          "MigrationOptimizer",
+          "optimize",
+          "optimize_inner"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"How does Django merge a sequence of migration operations into fewer ones (e.g. CreateModel followed by AddField) when squashing? Explain the algorithm.\"",
+          "chars": 7378,
+          "tokens": 2460
+        }
+      ]
+    },
+    {
+      "taskId": "dj-explain-migration-optimizer",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 1425,
+      "chars": 4270,
+      "toolCalls": 3,
+      "durationMs": 37,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.25,
+        "defRecall": 0.25,
+        "filesMissed": [
+          "django/db/migrations/optimizer.py",
+          "django/db/migrations/operations/base.py"
+        ],
+        "symbolsMissed": [
+          "MigrationOptimizer",
+          "optimize",
+          "optimize_inner"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"How does Django merge a sequence of migration operations into fewer ones (e.g. CreateModel followed by AddField) when squashing? Explain the algorithm.\"",
+          "chars": 628,
+          "tokens": 210
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#7c3",
+          "chars": 862,
+          "tokens": 288
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#7ia",
+          "chars": 2780,
+          "tokens": 927
+        }
+      ]
+    },
+    {
+      "taskId": "dj-explain-template-lookup",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 43481,
+      "chars": 130440,
+      "toolCalls": 3,
+      "durationMs": 483,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "resolve_lookup",
+          "chars": 489,
+          "tokens": 163
+        },
+        {
+          "tool": "read_file",
+          "args": "django/db/models/sql/query.py",
+          "chars": 85309,
+          "tokens": 28437
+        },
+        {
+          "tool": "read_file",
+          "args": "django/template/base.py",
+          "chars": 44642,
+          "tokens": 14881
+        }
+      ]
+    },
+    {
+      "taskId": "dj-explain-template-lookup",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 5505,
+      "chars": 16511,
+      "toolCalls": 4,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "resolve_lookup",
+          "chars": 489,
+          "tokens": 163
+        },
+        {
+          "tool": "read_file",
+          "args": "django/db/models/sql/query.py:1262-1382",
+          "chars": 5188,
+          "tokens": 1730
+        },
+        {
+          "tool": "read_file",
+          "args": "django/db/models/sql/query.py:1499-1619",
+          "chars": 5003,
+          "tokens": 1668
+        },
+        {
+          "tool": "read_file",
+          "args": "django/template/base.py:904-1024",
+          "chars": 5831,
+          "tokens": 1944
+        }
+      ]
+    },
+    {
+      "taskId": "dj-explain-template-lookup",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 238,
+      "chars": 713,
+      "toolCalls": 1,
+      "durationMs": 32,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"In the template engine, how does `Variable._resolve_lookup` resolve something like {{ user.profile.0 }}? Which lookups does it try and in what order?\"",
+          "chars": 713,
+          "tokens": 238
+        }
+      ]
+    },
+    {
+      "taskId": "dj-explain-template-lookup",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 1696,
+      "chars": 5087,
+      "toolCalls": 3,
+      "durationMs": 21,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"In the template engine, how does `Variable._resolve_lookup` resolve something like {{ user.profile.0 }}? Which lookups does it try and in what order?\"",
+          "chars": 542,
+          "tokens": 181
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#azc",
+          "chars": 4092,
+          "tokens": 1364
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#az6",
+          "chars": 453,
+          "tokens": 151
+        }
+      ]
+    },
+    {
+      "taskId": "dj-explain-password-upgrade",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 31181,
+      "chars": 93539,
+      "toolCalls": 4,
+      "durationMs": 350,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "django/contrib/auth/hashers.py"
+        ],
+        "symbolsMissed": [
+          "check_password",
+          "verify_password",
+          "identify_hasher",
+          "must_update"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "decide",
+          "chars": 4386,
+          "tokens": 1462
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/howto/custom-template-tags.txt",
+          "chars": 51695,
+          "tokens": 17232
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/internals/contributing/committing-code.txt",
+          "chars": 12599,
+          "tokens": 4200
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/internals/contributing/triaging-tickets.txt",
+          "chars": 24859,
+          "tokens": 8287
+        }
+      ]
+    },
+    {
+      "taskId": "dj-explain-password-upgrade",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 7014,
+      "chars": 21039,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "django/contrib/auth/hashers.py"
+        ],
+        "symbolsMissed": [
+          "check_password",
+          "verify_password",
+          "identify_hasher",
+          "must_update"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "decide",
+          "chars": 4386,
+          "tokens": 1462
+        },
+        {
+          "tool": "read_file",
+          "args": "django/core/cache/backends/base.py:1-106",
+          "chars": 3165,
+          "tokens": 1055
+        },
+        {
+          "tool": "read_file",
+          "args": "django/utils/log.py:129-249",
+          "chars": 3992,
+          "tokens": 1331
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/internals/release-process.txt:34-154",
+          "chars": 4512,
+          "tokens": 1504
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/topics/i18n/timezones.txt:474-594",
+          "chars": 4984,
+          "tokens": 1662
+        }
+      ]
+    },
+    {
+      "taskId": "dj-explain-password-upgrade",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 843,
+      "chars": 2529,
+      "toolCalls": 1,
+      "durationMs": 36,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.75,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "identify_hasher"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"How does Django check a password and decide that it must be re-hashed (algorithm change or a different number of iterations)?\"",
+          "chars": 2529,
+          "tokens": 843
+        }
+      ]
+    },
+    {
+      "taskId": "dj-explain-password-upgrade",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 1546,
+      "chars": 4634,
+      "toolCalls": 3,
+      "durationMs": 24,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.75,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "identify_hasher"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"How does Django check a password and decide that it must be re-hashed (algorithm change or a different number of iterations)?\"",
+          "chars": 1996,
+          "tokens": 666
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#1wc",
+          "chars": 2146,
+          "tokens": 716
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#1vp",
+          "chars": 492,
+          "tokens": 164
+        }
+      ]
+    },
+    {
+      "taskId": "dj-explain-autoreload-stat",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 46500,
+      "chars": 139495,
+      "toolCalls": 4,
+      "durationMs": 252,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "autoreloader|watchman",
+          "chars": 7394,
+          "tokens": 2465
+        },
+        {
+          "tool": "read_file",
+          "args": "django/utils/autoreload.py",
+          "chars": 25043,
+          "tokens": 8348
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/utils_tests/test_autoreload.py",
+          "chars": 38497,
+          "tokens": 12833
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/ref/django-admin.txt",
+          "chars": 68561,
+          "tokens": 22854
+        }
+      ]
+    },
+    {
+      "taskId": "dj-explain-autoreload-stat",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 8458,
+      "chars": 25369,
+      "toolCalls": 4,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.75,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "autoreloader|watchman",
+          "chars": 7394,
+          "tokens": 2465
+        },
+        {
+          "tool": "read_file",
+          "args": "django/utils/autoreload.py:384-504",
+          "chars": 4414,
+          "tokens": 1472
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/utils_tests/test_autoreload.py:288-408",
+          "chars": 5253,
+          "tokens": 1751
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/utils_tests/test_autoreload.py:729-934",
+          "chars": 8308,
+          "tokens": 2770
+        }
+      ]
+    },
+    {
+      "taskId": "dj-explain-autoreload-stat",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 1142,
+      "chars": 3425,
+      "toolCalls": 1,
+      "durationMs": 22,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "get_reloader",
+          "StatReloader",
+          "tick",
+          "snapshot_files"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"How does the runserver autoreloader detect code changes when Watchman is not installed?\"",
+          "chars": 3425,
+          "tokens": 1142
+        }
+      ]
+    },
+    {
+      "taskId": "dj-explain-autoreload-stat",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 2426,
+      "chars": 7275,
+      "toolCalls": 3,
+      "durationMs": 13,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "get_reloader",
+          "StatReloader",
+          "tick",
+          "snapshot_files"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"How does the runserver autoreloader detect code changes when Watchman is not installed?\"",
+          "chars": 1979,
+          "tokens": 660
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#7st",
+          "chars": 4696,
+          "tokens": 1566
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#7sq",
+          "chars": 600,
+          "tokens": 200
+        }
+      ]
+    },
+    {
+      "taskId": "dj-usage-add-new-csrf-cookie",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 50171,
+      "chars": 150507,
+      "toolCalls": 4,
+      "durationMs": 641,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "get_token",
+          "rotate_token",
+          "process_request"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "add_new_csrf_cookie|caller",
+          "chars": 6832,
+          "tokens": 2278
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/view_tests/tests/test_debug.py",
+          "chars": 80264,
+          "tokens": 26755
+        },
+        {
+          "tool": "read_file",
+          "args": "django/contrib/admin/static/admin/js/vendor/jquery/jquery.js",
+          "chars": 55277,
+          "tokens": 18426
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/deprecation/test_warn_about_external_use.py",
+          "chars": 8134,
+          "tokens": 2712
+        }
+      ]
+    },
+    {
+      "taskId": "dj-usage-add-new-csrf-cookie",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 7943,
+      "chars": 23823,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "process_request"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "add_new_csrf_cookie|caller",
+          "chars": 6832,
+          "tokens": 2278
+        },
+        {
+          "tool": "read_file",
+          "args": "django/db/models/query_utils.py:254-374",
+          "chars": 4273,
+          "tokens": 1425
+        },
+        {
+          "tool": "read_file",
+          "args": "django/middleware/csrf.py:24-144",
+          "chars": 4459,
+          "tokens": 1487
+        },
+        {
+          "tool": "read_file",
+          "args": "django/views/debug.py:42-162",
+          "chars": 3909,
+          "tokens": 1303
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/deprecation/test_warn_about_external_use.py:88-179",
+          "chars": 4350,
+          "tokens": 1450
+        }
+      ]
+    },
+    {
+      "taskId": "dj-usage-add-new-csrf-cookie",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 696,
+      "chars": 2086,
+      "toolCalls": 1,
+      "durationMs": 34,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"Who calls `_add_new_csrf_cookie`? I want every caller before I change what it stores in request.META.\"",
+          "chars": 2086,
+          "tokens": 696
+        }
+      ]
+    },
+    {
+      "taskId": "dj-usage-add-new-csrf-cookie",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 893,
+      "chars": 2679,
+      "toolCalls": 3,
+      "durationMs": 18,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "get_token"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"Who calls `_add_new_csrf_cookie`? I want every caller before I change what it stores in request.META.\"",
+          "chars": 1728,
+          "tokens": 576
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#aj9",
+          "chars": 351,
+          "tokens": 117
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#aju",
+          "chars": 600,
+          "tokens": 200
+        }
+      ]
+    },
+    {
+      "taskId": "dj-usage-construct-instance",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 74341,
+      "chars": 223019,
+      "toolCalls": 4,
+      "durationMs": 820,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.3333333333333333,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "_post_clean",
+          "BaseModelForm"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "construct_instance|filled",
+          "chars": 5565,
+          "tokens": 1855
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/forms_tests/tests/test_formsets.py",
+          "chars": 80140,
+          "tokens": 26714
+        },
+        {
+          "tool": "read_file",
+          "args": "django/contrib/admin/static/admin/js/vendor/jquery/jquery.js",
+          "chars": 55277,
+          "tokens": 18426
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/model_formsets/tests.py",
+          "chars": 82037,
+          "tokens": 27346
+        }
+      ]
+    },
+    {
+      "taskId": "dj-usage-construct-instance",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 7689,
+      "chars": 23062,
+      "toolCalls": 5,
+      "durationMs": 1,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "_post_clean"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "construct_instance|filled",
+          "chars": 5565,
+          "tokens": 1855
+        },
+        {
+          "tool": "read_file",
+          "args": "django/contrib/admin/static/admin/js/vendor/jquery/jquery.js:3413-3533",
+          "chars": 3914,
+          "tokens": 1305
+        },
+        {
+          "tool": "read_file",
+          "args": "django/forms/models.py:1-110",
+          "chars": 3389,
+          "tokens": 1130
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/forms_tests/tests/test_formsets.py:210-330",
+          "chars": 4948,
+          "tokens": 1650
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/forms_tests/tests/test_formsets.py:492-612",
+          "chars": 5246,
+          "tokens": 1749
+        }
+      ]
+    },
+    {
+      "taskId": "dj-usage-construct-instance",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 824,
+      "chars": 2472,
+      "toolCalls": 1,
+      "durationMs": 40,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "_post_clean"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"Who calls `construct_instance`? I want to know where the model instance is filled in from a ModelForm.\"",
+          "chars": 2472,
+          "tokens": 824
+        }
+      ]
+    },
+    {
+      "taskId": "dj-usage-construct-instance",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 763,
+      "chars": 2285,
+      "toolCalls": 3,
+      "durationMs": 31,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "_post_clean"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"Who calls `construct_instance`? I want to know where the model instance is filled in from a ModelForm.\"",
+          "chars": 603,
+          "tokens": 201
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#a2a",
+          "chars": 106,
+          "tokens": 36
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#a1s",
+          "chars": 1576,
+          "tokens": 526
+        }
+      ]
+    },
+    {
+      "taskId": "dj-usage-same-domain",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 65803,
+      "chars": 197405,
+      "toolCalls": 4,
+      "durationMs": 207,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "django/utils/http.py",
+          "django/http/request.py",
+          "django/middleware/csrf.py"
+        ],
+        "symbolsMissed": [
+          "is_same_domain",
+          "validate_host",
+          "_origin_verified",
+          "_check_referer"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "matches",
+          "chars": 10017,
+          "tokens": 3339
+        },
+        {
+          "tool": "read_file",
+          "args": "django/contrib/admin/static/admin/js/vendor/jquery/jquery.js",
+          "chars": 55277,
+          "tokens": 18426
+        },
+        {
+          "tool": "read_file",
+          "args": "django/contrib/admin/static/admin/js/vendor/xregexp/xregexp.js",
+          "chars": 76769,
+          "tokens": 25590
+        },
+        {
+          "tool": "read_file",
+          "args": "django/contrib/admin/static/admin/js/vendor/select2/select2.full.js",
+          "chars": 55342,
+          "tokens": 18448
+        }
+      ]
+    },
+    {
+      "taskId": "dj-usage-same-domain",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 7988,
+      "chars": 23960,
+      "toolCalls": 5,
+      "durationMs": 1,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "django/utils/http.py",
+          "django/http/request.py",
+          "django/middleware/csrf.py"
+        ],
+        "symbolsMissed": [
+          "is_same_domain",
+          "validate_host",
+          "_origin_verified",
+          "_check_referer"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "matches",
+          "chars": 10017,
+          "tokens": 3339
+        },
+        {
+          "tool": "read_file",
+          "args": "django/contrib/admin/static/admin/js/vendor/jquery/jquery.js:1020-1140",
+          "chars": 4231,
+          "tokens": 1411
+        },
+        {
+          "tool": "read_file",
+          "args": "django/contrib/admin/static/admin/js/vendor/jquery/jquery.js:1357-1477",
+          "chars": 3504,
+          "tokens": 1168
+        },
+        {
+          "tool": "read_file",
+          "args": "django/contrib/admin/static/admin/js/vendor/jquery/jquery.js:1774-1894",
+          "chars": 3319,
+          "tokens": 1107
+        },
+        {
+          "tool": "read_file",
+          "args": "django/contrib/admin/static/admin/js/vendor/jquery/jquery.js:2738-2858",
+          "chars": 2889,
+          "tokens": 963
+        }
+      ]
+    },
+    {
+      "taskId": "dj-usage-same-domain",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 938,
+      "chars": 2813,
+      "toolCalls": 1,
+      "durationMs": 37,
+      "recall": {
+        "fileRecall": 0.6666666666666666,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [
+          "django/middleware/csrf.py"
+        ],
+        "symbolsMissed": [],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"Which parts of Django check whether a host matches an allowed domain pattern like '.example.com'? List the call sites.\"",
+          "chars": 2813,
+          "tokens": 938
+        }
+      ]
+    },
+    {
+      "taskId": "dj-usage-same-domain",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 989,
+      "chars": 2963,
+      "toolCalls": 3,
+      "durationMs": 28,
+      "recall": {
+        "fileRecall": 0.6666666666666666,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [
+          "django/middleware/csrf.py"
+        ],
+        "symbolsMissed": [
+          "_origin_verified",
+          "_check_referer"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"Which parts of Django check whether a host matches an allowed domain pattern like '.example.com'? List the call sites.\"",
+          "chars": 1615,
+          "tokens": 539
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#c40",
+          "chars": 591,
+          "tokens": 197
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#agf",
+          "chars": 757,
+          "tokens": 253
+        }
+      ]
+    },
+    {
+      "taskId": "dj-usage-resolve-callables",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 50249,
+      "chars": 150743,
+      "toolCalls": 4,
+      "durationMs": 140,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.25,
+        "defRecall": 0.25,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "get_or_create",
+          "update_or_create",
+          "_add_items"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "resolve_callables|caller",
+          "chars": 7068,
+          "tokens": 2356
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/view_tests/tests/test_debug.py",
+          "chars": 80264,
+          "tokens": 26755
+        },
+        {
+          "tool": "read_file",
+          "args": "django/contrib/admin/static/admin/js/vendor/jquery/jquery.js",
+          "chars": 55277,
+          "tokens": 18426
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/deprecation/test_warn_about_external_use.py",
+          "chars": 8134,
+          "tokens": 2712
+        }
+      ]
+    },
+    {
+      "taskId": "dj-usage-resolve-callables",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 7388,
+      "chars": 22160,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.25,
+        "defRecall": 0.25,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "get_or_create",
+          "update_or_create",
+          "_add_items"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "resolve_callables|caller",
+          "chars": 7068,
+          "tokens": 2356
+        },
+        {
+          "tool": "read_file",
+          "args": "django/db/models/query_utils.py:254-374",
+          "chars": 4273,
+          "tokens": 1425
+        },
+        {
+          "tool": "read_file",
+          "args": "django/db/models/utils.py:1-82",
+          "chars": 2560,
+          "tokens": 854
+        },
+        {
+          "tool": "read_file",
+          "args": "django/views/debug.py:42-162",
+          "chars": 3909,
+          "tokens": 1303
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/deprecation/test_warn_about_external_use.py:88-179",
+          "chars": 4350,
+          "tokens": 1450
+        }
+      ]
+    },
+    {
+      "taskId": "dj-usage-resolve-callables",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 287,
+      "chars": 859,
+      "toolCalls": 1,
+      "durationMs": 16,
+      "recall": {
+        "fileRecall": 0.3333333333333333,
+        "symbolRecall": 0.75,
+        "defRecall": 0.25,
+        "filesMissed": [
+          "django/db/models/query.py",
+          "django/db/models/fields/related_descriptors.py"
+        ],
+        "symbolsMissed": [
+          "_add_items"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"Where is `resolve_callables` used, and what does each caller pass to it?\"",
+          "chars": 859,
+          "tokens": 287
+        }
+      ]
+    },
+    {
+      "taskId": "dj-usage-resolve-callables",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 695,
+      "chars": 2083,
+      "toolCalls": 3,
+      "durationMs": 11,
+      "recall": {
+        "fileRecall": 0.3333333333333333,
+        "symbolRecall": 0.25,
+        "defRecall": 0.25,
+        "filesMissed": [
+          "django/db/models/query.py",
+          "django/db/models/fields/related_descriptors.py"
+        ],
+        "symbolsMissed": [
+          "get_or_create",
+          "update_or_create",
+          "_add_items"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"Where is `resolve_callables` used, and what does each caller pass to it?\"",
+          "chars": 587,
+          "tokens": 196
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#94f",
+          "chars": 267,
+          "tokens": 89
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#aie",
+          "chars": 1229,
+          "tokens": 410
+        }
+      ]
+    },
+    {
+      "taskId": "dj-impact-naive-now",
+      "kind": "impact",
+      "strategy": "native-naive",
+      "tokens": 23996,
+      "chars": 71984,
+      "toolCalls": 2,
+      "durationMs": 524,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "get_naive_now",
+          "chars": 217,
+          "tokens": 73
+        },
+        {
+          "tool": "read_file",
+          "args": "django/db/models/fields/__init__.py",
+          "chars": 71767,
+          "tokens": 23923
+        }
+      ]
+    },
+    {
+      "taskId": "dj-impact-naive-now",
+      "kind": "impact",
+      "strategy": "native-ranged",
+      "tokens": 2892,
+      "chars": 8670,
+      "toolCalls": 3,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "get_naive_now",
+          "chars": 217,
+          "tokens": 73
+        },
+        {
+          "tool": "read_file",
+          "args": "django/db/models/fields/__init__.py:1327-1447",
+          "chars": 4135,
+          "tokens": 1379
+        },
+        {
+          "tool": "read_file",
+          "args": "django/db/models/fields/__init__.py:2576-2696",
+          "chars": 4318,
+          "tokens": 1440
+        }
+      ]
+    },
+    {
+      "taskId": "dj-impact-naive-now",
+      "kind": "impact",
+      "strategy": "kopt-pack",
+      "tokens": 308,
+      "chars": 924,
+      "toolCalls": 1,
+      "durationMs": 42,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"If I change `_get_naive_now` so that it returns an aware datetime, which date/time field checks are affected?\"",
+          "chars": 924,
+          "tokens": 308
+        }
+      ]
+    },
+    {
+      "taskId": "dj-impact-naive-now",
+      "kind": "impact",
+      "strategy": "kopt-hits+read",
+      "tokens": 903,
+      "chars": 2703,
+      "toolCalls": 3,
+      "durationMs": 33,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "_check_fix_default_value"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"If I change `_get_naive_now` so that it returns an aware datetime, which date/time field checks are affected?\"",
+          "chars": 1177,
+          "tokens": 393
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#9gq",
+          "chars": 109,
+          "tokens": 37
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#9gv",
+          "chars": 1417,
+          "tokens": 473
+        }
+      ]
+    },
+    {
+      "taskId": "dj-impact-same-field-operation",
+      "kind": "impact",
+      "strategy": "native-naive",
+      "tokens": 33839,
+      "chars": 101513,
+      "toolCalls": 4,
+      "durationMs": 553,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "django/db/migrations/operations/fields.py"
+        ],
+        "symbolsMissed": [
+          "is_same_field_operation",
+          "AddField",
+          "AlterField"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "decides",
+          "chars": 481,
+          "tokens": 161
+        },
+        {
+          "tool": "read_file",
+          "args": "django/db/models/fields/reverse_related.py",
+          "chars": 12624,
+          "tokens": 4208
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/internals/contributing/triaging-tickets.txt",
+          "chars": 24859,
+          "tokens": 8287
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/ref/settings.txt",
+          "chars": 63549,
+          "tokens": 21183
+        }
+      ]
+    },
+    {
+      "taskId": "dj-impact-same-field-operation",
+      "kind": "impact",
+      "strategy": "native-ranged",
+      "tokens": 6597,
+      "chars": 19786,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "django/db/migrations/operations/fields.py"
+        ],
+        "symbolsMissed": [
+          "is_same_field_operation",
+          "AddField",
+          "AlterField"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "decides",
+          "chars": 481,
+          "tokens": 161
+        },
+        {
+          "tool": "read_file",
+          "args": "django/db/models/fields/reverse_related.py:155-275",
+          "chars": 4530,
+          "tokens": 1510
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/internals/contributing/triaging-tickets.txt:270-390",
+          "chars": 4884,
+          "tokens": 1628
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/ref/settings.txt:1897-2017",
+          "chars": 4493,
+          "tokens": 1498
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/topics/http/middleware.txt:88-208",
+          "chars": 5398,
+          "tokens": 1800
+        }
+      ]
+    },
+    {
+      "taskId": "dj-impact-same-field-operation",
+      "kind": "impact",
+      "strategy": "kopt-pack",
+      "tokens": 690,
+      "chars": 2070,
+      "toolCalls": 1,
+      "durationMs": 39,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "AddField"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"In migrations, what is affected if I change the rule that decides two field operations target the same field (same model name and field name)?\"",
+          "chars": 2070,
+          "tokens": 690
+        }
+      ]
+    },
+    {
+      "taskId": "dj-impact-same-field-operation",
+      "kind": "impact",
+      "strategy": "kopt-hits+read",
+      "tokens": 1528,
+      "chars": 4580,
+      "toolCalls": 3,
+      "durationMs": 35,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "AddField"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"In migrations, what is affected if I change the rule that decides two field operations target the same field (same model name and field name)?\"",
+          "chars": 1969,
+          "tokens": 657
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#7i5",
+          "chars": 169,
+          "tokens": 57
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#7i1",
+          "chars": 2442,
+          "tokens": 814
+        }
+      ]
+    },
+    {
+      "taskId": "dj-impact-migrations-module",
+      "kind": "impact",
+      "strategy": "native-naive",
+      "tokens": 43715,
+      "chars": 131138,
+      "toolCalls": 4,
+      "durationMs": 208,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.75,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "basedir"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "MigrationLoader|migrations_module",
+          "chars": 7162,
+          "tokens": 2388
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/migrations/test_loader.py",
+          "chars": 29443,
+          "tokens": 9815
+        },
+        {
+          "tool": "read_file",
+          "args": "django/db/migrations/questioner.py",
+          "chars": 13568,
+          "tokens": 4523
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/migrations/test_commands.py",
+          "chars": 80965,
+          "tokens": 26989
+        }
+      ]
+    },
+    {
+      "taskId": "dj-impact-migrations-module",
+      "kind": "impact",
+      "strategy": "native-ranged",
+      "tokens": 8073,
+      "chars": 24214,
+      "toolCalls": 5,
+      "durationMs": 1,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "MigrationLoader|migrations_module",
+          "chars": 7162,
+          "tokens": 2388
+        },
+        {
+          "tool": "read_file",
+          "args": "django/db/migrations/loader.py:1-81",
+          "chars": 2961,
+          "tokens": 987
+        },
+        {
+          "tool": "read_file",
+          "args": "django/db/migrations/questioner.py:1-100",
+          "chars": 3945,
+          "tokens": 1315
+        },
+        {
+          "tool": "read_file",
+          "args": "django/db/migrations/writer.py:160-280",
+          "chars": 5020,
+          "tokens": 1674
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/migrations/test_commands.py:2371-2491",
+          "chars": 5126,
+          "tokens": 1709
+        }
+      ]
+    },
+    {
+      "taskId": "dj-impact-migrations-module",
+      "kind": "impact",
+      "strategy": "kopt-pack",
+      "tokens": 335,
+      "chars": 1004,
+      "toolCalls": 1,
+      "durationMs": 25,
+      "recall": {
+        "fileRecall": 0.3333333333333333,
+        "symbolRecall": 1,
+        "defRecall": 0.25,
+        "filesMissed": [
+          "django/db/migrations/questioner.py",
+          "django/db/migrations/writer.py"
+        ],
+        "symbolsMissed": [],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"I want `MigrationLoader.migrations_module` to return only the module path instead of a (path, explicit) tuple. What code breaks?\"",
+          "chars": 1004,
+          "tokens": 335
+        }
+      ]
+    },
+    {
+      "taskId": "dj-impact-migrations-module",
+      "kind": "impact",
+      "strategy": "kopt-hits+read",
+      "tokens": 737,
+      "chars": 2208,
+      "toolCalls": 3,
+      "durationMs": 22,
+      "recall": {
+        "fileRecall": 0.3333333333333333,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [
+          "django/db/migrations/questioner.py",
+          "django/db/migrations/writer.py"
+        ],
+        "symbolsMissed": [
+          "ask_initial",
+          "basedir"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"I want `MigrationLoader.migrations_module` to return only the module path instead of a (path, explicit) tuple. What code breaks?\"",
+          "chars": 520,
+          "tokens": 174
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#7a3",
+          "chars": 575,
+          "tokens": 192
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#7a1",
+          "chars": 1113,
+          "tokens": 371
+        }
+      ]
+    }
+  ],
+  "aggregates": [
+    {
+      "strategy": "native-naive",
+      "tasks": 15,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 45933,
+      "meanTokens": 46714,
+      "p90Tokens": 65961,
+      "totalTokens": 700711,
+      "totalChars": 2102064,
+      "meanToolCalls": 3.8,
+      "meanFileRecall": 0.6333333333333333,
+      "meanSymbolRecall": 0.4444444444444444,
+      "meanDefRecall": 0.36111111111111105,
+      "found": 4,
+      "foundRate": 0.26666666666666666,
+      "tokensPerFound": 175178
+    },
+    {
+      "strategy": "native-ranged",
+      "tasks": 15,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 7388,
+      "meanTokens": 7222,
+      "p90Tokens": 8999,
+      "totalTokens": 108333,
+      "totalChars": 324926,
+      "meanToolCalls": 4.666666666666667,
+      "meanFileRecall": 0.6333333333333333,
+      "meanSymbolRecall": 0.47222222222222227,
+      "meanDefRecall": 0.38333333333333336,
+      "found": 4,
+      "foundRate": 0.26666666666666666,
+      "tokensPerFound": 27083
+    },
+    {
+      "strategy": "kopt-pack",
+      "tasks": 15,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 824,
+      "meanTokens": 903,
+      "p90Tokens": 2218,
+      "totalTokens": 13539,
+      "totalChars": 40600,
+      "meanToolCalls": 1,
+      "meanFileRecall": 0.788888888888889,
+      "meanSymbolRecall": 0.7611111111111111,
+      "meanDefRecall": 0.5166666666666667,
+      "found": 5,
+      "foundRate": 0.3333333333333333,
+      "tokensPerFound": 2708
+    },
+    {
+      "strategy": "kopt-hits+read",
+      "tasks": 15,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 1102,
+      "meanTokens": 1211,
+      "p90Tokens": 1696,
+      "totalTokens": 18168,
+      "totalChars": 54457,
+      "meanToolCalls": 3,
+      "meanFileRecall": 0.788888888888889,
+      "meanSymbolRecall": 0.5944444444444446,
+      "meanDefRecall": 0.5333333333333333,
+      "found": 2,
+      "foundRate": 0.13333333333333333,
+      "tokensPerFound": 9084
+    }
+  ],
+  "paired": [
+    {
+      "a": "native-naive",
+      "b": "kopt-pack",
+      "nRun": 15,
+      "nBoth": 2,
+      "onlyA": 2,
+      "onlyB": 3,
+      "medianRatio": 0.009154563869244032,
+      "geoMeanRatio": 0.008381941941355518,
+      "bCheaper": 2
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-pack",
+      "nRun": 15,
+      "nBoth": 2,
+      "onlyA": 2,
+      "onlyB": 3,
+      "medianRatio": 0.07486705786139344,
+      "geoMeanRatio": 0.06785565246652712,
+      "bCheaper": 2
+    },
+    {
+      "a": "native-naive",
+      "b": "kopt-hits+read",
+      "nRun": 15,
+      "nBoth": 1,
+      "onlyA": 3,
+      "onlyB": 1,
+      "medianRatio": 0.039005542650813,
+      "geoMeanRatio": 0.039005542650813005,
+      "bCheaper": 1
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-hits+read",
+      "nRun": 15,
+      "nBoth": 1,
+      "onlyA": 3,
+      "onlyB": 1,
+      "medianRatio": 0.3080835603996367,
+      "geoMeanRatio": 0.3080835603996367,
+      "bCheaper": 1
+    },
+    {
+      "a": "native-naive",
+      "b": "native-ranged",
+      "nRun": 15,
+      "nBoth": 3,
+      "onlyA": 1,
+      "onlyB": 1,
+      "medianRatio": 0.12660702375750327,
+      "geoMeanRatio": 0.14053267757531954,
+      "bCheaper": 3
+    }
+  ],
+  "byKind": [
+    {
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tasks": 4,
+      "found": 1,
+      "medianTokens": 44117.5
+    },
+    {
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tasks": 4,
+      "found": 0,
+      "medianTokens": 7191
+    },
+    {
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tasks": 4,
+      "found": 2,
+      "medianTokens": 1035.5
+    },
+    {
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tasks": 4,
+      "found": 1,
+      "medianTokens": 1145
+    },
+    {
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tasks": 4,
+      "found": 2,
+      "medianTokens": 44990.5
+    },
+    {
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tasks": 4,
+      "found": 2,
+      "medianTokens": 7736
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tasks": 4,
+      "found": 1,
+      "medianTokens": 992.5
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tasks": 4,
+      "found": 1,
+      "medianTokens": 1621
+    },
+    {
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tasks": 4,
+      "found": 0,
+      "medianTokens": 58026
+    },
+    {
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tasks": 4,
+      "found": 0,
+      "medianTokens": 7816
+    },
+    {
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tasks": 4,
+      "found": 1,
+      "medianTokens": 760
+    },
+    {
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tasks": 4,
+      "found": 0,
+      "medianTokens": 828
+    },
+    {
+      "kind": "impact",
+      "strategy": "native-naive",
+      "tasks": 3,
+      "found": 1,
+      "medianTokens": 33839
+    },
+    {
+      "kind": "impact",
+      "strategy": "native-ranged",
+      "tasks": 3,
+      "found": 2,
+      "medianTokens": 6597
+    },
+    {
+      "kind": "impact",
+      "strategy": "kopt-pack",
+      "tasks": 3,
+      "found": 1,
+      "medianTokens": 335
+    },
+    {
+      "kind": "impact",
+      "strategy": "kopt-hits+read",
+      "tasks": 3,
+      "found": 0,
+      "medianTokens": 903
+    }
+  ]
+}

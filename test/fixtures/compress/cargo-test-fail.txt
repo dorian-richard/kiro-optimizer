@@ -1,0 +1,142 @@
+   Compiling shop v0.4.0 (/home/dev/shop)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.21s
+     Running unittests src/lib.rs (target/debug/deps/shop-1a2b3c4d5e6f7a8b)
+
+running 120 tests
+test customers::tests::lists_discount_0 ... ok
+test notifications::tests::creates_timeout_1 ... ok
+test notifications::tests::computes_refund_2 ... ok
+test reports::tests::retries_rounding_3 ... ok
+test cart::tests::lists_batch_4 ... ok
+test tax::tests::formats_item_5 ... ok
+test webhooks::tests::formats_total_6 ... ok
+test notifications::tests::handles_total_7 ... ok
+test reports::tests::handles_customer_8 ... ok
+test webhooks::tests::lists_total_9 ... ok
+test pricing::tests::handles_currency_10 ... ok
+test pricing::tests::parses_batch_11 ... ok
+test auth::tests::computes_page_12 ... ok
+test tax::tests::parses_total_13 ... ok
+test invoices::tests::computes_page_14 ... ok
+test discounts::tests::parses_invoice_15 ... ok
+test pricing::tests::deletes_customer_16 ... ok
+test inventory::tests::retries_batch_17 ... ok
+test pricing::tests::computes_address_18 ... ok
+test payments::tests::caches_timeout_19 ... ok
+test tax::tests::formats_item_20 ... ok
+test notifications::tests::rejects_customer_21 ... ok
+test payments::tests::formats_timeout_22 ... ok
+test payments::tests::parses_item_23 ... ok
+test shipping::tests::rejects_discount_24 ... ok
+test tax::tests::validates_payload_25 ... ok
+test customers::tests::validates_customer_26 ... ok
+test catalog::tests::deletes_token_27 ... ok
+test webhooks::tests::updates_payload_28 ... ok
+test payments::tests::parses_rounding_29 ... ok
+test pricing::tests::caches_currency_30 ... ok
+test shipping::tests::deletes_page_31 ... ok
+test auth::tests::updates_discount_32 ... ok
+test refunds::tests::creates_timeout_33 ... ok
+test orders::tests::formats_item_34 ... ok
+test webhooks::tests::parses_currency_35 ... ok
+test reports::tests::handles_invoice_36 ... ok
+test auth::tests::retries_customer_37 ... ok
+test inventory::tests::caches_payload_38 ... ok
+test discounts::tests::paginates_currency_39 ... ok
+test tax::tests::computes_address_40 ... ok
+test orders::tests::caches_customer_41 ... ok
+test webhooks::tests::rejects_token_42 ... ok
+test tax::tests::lists_discount_43 ... ok
+test discounts::tests::lists_total_44 ... ok
+test payments::tests::validates_invoice_45 ... ok
+test shipping::tests::lists_token_46 ... ok
+test auth::tests::validates_order_47 ... ok
+test discounts::tests::parses_page_48 ... ok
+test orders::tests::parses_refund_49 ... ok
+test customers::tests::caches_address_50 ... ok
+test reports::tests::caches_currency_51 ... ok
+test shipping::tests::caches_timeout_52 ... ok
+test inventory::tests::creates_customer_53 ... ok
+test refunds::tests::updates_timeout_54 ... ok
+test customers::tests::creates_address_55 ... ok
+test notifications::tests::formats_refund_56 ... ok
+test refund::tests::refund_partial ... FAILED
+test webhooks::tests::paginates_order_58 ... ok
+test cart::tests::caches_rounding_59 ... ok
+test payments::tests::creates_timeout_60 ... ok
+test refunds::tests::computes_page_61 ... ok
+test webhooks::tests::formats_page_62 ... ok
+test auth::tests::serializes_discount_63 ... ok
+test customers::tests::creates_customer_64 ... ok
+test orders::tests::updates_customer_65 ... ok
+test shipping::tests::retries_total_66 ... ok
+test inventory::tests::deletes_item_67 ... ok
+test pricing::tests::updates_timeout_68 ... ok
+test pricing::tests::parses_discount_69 ... ok
+test shipping::tests::formats_discount_70 ... ok
+test pricing::tests::creates_timeout_71 ... ok
+test pricing::tests::lists_address_72 ... ok
+test payments::tests::updates_item_73 ... ok
+test customers::tests::rejects_order_74 ... ok
+test notifications::tests::caches_discount_75 ... ok
+test inventory::tests::paginates_timeout_76 ... ok
+test invoices::tests::creates_refund_77 ... ok
+test tax::tests::computes_currency_78 ... ok
+test inventory::tests::lists_customer_79 ... ok
+test cart::tests::creates_customer_80 ... ok
+test notifications::tests::creates_rounding_81 ... ok
+test reports::tests::formats_customer_82 ... ok
+test invoices::tests::handles_total_83 ... ok
+test invoices::tests::validates_address_84 ... ok
+test reports::tests::parses_item_85 ... ok
+test webhooks::tests::caches_address_86 ... ok
+test customers::tests::updates_customer_87 ... ok
+test payments::tests::retries_page_88 ... ok
+test inventory::tests::handles_rounding_89 ... ok
+test auth::tests::computes_batch_90 ... ok
+test auth::tests::caches_invoice_91 ... ok
+test invoices::tests::lists_discount_92 ... ok
+test inventory::tests::computes_invoice_93 ... ok
+test inventory::tests::paginates_discount_94 ... ok
+test reports::tests::caches_rounding_95 ... ok
+test reports::tests::caches_refund_96 ... ok
+test customers::tests::parses_invoice_97 ... ok
+test cart::tests::deletes_payload_98 ... ok
+test discounts::tests::lists_payload_99 ... ok
+test discounts::tests::rejects_item_100 ... ok
+test notifications::tests::rejects_timeout_101 ... ok
+test inventory::tests::deletes_invoice_102 ... ok
+test catalog::tests::computes_payload_103 ... ok
+test invoices::tests::retries_currency_104 ... ok
+test webhooks::tests::computes_token_105 ... ok
+test invoices::tests::paginates_page_106 ... ok
+test discounts::tests::updates_total_107 ... ok
+test customers::tests::caches_item_108 ... ok
+test pricing::tests::serializes_discount_109 ... ok
+test invoices::tests::retries_customer_110 ... ok
+test cart::tests::deletes_currency_111 ... ok
+test auth::tests::updates_batch_112 ... ok
+test pricing::tests::formats_payload_113 ... ok
+test customers::tests::updates_timeout_114 ... ok
+test refunds::tests::caches_invoice_115 ... ok
+test payments::tests::deletes_invoice_116 ... ok
+test notifications::tests::computes_rounding_117 ... ok
+test auth::tests::updates_item_118 ... ok
+test discounts::tests::parses_invoice_119 ... ok
+
+failures:
+
+---- refund::tests::refund_partial stdout ----
+thread 'refund::tests::refund_partial' panicked at src/refund.rs:142:9:
+assertion `left == right` failed: refund amount
+  left: 60.00
+ right: 70.00
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    refund::tests::refund_partial
+
+test result: FAILED. 119 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+error: test failed, to rerun pass `--lib`

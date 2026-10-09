@@ -1,0 +1,217 @@
+{
+  "repo": {
+    "name": "jellyfin",
+    "url": "https://github.com/jellyfin/jellyfin.git",
+    "tag": "v10.11.11",
+    "commit": "1fbd8739292cce610231be93daf43368733edf63",
+    "language": "c_sharp",
+    "path": "bench/repos/jellyfin"
+  },
+  "notes": "Gold = non-test code only (tests/ excluded). Interface declarations (IQuickConnect, ITrickplayManager...) are not counted as callers. `search` is the phrase an agent would derive from the question (English, no identifier the developer did not give). Re-check with `kopt bench jellyfin --verify`.",
+  "tasks": [
+    {
+      "id": "jf-locate-lockout",
+      "kind": "locate",
+      "lang": "en",
+      "question": "Where is a user account disabled after too many failed login attempts, and which event is raised when that happens?",
+      "search": "user disabled too many failed login attempts lockout event",
+      "gold": {
+        "files": ["Jellyfin.Server.Implementations/Users/UserManager.cs", "Jellyfin.Data/Events/Users/UserLockedOutEventArgs.cs"],
+        "symbols": [
+          { "name": "AuthenticateUser", "file": "Jellyfin.Server.Implementations/Users/UserManager.cs", "line": 498, "kind": "method" },
+          { "name": "UserLockedOutEventArgs", "file": "Jellyfin.Data/Events/Users/UserLockedOutEventArgs.cs", "line": 8, "kind": "class" }
+        ]
+      },
+      "verifiedBy": "Read UserManager.cs@v10.11.11: on a failed login AuthenticateUser increments InvalidLoginAttemptCount and, when it reaches LoginAttemptsBeforeLockout, sets PermissionKind.IsDisabled and publishes new UserLockedOutEventArgs(user) (lines 636-648)."
+    },
+    {
+      "id": "jf-locate-auth-header",
+      "kind": "locate",
+      "lang": "en",
+      "question": "Where is the `Authorization: MediaBrowser Client=..., Token=...` header parsed into key/value pairs, including the legacy header name?",
+      "search": "authorization header parse MediaBrowser client token legacy",
+      "gold": {
+        "files": ["Jellyfin.Server.Implementations/Security/AuthorizationContext.cs"],
+        "symbols": [
+          { "name": "GetAuthorizationDictionary", "file": "Jellyfin.Server.Implementations/Security/AuthorizationContext.cs", "line": 229, "kind": "method" },
+          { "name": "GetAuthorization", "file": "Jellyfin.Server.Implementations/Security/AuthorizationContext.cs", "line": 246, "kind": "method" },
+          { "name": "GetParts", "file": "Jellyfin.Server.Implementations/Security/AuthorizationContext.cs", "line": 276, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read AuthorizationContext.cs@v10.11.11: GetAuthorizationDictionary reads Authorization (or X-Emby-Authorization when EnableLegacyAuthorization), GetAuthorization(ReadOnlySpan<char>) checks the 'MediaBrowser'/'Emby' scheme and GetParts splits key=\"value\" pairs with quote/comma handling and URL decoding."
+    },
+    {
+      "id": "jf-locate-password-migration",
+      "kind": "locate",
+      "lang": "en",
+      "question": "When a user logs in with a password stored under an older hash algorithm or iteration count, where is it verified and transparently re-hashed?",
+      "search": "password hash verify login migrate old hash iterations",
+      "gold": {
+        "files": ["Jellyfin.Server.Implementations/Users/DefaultAuthenticationProvider.cs", "Emby.Server.Implementations/Cryptography/CryptographyProvider.cs"],
+        "symbols": [
+          { "name": "Authenticate", "file": "Jellyfin.Server.Implementations/Users/DefaultAuthenticationProvider.cs", "line": 48, "kind": "method" },
+          { "name": "Verify", "file": "Emby.Server.Implementations/Cryptography/CryptographyProvider.cs", "line": 38, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read @v10.11.11: DefaultAuthenticationProvider.Authenticate(username, password, resolvedUser) parses the stored PasswordHash, calls _cryptographyProvider.Verify (PBKDF2 / PBKDF2-SHA512) and, when the hash id differs from DefaultHashMethod or iterations != Constants.DefaultIterations, calls ChangePassword to re-hash."
+    },
+    {
+      "id": "jf-locate-media-segments",
+      "kind": "locate",
+      "lang": "en",
+      "question": "Where does `MediaSegmentManager` run the enabled media segment providers for an item, in the order configured for the library?",
+      "search": "MediaSegmentManager segment providers order library",
+      "gold": {
+        "files": ["Jellyfin.Server.Implementations/MediaSegments/MediaSegmentManager.cs"],
+        "symbols": [
+          { "name": "RunSegmentPluginProviders", "file": "Jellyfin.Server.Implementations/MediaSegments/MediaSegmentManager.cs", "line": 54, "kind": "method" },
+          { "name": "GetProviderId", "file": "Jellyfin.Server.Implementations/MediaSegments/MediaSegmentManager.cs", "line": 285, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read MediaSegmentManager.cs@v10.11.11: RunSegmentPluginProviders filters _segmentProviders by libraryOptions.DisabledMediaSegmentProviders (via GetProviderId), orders them by libraryOptions.MediaSegmentProviderOrder, optionally deletes existing segments and runs each provider that supports the item."
+    },
+    {
+      "id": "jf-explain-quick-connect",
+      "kind": "explain",
+      "lang": "en",
+      "question": "Explain the Quick Connect flow: how a new device gets a code, how a signed-in user authorizes it, and how the device then obtains its session.",
+      "search": "quick connect code device authorize user session secret",
+      "gold": {
+        "files": ["Emby.Server.Implementations/QuickConnect/QuickConnectManager.cs"],
+        "symbols": [
+          { "name": "TryConnect", "file": "Emby.Server.Implementations/QuickConnect/QuickConnectManager.cs", "line": 72, "kind": "method" },
+          { "name": "CheckRequestStatus", "file": "Emby.Server.Implementations/QuickConnect/QuickConnectManager.cs", "line": 98, "kind": "method" },
+          { "name": "AuthorizeRequest", "file": "Emby.Server.Implementations/QuickConnect/QuickConnectManager.cs", "line": 136, "kind": "method" },
+          { "name": "GetAuthorizedRequest", "file": "Emby.Server.Implementations/QuickConnect/QuickConnectManager.cs", "line": 173, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read QuickConnectManager.cs@v10.11.11: TryConnect creates a QuickConnectResult with a secure secret and a generated code; CheckRequestStatus polls by secret; AuthorizeRequest(userId, code) authenticates the user and stores the AuthenticationResult under the secret; GetAuthorizedRequest(secret) returns it. All four call ExpireRequests first."
+    },
+    {
+      "id": "jf-explain-trickplay",
+      "kind": "explain",
+      "lang": "en",
+      "question": "How are trickplay (seek preview) images generated for a video: which widths and interval are used, and how are the extracted frames combined into tile sheets?",
+      "search": "trickplay images generate video widths interval tiles",
+      "gold": {
+        "files": ["Jellyfin.Server.Implementations/Trickplay/TrickplayManager.cs"],
+        "symbols": [
+          { "name": "RefreshTrickplayDataAsync", "file": "Jellyfin.Server.Implementations/Trickplay/TrickplayManager.cs", "line": 139, "kind": "method" },
+          { "name": "RefreshTrickplayDataInternal", "file": "Jellyfin.Server.Implementations/Trickplay/TrickplayManager.cs", "line": 225, "kind": "method" },
+          { "name": "CreateTiles", "file": "Jellyfin.Server.Implementations/Trickplay/TrickplayManager.cs", "line": 392, "kind": "method" },
+          { "name": "CanGenerateTrickplay", "file": "Jellyfin.Server.Implementations/Trickplay/TrickplayManager.cs", "line": 462, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read TrickplayManager.cs@v10.11.11: RefreshTrickplayDataAsync checks CanGenerateTrickplay, clamps Interval to >= 1000 ms and loops options.WidthResolutions calling RefreshTrickplayDataInternal, which extracts frames with ExtractVideoImagesOnIntervalAccelerated and calls CreateTiles to assemble TileWidth x TileHeight sheets."
+    },
+    {
+      "id": "jf-explain-syncplay-wait",
+      "kind": "explain",
+      "lang": "en",
+      "question": "In SyncPlay, while some group members are still buffering, how does the group wait for everyone to be ready before it resumes playback?",
+      "search": "syncplay group waiting buffering members ready resume playback",
+      "gold": {
+        "files": ["MediaBrowser.Controller/SyncPlay/GroupStates/WaitingGroupState.cs", "Emby.Server.Implementations/SyncPlay/Group.cs"],
+        "symbols": [
+          { "name": "WaitingGroupState", "file": "MediaBrowser.Controller/SyncPlay/GroupStates/WaitingGroupState.cs", "line": 18, "kind": "class" },
+          { "name": "HandleRequest", "file": "MediaBrowser.Controller/SyncPlay/GroupStates/WaitingGroupState.cs", "line": 398, "kind": "method" },
+          { "name": "SetBuffering", "file": "Emby.Server.Implementations/SyncPlay/Group.cs", "line": 457, "kind": "method" },
+          { "name": "IsBuffering", "file": "Emby.Server.Implementations/SyncPlay/Group.cs", "line": 475, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read @v10.11.11: WaitingGroupState.HandleRequest(ReadyGroupRequest ...) (398) marks the session not buffering via context.SetBuffering and, once Group.IsBuffering() (any participant buffering and not IgnoreGroupWait) is false, schedules playback with a delay based on GetHighestPing and switches to PlayingGroupState (or PausedGroupState)."
+    },
+    {
+      "id": "jf-usage-refresh-trickplay",
+      "kind": "usage",
+      "lang": "en",
+      "question": "Who calls `RefreshTrickplayDataAsync` on the trickplay manager?",
+      "search": "RefreshTrickplayDataAsync",
+      "gold": {
+        "files": ["MediaBrowser.Providers/Trickplay/TrickplayImagesTask.cs", "MediaBrowser.Providers/Trickplay/TrickplayProvider.cs"],
+        "symbols": [
+          { "name": "ExecuteAsync", "file": "MediaBrowser.Providers/Trickplay/TrickplayImagesTask.cs", "line": 73, "kind": "method" },
+          { "name": "FetchInternal", "file": "MediaBrowser.Providers/Trickplay/TrickplayProvider.cs", "line": 98, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "git grep -w RefreshTrickplayDataAsync @v10.11.11 (tests excluded): implementation TrickplayManager.cs:139, interface ITrickplayManager.cs:24; calls in TrickplayImagesTask.ExecuteAsync (102) and TrickplayProvider.FetchInternal (111, 115)."
+    },
+    {
+      "id": "jf-usage-authorization-info",
+      "kind": "usage",
+      "lang": "en",
+      "question": "Which code calls `IAuthorizationContext.GetAuthorizationInfo` to read the caller's authorization?",
+      "search": "GetAuthorizationInfo",
+      "gold": {
+        "files": [
+          "Emby.Server.Implementations/HttpServer/Security/AuthService.cs",
+          "Jellyfin.Api/Controllers/QuickConnectController.cs",
+          "Jellyfin.Api/Controllers/UserController.cs",
+          "Jellyfin.Server.Implementations/Security/AuthorizationContext.cs"
+        ],
+        "symbols": [
+          { "name": "Authenticate", "file": "Emby.Server.Implementations/HttpServer/Security/AuthService.cs", "line": 21, "kind": "method" },
+          { "name": "InitiateQuickConnect", "file": "Jellyfin.Api/Controllers/QuickConnectController.cs", "line": 55, "kind": "method" },
+          { "name": "AuthenticateUserByName", "file": "Jellyfin.Api/Controllers/UserController.cs", "line": 211, "kind": "method" },
+          { "name": "GetAuthorization", "file": "Jellyfin.Server.Implementations/Security/AuthorizationContext.cs", "line": 65, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "git grep -w GetAuthorizationInfo @v10.11.11 (tests excluded): AuthService.Authenticate (23), QuickConnectController.InitiateQuickConnect (59), UserController.AuthenticateUserByName (213) and AuthorizationContext.GetAuthorization(HttpContext) (67); the HttpContext overload (43) and interface lines are declarations."
+    },
+    {
+      "id": "jf-usage-create-backup",
+      "kind": "usage",
+      "lang": "en",
+      "question": "Where is `IBackupService.CreateBackupAsync` invoked?",
+      "search": "CreateBackupAsync",
+      "gold": {
+        "files": ["Jellyfin.Api/Controllers/BackupController.cs", "Jellyfin.Server/Migrations/JellyfinMigrationService.cs"],
+        "symbols": [
+          { "name": "CreateBackup", "file": "Jellyfin.Api/Controllers/BackupController.cs", "line": 45, "kind": "method" },
+          { "name": "PrepareSystemForMigration", "file": "Jellyfin.Server/Migrations/JellyfinMigrationService.cs", "line": 327, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "git grep -w CreateBackupAsync @v10.11.11 (tests excluded): BackupService.cs:264 implements it; called by BackupController.CreateBackup (47) and JellyfinMigrationService.PrepareSystemForMigration (396)."
+    },
+    {
+      "id": "jf-impact-trickplay-resolutions",
+      "kind": "impact",
+      "lang": "en",
+      "question": "If `GetTrickplayResolutions` returned a list instead of a dictionary keyed by width, which code would break?",
+      "search": "GetTrickplayResolutions",
+      "gold": {
+        "files": ["Jellyfin.Server.Implementations/Trickplay/TrickplayManager.cs", "Jellyfin.Api/Helpers/DynamicHlsHelper.cs"],
+        "symbols": [
+          { "name": "GetTrickplayResolutions", "file": "Jellyfin.Server.Implementations/Trickplay/TrickplayManager.cs", "line": 495, "kind": "method" },
+          { "name": "MoveGeneratedTrickplayDataAsync", "file": "Jellyfin.Server.Implementations/Trickplay/TrickplayManager.cs", "line": 81, "kind": "method" },
+          { "name": "GetTrickplayManifest", "file": "Jellyfin.Server.Implementations/Trickplay/TrickplayManager.cs", "line": 563, "kind": "method" },
+          { "name": "GetTrickplayTilePathAsync", "file": "Jellyfin.Server.Implementations/Trickplay/TrickplayManager.cs", "line": 585, "kind": "method" },
+          { "name": "GetHlsPlaylist", "file": "Jellyfin.Server.Implementations/Trickplay/TrickplayManager.cs", "line": 597, "kind": "method" },
+          { "name": "GetMasterPlaylistInternal", "file": "Jellyfin.Api/Helpers/DynamicHlsHelper.cs", "line": 112, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "git grep -w GetTrickplayResolutions @v10.11.11 (tests excluded): defined TrickplayManager.cs:495 (+ interface); called by MoveGeneratedTrickplayDataAsync (89), GetTrickplayManifest (573), GetTrickplayTilePathAsync (587), GetHlsPlaylist (599) and DynamicHlsHelper.GetMasterPlaylistInternal (319); each indexes the result by width."
+    },
+    {
+      "id": "jf-impact-dot-ignore",
+      "kind": "impact",
+      "lang": "en",
+      "question": "If `DotIgnoreIgnoreRule.IsIgnored` stopped looking for `.ignore` files in parent folders, which library code paths would behave differently?",
+      "search": "DotIgnoreIgnoreRule IsIgnored",
+      "gold": {
+        "files": [
+          "Emby.Server.Implementations/Library/DotIgnoreIgnoreRule.cs",
+          "Emby.Server.Implementations/IO/LibraryMonitor.cs",
+          "Emby.Server.Implementations/Library/LibraryManager.cs"
+        ],
+        "symbols": [
+          { "name": "IsIgnored", "file": "Emby.Server.Implementations/Library/DotIgnoreIgnoreRule.cs", "line": 41, "kind": "method" },
+          { "name": "ShouldIgnore", "file": "Emby.Server.Implementations/Library/DotIgnoreIgnoreRule.cs", "line": 33, "kind": "method" },
+          { "name": "ReportFileSystemChanged", "file": "Emby.Server.Implementations/IO/LibraryMonitor.cs", "line": 346, "kind": "method" },
+          { "name": "FindExtras", "file": "Emby.Server.Implementations/Library/LibraryManager.cs", "line": 2833, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read DotIgnoreIgnoreRule.cs@v10.11.11 (FindIgnoreFile walks current.Parent) and git grep -w IsIgnored (tests excluded): callers are DotIgnoreIgnoreRule.ShouldIgnore (33, the IResolverIgnoreRule used during library scans), LibraryMonitor.ReportFileSystemChanged (356) and LibraryManager.FindExtras (2836)."
+    }
+  ]
+}

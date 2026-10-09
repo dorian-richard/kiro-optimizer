@@ -1,0 +1,85 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "kopt-session-start",
+      "description": "kopt: one-line index status + navigation hint (<= 250 chars); starts a background incremental index refresh.",
+      "trigger": "SessionStart",
+      "action": {
+        "type": "command",
+        "command": "{{KOPT}}"
+      },
+      "timeout": 10
+    },
+    {
+      "name": "kopt-prompt-pointers",
+      "description": "kopt: front-loads a few symbol pointers for the prompt only when retrieval is confident (budgets.frontload tokens, 400 ms cap). Re-arms the tool-call budget after a governor stop.",
+      "trigger": "UserPromptSubmit",
+      "action": {
+        "type": "command",
+        "command": "{{KOPT}}"
+      },
+      "timeout": 5
+    },
+    {
+      "name": "kopt-governor",
+      "description": "kopt session governor. No matcher on purpose: one process counts every call and gates by tool name. Blocks (exit 2, once per file/command, retry allowed): whole-file reads of files > governor.bigFileLines, verbose test/build shell commands (-> kopt_run), identical test/build re-runs with no file written since, and the session tool-call budget. The allow path prints nothing. Tool names verified 2026-10 (kiro.dev docs, Kiro IDE 0.12.318 bundle, kiro-cli 2.28 binary): read = read_file, read_files, fs_read (operations[]), read; shell = execute_bash, execute_pwsh, execute_cmd, shell; write = fs_write, fs_append, str_replace, edit_code, delete_file, write; MCP = mcp_<server>_<tool> (IDE) or @server/tool (CLI).",
+      "trigger": "PreToolUse",
+      "action": {
+        "type": "command",
+        "command": "{{KOPT}}"
+      },
+      "timeout": 5
+    },
+    {
+      "name": "kopt-tool-telemetry",
+      "description": "kopt: records the size of every tool response (where context tokens go); write tools also mark the workspace dirty. No output.",
+      "trigger": "PostToolUse",
+      "action": {
+        "type": "command",
+        "command": "{{KOPT}}"
+      },
+      "timeout": 5
+    },
+    {
+      "name": "kopt-dirty-save",
+      "description": "kopt: records agent file writes (unblocks re-runs, feeds the incremental index refresh).",
+      "trigger": "PostFileSave",
+      "action": {
+        "type": "command",
+        "command": "{{KOPT}}"
+      },
+      "timeout": 5
+    },
+    {
+      "name": "kopt-dirty-create",
+      "description": "kopt: records agent file creations.",
+      "trigger": "PostFileCreate",
+      "action": {
+        "type": "command",
+        "command": "{{KOPT}}"
+      },
+      "timeout": 5
+    },
+    {
+      "name": "kopt-dirty-delete",
+      "description": "kopt: records agent file deletions.",
+      "trigger": "PostFileDelete",
+      "action": {
+        "type": "command",
+        "command": "{{KOPT}}"
+      },
+      "timeout": 5
+    },
+    {
+      "name": "kopt-stop",
+      "description": "kopt: ships telemetry and collects Kiro credit records in a detached background process; returns immediately.",
+      "trigger": "Stop",
+      "action": {
+        "type": "command",
+        "command": "{{KOPT}}"
+      },
+      "timeout": 5
+    }
+  ]
+}

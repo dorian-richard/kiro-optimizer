@@ -1,0 +1,14 @@
+{
+  "name": "kopt",
+  "description": "Kiro CLI 2.x default agent with kopt: budgeted code navigation (kopt_* MCP tools) and the session governor hooks. Written by kopt setup; remove with kopt uninstall.",
+  "tools": ["*"],
+  "allowedTools": ["@kopt/kopt_find", "@kopt/kopt_read", "@kopt/kopt_outline", "@kopt/kopt_refs", "@kopt/kopt_expand"],
+  "includeMcpJson": true,
+  "hooks": {
+    "agentSpawn": [{ "command": "{{KOPT}}", "timeout_ms": 10000 }],
+    "userPromptSubmit": [{ "command": "{{KOPT}}", "timeout_ms": 5000 }],
+    "preToolUse": [{ "matcher": "*", "command": "{{KOPT}}", "timeout_ms": 5000 }],
+    "postToolUse": [{ "matcher": "*", "command": "{{KOPT}}", "timeout_ms": 5000 }],
+    "stop": [{ "command": "{{KOPT}}", "timeout_ms": 5000 }]
+  }
+}

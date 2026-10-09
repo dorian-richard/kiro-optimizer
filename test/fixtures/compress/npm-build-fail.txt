@@ -1,0 +1,155 @@
+> shop-web@2.3.0 build
+> vite build
+
+vite v5.2.11 building for production...
+transforming...
+src/components/Cart0.tsx (1/300) transformed
+src/components/Order1.tsx (2/300) transformed
+src/components/Cart2.tsx (3/300) transformed
+src/components/Invoice3.tsx (4/300) transformed
+src/components/Invoice4.tsx (5/300) transformed
+src/components/Order5.tsx (6/300) transformed
+src/components/Cart6.tsx (7/300) transformed
+src/components/Cart7.tsx (8/300) transformed
+src/components/Order8.tsx (9/300) transformed
+src/components/Order9.tsx (10/300) transformed
+src/components/Cart10.tsx (11/300) transformed
+src/components/Invoice11.tsx (12/300) transformed
+src/components/Cart12.tsx (13/300) transformed
+src/components/Order13.tsx (14/300) transformed
+src/components/Invoice14.tsx (15/300) transformed
+src/components/Cart15.tsx (16/300) transformed
+src/components/Invoice16.tsx (17/300) transformed
+src/components/Invoice17.tsx (18/300) transformed
+src/components/Order18.tsx (19/300) transformed
+src/components/Invoice19.tsx (20/300) transformed
+src/components/Order20.tsx (21/300) transformed
+src/components/Invoice21.tsx (22/300) transformed
+src/components/Invoice22.tsx (23/300) transformed
+src/components/Invoice23.tsx (24/300) transformed
+src/components/Cart24.tsx (25/300) transformed
+src/components/Order25.tsx (26/300) transformed
+src/components/Cart26.tsx (27/300) transformed
+src/components/Cart27.tsx (28/300) transformed
+src/components/Order28.tsx (29/300) transformed
+src/components/Cart29.tsx (30/300) transformed
+src/components/Cart30.tsx (31/300) transformed
+src/components/Order31.tsx (32/300) transformed
+src/components/Cart32.tsx (33/300) transformed
+src/components/Invoice33.tsx (34/300) transformed
+src/components/Order34.tsx (35/300) transformed
+src/components/Order35.tsx (36/300) transformed
+src/components/Order36.tsx (37/300) transformed
+src/components/Cart37.tsx (38/300) transformed
+src/components/Invoice38.tsx (39/300) transformed
+src/components/Cart39.tsx (40/300) transformed
+src/components/Cart40.tsx (41/300) transformed
+src/components/Order41.tsx (42/300) transformed
+src/components/Order42.tsx (43/300) transformed
+src/components/Cart43.tsx (44/300) transformed
+src/components/Cart44.tsx (45/300) transformed
+src/components/Order45.tsx (46/300) transformed
+src/components/Cart46.tsx (47/300) transformed
+src/components/Cart47.tsx (48/300) transformed
+src/components/Order48.tsx (49/300) transformed
+src/components/Order49.tsx (50/300) transformed
+src/components/Invoice50.tsx (51/300) transformed
+src/components/Order51.tsx (52/300) transformed
+src/components/Order52.tsx (53/300) transformed
+src/components/Invoice53.tsx (54/300) transformed
+src/components/Invoice54.tsx (55/300) transformed
+src/components/Invoice55.tsx (56/300) transformed
+src/components/Order56.tsx (57/300) transformed
+src/components/Order57.tsx (58/300) transformed
+src/components/Order58.tsx (59/300) transformed
+src/components/Invoice59.tsx (60/300) transformed
+src/components/Invoice60.tsx (61/300) transformed
+src/components/Cart61.tsx (62/300) transformed
+src/components/Cart62.tsx (63/300) transformed
+src/components/Invoice63.tsx (64/300) transformed
+src/components/Invoice64.tsx (65/300) transformed
+src/components/Cart65.tsx (66/300) transformed
+src/components/Order66.tsx (67/300) transformed
+src/components/Cart67.tsx (68/300) transformed
+src/components/Cart68.tsx (69/300) transformed
+src/components/Order69.tsx (70/300) transformed
+src/components/Order70.tsx (71/300) transformed
+src/components/Order71.tsx (72/300) transformed
+src/components/Order72.tsx (73/300) transformed
+src/components/Invoice73.tsx (74/300) transformed
+src/components/Invoice74.tsx (75/300) transformed
+src/components/Invoice75.tsx (76/300) transformed
+src/components/Order76.tsx (77/300) transformed
+src/components/Cart77.tsx (78/300) transformed
+src/components/Order78.tsx (79/300) transformed
+src/components/Cart79.tsx (80/300) transformed
+src/components/Cart80.tsx (81/300) transformed
+src/components/Cart81.tsx (82/300) transformed
+src/components/Invoice82.tsx (83/300) transformed
+src/components/Order83.tsx (84/300) transformed
+src/components/Cart84.tsx (85/300) transformed
+src/components/Cart85.tsx (86/300) transformed
+src/components/Order86.tsx (87/300) transformed
+src/components/Invoice87.tsx (88/300) transformed
+src/components/Invoice88.tsx (89/300) transformed
+src/components/Invoice89.tsx (90/300) transformed
+src/components/Order90.tsx (91/300) transformed
+src/components/Order91.tsx (92/300) transformed
+src/components/Order92.tsx (93/300) transformed
+src/components/Invoice93.tsx (94/300) transformed
+src/components/Cart94.tsx (95/300) transformed
+src/components/Cart95.tsx (96/300) transformed
+src/components/Cart96.tsx (97/300) transformed
+src/components/Order97.tsx (98/300) transformed
+src/components/Invoice98.tsx (99/300) transformed
+src/components/Order99.tsx (100/300) transformed
+src/components/Invoice100.tsx (101/300) transformed
+src/components/Invoice101.tsx (102/300) transformed
+src/components/Invoice102.tsx (103/300) transformed
+src/components/Cart103.tsx (104/300) transformed
+src/components/Invoice104.tsx (105/300) transformed
+src/components/Invoice105.tsx (106/300) transformed
+src/components/Order106.tsx (107/300) transformed
+src/components/Invoice107.tsx (108/300) transformed
+src/components/Cart108.tsx (109/300) transformed
+src/components/Cart109.tsx (110/300) transformed
+src/components/Cart110.tsx (111/300) transformed
+src/components/Cart111.tsx (112/300) transformed
+src/components/Order112.tsx (113/300) transformed
+src/components/Invoice113.tsx (114/300) transformed
+src/components/Cart114.tsx (115/300) transformed
+src/components/Order115.tsx (116/300) transformed
+src/components/Invoice116.tsx (117/300) transformed
+src/components/Cart117.tsx (118/300) transformed
+src/components/Invoice118.tsx (119/300) transformed
+src/components/Order119.tsx (120/300) transformed
+✓ 412 modules transformed.
+x Build failed in 3.41s
+error during build:
+[vite:esbuild] Transform failed with 1 error:
+/home/dev/shop/src/pages/Checkout.tsx:88:14: ERROR: Expected ")" but found "total"
+file: /home/dev/shop/src/pages/Checkout.tsx:88:14
+
+Expected ")" but found "total"
+86 |    return (
+87 |      <Summary
+88 |        amount={cart total}
+   |                     ^
+89 |      />
+90 |    );
+
+    at failureErrorWithLog (/home/dev/shop/node_modules/esbuild/lib/main.js:1651:15)
+    at /home/dev/shop/node_modules/esbuild/lib/main.js:849:29
+    at responseCallbacks.<computed> (/home/dev/shop/node_modules/esbuild/lib/main.js:704:9)
+    at handleIncomingPacket (/home/dev/shop/node_modules/esbuild/lib/main.js:764:9)
+    at Socket.readFromStdout (/home/dev/shop/node_modules/esbuild/lib/main.js:680:7)
+    at Socket.emit (node:events:519:28)
+    at addChunk (node:internal/streams/readable:559:12)
+npm error Lifecycle script `build` failed with error:
+npm error code 1
+npm error path /home/dev/shop
+npm error workspace shop-web@2.3.0
+npm error location /home/dev/shop
+npm error command failed
+npm error command sh -c vite build
+npm error A complete log of this run can be found in: /home/dev/.npm/_logs/2026-10-09T08_15_42_123Z-debug-0.log

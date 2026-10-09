@@ -1,0 +1,38 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  Shop.Domain -> /home/dev/shop/src/Shop.Domain/bin/Debug/net8.0/Shop.Domain.dll
+  Shop.Core -> /home/dev/shop/src/Shop.Core/bin/Debug/net8.0/Shop.Core.dll
+  Shop.Infrastructure -> /home/dev/shop/src/Shop.Infrastructure/bin/Debug/net8.0/Shop.Infrastructure.dll
+  Shop.Api -> /home/dev/shop/src/Shop.Api/bin/Debug/net8.0/Shop.Api.dll
+  Shop.Worker -> /home/dev/shop/src/Shop.Worker/bin/Debug/net8.0/Shop.Worker.dll
+  Shop.Tests -> /home/dev/shop/src/Shop.Tests/bin/Debug/net8.0/Shop.Tests.dll
+Test run for /home/dev/shop/src/Shop.Tests/bin/Debug/net8.0/Shop.Tests.dll (.NETCoreApp,Version=v8.0)
+Microsoft (R) Test Execution Command Line Tool Version 17.9.0 (x64)
+Copyright (c) Microsoft Corporation.  All rights reserved.
+
+Starting test execution, please wait...
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.52]     Shop.Tests.Refunds.RefundServiceTests.RefundPartial [FAIL]
+[xUnit.net 00:00:00.55]     Shop.Tests.Orders.OrderServiceTests.CreateOrder_UnknownCustomer [FAIL]
+  Failed Shop.Tests.Refunds.RefundServiceTests.RefundPartial [12 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: 70.00
+Actual:   60.00
+  Stack Trace:
+     at Shop.Tests.Refunds.RefundServiceTests.RefundPartial() in /home/dev/shop/src/Shop.Tests/Refunds/RefundServiceTests.cs:line 42
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed Shop.Tests.Orders.OrderServiceTests.CreateOrder_UnknownCustomer [3 ms]
+  Error Message:
+   System.NullReferenceException : Object reference not set to an instance of an object.
+  Stack Trace:
+     at Shop.Core.Orders.OrderService.Create(OrderRequest request) in /home/dev/shop/src/Shop.Core/Orders/OrderService.cs:line 57
+   at Shop.Tests.Orders.OrderServiceTests.CreateOrder_UnknownCustomer() in /home/dev/shop/src/Shop.Tests/Orders/OrderServiceTests.cs:line 88
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Standard Output Messages:
+ creating order for customer 42
+ customer lookup returned null
+
+Failed!  - Failed:     2, Passed:   338, Skipped:     1, Total:   341, Duration: 3 s - Shop.Tests.dll (net8.0)

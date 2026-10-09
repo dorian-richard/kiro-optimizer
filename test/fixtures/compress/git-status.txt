@@ -1,0 +1,64 @@
+On branch feature/refund-fees
+Your branch is ahead of 'origin/feature/refund-fees' by 2 commits.
+  (use "git push" to publish your local commits)
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	modified:   src/refunds/policy.ts
+	new file:   src/refunds/fees.test.ts
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   src/refunds/service.ts
+	deleted:    src/refunds/legacy.ts
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	src/generated/api/model0.ts
+	src/generated/api/model1.ts
+	src/generated/api/model2.ts
+	src/generated/api/model3.ts
+	src/generated/api/model4.ts
+	src/generated/api/model5.ts
+	src/generated/api/model6.ts
+	src/generated/api/model7.ts
+	src/generated/api/model8.ts
+	src/generated/api/model9.ts
+	src/generated/api/model10.ts
+	src/generated/api/model11.ts
+	src/generated/api/model12.ts
+	src/generated/api/model13.ts
+	src/generated/api/model14.ts
+	src/generated/api/model15.ts
+	src/generated/api/model16.ts
+	src/generated/api/model17.ts
+	src/generated/api/model18.ts
+	src/generated/api/model19.ts
+	src/generated/api/model20.ts
+	src/generated/api/model21.ts
+	src/generated/api/model22.ts
+	src/generated/api/model23.ts
+	src/generated/api/model24.ts
+	src/generated/api/model25.ts
+	src/generated/api/model26.ts
+	src/generated/api/model27.ts
+	src/generated/api/model28.ts
+	src/generated/api/model29.ts
+	src/generated/api/model30.ts
+	src/generated/api/model31.ts
+	src/generated/api/model32.ts
+	src/generated/api/model33.ts
+	src/generated/api/model34.ts
+	src/generated/api/model35.ts
+	src/generated/api/model36.ts
+	src/generated/api/model37.ts
+	src/generated/api/model38.ts
+	src/generated/api/model39.ts
+	src/generated/api/model40.ts
+	src/generated/api/model41.ts
+	src/generated/api/model42.ts
+	src/generated/api/model43.ts
+	src/generated/api/model44.ts
+	notes.md
+

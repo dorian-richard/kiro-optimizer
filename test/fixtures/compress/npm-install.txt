@@ -1,0 +1,33 @@
+npm warn deprecated rimraf@3.0.2: This module is not supported, and leaks memory. Do not use it.
+npm warn deprecated inflight@1.0.6: Glob versions prior to v9 are no longer supported
+npm warn deprecated abab@2.0.6: Rimraf versions prior to v4 are no longer supported
+npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+npm warn deprecated glob@7.2.3: Use your platform's native atob() and btoa() methods instead
+npm warn deprecated abab@2.0.6: Glob versions prior to v9 are no longer supported
+npm warn deprecated w3c-hr-time@1.0.2: Use your platform's native atob() and btoa() methods instead
+npm warn deprecated rimraf@3.0.2: Glob versions prior to v9 are no longer supported
+npm warn deprecated glob@7.2.3: Rimraf versions prior to v4 are no longer supported
+npm warn deprecated domexception@4.0.0: Rimraf versions prior to v4 are no longer supported
+npm warn deprecated glob@7.2.3: Use your platform's native atob() and btoa() methods instead
+npm warn deprecated abab@2.0.6: This module is not supported, and leaks memory. Do not use it.
+npm warn deprecated inflight@1.0.6: Glob versions prior to v9 are no longer supported
+npm warn deprecated inflight@1.0.6: Use your platform's native atob() and btoa() methods instead
+npm warn deprecated inflight@1.0.6: Use your platform's native atob() and btoa() methods instead
+npm warn deprecated inflight@1.0.6: Glob versions prior to v9 are no longer supported
+npm warn deprecated domexception@4.0.0: This module is not supported, and leaks memory. Do not use it.
+npm warn deprecated domexception@4.0.0: Glob versions prior to v9 are no longer supported
+
+added 1324 packages, and audited 1325 packages in 32s
+
+187 packages are looking for funding
+  run `npm fund` for details
+
+12 vulnerabilities (4 moderate, 8 high)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.

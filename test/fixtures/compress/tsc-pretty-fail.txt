@@ -1,0 +1,22 @@
+src/cart/cart.ts:22:23 - error TS2339: Property 'reduce' does not exist on type 'CartItems'.
+
+22     return this.items.reduce((s, i) => s + i.price, 0);
+                         ~~~~~~
+
+src/orders/orderService.ts:57:9 - error TS2322: Type 'string' is not assignable to type 'number'.
+
+57         qty = request.quantity;
+           ~~~
+
+src/orders/orderService.ts:88:5 - error TS2345: Argument of type '{ id: string; }' is not assignable to parameter of type 'Order'.
+  Type '{ id: string; }' is missing the following properties from type 'Order': total, items, customer
+
+88     save({ id });
+       ~~~~~~~~~~~~
+
+
+Found 3 errors in 2 files.
+
+Errors  Files
+     1  src/cart/cart.ts:22
+     2  src/orders/orderService.ts:57

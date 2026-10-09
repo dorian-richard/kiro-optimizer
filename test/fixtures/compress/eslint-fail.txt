@@ -1,0 +1,245 @@
+/home/dev/shop/src/cart/total0.ts
+  20:5  warning  Unexpected console statement  no-console
+  23:6  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+
+/home/dev/shop/src/orders/rounding1.ts
+  20:5  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+  23:6  warning  Unexpected console statement  no-console
+  26:7  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+
+/home/dev/shop/src/refunds/item2.ts
+  20:5  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+  23:6  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  26:7  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  29:8  warning  Unexpected console statement  no-console
+
+/home/dev/shop/src/payments/currency3.ts
+  12:7  error    'unusedHelper' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  23:6  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  26:7  warning  Unexpected console statement  no-console
+  29:8  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+  32:9  warning  Unexpected console statement  no-console
+
+/home/dev/shop/src/invoices/item4.ts
+  20:5  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  23:6  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  26:7  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  29:8  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  32:9  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+  35:10  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/dev/shop/src/customers/page5.ts
+  20:5  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  23:6  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/dev/shop/src/catalog/payload6.ts
+  20:5  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+  23:6  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  26:7  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/dev/shop/src/inventory/batch7.ts
+  20:5  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+  23:6  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+  26:7  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  29:8  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+
+/home/dev/shop/src/shipping/refund8.ts
+  20:5  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  23:6  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  26:7  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  29:8  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+  32:9  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/dev/shop/src/auth/page9.ts
+  20:5  warning  Unexpected console statement  no-console
+  23:6  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  26:7  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  29:8  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+  32:9  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+  35:10  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/dev/shop/src/pricing/customer10.ts
+  20:5  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  23:6  warning  Unexpected console statement  no-console
+
+/home/dev/shop/src/tax/order11.ts
+  20:5  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  23:6  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  26:7  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+
+/home/dev/shop/src/discounts/batch12.ts
+  20:5  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  23:6  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  26:7  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+  29:8  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/dev/shop/src/reports/customer13.ts
+  20:5  warning  Unexpected console statement  no-console
+  23:6  warning  Unexpected console statement  no-console
+  26:7  warning  Unexpected console statement  no-console
+  29:8  warning  Unexpected console statement  no-console
+  32:9  warning  Unexpected console statement  no-console
+
+/home/dev/shop/src/webhooks/customer14.ts
+  20:5  warning  Unexpected console statement  no-console
+  23:6  warning  Unexpected console statement  no-console
+  26:7  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  29:8  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+  32:9  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  35:10  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+
+/home/dev/shop/src/notifications/timeout15.ts
+  20:5  warning  Unexpected console statement  no-console
+  23:6  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/dev/shop/src/cart/item16.ts
+  20:5  warning  Unexpected console statement  no-console
+  23:6  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+  26:7  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/dev/shop/src/orders/rounding17.ts
+  12:7  error    'unusedHelper' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  23:6  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+  26:7  warning  Unexpected console statement  no-console
+  29:8  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/dev/shop/src/refunds/item18.ts
+  20:5  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  23:6  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+  26:7  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+  29:8  warning  Unexpected console statement  no-console
+  32:9  warning  Unexpected console statement  no-console
+
+/home/dev/shop/src/payments/address19.ts
+  20:5  warning  Unexpected console statement  no-console
+  23:6  warning  Unexpected console statement  no-console
+  26:7  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  29:8  warning  Unexpected console statement  no-console
+  32:9  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+  35:10  warning  Unexpected console statement  no-console
+
+/home/dev/shop/src/invoices/timeout20.ts
+  20:5  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+  23:6  warning  Unexpected console statement  no-console
+
+/home/dev/shop/src/customers/token21.ts
+  20:5  warning  Unexpected console statement  no-console
+  23:6  warning  Unexpected console statement  no-console
+  26:7  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+
+/home/dev/shop/src/catalog/page22.ts
+  20:5  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+  23:6  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  26:7  warning  Unexpected console statement  no-console
+  29:8  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/dev/shop/src/inventory/refund23.ts
+  20:5  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  23:6  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+  26:7  warning  Unexpected console statement  no-console
+  29:8  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  32:9  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+
+/home/dev/shop/src/shipping/rounding24.ts
+  20:5  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+  23:6  warning  Unexpected console statement  no-console
+  26:7  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  29:8  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  32:9  warning  Unexpected console statement  no-console
+  35:10  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/dev/shop/src/auth/invoice25.ts
+  20:5  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+  23:6  warning  Unexpected console statement  no-console
+
+/home/dev/shop/src/pricing/order26.ts
+  20:5  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  23:6  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+  26:7  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/dev/shop/src/tax/customer27.ts
+  20:5  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  23:6  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+  26:7  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+  29:8  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/dev/shop/src/discounts/address28.ts
+  20:5  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+  23:6  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  26:7  warning  Unexpected console statement  no-console
+  29:8  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  32:9  warning  Unexpected console statement  no-console
+
+/home/dev/shop/src/reports/item29.ts
+  20:5  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  23:6  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+  26:7  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+  29:8  warning  Unexpected console statement  no-console
+  32:9  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+  35:10  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+
+/home/dev/shop/src/webhooks/rounding30.ts
+  20:5  warning  Unexpected console statement  no-console
+  23:6  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/dev/shop/src/notifications/item31.ts
+  20:5  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  23:6  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+  26:7  warning  Unexpected console statement  no-console
+
+/home/dev/shop/src/cart/customer32.ts
+  20:5  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  23:6  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  26:7  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  29:8  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/dev/shop/src/orders/address33.ts
+  20:5  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  23:6  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+  26:7  warning  Unexpected console statement  no-console
+  29:8  warning  Unexpected console statement  no-console
+  32:9  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+
+/home/dev/shop/src/refunds/customer34.ts
+  20:5  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+  23:6  warning  Unexpected console statement  no-console
+  26:7  warning  Unexpected console statement  no-console
+  29:8  warning  Unexpected console statement  no-console
+  32:9  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  35:10  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/dev/shop/src/payments/address35.ts
+  20:5  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  23:6  warning  Unexpected console statement  no-console
+
+/home/dev/shop/src/invoices/item36.ts
+  20:5  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+  23:6  warning  Unexpected console statement  no-console
+  26:7  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/dev/shop/src/customers/batch37.ts
+  20:5  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+  23:6  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+  26:7  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+  29:8  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/dev/shop/src/catalog/timeout38.ts
+  20:5  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  23:6  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+  26:7  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  29:8  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+  32:9  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/dev/shop/src/inventory/refund39.ts
+  20:5  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  23:6  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+  26:7  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  29:8  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  32:9  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+  35:10  warning  React Hook useEffect has a missing dependency: 'load'  react-hooks/exhaustive-deps
+
+/home/dev/shop/src/api/client.ts
+  10:5  error  Parsing error: ';' expected
+
+✖ 161 problems (3 errors, 158 warnings)
+  0 errors and 12 warnings potentially fixable with the `--fix` option.

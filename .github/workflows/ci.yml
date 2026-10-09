@@ -1,0 +1,237 @@
+# Build, typecheck and test kopt on Linux, macOS and Windows (Node 22 and 24), smoke-test the built CLI through
+# each OS's own shells (bash/sh, PowerShell, cmd.exe), and synth the AWS infrastructure. No secrets are needed.
+
+name: CI
+
+on:
+  push:
+    branches: [main, wip]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  # kopt never ships telemetry from CI
+  KOPT_TELEMETRY: '0'
+  npm_config_audit: 'false'
+  npm_config_fund: 'false'
+  npm_config_update_notifier: 'false'
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  test:
+    name: test (${{ matrix.os }}, node ${{ matrix.node }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        node: [22, 24]
+    steps:
+      - name: Keep LF line endings on Windows (.gitattributes also enforces eol=lf)
+        if: runner.os == 'Windows'
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.eol lf
+
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Isolate kopt and Kiro user state
+        run: |
+          echo "KOPT_HOME=$RUNNER_TEMP/kopt-home" >> "$GITHUB_ENV"
+          echo "KOPT_CACHE_DIR=$RUNNER_TEMP/kopt-cache" >> "$GITHUB_ENV"
+          echo "KOPT_KIRO_HOME=$RUNNER_TEMP/kiro-home" >> "$GITHUB_ENV"
+          echo "KOPT_KIRO_USER_SETTINGS=$RUNNER_TEMP/kiro-user/settings.json" >> "$GITHUB_ENV"
+
+      - run: npm ci
+      - run: npm run build
+      - name: Typecheck
+        run: npx tsc -p tsconfig.json --noEmit
+      - name: Tests
+        run: npx vitest run
+
+  smoke:
+    name: smoke (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - name: Keep LF line endings on Windows
+        if: runner.os == 'Windows'
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.eol lf
+
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - run: npm ci
+      - run: npm run build
+
+      - name: Prepare the environment
+        run: |
+          echo "KOPT_HOME=$RUNNER_TEMP/kopt-home" >> "$GITHUB_ENV"
+          echo "KOPT_CACHE_DIR=$RUNNER_TEMP/kopt-cache" >> "$GITHUB_ENV"
+          echo "KOPT_KIRO_HOME=$RUNNER_TEMP/kiro-home" >> "$GITHUB_ENV"
+          # entry point: dist/bin.js (silences node:sqlite warnings) when built, else dist/cli.js
+          if [ -f dist/bin.js ]; then echo "KOPT_BIN=dist/bin.js" >> "$GITHUB_ENV"; else echo "KOPT_BIN=dist/cli.js" >> "$GITHUB_ENV"; fi
+          echo "NODE_EXE=$(node -p process.execPath)" >> "$GITHUB_ENV"
+          node --input-type=module -e "const m = await import('./dist/compress/runner.js'); console.log('kopt_run shell:', JSON.stringify(m.resolveShell()))"
+
+      - name: kopt index (this repository)
+        run: |
+          node "$KOPT_BIN" index | tee "$RUNNER_TEMP/index.txt"
+          grep -Eq 'indexed [0-9]+ files' "$RUNNER_TEMP/index.txt"
+
+      - name: kopt find
+        run: |
+          node "$KOPT_BIN" find "token budget" | tee "$RUNNER_TEMP/find.txt"
+          head -n 1 "$RUNNER_TEMP/find.txt" | grep -Fq 'find "token budget"'
+          grep -q 'src/core/tokens.ts' "$RUNNER_TEMP/find.txt"
+
+      - name: Hook as Kiro runs it (installer command line, spawn with shell true)
+        run: node .github/scripts/hook-smoke.mjs
+
+      - name: Hook through sh (allow is silent, a big read is blocked with exit 2)
+        if: runner.os != 'Windows'
+        shell: sh
+        run: |
+          set +e
+          printf '%s' '{"hook_event_name":"PreToolUse","session_id":"ci-sh","cwd":"'"$PWD"'","tool_name":"read_file","tool_input":{"path":"README.md"}}' \
+            | node "$KOPT_BIN" hook > "$RUNNER_TEMP/hook.out" 2> "$RUNNER_TEMP/hook.err"
+          code=$?
+          cat "$RUNNER_TEMP/hook.err"
+          [ "$code" -eq 0 ] || { echo "::error::allowed PreToolUse exited $code"; exit 1; }
+          [ ! -s "$RUNNER_TEMP/hook.out" ] || { echo "::error::allowed PreToolUse printed to stdout"; cat "$RUNNER_TEMP/hook.out"; exit 1; }
+          [ ! -s "$RUNNER_TEMP/hook.err" ] || echo "::warning::allowed PreToolUse wrote to stderr"
+          printf '%s' '{"hook_event_name":"PreToolUse","session_id":"ci-sh-big","cwd":"'"$PWD"'","tool_name":"read_file","tool_input":{"path":"package-lock.json"}}' \
+            | node "$KOPT_BIN" hook > /dev/null 2> "$RUNNER_TEMP/block.err"
+          code=$?
+          cat "$RUNNER_TEMP/block.err"
+          [ "$code" -eq 2 ] || { echo "::error::blocking PreToolUse exited $code, expected 2"; exit 1; }
+          grep -q 'kopt' "$RUNNER_TEMP/block.err"
+
+      - name: Hook through PowerShell
+        shell: pwsh
+        run: |
+          $allow = @{ hook_event_name = 'PreToolUse'; session_id = 'ci-pwsh'; cwd = (Get-Location).Path; tool_name = 'read_file'; tool_input = @{ path = 'README.md' } } | ConvertTo-Json -Compress
+          $out = $allow | node $env:KOPT_BIN hook 2> (Join-Path $env:RUNNER_TEMP 'hook-pwsh.err')
+          $code = $LASTEXITCODE
+          if ($code -ne 0) { throw "allowed PreToolUse exited $code" }
+          if ($out) { throw "allowed PreToolUse printed: $out" }
+          # the absolute command line the installer writes for Kiro (node by path, entry by path)
+          $entry = Join-Path (Get-Location).Path $env:KOPT_BIN
+          $out = $allow | & $env:NODE_EXE --no-warnings=ExperimentalWarning $entry hook
+          if ($LASTEXITCODE -ne 0 -or $out) { throw "installer-style hook command failed ($LASTEXITCODE): $out" }
+          $big = @{ hook_event_name = 'PreToolUse'; session_id = 'ci-pwsh-big'; cwd = (Get-Location).Path; tool_name = 'read_file'; tool_input = @{ path = 'package-lock.json' } } | ConvertTo-Json -Compress
+          $big | node $env:KOPT_BIN hook 2> (Join-Path $env:RUNNER_TEMP 'block-pwsh.err') | Out-Null
+          $code = $LASTEXITCODE
+          Get-Content (Join-Path $env:RUNNER_TEMP 'block-pwsh.err')
+          if ($code -ne 2) { throw "blocking PreToolUse exited $code, expected 2" }
+          exit 0
+
+      - name: Hook through cmd.exe
+        if: runner.os == 'Windows'
+        shell: cmd
+        run: |
+          echo {"hook_event_name":"PreToolUse","session_id":"ci-cmd","tool_name":"read_file","tool_input":{"path":"README.md"}}| node %KOPT_BIN% hook > "%RUNNER_TEMP%\hook-cmd.out" 2> "%RUNNER_TEMP%\hook-cmd.err"
+          if errorlevel 1 (echo allowed PreToolUse failed & type "%RUNNER_TEMP%\hook-cmd.err" & exit /b 1)
+          for %%F in ("%RUNNER_TEMP%\hook-cmd.out") do if %%~zF NEQ 0 (echo allowed PreToolUse printed to stdout & type "%%~fF" & exit /b 1)
+          echo {"hook_event_name":"PreToolUse","session_id":"ci-cmd-quoted","tool_name":"read_file","tool_input":{"path":"README.md"}}| "%NODE_EXE%" --no-warnings=ExperimentalWarning "%CD%\%KOPT_BIN%" hook > "%RUNNER_TEMP%\hook-cmd2.out"
+          if errorlevel 1 (echo installer-style hook command failed & exit /b 1)
+          for %%F in ("%RUNNER_TEMP%\hook-cmd2.out") do if %%~zF NEQ 0 (type "%%~fF" & exit /b 1)
+          echo {"hook_event_name":"PreToolUse","session_id":"ci-cmd-big","tool_name":"read_file","tool_input":{"path":"package-lock.json"}}| node %KOPT_BIN% hook > nul 2> "%RUNNER_TEMP%\block-cmd.err"
+          if not errorlevel 2 (echo blocking PreToolUse did not exit 2 & exit /b 1)
+          if errorlevel 3 (echo blocking PreToolUse exited above 2 & exit /b 1)
+          type "%RUNNER_TEMP%\block-cmd.err"
+          exit /b 0
+
+      - name: kopt run (failing command, compressed output, exit codes, cd chains)
+        run: |
+          set +e
+          node "$KOPT_BIN" run "node -e 'console.error(40+2); process.exit(3)'" > "$RUNNER_TEMP/run.out" 2> "$RUNNER_TEMP/run.err"
+          code=$?
+          set -e
+          cat "$RUNNER_TEMP/run.out" "$RUNNER_TEMP/run.err"
+          [ "$code" -eq 1 ] || { echo "::error::kopt run exited $code, expected 1 for a failing command"; exit 1; }
+          head -n 1 "$RUNNER_TEMP/run.out" | grep -Fq ' · exit 3 · '
+          grep -q '^42$' "$RUNNER_TEMP/run.out"
+          set +e
+          node "$KOPT_BIN" run "cd src && node -e 'process.exit(4)'" > "$RUNNER_TEMP/run-cd.out"
+          set -e
+          cat "$RUNNER_TEMP/run-cd.out"
+          head -n 1 "$RUNNER_TEMP/run-cd.out" | grep -Fq ' · exit 4 · '
+
+      - name: kopt run timeout kills the whole process tree
+        run: |
+          # a command that starts a grandchild and never ends: the timeout must end both
+          cat > "$RUNNER_TEMP/tree.cjs" <<'EOF'
+          require('child_process').spawn(process.execPath, ['-e', 'setInterval(function () {}, 1000)'], { stdio: 'inherit' });
+          setInterval(function () {}, 1000);
+          EOF
+          set +e
+          SECONDS=0
+          node "$KOPT_BIN" run --timeout 3 "node $RUNNER_TEMP/tree.cjs" > "$RUNNER_TEMP/timeout.out"
+          set -e
+          cat "$RUNNER_TEMP/timeout.out"
+          head -n 1 "$RUNNER_TEMP/timeout.out" | grep -Fq ' · exit 124 · '
+          [ "$SECONDS" -lt 30 ] || { echo "::error::timeout took ${SECONDS}s"; exit 1; }
+
+      - name: kopt run through cmd.exe and Windows PowerShell 5.1
+        if: runner.os == 'Windows'
+        run: |
+          set +e
+          KOPT_SHELL=cmd.exe node "$KOPT_BIN" run "node -e \"process.exit(5)\"" > "$RUNNER_TEMP/run-cmd.out"
+          KOPT_SHELL=powershell.exe node "$KOPT_BIN" run "node -e 'process.exit(6)'" > "$RUNNER_TEMP/run-ps51.out"
+          KOPT_SHELL=powershell.exe node "$KOPT_BIN" run "definitely-not-a-command-kopt" > "$RUNNER_TEMP/run-ps51-missing.out"
+          set -e
+          cat "$RUNNER_TEMP/run-cmd.out" "$RUNNER_TEMP/run-ps51.out" "$RUNNER_TEMP/run-ps51-missing.out"
+          head -n 1 "$RUNNER_TEMP/run-cmd.out" | grep -Fq ' · exit 5 · '
+          head -n 1 "$RUNNER_TEMP/run-ps51.out" | grep -Fq ' · exit 6 · '
+          head -n 1 "$RUNNER_TEMP/run-ps51-missing.out" | grep -Fq ' · exit 127 · '
+
+  infra:
+    name: infra (CDK)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: infra
+    env:
+      CDK_DISABLE_VERSION_CHECK: 'true'
+      CDK_DISABLE_CLI_TELEMETRY: 'true'
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: infra/package-lock.json
+      - run: npm ci
+      - run: npm test
+      - name: cdk synth (no AWS credentials, no lookups)
+        run: npx cdk synth -c reposFile=repos.example.json --quiet --no-notices

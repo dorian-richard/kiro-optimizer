@@ -1,0 +1,2869 @@
+{
+  "date": "2026-10-09T11:19:12.668Z",
+  "charsPerToken": 3,
+  "repos": {
+    "django": {
+      "inputs": {
+        "search": {
+          "aggregates": [
+            {
+              "source": "container",
+              "strategy": "codegraph",
+              "tasks": 15,
+              "skipped": 0,
+              "errors": 0,
+              "medianTokens": 8317,
+              "meanTokens": 8102,
+              "p90Tokens": 8330,
+              "totalTokens": 121532,
+              "totalChars": 364579,
+              "meanToolCalls": 1,
+              "meanFileRecall": 0.9,
+              "meanSymbolRecall": 0.8055555555555556,
+              "meanDefRecall": 0.6222222222222221,
+              "found": 8,
+              "foundRate": 0.5333333333333333,
+              "tokensPerFound": 15192
+            },
+            {
+              "source": "container",
+              "strategy": "kirograph",
+              "tasks": 2,
+              "skipped": 0,
+              "errors": 0,
+              "medianTokens": 886,
+              "meanTokens": 886,
+              "p90Tokens": 1040,
+              "totalTokens": 1772,
+              "totalChars": 5313,
+              "meanToolCalls": 1,
+              "meanFileRecall": 0.5,
+              "meanSymbolRecall": 0.16666666666666666,
+              "meanDefRecall": 0,
+              "found": 0,
+              "foundRate": 0,
+              "tokensPerFound": null
+            },
+            {
+              "source": "container",
+              "strategy": "kopt",
+              "tasks": 15,
+              "skipped": 0,
+              "errors": 0,
+              "medianTokens": 626,
+              "meanTokens": 609,
+              "p90Tokens": 1053,
+              "totalTokens": 9142,
+              "totalChars": 27406,
+              "meanToolCalls": 1,
+              "meanFileRecall": 0.888888888888889,
+              "meanSymbolRecall": 0.8666666666666667,
+              "meanDefRecall": 0.5777777777777777,
+              "found": 8,
+              "foundRate": 0.5333333333333333,
+              "tokensPerFound": 1143
+            },
+            {
+              "source": "kopt bench 2026-10-09",
+              "strategy": "native-naive",
+              "tasks": 15,
+              "skipped": 0,
+              "errors": 0,
+              "medianTokens": 43715,
+              "meanTokens": 39002,
+              "p90Tokens": 65803,
+              "totalTokens": 585023,
+              "totalChars": 1755006,
+              "meanToolCalls": 3.533333333333333,
+              "meanFileRecall": 0.7666666666666667,
+              "meanSymbolRecall": 0.6277777777777778,
+              "meanDefRecall": 0.611111111111111,
+              "found": 7,
+              "foundRate": 0.4666666666666667,
+              "tokensPerFound": 83575
+            },
+            {
+              "source": "kopt bench 2026-10-09",
+              "strategy": "native-ranged",
+              "tasks": 15,
+              "skipped": 0,
+              "errors": 0,
+              "medianTokens": 6737,
+              "meanTokens": 6132,
+              "p90Tokens": 8352,
+              "totalTokens": 91976,
+              "totalChars": 275850,
+              "meanToolCalls": 4.466666666666667,
+              "meanFileRecall": 0.7666666666666667,
+              "meanSymbolRecall": 0.6722222222222222,
+              "meanDefRecall": 0.5388888888888889,
+              "found": 8,
+              "foundRate": 0.5333333333333333,
+              "tokensPerFound": 11497
+            },
+            {
+              "source": "kopt bench 2026-10-09",
+              "strategy": "kopt-pack",
+              "tasks": 15,
+              "skipped": 0,
+              "errors": 0,
+              "medianTokens": 627,
+              "meanTokens": 615,
+              "p90Tokens": 1053,
+              "totalTokens": 9223,
+              "totalChars": 27654,
+              "meanToolCalls": 1,
+              "meanFileRecall": 0.888888888888889,
+              "meanSymbolRecall": 0.8888888888888888,
+              "meanDefRecall": 0.5777777777777777,
+              "found": 8,
+              "foundRate": 0.5333333333333333,
+              "tokensPerFound": 1153
+            },
+            {
+              "source": "kopt bench 2026-10-09",
+              "strategy": "kopt-hits+read",
+              "tasks": 15,
+              "skipped": 0,
+              "errors": 0,
+              "medianTokens": 729,
+              "meanTokens": 910,
+              "p90Tokens": 1734,
+              "totalTokens": 13657,
+              "totalChars": 40919,
+              "meanToolCalls": 3,
+              "meanFileRecall": 0.888888888888889,
+              "meanSymbolRecall": 0.6777777777777777,
+              "meanDefRecall": 0.6333333333333333,
+              "found": 5,
+              "foundRate": 0.3333333333333333,
+              "tokensPerFound": 2731
+            }
+          ],
+          "paired": [
+            {
+              "a": "kopt-pack",
+              "b": "codegraph",
+              "nRun": 15,
+              "nBoth": 4,
+              "onlyA": 4,
+              "onlyB": 4,
+              "medianRatio": 24.396791804686544,
+              "geoMeanRatio": 20.91217051751482,
+              "bCheaper": 0
+            },
+            {
+              "a": "native-ranged",
+              "b": "codegraph",
+              "nRun": 15,
+              "nBoth": 5,
+              "onlyA": 3,
+              "onlyB": 3,
+              "medianRatio": 1.0404154154154155,
+              "geoMeanRatio": 1.359710155348326,
+              "bCheaper": 1
+            },
+            {
+              "a": "kopt-pack",
+              "b": "kirograph",
+              "nRun": 2,
+              "nBoth": 0,
+              "onlyA": 1,
+              "onlyB": 0,
+              "medianRatio": null,
+              "geoMeanRatio": null,
+              "bCheaper": 0
+            },
+            {
+              "a": "native-ranged",
+              "b": "kirograph",
+              "nRun": 2,
+              "nBoth": 0,
+              "onlyA": 0,
+              "onlyB": 0,
+              "medianRatio": null,
+              "geoMeanRatio": null,
+              "bCheaper": 0
+            },
+            {
+              "a": "kopt-pack",
+              "b": "kopt",
+              "nRun": 15,
+              "nBoth": 8,
+              "onlyA": 0,
+              "onlyB": 0,
+              "medianRatio": 1,
+              "geoMeanRatio": 0.9998004987114265,
+              "bCheaper": 1
+            },
+            {
+              "a": "native-ranged",
+              "b": "kopt",
+              "nRun": 15,
+              "nBoth": 6,
+              "onlyA": 2,
+              "onlyB": 2,
+              "medianRatio": 0.09196089335869408,
+              "geoMeanRatio": 0.08413602646823105,
+              "bCheaper": 6
+            }
+          ],
+          "perTask": [
+            {
+              "taskId": "dj-locate-db-cache-cull",
+              "kind": "locate",
+              "codegraph": {
+                "found": false,
+                "tokens": 8330,
+                "fileRecall": 0.5,
+                "symbolRecall": 0
+              },
+              "kirograph": {
+                "found": false,
+                "tokens": 732,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "kopt": {
+                "found": false,
+                "tokens": 1050,
+                "fileRecall": 1,
+                "symbolRecall": 0.6666666666666666
+              },
+              "native-naive": {
+                "found": false,
+                "tokens": 48894,
+                "fileRecall": 1,
+                "symbolRecall": 0.6666666666666666
+              },
+              "native-ranged": {
+                "found": false,
+                "tokens": 6737,
+                "fileRecall": 1,
+                "symbolRecall": 0.6666666666666666
+              },
+              "kopt-pack": {
+                "found": false,
+                "tokens": 1050,
+                "fileRecall": 1,
+                "symbolRecall": 0.6666666666666666
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 904,
+                "fileRecall": 1,
+                "symbolRecall": 0.6666666666666666
+              }
+            },
+            {
+              "taskId": "dj-locate-accept-language",
+              "kind": "locate",
+              "codegraph": {
+                "found": true,
+                "tokens": 8315,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt": {
+                "found": true,
+                "tokens": 1053,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-naive": {
+                "found": false,
+                "tokens": 48259,
+                "fileRecall": 1,
+                "symbolRecall": 0.5
+              },
+              "native-ranged": {
+                "found": true,
+                "tokens": 7992,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-pack": {
+                "found": true,
+                "tokens": 1053,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-hits+read": {
+                "found": true,
+                "tokens": 1277,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              }
+            },
+            {
+              "taskId": "dj-locate-test-shuffle",
+              "kind": "locate",
+              "codegraph": {
+                "found": true,
+                "tokens": 8319,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kirograph": {
+                "found": false,
+                "tokens": 1040,
+                "fileRecall": 1,
+                "symbolRecall": 0.3333333333333333
+              },
+              "kopt": {
+                "found": true,
+                "tokens": 626,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-naive": {
+                "found": true,
+                "tokens": 37719,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-ranged": {
+                "found": false,
+                "tokens": 7757,
+                "fileRecall": 1,
+                "symbolRecall": 0.6666666666666666
+              },
+              "kopt-pack": {
+                "found": true,
+                "tokens": 627,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-hits+read": {
+                "found": true,
+                "tokens": 715,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              }
+            },
+            {
+              "taskId": "dj-locate-session-vary-cookie",
+              "kind": "locate",
+              "codegraph": {
+                "found": false,
+                "tokens": 8299,
+                "fileRecall": 0.5,
+                "symbolRecall": 1
+              },
+              "kopt": {
+                "found": true,
+                "tokens": 1385,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-naive": {
+                "found": false,
+                "tokens": 15045,
+                "fileRecall": 0.5,
+                "symbolRecall": 0
+              },
+              "native-ranged": {
+                "found": false,
+                "tokens": 7674,
+                "fileRecall": 0.5,
+                "symbolRecall": 0
+              },
+              "kopt-pack": {
+                "found": true,
+                "tokens": 1385,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-hits+read": {
+                "found": true,
+                "tokens": 1734,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              }
+            },
+            {
+              "taskId": "dj-explain-migration-optimizer",
+              "kind": "explain",
+              "codegraph": {
+                "found": false,
+                "tokens": 7132,
+                "fileRecall": 0.5,
+                "symbolRecall": 1
+              },
+              "kopt": {
+                "found": true,
+                "tokens": 584,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-naive": {
+                "found": false,
+                "tokens": 31689,
+                "fileRecall": 1,
+                "symbolRecall": 0.5
+              },
+              "native-ranged": {
+                "found": true,
+                "tokens": 5219,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-pack": {
+                "found": true,
+                "tokens": 584,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-hits+read": {
+                "found": true,
+                "tokens": 1562,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              }
+            },
+            {
+              "taskId": "dj-explain-template-lookup",
+              "kind": "explain",
+              "codegraph": {
+                "found": true,
+                "tokens": 8313,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt": {
+                "found": true,
+                "tokens": 234,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-naive": {
+                "found": true,
+                "tokens": 43481,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-ranged": {
+                "found": true,
+                "tokens": 5505,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-pack": {
+                "found": true,
+                "tokens": 234,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-hits+read": {
+                "found": true,
+                "tokens": 1800,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              }
+            },
+            {
+              "taskId": "dj-explain-password-upgrade",
+              "kind": "explain",
+              "codegraph": {
+                "found": false,
+                "tokens": 8317,
+                "fileRecall": 1,
+                "symbolRecall": 0.25
+              },
+              "kopt": {
+                "found": false,
+                "tokens": 465,
+                "fileRecall": 1,
+                "symbolRecall": 0.5
+              },
+              "native-naive": {
+                "found": false,
+                "tokens": 788,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "native-ranged": {
+                "found": false,
+                "tokens": 788,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "kopt-pack": {
+                "found": false,
+                "tokens": 476,
+                "fileRecall": 1,
+                "symbolRecall": 0.5
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 652,
+                "fileRecall": 1,
+                "symbolRecall": 0.5
+              }
+            },
+            {
+              "taskId": "dj-explain-autoreload-stat",
+              "kind": "explain",
+              "codegraph": {
+                "found": true,
+                "tokens": 8330,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt": {
+                "found": false,
+                "tokens": 679,
+                "fileRecall": 1,
+                "symbolRecall": 0.75
+              },
+              "native-naive": {
+                "found": true,
+                "tokens": 46394,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-ranged": {
+                "found": true,
+                "tokens": 8352,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-pack": {
+                "found": false,
+                "tokens": 679,
+                "fileRecall": 1,
+                "symbolRecall": 0.75
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 795,
+                "fileRecall": 1,
+                "symbolRecall": 0.75
+              }
+            },
+            {
+              "taskId": "dj-usage-add-new-csrf-cookie",
+              "kind": "usage",
+              "codegraph": {
+                "found": false,
+                "tokens": 6251,
+                "fileRecall": 1,
+                "symbolRecall": 0.6666666666666666
+              },
+              "kopt": {
+                "found": true,
+                "tokens": 251,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-naive": {
+                "found": true,
+                "tokens": 6602,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-ranged": {
+                "found": true,
+                "tokens": 3485,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-pack": {
+                "found": true,
+                "tokens": 251,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 713,
+                "fileRecall": 1,
+                "symbolRecall": 0.6666666666666666
+              }
+            },
+            {
+              "taskId": "dj-usage-construct-instance",
+              "kind": "usage",
+              "codegraph": {
+                "found": false,
+                "tokens": 8311,
+                "fileRecall": 1,
+                "symbolRecall": 0.6666666666666666
+              },
+              "kopt": {
+                "found": true,
+                "tokens": 681,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-naive": {
+                "found": true,
+                "tokens": 44674,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-ranged": {
+                "found": true,
+                "tokens": 4854,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-pack": {
+                "found": true,
+                "tokens": 681,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 872,
+                "fileRecall": 1,
+                "symbolRecall": 0.3333333333333333
+              }
+            },
+            {
+              "taskId": "dj-usage-same-domain",
+              "kind": "usage",
+              "codegraph": {
+                "found": false,
+                "tokens": 8317,
+                "fileRecall": 1,
+                "symbolRecall": 0.5
+              },
+              "kopt": {
+                "found": false,
+                "tokens": 775,
+                "fileRecall": 0.6666666666666666,
+                "symbolRecall": 1
+              },
+              "native-naive": {
+                "found": false,
+                "tokens": 65803,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "native-ranged": {
+                "found": false,
+                "tokens": 7988,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "kopt-pack": {
+                "found": false,
+                "tokens": 779,
+                "fileRecall": 0.6666666666666666,
+                "symbolRecall": 1
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 729,
+                "fileRecall": 0.6666666666666666,
+                "symbolRecall": 0.5
+              }
+            },
+            {
+              "taskId": "dj-usage-resolve-callables",
+              "kind": "usage",
+              "codegraph": {
+                "found": true,
+                "tokens": 8332,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt": {
+                "found": false,
+                "tokens": 229,
+                "fileRecall": 0.3333333333333333,
+                "symbolRecall": 0.75
+              },
+              "native-naive": {
+                "found": true,
+                "tokens": 50072,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-ranged": {
+                "found": false,
+                "tokens": 5566,
+                "fileRecall": 1,
+                "symbolRecall": 0.75
+              },
+              "kopt-pack": {
+                "found": false,
+                "tokens": 229,
+                "fileRecall": 0.3333333333333333,
+                "symbolRecall": 0.75
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 265,
+                "fileRecall": 0.3333333333333333,
+                "symbolRecall": 0.25
+              }
+            },
+            {
+              "taskId": "dj-impact-naive-now",
+              "kind": "impact",
+              "codegraph": {
+                "found": true,
+                "tokens": 8324,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt": {
+                "found": true,
+                "tokens": 162,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-naive": {
+                "found": true,
+                "tokens": 23996,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-ranged": {
+                "found": true,
+                "tokens": 2892,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-pack": {
+                "found": true,
+                "tokens": 162,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 217,
+                "fileRecall": 1,
+                "symbolRecall": 0.3333333333333333
+              }
+            },
+            {
+              "taskId": "dj-impact-same-field-operation",
+              "kind": "impact",
+              "codegraph": {
+                "found": true,
+                "tokens": 8323,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt": {
+                "found": false,
+                "tokens": 645,
+                "fileRecall": 1,
+                "symbolRecall": 0.3333333333333333
+              },
+              "native-naive": {
+                "found": false,
+                "tokens": 77892,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "native-ranged": {
+                "found": false,
+                "tokens": 9094,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "kopt-pack": {
+                "found": false,
+                "tokens": 710,
+                "fileRecall": 1,
+                "symbolRecall": 0.6666666666666666
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 717,
+                "fileRecall": 1,
+                "symbolRecall": 0.6666666666666666
+              }
+            },
+            {
+              "taskId": "dj-impact-migrations-module",
+              "kind": "impact",
+              "codegraph": {
+                "found": true,
+                "tokens": 8319,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt": {
+                "found": false,
+                "tokens": 323,
+                "fileRecall": 0.3333333333333333,
+                "symbolRecall": 1
+              },
+              "native-naive": {
+                "found": false,
+                "tokens": 43715,
+                "fileRecall": 1,
+                "symbolRecall": 0.75
+              },
+              "native-ranged": {
+                "found": true,
+                "tokens": 8073,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-pack": {
+                "found": false,
+                "tokens": 323,
+                "fileRecall": 0.3333333333333333,
+                "symbolRecall": 1
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 705,
+                "fileRecall": 0.3333333333333333,
+                "symbolRecall": 0.5
+              }
+            }
+          ]
+        },
+        "question": {
+          "aggregates": [
+            {
+              "source": "container",
+              "strategy": "codegraph",
+              "tasks": 15,
+              "skipped": 0,
+              "errors": 0,
+              "medianTokens": 8317,
+              "meanTokens": 8116,
+              "p90Tokens": 8330,
+              "totalTokens": 121747,
+              "totalChars": 365224,
+              "meanToolCalls": 1,
+              "meanFileRecall": 0.6888888888888888,
+              "meanSymbolRecall": 0.5666666666666667,
+              "meanDefRecall": 0.3611111111111111,
+              "found": 8,
+              "foundRate": 0.5333333333333333,
+              "tokensPerFound": 15218
+            },
+            {
+              "source": "container",
+              "strategy": "kopt",
+              "tasks": 15,
+              "skipped": 0,
+              "errors": 0,
+              "medianTokens": 824,
+              "meanTokens": 903,
+              "p90Tokens": 2218,
+              "totalTokens": 13548,
+              "totalChars": 40627,
+              "meanToolCalls": 1,
+              "meanFileRecall": 0.788888888888889,
+              "meanSymbolRecall": 0.7611111111111111,
+              "meanDefRecall": 0.5166666666666667,
+              "found": 5,
+              "foundRate": 0.3333333333333333,
+              "tokensPerFound": 2710
+            },
+            {
+              "source": "kopt bench 2026-10-09",
+              "strategy": "native-naive",
+              "tasks": 15,
+              "skipped": 0,
+              "errors": 0,
+              "medianTokens": 45933,
+              "meanTokens": 44250,
+              "p90Tokens": 65803,
+              "totalTokens": 663751,
+              "totalChars": 1991185,
+              "meanToolCalls": 3.8,
+              "meanFileRecall": 0.6,
+              "meanSymbolRecall": 0.4388888888888889,
+              "meanDefRecall": 0.38333333333333336,
+              "found": 5,
+              "foundRate": 0.3333333333333333,
+              "tokensPerFound": 132750
+            },
+            {
+              "source": "kopt bench 2026-10-09",
+              "strategy": "native-ranged",
+              "tasks": 15,
+              "skipped": 0,
+              "errors": 0,
+              "medianTokens": 7006,
+              "meanTokens": 6768,
+              "p90Tokens": 8458,
+              "totalTokens": 101521,
+              "totalChars": 304496,
+              "meanToolCalls": 4.533333333333333,
+              "meanFileRecall": 0.6,
+              "meanSymbolRecall": 0.4888888888888889,
+              "meanDefRecall": 0.38333333333333336,
+              "found": 5,
+              "foundRate": 0.3333333333333333,
+              "tokensPerFound": 20304
+            },
+            {
+              "source": "kopt bench 2026-10-09",
+              "strategy": "kopt-pack",
+              "tasks": 15,
+              "skipped": 0,
+              "errors": 0,
+              "medianTokens": 696,
+              "meanTokens": 799,
+              "p90Tokens": 1344,
+              "totalTokens": 11984,
+              "totalChars": 35932,
+              "meanToolCalls": 1,
+              "meanFileRecall": 0.7555555555555556,
+              "meanSymbolRecall": 0.6499999999999999,
+              "meanDefRecall": 0.39999999999999997,
+              "found": 4,
+              "foundRate": 0.26666666666666666,
+              "tokensPerFound": 2996
+            },
+            {
+              "source": "kopt bench 2026-10-09",
+              "strategy": "kopt-hits+read",
+              "tasks": 15,
+              "skipped": 0,
+              "errors": 0,
+              "medianTokens": 917,
+              "meanTokens": 1075,
+              "p90Tokens": 1714,
+              "totalTokens": 16123,
+              "totalChars": 48330,
+              "meanToolCalls": 3,
+              "meanFileRecall": 0.7555555555555556,
+              "meanSymbolRecall": 0.4611111111111111,
+              "meanDefRecall": 0.41666666666666663,
+              "found": 1,
+              "foundRate": 0.06666666666666667,
+              "tokensPerFound": 16123
+            }
+          ],
+          "paired": [
+            {
+              "a": "kopt-pack",
+              "b": "codegraph",
+              "nRun": 15,
+              "nBoth": 3,
+              "onlyA": 1,
+              "onlyB": 5,
+              "medianRatio": 34.945378151260506,
+              "geoMeanRatio": 26.704191109218957,
+              "bCheaper": 0
+            },
+            {
+              "a": "native-ranged",
+              "b": "codegraph",
+              "nRun": 15,
+              "nBoth": 4,
+              "onlyA": 1,
+              "onlyB": 4,
+              "medianRatio": 1.4603694381453844,
+              "geoMeanRatio": 1.3791912488121811,
+              "bCheaper": 1
+            },
+            {
+              "a": "kopt-pack",
+              "b": "kopt",
+              "nRun": 15,
+              "nBoth": 3,
+              "onlyA": 1,
+              "onlyB": 2,
+              "medianRatio": 1,
+              "geoMeanRatio": 1.2143412743242172,
+              "bCheaper": 0
+            },
+            {
+              "a": "native-ranged",
+              "b": "kopt",
+              "nRun": 15,
+              "nBoth": 2,
+              "onlyA": 3,
+              "onlyB": 3,
+              "medianRatio": 0.04771398372880041,
+              "geoMeanRatio": 0.047503145466604196,
+              "bCheaper": 2
+            }
+          ],
+          "perTask": [
+            {
+              "taskId": "dj-locate-db-cache-cull",
+              "kind": "locate",
+              "codegraph": {
+                "found": false,
+                "tokens": 8330,
+                "fileRecall": 0.5,
+                "symbolRecall": 0
+              },
+              "kopt": {
+                "found": false,
+                "tokens": 990,
+                "fileRecall": 0.5,
+                "symbolRecall": 0.6666666666666666
+              },
+              "native-naive": {
+                "found": false,
+                "tokens": 65961,
+                "fileRecall": 0.5,
+                "symbolRecall": 0.3333333333333333
+              },
+              "native-ranged": {
+                "found": false,
+                "tokens": 7006,
+                "fileRecall": 0.5,
+                "symbolRecall": 0
+              },
+              "kopt-pack": {
+                "found": false,
+                "tokens": 991,
+                "fileRecall": 0.5,
+                "symbolRecall": 0.6666666666666666
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 917,
+                "fileRecall": 0.5,
+                "symbolRecall": 0.6666666666666666
+              }
+            },
+            {
+              "taskId": "dj-locate-accept-language",
+              "kind": "locate",
+              "codegraph": {
+                "found": true,
+                "tokens": 8318,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt": {
+                "found": true,
+                "tokens": 1080,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-naive": {
+                "found": false,
+                "tokens": 11278,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "native-ranged": {
+                "found": false,
+                "tokens": 4962,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "kopt-pack": {
+                "found": false,
+                "tokens": 865,
+                "fileRecall": 1,
+                "symbolRecall": 0.5
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 807,
+                "fileRecall": 1,
+                "symbolRecall": 0.5
+              }
+            },
+            {
+              "taskId": "dj-locate-test-shuffle",
+              "kind": "locate",
+              "codegraph": {
+                "found": true,
+                "tokens": 8313,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt": {
+                "found": false,
+                "tokens": 487,
+                "fileRecall": 1,
+                "symbolRecall": 0.6666666666666666
+              },
+              "native-naive": {
+                "found": true,
+                "tokens": 45933,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-ranged": {
+                "found": false,
+                "tokens": 6111,
+                "fileRecall": 1,
+                "symbolRecall": 0.6666666666666666
+              },
+              "kopt-pack": {
+                "found": false,
+                "tokens": 489,
+                "fileRecall": 1,
+                "symbolRecall": 0.6666666666666666
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 1188,
+                "fileRecall": 1,
+                "symbolRecall": 0.6666666666666666
+              }
+            },
+            {
+              "taskId": "dj-locate-session-vary-cookie",
+              "kind": "locate",
+              "codegraph": {
+                "found": false,
+                "tokens": 8319,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "kopt": {
+                "found": true,
+                "tokens": 2218,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-naive": {
+                "found": false,
+                "tokens": 9858,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "native-ranged": {
+                "found": false,
+                "tokens": 3545,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "kopt-pack": {
+                "found": false,
+                "tokens": 577,
+                "fileRecall": 0.5,
+                "symbolRecall": 0
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 526,
+                "fileRecall": 0.5,
+                "symbolRecall": 0
+              }
+            },
+            {
+              "taskId": "dj-explain-migration-optimizer",
+              "kind": "explain",
+              "codegraph": {
+                "found": false,
+                "tokens": 7486,
+                "fileRecall": 0.5,
+                "symbolRecall": 0.5
+              },
+              "kopt": {
+                "found": false,
+                "tokens": 2469,
+                "fileRecall": 0,
+                "symbolRecall": 0.25
+              },
+              "native-naive": {
+                "found": false,
+                "tokens": 59173,
+                "fileRecall": 0.5,
+                "symbolRecall": 0
+              },
+              "native-ranged": {
+                "found": false,
+                "tokens": 8999,
+                "fileRecall": 0.5,
+                "symbolRecall": 0.5
+              },
+              "kopt-pack": {
+                "found": false,
+                "tokens": 2479,
+                "fileRecall": 0,
+                "symbolRecall": 0.25
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 1714,
+                "fileRecall": 0,
+                "symbolRecall": 0.25
+              }
+            },
+            {
+              "taskId": "dj-explain-template-lookup",
+              "kind": "explain",
+              "codegraph": {
+                "found": true,
+                "tokens": 8317,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt": {
+                "found": true,
+                "tokens": 238,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-naive": {
+                "found": true,
+                "tokens": 43481,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-ranged": {
+                "found": true,
+                "tokens": 5505,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-pack": {
+                "found": true,
+                "tokens": 238,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-hits+read": {
+                "found": true,
+                "tokens": 1696,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              }
+            },
+            {
+              "taskId": "dj-explain-password-upgrade",
+              "kind": "explain",
+              "codegraph": {
+                "found": false,
+                "tokens": 8331,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "kopt": {
+                "found": false,
+                "tokens": 843,
+                "fileRecall": 1,
+                "symbolRecall": 0.75
+              },
+              "native-naive": {
+                "found": false,
+                "tokens": 54971,
+                "fileRecall": 0,
+                "symbolRecall": 0.25
+              },
+              "native-ranged": {
+                "found": false,
+                "tokens": 8191,
+                "fileRecall": 0,
+                "symbolRecall": 0.25
+              },
+              "kopt-pack": {
+                "found": false,
+                "tokens": 1344,
+                "fileRecall": 1,
+                "symbolRecall": 0.25
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 1055,
+                "fileRecall": 1,
+                "symbolRecall": 0.25
+              }
+            },
+            {
+              "taskId": "dj-explain-autoreload-stat",
+              "kind": "explain",
+              "codegraph": {
+                "found": false,
+                "tokens": 8322,
+                "fileRecall": 1,
+                "symbolRecall": 0
+              },
+              "kopt": {
+                "found": false,
+                "tokens": 1145,
+                "fileRecall": 1,
+                "symbolRecall": 0
+              },
+              "native-naive": {
+                "found": true,
+                "tokens": 46500,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-ranged": {
+                "found": true,
+                "tokens": 8458,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-pack": {
+                "found": false,
+                "tokens": 1142,
+                "fileRecall": 1,
+                "symbolRecall": 0
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 2426,
+                "fileRecall": 1,
+                "symbolRecall": 0
+              }
+            },
+            {
+              "taskId": "dj-usage-add-new-csrf-cookie",
+              "kind": "usage",
+              "codegraph": {
+                "found": false,
+                "tokens": 6509,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "kopt": {
+                "found": true,
+                "tokens": 696,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-naive": {
+                "found": false,
+                "tokens": 50171,
+                "fileRecall": 1,
+                "symbolRecall": 0
+              },
+              "native-ranged": {
+                "found": false,
+                "tokens": 7943,
+                "fileRecall": 1,
+                "symbolRecall": 0.6666666666666666
+              },
+              "kopt-pack": {
+                "found": true,
+                "tokens": 696,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 893,
+                "fileRecall": 1,
+                "symbolRecall": 0.6666666666666666
+              }
+            },
+            {
+              "taskId": "dj-usage-construct-instance",
+              "kind": "usage",
+              "codegraph": {
+                "found": true,
+                "tokens": 8314,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt": {
+                "found": false,
+                "tokens": 824,
+                "fileRecall": 1,
+                "symbolRecall": 0.6666666666666666
+              },
+              "native-naive": {
+                "found": true,
+                "tokens": 44674,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-ranged": {
+                "found": true,
+                "tokens": 4854,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-pack": {
+                "found": true,
+                "tokens": 738,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 726,
+                "fileRecall": 1,
+                "symbolRecall": 0.6666666666666666
+              }
+            },
+            {
+              "taskId": "dj-usage-same-domain",
+              "kind": "usage",
+              "codegraph": {
+                "found": false,
+                "tokens": 8330,
+                "fileRecall": 0.3333333333333333,
+                "symbolRecall": 0
+              },
+              "kopt": {
+                "found": false,
+                "tokens": 938,
+                "fileRecall": 0.6666666666666666,
+                "symbolRecall": 1
+              },
+              "native-naive": {
+                "found": false,
+                "tokens": 65803,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "native-ranged": {
+                "found": false,
+                "tokens": 7988,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "kopt-pack": {
+                "found": false,
+                "tokens": 938,
+                "fileRecall": 0.6666666666666666,
+                "symbolRecall": 1
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 989,
+                "fileRecall": 0.6666666666666666,
+                "symbolRecall": 0.5
+              }
+            },
+            {
+              "taskId": "dj-usage-resolve-callables",
+              "kind": "usage",
+              "codegraph": {
+                "found": true,
+                "tokens": 8238,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt": {
+                "found": false,
+                "tokens": 287,
+                "fileRecall": 0.3333333333333333,
+                "symbolRecall": 0.75
+              },
+              "native-naive": {
+                "found": false,
+                "tokens": 50249,
+                "fileRecall": 1,
+                "symbolRecall": 0.25
+              },
+              "native-ranged": {
+                "found": false,
+                "tokens": 7388,
+                "fileRecall": 1,
+                "symbolRecall": 0.25
+              },
+              "kopt-pack": {
+                "found": false,
+                "tokens": 287,
+                "fileRecall": 0.3333333333333333,
+                "symbolRecall": 0.75
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 695,
+                "fileRecall": 0.3333333333333333,
+                "symbolRecall": 0.25
+              }
+            },
+            {
+              "taskId": "dj-impact-naive-now",
+              "kind": "impact",
+              "codegraph": {
+                "found": true,
+                "tokens": 8320,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt": {
+                "found": true,
+                "tokens": 308,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-naive": {
+                "found": true,
+                "tokens": 38145,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-ranged": {
+                "found": true,
+                "tokens": 5901,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-pack": {
+                "found": true,
+                "tokens": 172,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 248,
+                "fileRecall": 1,
+                "symbolRecall": 0.3333333333333333
+              }
+            },
+            {
+              "taskId": "dj-impact-same-field-operation",
+              "kind": "impact",
+              "codegraph": {
+                "found": true,
+                "tokens": 8294,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt": {
+                "found": false,
+                "tokens": 690,
+                "fileRecall": 1,
+                "symbolRecall": 0.6666666666666666
+              },
+              "native-naive": {
+                "found": false,
+                "tokens": 33839,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "native-ranged": {
+                "found": false,
+                "tokens": 6597,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "kopt-pack": {
+                "found": false,
+                "tokens": 696,
+                "fileRecall": 1,
+                "symbolRecall": 0.6666666666666666
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 1529,
+                "fileRecall": 1,
+                "symbolRecall": 0.6666666666666666
+              }
+            },
+            {
+              "taskId": "dj-impact-migrations-module",
+              "kind": "impact",
+              "codegraph": {
+                "found": true,
+                "tokens": 8006,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt": {
+                "found": false,
+                "tokens": 335,
+                "fileRecall": 0.3333333333333333,
+                "symbolRecall": 1
+              },
+              "native-naive": {
+                "found": false,
+                "tokens": 43715,
+                "fileRecall": 1,
+                "symbolRecall": 0.75
+              },
+              "native-ranged": {
+                "found": true,
+                "tokens": 8073,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-pack": {
+                "found": false,
+                "tokens": 332,
+                "fileRecall": 0.3333333333333333,
+                "symbolRecall": 1
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 714,
+                "fileRecall": 0.3333333333333333,
+                "symbolRecall": 0.5
+              }
+            }
+          ]
+        }
+      }
+    },
+    "spring-framework": {
+      "inputs": {
+        "search": {
+          "aggregates": [
+            {
+              "source": "container",
+              "strategy": "codegraph",
+              "tasks": 15,
+              "skipped": 0,
+              "errors": 0,
+              "medianTokens": 8307,
+              "meanTokens": 7778,
+              "p90Tokens": 8324,
+              "totalTokens": 116673,
+              "totalChars": 350003,
+              "meanToolCalls": 1,
+              "meanFileRecall": 0.8,
+              "meanSymbolRecall": 0.7611111111111111,
+              "meanDefRecall": 0.47222222222222215,
+              "found": 8,
+              "foundRate": 0.5333333333333333,
+              "tokensPerFound": 14584
+            },
+            {
+              "source": "kopt bench 2026-10-09",
+              "strategy": "native-naive",
+              "tasks": 15,
+              "skipped": 0,
+              "errors": 0,
+              "medianTokens": 19851,
+              "meanTokens": 22982,
+              "p90Tokens": 40375,
+              "totalTokens": 344731,
+              "totalChars": 1034134,
+              "meanToolCalls": 3.8,
+              "meanFileRecall": 0.8222222222222223,
+              "meanSymbolRecall": 0.7111111111111111,
+              "meanDefRecall": 0.6333333333333333,
+              "found": 9,
+              "foundRate": 0.6,
+              "tokensPerFound": 38303
+            },
+            {
+              "source": "kopt bench 2026-10-09",
+              "strategy": "native-ranged",
+              "tasks": 15,
+              "skipped": 0,
+              "errors": 0,
+              "medianTokens": 7378,
+              "meanTokens": 7509,
+              "p90Tokens": 9517,
+              "totalTokens": 112637,
+              "totalChars": 337846,
+              "meanToolCalls": 4.2,
+              "meanFileRecall": 0.8222222222222223,
+              "meanSymbolRecall": 0.7,
+              "meanDefRecall": 0.5722222222222222,
+              "found": 8,
+              "foundRate": 0.5333333333333333,
+              "tokensPerFound": 14080
+            },
+            {
+              "source": "kopt bench 2026-10-09",
+              "strategy": "kopt-pack",
+              "tasks": 15,
+              "skipped": 0,
+              "errors": 0,
+              "medianTokens": 776,
+              "meanTokens": 834,
+              "p90Tokens": 1363,
+              "totalTokens": 12515,
+              "totalChars": 37530,
+              "meanToolCalls": 1,
+              "meanFileRecall": 0.7222222222222222,
+              "meanSymbolRecall": 0.75,
+              "meanDefRecall": 0.4277777777777777,
+              "found": 5,
+              "foundRate": 0.3333333333333333,
+              "tokensPerFound": 2503
+            },
+            {
+              "source": "kopt bench 2026-10-09",
+              "strategy": "kopt-hits+read",
+              "tasks": 15,
+              "skipped": 0,
+              "errors": 0,
+              "medianTokens": 1436,
+              "meanTokens": 1453,
+              "p90Tokens": 2425,
+              "totalTokens": 21788,
+              "totalChars": 65307,
+              "meanToolCalls": 3,
+              "meanFileRecall": 0.7444444444444446,
+              "meanSymbolRecall": 0.5944444444444443,
+              "meanDefRecall": 0.5222222222222221,
+              "found": 5,
+              "foundRate": 0.3333333333333333,
+              "tokensPerFound": 4358
+            }
+          ],
+          "paired": [
+            {
+              "a": "kopt-pack",
+              "b": "codegraph",
+              "nRun": 15,
+              "nBoth": 5,
+              "onlyA": 0,
+              "onlyB": 3,
+              "medianRatio": 14.538461538461538,
+              "geoMeanRatio": 13.100168141359354,
+              "bCheaper": 0
+            },
+            {
+              "a": "native-ranged",
+              "b": "codegraph",
+              "nRun": 15,
+              "nBoth": 6,
+              "onlyA": 2,
+              "onlyB": 2,
+              "medianRatio": 1.1326251033912325,
+              "geoMeanRatio": 1.0753392298192548,
+              "bCheaper": 2
+            }
+          ],
+          "perTask": [
+            {
+              "taskId": "sf-locate-retry-loop",
+              "kind": "locate",
+              "codegraph": {
+                "found": false,
+                "tokens": 8320,
+                "fileRecall": 1,
+                "symbolRecall": 0.3333333333333333
+              },
+              "native-naive": {
+                "found": false,
+                "tokens": 23792,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "native-ranged": {
+                "found": false,
+                "tokens": 8971,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "kopt-pack": {
+                "found": false,
+                "tokens": 1041,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 1773,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              }
+            },
+            {
+              "taskId": "sf-locate-api-version",
+              "kind": "locate",
+              "codegraph": {
+                "found": false,
+                "tokens": 8307,
+                "fileRecall": 0,
+                "symbolRecall": 0.25
+              },
+              "native-naive": {
+                "found": false,
+                "tokens": 31703,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "native-ranged": {
+                "found": false,
+                "tokens": 9466,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "kopt-pack": {
+                "found": false,
+                "tokens": 1363,
+                "fileRecall": 0.6666666666666666,
+                "symbolRecall": 1
+              },
+              "kopt-hits+read": {
+                "found": true,
+                "tokens": 1152,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              }
+            },
+            {
+              "taskId": "sf-locate-sqlstate-lock",
+              "kind": "locate",
+              "codegraph": {
+                "found": true,
+                "tokens": 8028,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-naive": {
+                "found": true,
+                "tokens": 8382,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-ranged": {
+                "found": false,
+                "tokens": 6511,
+                "fileRecall": 1,
+                "symbolRecall": 0.6666666666666666
+              },
+              "kopt-pack": {
+                "found": false,
+                "tokens": 499,
+                "fileRecall": 0.5,
+                "symbolRecall": 1
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 564,
+                "fileRecall": 0.5,
+                "symbolRecall": 0.6666666666666666
+              }
+            },
+            {
+              "taskId": "sf-locate-advice-order",
+              "kind": "locate",
+              "codegraph": {
+                "found": true,
+                "tokens": 3938,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-naive": {
+                "found": true,
+                "tokens": 15882,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-ranged": {
+                "found": true,
+                "tokens": 7360,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-pack": {
+                "found": true,
+                "tokens": 805,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-hits+read": {
+                "found": true,
+                "tokens": 1879,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              }
+            },
+            {
+              "taskId": "sf-explain-concurrency-limit",
+              "kind": "explain",
+              "codegraph": {
+                "found": true,
+                "tokens": 8321,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-naive": {
+                "found": true,
+                "tokens": 13248,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-ranged": {
+                "found": true,
+                "tokens": 9115,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-pack": {
+                "found": false,
+                "tokens": 813,
+                "fileRecall": 1,
+                "symbolRecall": 0.5
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 1584,
+                "fileRecall": 1,
+                "symbolRecall": 0.5
+              }
+            },
+            {
+              "taskId": "sf-explain-retryable",
+              "kind": "explain",
+              "codegraph": {
+                "found": false,
+                "tokens": 7384,
+                "fileRecall": 0.6666666666666666,
+                "symbolRecall": 1
+              },
+              "native-naive": {
+                "found": false,
+                "tokens": 8744,
+                "fileRecall": 0.3333333333333333,
+                "symbolRecall": 0.25
+              },
+              "native-ranged": {
+                "found": false,
+                "tokens": 7682,
+                "fileRecall": 0.3333333333333333,
+                "symbolRecall": 0.25
+              },
+              "kopt-pack": {
+                "found": false,
+                "tokens": 2168,
+                "fileRecall": 0.3333333333333333,
+                "symbolRecall": 0.75
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 2701,
+                "fileRecall": 0.3333333333333333,
+                "symbolRecall": 0.75
+              }
+            },
+            {
+              "taskId": "sf-explain-config-full-lite",
+              "kind": "explain",
+              "codegraph": {
+                "found": false,
+                "tokens": 8315,
+                "fileRecall": 0.3333333333333333,
+                "symbolRecall": 0.5
+              },
+              "native-naive": {
+                "found": false,
+                "tokens": 30624,
+                "fileRecall": 1,
+                "symbolRecall": 0.25
+              },
+              "native-ranged": {
+                "found": false,
+                "tokens": 9933,
+                "fileRecall": 1,
+                "symbolRecall": 0.75
+              },
+              "kopt-pack": {
+                "found": false,
+                "tokens": 594,
+                "fileRecall": 0.3333333333333333,
+                "symbolRecall": 0.5
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 870,
+                "fileRecall": 0.3333333333333333,
+                "symbolRecall": 0.5
+              }
+            },
+            {
+              "taskId": "sf-explain-exponential-backoff",
+              "kind": "explain",
+              "codegraph": {
+                "found": true,
+                "tokens": 7799,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-naive": {
+                "found": false,
+                "tokens": 15790,
+                "fileRecall": 1,
+                "symbolRecall": 0.5
+              },
+              "native-ranged": {
+                "found": true,
+                "tokens": 6864,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-pack": {
+                "found": true,
+                "tokens": 1142,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-hits+read": {
+                "found": true,
+                "tokens": 1436,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              }
+            },
+            {
+              "taskId": "sf-usage-fail-early",
+              "kind": "usage",
+              "codegraph": {
+                "found": true,
+                "tokens": 8314,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-naive": {
+                "found": true,
+                "tokens": 19851,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-ranged": {
+                "found": true,
+                "tokens": 4794,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-pack": {
+                "found": true,
+                "tokens": 265,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 375,
+                "fileRecall": 1,
+                "symbolRecall": 0.3333333333333333
+              }
+            },
+            {
+              "taskId": "sf-usage-trigger-flush",
+              "kind": "usage",
+              "codegraph": {
+                "found": false,
+                "tokens": 8274,
+                "fileRecall": 1,
+                "symbolRecall": 0.6666666666666666
+              },
+              "native-naive": {
+                "found": false,
+                "tokens": 16454,
+                "fileRecall": 1,
+                "symbolRecall": 0.6666666666666666
+              },
+              "native-ranged": {
+                "found": true,
+                "tokens": 6597,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-pack": {
+                "found": false,
+                "tokens": 749,
+                "fileRecall": 0.3333333333333333,
+                "symbolRecall": 1
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 997,
+                "fileRecall": 0.3333333333333333,
+                "symbolRecall": 0.3333333333333333
+              }
+            },
+            {
+              "taskId": "sf-usage-imported-by",
+              "kind": "usage",
+              "codegraph": {
+                "found": false,
+                "tokens": 6406,
+                "fileRecall": 1,
+                "symbolRecall": 0.6666666666666666
+              },
+              "native-naive": {
+                "found": true,
+                "tokens": 26310,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-ranged": {
+                "found": true,
+                "tokens": 3582,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-pack": {
+                "found": false,
+                "tokens": 478,
+                "fileRecall": 0.6666666666666666,
+                "symbolRecall": 1
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 1689,
+                "fileRecall": 0.6666666666666666,
+                "symbolRecall": 0.3333333333333333
+              }
+            },
+            {
+              "taskId": "sf-usage-lru-drain",
+              "kind": "usage",
+              "codegraph": {
+                "found": true,
+                "tokens": 8324,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-naive": {
+                "found": true,
+                "tokens": 14167,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-ranged": {
+                "found": true,
+                "tokens": 5850,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-pack": {
+                "found": false,
+                "tokens": 776,
+                "fileRecall": 1,
+                "symbolRecall": 0
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 955,
+                "fileRecall": 1,
+                "symbolRecall": 0
+              }
+            },
+            {
+              "taskId": "sf-impact-shortcut",
+              "kind": "impact",
+              "codegraph": {
+                "found": true,
+                "tokens": 8316,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-naive": {
+                "found": true,
+                "tokens": 56263,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-ranged": {
+                "found": false,
+                "tokens": 9517,
+                "fileRecall": 1,
+                "symbolRecall": 0.3333333333333333
+              },
+              "kopt-pack": {
+                "found": true,
+                "tokens": 572,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-hits+read": {
+                "found": true,
+                "tokens": 2425,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              }
+            },
+            {
+              "taskId": "sf-impact-primary-conflict",
+              "kind": "impact",
+              "codegraph": {
+                "found": false,
+                "tokens": 8297,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "native-naive": {
+                "found": true,
+                "tokens": 40375,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-ranged": {
+                "found": false,
+                "tokens": 9017,
+                "fileRecall": 1,
+                "symbolRecall": 0.5
+              },
+              "kopt-pack": {
+                "found": false,
+                "tokens": 921,
+                "fileRecall": 1,
+                "symbolRecall": 0.5
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 1003,
+                "fileRecall": 1,
+                "symbolRecall": 0.5
+              }
+            },
+            {
+              "taskId": "sf-impact-cleanup-txinfo",
+              "kind": "impact",
+              "codegraph": {
+                "found": true,
+                "tokens": 8330,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-naive": {
+                "found": true,
+                "tokens": 23146,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-ranged": {
+                "found": true,
+                "tokens": 7378,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-pack": {
+                "found": true,
+                "tokens": 329,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-hits+read": {
+                "found": true,
+                "tokens": 2385,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              }
+            }
+          ]
+        },
+        "question": {
+          "aggregates": [
+            {
+              "source": "container",
+              "strategy": "codegraph",
+              "tasks": 15,
+              "skipped": 0,
+              "errors": 0,
+              "medianTokens": 8293,
+              "meanTokens": 7994,
+              "p90Tokens": 8325,
+              "totalTokens": 119915,
+              "totalChars": 359728,
+              "meanToolCalls": 1,
+              "meanFileRecall": 0.6777777777777777,
+              "meanSymbolRecall": 0.6944444444444445,
+              "meanDefRecall": 0.42777777777777776,
+              "found": 7,
+              "foundRate": 0.4666666666666667,
+              "tokensPerFound": 17131
+            },
+            {
+              "source": "kopt bench 2026-10-09",
+              "strategy": "native-naive",
+              "tasks": 15,
+              "skipped": 0,
+              "errors": 0,
+              "medianTokens": 19851,
+              "meanTokens": 20896,
+              "p90Tokens": 43980,
+              "totalTokens": 313445,
+              "totalChars": 940273,
+              "meanToolCalls": 3.6,
+              "meanFileRecall": 0.5333333333333333,
+              "meanSymbolRecall": 0.4888888888888889,
+              "meanDefRecall": 0.4222222222222223,
+              "found": 6,
+              "foundRate": 0.4,
+              "tokensPerFound": 52241
+            },
+            {
+              "source": "kopt bench 2026-10-09",
+              "strategy": "native-ranged",
+              "tasks": 15,
+              "skipped": 0,
+              "errors": 0,
+              "medianTokens": 7534,
+              "meanTokens": 6931,
+              "p90Tokens": 9333,
+              "totalTokens": 103962,
+              "totalChars": 311811,
+              "meanToolCalls": 4.2,
+              "meanFileRecall": 0.5333333333333333,
+              "meanSymbolRecall": 0.42777777777777776,
+              "meanDefRecall": 0.2944444444444444,
+              "found": 4,
+              "foundRate": 0.26666666666666666,
+              "tokensPerFound": 25991
+            },
+            {
+              "source": "kopt bench 2026-10-09",
+              "strategy": "kopt-pack",
+              "tasks": 15,
+              "skipped": 0,
+              "errors": 0,
+              "medianTokens": 961,
+              "meanTokens": 980,
+              "p90Tokens": 1547,
+              "totalTokens": 14703,
+              "totalChars": 44093,
+              "meanToolCalls": 1,
+              "meanFileRecall": 0.6777777777777778,
+              "meanSymbolRecall": 0.6666666666666666,
+              "meanDefRecall": 0.3444444444444444,
+              "found": 5,
+              "foundRate": 0.3333333333333333,
+              "tokensPerFound": 2941
+            },
+            {
+              "source": "kopt bench 2026-10-09",
+              "strategy": "kopt-hits+read",
+              "tasks": 15,
+              "skipped": 0,
+              "errors": 0,
+              "medianTokens": 1061,
+              "meanTokens": 1141,
+              "p90Tokens": 1822,
+              "totalTokens": 17114,
+              "totalChars": 51297,
+              "meanToolCalls": 3,
+              "meanFileRecall": 0.7,
+              "meanSymbolRecall": 0.4388888888888889,
+              "meanDefRecall": 0.36111111111111105,
+              "found": 2,
+              "foundRate": 0.13333333333333333,
+              "tokensPerFound": 8557
+            }
+          ],
+          "paired": [
+            {
+              "a": "kopt-pack",
+              "b": "codegraph",
+              "nRun": 15,
+              "nBoth": 5,
+              "onlyA": 0,
+              "onlyB": 2,
+              "medianRatio": 11.269647696476964,
+              "geoMeanRatio": 13.95980669328693,
+              "bCheaper": 0
+            },
+            {
+              "a": "native-ranged",
+              "b": "codegraph",
+              "nRun": 15,
+              "nBoth": 3,
+              "onlyA": 1,
+              "onlyB": 4,
+              "medianRatio": 1.2590571471881158,
+              "geoMeanRatio": 1.248990198592044,
+              "bCheaper": 1
+            }
+          ],
+          "perTask": [
+            {
+              "taskId": "sf-locate-retry-loop",
+              "kind": "locate",
+              "codegraph": {
+                "found": true,
+                "tokens": 8293,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-naive": {
+                "found": false,
+                "tokens": 1130,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "native-ranged": {
+                "found": false,
+                "tokens": 921,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "kopt-pack": {
+                "found": false,
+                "tokens": 1058,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 1822,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              }
+            },
+            {
+              "taskId": "sf-locate-api-version",
+              "kind": "locate",
+              "codegraph": {
+                "found": false,
+                "tokens": 7770,
+                "fileRecall": 0,
+                "symbolRecall": 0.25
+              },
+              "native-naive": {
+                "found": false,
+                "tokens": 11213,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "native-ranged": {
+                "found": false,
+                "tokens": 8853,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "kopt-pack": {
+                "found": false,
+                "tokens": 1179,
+                "fileRecall": 0.6666666666666666,
+                "symbolRecall": 0.75
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 865,
+                "fileRecall": 0.6666666666666666,
+                "symbolRecall": 0.5
+              }
+            },
+            {
+              "taskId": "sf-locate-sqlstate-lock",
+              "kind": "locate",
+              "codegraph": {
+                "found": false,
+                "tokens": 8270,
+                "fileRecall": 0.5,
+                "symbolRecall": 1
+              },
+              "native-naive": {
+                "found": false,
+                "tokens": 5649,
+                "fileRecall": 1,
+                "symbolRecall": 0.6666666666666666
+              },
+              "native-ranged": {
+                "found": false,
+                "tokens": 6354,
+                "fileRecall": 1,
+                "symbolRecall": 0.6666666666666666
+              },
+              "kopt-pack": {
+                "found": false,
+                "tokens": 527,
+                "fileRecall": 0.5,
+                "symbolRecall": 1
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 592,
+                "fileRecall": 0.5,
+                "symbolRecall": 0.6666666666666666
+              }
+            },
+            {
+              "taskId": "sf-locate-advice-order",
+              "kind": "locate",
+              "codegraph": {
+                "found": false,
+                "tokens": 8332,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "native-naive": {
+                "found": false,
+                "tokens": 30283,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "native-ranged": {
+                "found": false,
+                "tokens": 8537,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "kopt-pack": {
+                "found": false,
+                "tokens": 1274,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 1061,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              }
+            },
+            {
+              "taskId": "sf-explain-concurrency-limit",
+              "kind": "explain",
+              "codegraph": {
+                "found": false,
+                "tokens": 8309,
+                "fileRecall": 1,
+                "symbolRecall": 0.5
+              },
+              "native-naive": {
+                "found": false,
+                "tokens": 20664,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "native-ranged": {
+                "found": false,
+                "tokens": 6661,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "kopt-pack": {
+                "found": false,
+                "tokens": 961,
+                "fileRecall": 1,
+                "symbolRecall": 0.5
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 882,
+                "fileRecall": 1,
+                "symbolRecall": 0.5
+              }
+            },
+            {
+              "taskId": "sf-explain-retryable",
+              "kind": "explain",
+              "codegraph": {
+                "found": false,
+                "tokens": 8278,
+                "fileRecall": 0.6666666666666666,
+                "symbolRecall": 1
+              },
+              "native-naive": {
+                "found": false,
+                "tokens": 22482,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "native-ranged": {
+                "found": false,
+                "tokens": 7758,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "kopt-pack": {
+                "found": false,
+                "tokens": 2171,
+                "fileRecall": 0.6666666666666666,
+                "symbolRecall": 1
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 1192,
+                "fileRecall": 0.6666666666666666,
+                "symbolRecall": 0.5
+              }
+            },
+            {
+              "taskId": "sf-explain-config-full-lite",
+              "kind": "explain",
+              "codegraph": {
+                "found": false,
+                "tokens": 7704,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "native-naive": {
+                "found": false,
+                "tokens": 43980,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "native-ranged": {
+                "found": false,
+                "tokens": 9556,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "kopt-pack": {
+                "found": false,
+                "tokens": 1547,
+                "fileRecall": 0.6666666666666666,
+                "symbolRecall": 0.75
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 1460,
+                "fileRecall": 0.6666666666666666,
+                "symbolRecall": 0.75
+              }
+            },
+            {
+              "taskId": "sf-explain-exponential-backoff",
+              "kind": "explain",
+              "codegraph": {
+                "found": true,
+                "tokens": 8275,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-naive": {
+                "found": true,
+                "tokens": 13517,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-ranged": {
+                "found": false,
+                "tokens": 7534,
+                "fileRecall": 1,
+                "symbolRecall": 0.75
+              },
+              "kopt-pack": {
+                "found": true,
+                "tokens": 949,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-hits+read": {
+                "found": true,
+                "tokens": 1297,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              }
+            },
+            {
+              "taskId": "sf-usage-fail-early",
+              "kind": "usage",
+              "codegraph": {
+                "found": true,
+                "tokens": 8317,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-naive": {
+                "found": true,
+                "tokens": 19851,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-ranged": {
+                "found": true,
+                "tokens": 4794,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-pack": {
+                "found": true,
+                "tokens": 738,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 864,
+                "fileRecall": 1,
+                "symbolRecall": 0.3333333333333333
+              }
+            },
+            {
+              "taskId": "sf-usage-trigger-flush",
+              "kind": "usage",
+              "codegraph": {
+                "found": true,
+                "tokens": 8306,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-naive": {
+                "found": false,
+                "tokens": 16454,
+                "fileRecall": 1,
+                "symbolRecall": 0.6666666666666666
+              },
+              "native-ranged": {
+                "found": true,
+                "tokens": 6597,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-pack": {
+                "found": true,
+                "tokens": 1062,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 1347,
+                "fileRecall": 1,
+                "symbolRecall": 0.6666666666666666
+              }
+            },
+            {
+              "taskId": "sf-usage-imported-by",
+              "kind": "usage",
+              "codegraph": {
+                "found": false,
+                "tokens": 6417,
+                "fileRecall": 1,
+                "symbolRecall": 0.6666666666666666
+              },
+              "native-naive": {
+                "found": true,
+                "tokens": 26310,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-ranged": {
+                "found": true,
+                "tokens": 3582,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-pack": {
+                "found": false,
+                "tokens": 775,
+                "fileRecall": 0.6666666666666666,
+                "symbolRecall": 1
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 810,
+                "fileRecall": 1,
+                "symbolRecall": 0.3333333333333333
+              }
+            },
+            {
+              "taskId": "sf-usage-lru-drain",
+              "kind": "usage",
+              "codegraph": {
+                "found": true,
+                "tokens": 8320,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-naive": {
+                "found": true,
+                "tokens": 12682,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-ranged": {
+                "found": false,
+                "tokens": 8546,
+                "fileRecall": 1,
+                "symbolRecall": 0.3333333333333333
+              },
+              "kopt-pack": {
+                "found": false,
+                "tokens": 822,
+                "fileRecall": 1,
+                "symbolRecall": 0
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 925,
+                "fileRecall": 1,
+                "symbolRecall": 0
+              }
+            },
+            {
+              "taskId": "sf-impact-shortcut",
+              "kind": "impact",
+              "codegraph": {
+                "found": true,
+                "tokens": 8305,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-naive": {
+                "found": true,
+                "tokens": 47421,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-ranged": {
+                "found": false,
+                "tokens": 7270,
+                "fileRecall": 1,
+                "symbolRecall": 0.6666666666666666
+              },
+              "kopt-pack": {
+                "found": true,
+                "tokens": 374,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 418,
+                "fileRecall": 1,
+                "symbolRecall": 0.3333333333333333
+              }
+            },
+            {
+              "taskId": "sf-impact-primary-conflict",
+              "kind": "impact",
+              "codegraph": {
+                "found": false,
+                "tokens": 6694,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "native-naive": {
+                "found": false,
+                "tokens": 16708,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "native-ranged": {
+                "found": false,
+                "tokens": 7666,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "kopt-pack": {
+                "found": false,
+                "tokens": 998,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              },
+              "kopt-hits+read": {
+                "found": false,
+                "tokens": 1302,
+                "fileRecall": 0,
+                "symbolRecall": 0
+              }
+            },
+            {
+              "taskId": "sf-impact-cleanup-txinfo",
+              "kind": "impact",
+              "codegraph": {
+                "found": true,
+                "tokens": 8325,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-naive": {
+                "found": true,
+                "tokens": 25101,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "native-ranged": {
+                "found": true,
+                "tokens": 9333,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-pack": {
+                "found": true,
+                "tokens": 268,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              },
+              "kopt-hits+read": {
+                "found": true,
+                "tokens": 2277,
+                "fileRecall": 1,
+                "symbolRecall": 1
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

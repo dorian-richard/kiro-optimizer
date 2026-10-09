@@ -1,0 +1,7 @@
+[
+  { "name": "billing-api", "source": { "type": "GITHUB", "owner": "acme", "repo": "billing-api", "branch": "main" } },
+  { "name": "portal", "source": { "type": "GITHUB_ENTERPRISE", "location": "https://ghe.acme.com/web/portal.git", "branch": "main" } },
+  { "name": "payments", "source": { "type": "BITBUCKET", "owner": "acme", "repo": "payments", "branch": "develop" } },
+  { "name": "legacy-erp", "source": { "type": "CODECOMMIT", "repo": "legacy-erp", "branch": "master" }, "computeType": "LARGE", "timeoutMinutes": 120 },
+  { "name": "docs", "source": { "type": "S3", "location": "s3://acme-sources/docs.zip" }, "webhook": false }
+]

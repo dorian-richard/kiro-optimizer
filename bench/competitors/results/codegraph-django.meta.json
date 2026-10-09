@@ -1,0 +1,91 @@
+{
+  "label": "codegraph",
+  "tool": "codegraph",
+  "package": "@colbymchenry/codegraph",
+  "version": "1.6.2",
+  "mode": "default",
+  "repo": {
+    "name": "django",
+    "url": "https://github.com/django/django.git",
+    "tag": "6.1.2",
+    "commit": "2212534bae393714e1e51db2341d4fd5545e19f6",
+    "language": "python",
+    "path": "bench/repos/django"
+  },
+  "headCommit": "2212534bae393714e1e51db2341d4fd5545e19f6",
+  "commitMatchesTasks": true,
+  "date": "2026-10-09T11:11:26.423Z",
+  "container": {
+    "node": "v22.23.3",
+    "arch": "arm64",
+    "platform": "linux",
+    "cpus": 10,
+    "memBytes": 8214851584,
+    "network": "none"
+  },
+  "primaryTool": "codegraph_explore",
+  "toolArgsExample": {
+    "query": "<input>"
+  },
+  "serverCommand": {
+    "command": "codegraph",
+    "args": [
+      "serve",
+      "--mcp"
+    ]
+  },
+  "oneSessionPerTask": true,
+  "indexOk": true,
+  "indexMs": 53211,
+  "indexSteps": [
+    {
+      "command": "codegraph init --yes /work/django",
+      "ms": 53211,
+      "exit": 0,
+      "signal": null
+    }
+  ],
+  "copyMs": 625,
+  "indexDirs": [
+    "<repo>/.codegraph"
+  ],
+  "indexSizeBytes": 180711653,
+  "modelBytes": 0,
+  "indexStatus": "CodeGraph Status\n\nProject: /work/django\n\nIndex Statistics:\n  Files:     3,002\n  Nodes:     62,008\n  Edges:     190,869\n  DB Size:   172.34 MB\n  Backend:   node:sqlite — built-in (full WAL)\n  Journal:   wal\n\nNodes by Kind:\n  method          29,565\n  import          11,475\n  class           11,056\n  function        3,053\n  variable        2,991\n  file            2,980\n  route           835\n  constant        53\n\nFiles by Language:\n  python          2,919\n  javascript      45\n  yaml            22\n  xml             16\n\n✓ Index is up to date",
+  "surface": {
+    "serverInfo": {
+      "name": "codegraph",
+      "version": "1.6.2"
+    },
+    "toolCount": 1,
+    "toolNames": [
+      "codegraph_explore"
+    ],
+    "toolsChars": 1725,
+    "toolsEstTokens": 575,
+    "instructionsChars": 6718,
+    "instructionsEstTokens": 2240,
+    "primaryToolListed": true,
+    "file": "codegraph.surface.json"
+  },
+  "inputs": {
+    "search": {
+      "file": "codegraph-django.jsonl",
+      "tasks": 15,
+      "failures": 0,
+      "queryMsMedian": 192,
+      "queryMsP90": 373,
+      "startupMsMedian": 157
+    },
+    "question": {
+      "file": "codegraph-django-question.jsonl",
+      "tasks": 15,
+      "failures": 0,
+      "queryMsMedian": 400,
+      "queryMsP90": 729,
+      "startupMsMedian": 161
+    }
+  },
+  "charsPerToken": 3,
+  "errors": []
+}

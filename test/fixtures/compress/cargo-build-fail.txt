@@ -1,0 +1,234 @@
+    Updating crates.io index
+     Locking 214 packages to latest compatible versions
+   Compiling proc-macro2 v1.0.86
+   Compiling unicode-ident v1.0.12
+   Compiling libc v0.2.155
+   Compiling cfg-if v1.0.0
+   Compiling autocfg v1.3.0
+   Compiling serde v1.0.204
+   Compiling quote v1.0.36
+   Compiling syn v2.0.72
+   Compiling once_cell v1.19.0
+   Compiling memchr v2.7.4
+   Compiling itoa v1.0.11
+   Compiling ryu v1.0.18
+   Compiling serde_json v1.0.120
+   Compiling tokio v1.39.2
+   Compiling bytes v1.6.1
+   Compiling mio v1.0.1
+   Compiling pin-project-lite v0.2.14
+   Compiling tracing v0.1.40
+   Compiling hyper v1.4.1
+   Compiling axum v0.7.5
+   Compiling sqlx v0.8.0
+   Compiling chrono v0.4.38
+   Compiling uuid v1.10.0
+   Compiling rust_decimal v1.35.0
+   Compiling proc-macro2 v1.0.87
+   Compiling unicode-ident v1.0.13
+   Compiling libc v0.2.156
+   Compiling cfg-if v1.0.1
+   Compiling autocfg v1.3.1
+   Compiling serde v1.0.205
+   Compiling quote v1.0.37
+   Compiling syn v2.0.73
+   Compiling once_cell v1.19.1
+   Compiling memchr v2.7.5
+   Compiling itoa v1.0.12
+   Compiling ryu v1.0.19
+   Compiling serde_json v1.0.121
+   Compiling tokio v1.39.3
+   Compiling bytes v1.6.2
+   Compiling mio v1.0.2
+   Compiling pin-project-lite v0.2.15
+   Compiling tracing v0.1.41
+   Compiling hyper v1.4.2
+   Compiling axum v0.7.6
+   Compiling sqlx v0.8.1
+   Compiling chrono v0.4.39
+   Compiling uuid v1.10.1
+   Compiling rust_decimal v1.35.1
+   Compiling proc-macro2 v1.0.88
+   Compiling unicode-ident v1.0.14
+   Compiling libc v0.2.157
+   Compiling cfg-if v1.0.2
+   Compiling autocfg v1.3.2
+   Compiling serde v1.0.206
+   Compiling quote v1.0.38
+   Compiling syn v2.0.74
+   Compiling once_cell v1.19.2
+   Compiling memchr v2.7.6
+   Compiling itoa v1.0.13
+   Compiling ryu v1.0.20
+   Compiling serde_json v1.0.122
+   Compiling tokio v1.39.4
+   Compiling bytes v1.6.3
+   Compiling mio v1.0.3
+   Compiling pin-project-lite v0.2.16
+   Compiling tracing v0.1.42
+   Compiling hyper v1.4.3
+   Compiling axum v0.7.7
+   Compiling sqlx v0.8.2
+   Compiling chrono v0.4.40
+   Compiling uuid v1.10.2
+   Compiling rust_decimal v1.35.2
+   Compiling proc-macro2 v1.0.89
+   Compiling unicode-ident v1.0.15
+   Compiling libc v0.2.158
+   Compiling cfg-if v1.0.3
+   Compiling autocfg v1.3.3
+   Compiling serde v1.0.207
+   Compiling quote v1.0.39
+   Compiling syn v2.0.75
+   Compiling once_cell v1.19.3
+   Compiling memchr v2.7.7
+   Compiling itoa v1.0.14
+   Compiling ryu v1.0.21
+   Compiling serde_json v1.0.123
+   Compiling tokio v1.39.5
+   Compiling bytes v1.6.4
+   Compiling mio v1.0.4
+   Compiling pin-project-lite v0.2.17
+   Compiling tracing v0.1.43
+   Compiling hyper v1.4.4
+   Compiling axum v0.7.8
+   Compiling sqlx v0.8.3
+   Compiling chrono v0.4.41
+   Compiling uuid v1.10.3
+   Compiling rust_decimal v1.35.3
+   Compiling proc-macro2 v1.0.90
+   Compiling unicode-ident v1.0.16
+   Compiling libc v0.2.159
+   Compiling cfg-if v1.0.4
+   Compiling autocfg v1.3.4
+   Compiling serde v1.0.208
+   Compiling quote v1.0.40
+   Compiling syn v2.0.76
+   Compiling once_cell v1.19.4
+   Compiling memchr v2.7.8
+   Compiling itoa v1.0.15
+   Compiling ryu v1.0.22
+   Compiling serde_json v1.0.124
+   Compiling tokio v1.39.6
+   Compiling bytes v1.6.5
+   Compiling mio v1.0.5
+   Compiling pin-project-lite v0.2.18
+   Compiling tracing v0.1.44
+   Compiling hyper v1.4.5
+   Compiling axum v0.7.9
+   Compiling sqlx v0.8.4
+   Compiling chrono v0.4.42
+   Compiling uuid v1.10.4
+   Compiling rust_decimal v1.35.4
+   Compiling proc-macro2 v1.0.91
+   Compiling unicode-ident v1.0.17
+   Compiling libc v0.2.160
+   Compiling cfg-if v1.0.5
+   Compiling autocfg v1.3.5
+   Compiling serde v1.0.209
+   Compiling quote v1.0.41
+   Compiling syn v2.0.77
+   Compiling once_cell v1.19.5
+   Compiling memchr v2.7.9
+   Compiling itoa v1.0.16
+   Compiling ryu v1.0.23
+   Compiling serde_json v1.0.125
+   Compiling tokio v1.39.7
+   Compiling bytes v1.6.6
+   Compiling mio v1.0.6
+   Compiling pin-project-lite v0.2.19
+   Compiling tracing v0.1.45
+   Compiling hyper v1.4.6
+   Compiling axum v0.7.10
+   Compiling sqlx v0.8.5
+   Compiling chrono v0.4.43
+   Compiling uuid v1.10.5
+   Compiling rust_decimal v1.35.5
+   Compiling proc-macro2 v1.0.92
+   Compiling unicode-ident v1.0.18
+   Compiling libc v0.2.161
+   Compiling cfg-if v1.0.6
+   Compiling autocfg v1.3.6
+   Compiling serde v1.0.210
+   Compiling quote v1.0.42
+   Compiling syn v2.0.78
+   Compiling once_cell v1.19.6
+   Compiling memchr v2.7.10
+   Compiling itoa v1.0.17
+   Compiling ryu v1.0.24
+   Compiling serde_json v1.0.126
+   Compiling tokio v1.39.8
+   Compiling bytes v1.6.7
+   Compiling mio v1.0.7
+   Compiling pin-project-lite v0.2.20
+   Compiling tracing v0.1.46
+   Compiling hyper v1.4.7
+   Compiling axum v0.7.11
+   Compiling sqlx v0.8.6
+   Compiling chrono v0.4.44
+   Compiling uuid v1.10.6
+   Compiling rust_decimal v1.35.6
+   Compiling proc-macro2 v1.0.93
+   Compiling unicode-ident v1.0.19
+   Compiling libc v0.2.162
+   Compiling cfg-if v1.0.7
+   Compiling autocfg v1.3.7
+   Compiling serde v1.0.211
+   Compiling quote v1.0.43
+   Compiling syn v2.0.79
+   Compiling once_cell v1.19.7
+   Compiling memchr v2.7.11
+   Compiling itoa v1.0.18
+   Compiling ryu v1.0.25
+   Compiling serde_json v1.0.127
+   Compiling tokio v1.39.9
+   Compiling bytes v1.6.8
+   Compiling mio v1.0.8
+   Compiling pin-project-lite v0.2.21
+   Compiling tracing v0.1.47
+   Compiling hyper v1.4.8
+   Compiling axum v0.7.12
+   Compiling sqlx v0.8.7
+   Compiling chrono v0.4.45
+   Compiling uuid v1.10.7
+   Compiling rust_decimal v1.35.7
+   Compiling shop v0.4.0 (/home/dev/shop)
+warning: unused variable: `fee`
+  --> src/refund.rs:31:9
+   |
+31 |     let fee = policy.fee(order);
+   |         ^^^ help: if this is intentional, prefix it with an underscore: `_fee`
+   |
+   = note: `#[warn(unused_variables)]` on by default
+
+warning: unused import: `std::collections::HashMap`
+ --> src/cart.rs:3:5
+  |
+3 | use std::collections::HashMap;
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+error[E0425]: cannot find function `compute_total` in this scope
+  --> src/order.rs:42:17
+   |
+42 |     let total = compute_total(&items);
+   |                 ^^^^^^^^^^^^^ not found in this scope
+   |
+help: consider importing this function
+   |
+1  + use crate::pricing::compute_total;
+   |
+
+error[E0308]: mismatched types
+  --> src/order.rs:57:20
+   |
+57 |     order.quantity = req.quantity;
+   |     --------------   ^^^^^^^^^^^^ expected `u32`, found `String`
+   |     |
+   |     expected due to the type of this binding
+
+Some errors have detailed explanations: E0308, E0425.
+For more information about an error, try `rustc --explain E0308`.
+warning: `shop` (lib) generated 2 warnings
+error: could not compile `shop` (lib) due to 2 previous errors; 2 warnings emitted

@@ -1,0 +1,213 @@
+{
+  "repo": {
+    "name": "laravel",
+    "url": "https://github.com/laravel/framework.git",
+    "tag": "v13.35.0",
+    "commit": "a413a9da94884e5e9d58f4e6612884f712827804",
+    "language": "php",
+    "path": "bench/repos/laravel"
+  },
+  "notes": "Gold = framework sources only (src/), tests excluded. Facade @method docblocks are not callers. Several tasks target recent components (Image, Concurrency, Http client batches, cache failover, Cache::flexible) rather than famous internals. `search` is the phrase an agent would derive from the question (English, no identifier the developer did not give). Re-check with `kopt bench laravel --verify`.",
+  "tasks": [
+    {
+      "id": "lv-locate-cache-flexible",
+      "kind": "locate",
+      "lang": "en",
+      "question": "Where does the cache return a stale value while refreshing it in the background after the response is sent, with a lock so that only one refresh runs (stale-while-revalidate)?",
+      "search": "cache stale value refresh background after response lock",
+      "gold": {
+        "files": ["src/Illuminate/Cache/Repository.php", "src/Illuminate/Support/functions.php"],
+        "symbols": [
+          { "name": "flexible", "file": "src/Illuminate/Cache/Repository.php", "line": 652, "kind": "method" },
+          { "name": "defer", "file": "src/Illuminate/Support/functions.php", "line": 21, "kind": "function" }
+        ]
+      },
+      "verifiedBy": "Read @v13.35.0: Repository::flexible reads the value and its illuminate:cache:flexible:created: timestamp, returns the value while fresh, otherwise schedules a refresh closure (guarded by store->lock(...)->get and a created-timestamp check) through Illuminate\\Support\\defer (imported with `use function`), which queues a DeferredCallback run after the response."
+    },
+    {
+      "id": "lv-locate-image-processing",
+      "kind": "locate",
+      "lang": "en",
+      "question": "When an `Illuminate\\Image\\Image` is turned into bytes, where are the queued transformations (cover, blur, rotate...) actually applied, and how can a custom transformation handler be registered for a driver?",
+      "search": "Image toBytes transformations applied driver custom transformation handler",
+      "gold": {
+        "files": ["src/Illuminate/Image/Image.php", "src/Illuminate/Image/Drivers/InterventionDriver.php", "src/Illuminate/Image/ImageManager.php"],
+        "symbols": [
+          { "name": "toBytes", "file": "src/Illuminate/Image/Image.php", "line": 413, "kind": "method" },
+          { "name": "process", "file": "src/Illuminate/Image/Drivers/InterventionDriver.php", "line": 79, "kind": "method" },
+          { "name": "transformationHandlerFor", "file": "src/Illuminate/Image/Drivers/InterventionDriver.php", "line": 216, "kind": "method" },
+          { "name": "transformUsing", "file": "src/Illuminate/Image/ImageManager.php", "line": 142, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read src/Illuminate/Image@v13.35.0: Image::toBytes calls resolveDriver()->process(contents, pipeline) once; InterventionDriver::process decodes, then for each transformation uses transformationHandlerFor (handlers registered via ImageManager::transformUsing(driver, class, callback)) or a built-in match (Cover, Contain, Crop...), then encodes."
+    },
+    {
+      "id": "lv-locate-pwned",
+      "kind": "locate",
+      "lang": "en",
+      "question": "Where does password validation check whether a password appeared in a known data breach (Have I Been Pwned range API with a hashed prefix)?",
+      "search": "password validation data breach pwned range api hash prefix",
+      "gold": {
+        "files": ["src/Illuminate/Validation/NotPwnedVerifier.php", "src/Illuminate/Validation/Rules/Password.php"],
+        "symbols": [
+          { "name": "verify", "file": "src/Illuminate/Validation/NotPwnedVerifier.php", "line": 43, "kind": "method" },
+          { "name": "search", "file": "src/Illuminate/Validation/NotPwnedVerifier.php", "line": 83, "kind": "method" },
+          { "name": "passes", "file": "src/Illuminate/Validation/Rules/Password.php", "line": 336, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read @v13.35.0: Password::passes (uncompromised option) resolves UncompromisedVerifier (bound to NotPwnedVerifier) and calls verify(); NotPwnedVerifier::verify upper-cases sha1, sends the 5-char prefix through search() to https://api.pwnedpasswords.com/range/ and compares suffix counts with the threshold."
+    },
+    {
+      "id": "lv-locate-cache-failover",
+      "kind": "locate",
+      "lang": "en",
+      "question": "Where does `FailoverStore` try the next cache store when one throws, and when is the `CacheFailedOver` event dispatched?",
+      "search": "FailoverStore next cache store failed CacheFailedOver event",
+      "gold": {
+        "files": ["src/Illuminate/Cache/FailoverStore.php", "src/Illuminate/Cache/Events/CacheFailedOver.php"],
+        "symbols": [
+          { "name": "attemptOnAllStores", "file": "src/Illuminate/Cache/FailoverStore.php", "line": 252, "kind": "method" },
+          { "name": "FailoverStore", "file": "src/Illuminate/Cache/FailoverStore.php", "line": 12, "kind": "class" },
+          { "name": "CacheFailedOver", "file": "src/Illuminate/Cache/Events/CacheFailedOver.php", "line": 7, "kind": "class" }
+        ]
+      },
+      "verifiedBy": "Read FailoverStore.php@v13.35.0: every operation goes through attemptOnAllStores, which calls the method on each configured store in order, records failing stores, dispatches CacheFailedOver only for a store that was not already failing, and rethrows the last exception when all fail."
+    },
+    {
+      "id": "lv-explain-http-batch",
+      "kind": "explain",
+      "lang": "en",
+      "question": "How does `Http::batch()` send several requests concurrently, cap the concurrency, and call the progress, catch, then and finally callbacks?",
+      "search": "http client batch concurrent requests concurrency progress catch then finally",
+      "gold": {
+        "files": ["src/Illuminate/Http/Client/Batch.php"],
+        "symbols": [
+          { "name": "send", "file": "src/Illuminate/Http/Client/Batch.php", "line": 265, "kind": "method" },
+          { "name": "concurrency", "file": "src/Illuminate/Http/Client/Batch.php", "line": 243, "kind": "method" },
+          { "name": "hasFailures", "file": "src/Illuminate/Http/Client/Batch.php", "line": 413, "kind": "method" },
+          { "name": "incrementFailedRequests", "file": "src/Illuminate/Http/Client/Batch.php", "line": 423, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read Batch.php@v13.35.0: send() wraps request promises in a Guzzle EachPromise (with 'concurrency' when concurrency() was set); fulfilled/rejected handlers call the progress or catch callbacks and incrementFailedRequests; results are re-sorted in request order, then() runs only if !hasFailures(), finally() always."
+    },
+    {
+      "id": "lv-explain-concurrency",
+      "kind": "explain",
+      "lang": "en",
+      "question": "How does `Concurrency::run()` with the process driver execute closures in parallel child processes and get their return values (or exceptions) back?",
+      "search": "concurrency run closures parallel child processes results",
+      "gold": {
+        "files": ["src/Illuminate/Concurrency/ProcessDriver.php", "src/Illuminate/Concurrency/Console/InvokeSerializedClosureCommand.php"],
+        "symbols": [
+          { "name": "run", "file": "src/Illuminate/Concurrency/ProcessDriver.php", "line": 34, "kind": "method" },
+          { "name": "defer", "file": "src/Illuminate/Concurrency/ProcessDriver.php", "line": 82, "kind": "method" },
+          { "name": "InvokeSerializedClosureCommand", "file": "src/Illuminate/Concurrency/Console/InvokeSerializedClosureCommand.php", "line": 11, "kind": "class" },
+          { "name": "handle", "file": "src/Illuminate/Concurrency/Console/InvokeSerializedClosureCommand.php", "line": 41, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read @v13.35.0: ProcessDriver::run starts a process pool of `artisan invoke-serialized-closure` commands with LARAVEL_INVOKABLE_CLOSURE (base64 serialized SerializableClosure) and the dehydrated Context in env, then json_decodes each output; InvokeSerializedClosureCommand::handle runs the closure and writes {successful, result | exception, message, parameters}; run() rethrows failures."
+    },
+    {
+      "id": "lv-explain-throttles-exceptions",
+      "kind": "explain",
+      "lang": "en",
+      "question": "How does the `ThrottlesExceptions` job middleware decide whether to release, delete or fail a job after an exception, and how long the job waits before the next attempt?",
+      "search": "ThrottlesExceptions job middleware release delete fail retry delay",
+      "gold": {
+        "files": ["src/Illuminate/Queue/Middleware/ThrottlesExceptions.php"],
+        "symbols": [
+          { "name": "handle", "file": "src/Illuminate/Queue/Middleware/ThrottlesExceptions.php", "line": 110, "kind": "method" },
+          { "name": "shouldDelete", "file": "src/Illuminate/Queue/Middleware/ThrottlesExceptions.php", "line": 194, "kind": "method" },
+          { "name": "shouldFail", "file": "src/Illuminate/Queue/Middleware/ThrottlesExceptions.php", "line": 205, "kind": "method" },
+          { "name": "getTimeUntilNextRetryAfterException", "file": "src/Illuminate/Queue/Middleware/ThrottlesExceptions.php", "line": 242, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read ThrottlesExceptions.php@v13.35.0: handle() releases immediately when the RateLimiter has too many attempts (getTimeUntilNextRetry), clears the key on success, and on exception honours when/report callbacks, deletes (shouldDelete) or fails (shouldFail) the job, else hits the limiter and releases after getTimeUntilNextRetryAfterException (backoff)."
+    },
+    {
+      "id": "lv-usage-image-driver",
+      "kind": "usage",
+      "lang": "en",
+      "question": "Which methods of `Illuminate\\Image\\Image` call `resolveDriver()`?",
+      "search": "Image resolveDriver",
+      "gold": {
+        "files": ["src/Illuminate/Image/Image.php"],
+        "symbols": [
+          { "name": "toBytes", "file": "src/Illuminate/Image/Image.php", "line": 413, "kind": "method" },
+          { "name": "dimensions", "file": "src/Illuminate/Image/Image.php", "line": 483, "kind": "method" },
+          { "name": "dominantColor", "file": "src/Illuminate/Image/Image.php", "line": 526, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "git grep -w resolveDriver src/Illuminate/Image@v13.35.0: defined Image.php:570; called at 417 (toBytes), 491 (dimensions) and 532/535 (dominantColor). BroadcastingInstallCommand has an unrelated resolveDriver."
+    },
+    {
+      "id": "lv-usage-fail-job",
+      "kind": "usage",
+      "lang": "en",
+      "question": "Which methods of the queue `Worker` call `failJob`?",
+      "search": "Queue Worker failJob",
+      "gold": {
+        "files": ["src/Illuminate/Queue/Worker.php"],
+        "symbols": [
+          { "name": "markJobAsFailedIfAlreadyExceedsMaxAttempts", "file": "src/Illuminate/Queue/Worker.php", "line": 721, "kind": "method" },
+          { "name": "markJobAsFailedIfWillExceedMaxAttempts", "file": "src/Illuminate/Queue/Worker.php", "line": 781, "kind": "method" },
+          { "name": "markJobAsFailedIfWillExceedMaxExceptions", "file": "src/Illuminate/Queue/Worker.php", "line": 802, "kind": "method" },
+          { "name": "markJobAsFailedIfItShouldntBeRetried", "file": "src/Illuminate/Queue/Worker.php", "line": 828, "kind": "method" },
+          { "name": "markJobAsFailedIfItShouldFailOnTimeout", "file": "src/Illuminate/Queue/Worker.php", "line": 843, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "git grep 'failJob(' src@v13.35.0: Worker::failJob defined at 857; called at 735, 786/790, 816, 831 and 846, inside the five markJobAsFailedIf* methods listed (enclosing methods checked by reading Worker.php)."
+    },
+    {
+      "id": "lv-usage-batch-record",
+      "kind": "usage",
+      "lang": "en",
+      "question": "Where does the queue record a batched job's success or failure on its Bus `Batch` (`recordSuccessfulJob` / `recordFailedJob`)?",
+      "search": "recordSuccessfulJob recordFailedJob batch",
+      "gold": {
+        "files": ["src/Illuminate/Queue/CallQueuedHandler.php"],
+        "symbols": [
+          { "name": "ensureSuccessfulBatchJobIsRecorded", "file": "src/Illuminate/Queue/CallQueuedHandler.php", "line": 218, "kind": "method" },
+          { "name": "ensureSuccessfulBatchJobIsRecordedForMissingModel", "file": "src/Illuminate/Queue/CallQueuedHandler.php", "line": 381, "kind": "method" },
+          { "name": "ensureFailedBatchJobIsRecorded", "file": "src/Illuminate/Queue/CallQueuedHandler.php", "line": 446, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "git grep 'recordSuccessfulJob(\\|recordFailedJob(' src@v13.35.0 (definitions in Bus/Batch.php excluded): CallQueuedHandler.php:227 (ensureSuccessfulBatchJobIsRecorded), 399 (ensureSuccessfulBatchJobIsRecordedForMissingModel), 453 (ensureFailedBatchJobIsRecorded)."
+    },
+    {
+      "id": "lv-impact-max-exceptions",
+      "kind": "impact",
+      "lang": "en",
+      "question": "If `Worker::markJobAsFailedIfWillExceedMaxExceptions` needed an extra argument, which worker code paths would have to change?",
+      "search": "Worker markJobAsFailedIfWillExceedMaxExceptions",
+      "gold": {
+        "files": ["src/Illuminate/Queue/Worker.php"],
+        "symbols": [
+          { "name": "markJobAsFailedIfWillExceedMaxExceptions", "file": "src/Illuminate/Queue/Worker.php", "line": 802, "kind": "method" },
+          { "name": "registerTimeoutHandler", "file": "src/Illuminate/Queue/Worker.php", "line": 319, "kind": "method" },
+          { "name": "handleJobException", "file": "src/Illuminate/Queue/Worker.php", "line": 668, "kind": "method" },
+          { "name": "markJobAsFailedIfAlreadyExceedsMaxExceptions", "file": "src/Illuminate/Queue/Worker.php", "line": 751, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "git grep 'markJobAsFailedIfWillExceedMaxExceptions(' src@v13.35.0: defined Worker.php:802; called at 336 (timeout closure in registerTimeoutHandler), 679 (handleJobException) and 763 (markJobAsFailedIfAlreadyExceedsMaxExceptions)."
+    },
+    {
+      "id": "lv-impact-flexible-prefix",
+      "kind": "impact",
+      "lang": "en",
+      "question": "If the key prefix `Repository::FLEXIBLE_CREATED_KEY_PREFIX` used by `Cache::flexible` changed, which cache code would be affected?",
+      "search": "FLEXIBLE_CREATED_KEY_PREFIX cache flexible",
+      "gold": {
+        "files": ["src/Illuminate/Cache/Repository.php", "src/Illuminate/Cache/DatabaseStore.php", "src/Illuminate/Cache/FileStore.php"],
+        "symbols": [
+          { "name": "FLEXIBLE_CREATED_KEY_PREFIX", "file": "src/Illuminate/Cache/Repository.php", "line": 55, "kind": "constant" },
+          { "name": "flexible", "file": "src/Illuminate/Cache/Repository.php", "line": 652, "kind": "method" },
+          { "name": "forgetMany", "file": "src/Illuminate/Cache/DatabaseStore.php", "line": 410, "kind": "method" },
+          { "name": "forgetManyIfExpired", "file": "src/Illuminate/Cache/DatabaseStore.php", "line": 427, "kind": "method" },
+          { "name": "forget", "file": "src/Illuminate/Cache/FileStore.php", "line": 325, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "git grep FLEXIBLE_CREATED_KEY_PREFIX src@v13.35.0: defined Repository.php:55, used by Repository::flexible (658-684), DatabaseStore::forgetMany (414), DatabaseStore::forgetManyIfExpired (432, 435) and FileStore::forget (329) to also remove the companion created-at entry."
+    }
+  ]
+}

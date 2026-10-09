@@ -1,0 +1,549 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.9, pytest-8.2.1, pluggy-1.5.0 -- /home/dev/shop/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/dev/shop
+configfile: pyproject.toml
+testpaths: tests
+plugins: cov-5.0.0, asyncio-0.23.7, mock-3.14.0, xdist-3.6.1
+asyncio: mode=Mode.STRICT
+collecting ... collected 380 items
+
+tests/cart/test_cart.py::test_paginates_rounding_0 PASSED                 [  0%]
+tests/orders/test_orders.py::test_rejects_invoice_1 PASSED                [  0%]
+tests/refunds/test_refunds.py::test_creates_batch_2 PASSED                [  0%]
+tests/payments/test_payments.py::test_parses_rounding_3 PASSED            [  1%]
+tests/invoices/test_invoices.py::test_updates_address_4 PASSED            [  1%]
+tests/customers/test_customers.py::test_deletes_token_5 PASSED            [  1%]
+tests/catalog/test_catalog.py::test_caches_timeout_6 PASSED               [  1%]
+tests/inventory/test_inventory.py::test_retries_timeout_7 PASSED          [  2%]
+tests/shipping/test_shipping.py::test_formats_discount_8 PASSED           [  2%]
+tests/auth/test_auth.py::test_deletes_timeout_9 PASSED                    [  2%]
+tests/pricing/test_pricing.py::test_paginates_page_10 PASSED              [  2%]
+tests/tax/test_tax.py::test_formats_rounding_11 PASSED                    [  3%]
+tests/discounts/test_discounts.py::test_retries_payload_12 PASSED         [  3%]
+tests/reports/test_reports.py::test_paginates_batch_13 PASSED             [  3%]
+tests/webhooks/test_webhooks.py::test_creates_page_14 PASSED              [  3%]
+tests/notifications/test_notifications.py::test_formats_order_15 PASSED   [  4%]
+tests/cart/test_cart.py::test_validates_timeout_16 PASSED                 [  4%]
+tests/orders/test_orders.py::test_serializes_payload_17 PASSED            [  4%]
+tests/refunds/test_refunds.py::test_rejects_refund_18 PASSED              [  5%]
+tests/payments/test_payments.py::test_lists_timeout_19 PASSED             [  5%]
+tests/invoices/test_invoices.py::test_parses_total_20 PASSED              [  5%]
+tests/customers/test_customers.py::test_handles_refund_21 PASSED          [  5%]
+tests/catalog/test_catalog.py::test_creates_invoice_22 PASSED             [  6%]
+tests/inventory/test_inventory.py::test_lists_refund_23 PASSED            [  6%]
+tests/shipping/test_shipping.py::test_rejects_total_24 PASSED             [  6%]
+tests/auth/test_auth.py::test_creates_invoice_25 PASSED                   [  6%]
+tests/pricing/test_pricing.py::test_formats_timeout_26 PASSED             [  7%]
+tests/tax/test_tax.py::test_creates_total_27 PASSED                       [  7%]
+tests/discounts/test_discounts.py::test_updates_order_28 PASSED           [  7%]
+tests/reports/test_reports.py::test_formats_invoice_29 PASSED             [  7%]
+tests/webhooks/test_webhooks.py::test_rejects_refund_30 PASSED            [  8%]
+tests/notifications/test_notifications.py::test_lists_rounding_31 PASSED  [  8%]
+tests/cart/test_cart.py::test_computes_customer_32 PASSED                 [  8%]
+tests/orders/test_orders.py::test_updates_item_33 PASSED                  [  8%]
+tests/refunds/test_refunds.py::test_deletes_total_34 PASSED               [  9%]
+tests/payments/test_payments.py::test_updates_address_35 PASSED           [  9%]
+tests/invoices/test_invoices.py::test_deletes_rounding_36 PASSED          [  9%]
+tests/customers/test_customers.py::test_updates_currency_37 PASSED        [ 10%]
+tests/catalog/test_catalog.py::test_updates_invoice_38 PASSED             [ 10%]
+tests/inventory/test_inventory.py::test_lists_invoice_39 PASSED           [ 10%]
+tests/shipping/test_shipping.py::test_validates_item_40 PASSED            [ 10%]
+tests/refunds/test_refunds.py::test_refund_partial FAILED                 [ 11%]
+tests/pricing/test_pricing.py::test_lists_invoice_42 PASSED               [ 11%]
+tests/tax/test_tax.py::test_caches_discount_43 PASSED                     [ 11%]
+tests/discounts/test_discounts.py::test_deletes_address_44 PASSED         [ 11%]
+tests/reports/test_reports.py::test_creates_currency_45 PASSED            [ 12%]
+tests/webhooks/test_webhooks.py::test_updates_page_46 PASSED              [ 12%]
+tests/notifications/test_notifications.py::test_paginates_invoice_47 PASSED [ 12%]
+tests/cart/test_cart.py::test_handles_order_48 PASSED                     [ 12%]
+tests/orders/test_orders.py::test_retries_page_49 PASSED                  [ 13%]
+tests/refunds/test_refunds.py::test_updates_token_50 PASSED               [ 13%]
+tests/payments/test_payments.py::test_updates_token_51 PASSED             [ 13%]
+tests/invoices/test_invoices.py::test_retries_refund_52 PASSED            [ 13%]
+tests/customers/test_customers.py::test_creates_batch_53 PASSED           [ 14%]
+tests/catalog/test_catalog.py::test_caches_timeout_54 PASSED              [ 14%]
+tests/inventory/test_inventory.py::test_validates_total_55 PASSED         [ 14%]
+tests/shipping/test_shipping.py::test_lists_refund_56 PASSED              [ 15%]
+tests/auth/test_auth.py::test_deletes_order_57 PASSED                     [ 15%]
+tests/pricing/test_pricing.py::test_retries_token_58 PASSED               [ 15%]
+tests/tax/test_tax.py::test_deletes_payload_59 PASSED                     [ 15%]
+tests/discounts/test_discounts.py::test_rejects_rounding_60 PASSED        [ 16%]
+tests/reports/test_reports.py::test_updates_rounding_61 PASSED            [ 16%]
+tests/webhooks/test_webhooks.py::test_formats_timeout_62 PASSED           [ 16%]
+tests/notifications/test_notifications.py::test_lists_customer_63 PASSED  [ 16%]
+tests/cart/test_cart.py::test_retries_total_64 PASSED                     [ 17%]
+tests/orders/test_orders.py::test_caches_batch_65 PASSED                  [ 17%]
+tests/refunds/test_refunds.py::test_lists_customer_66 PASSED              [ 17%]
+tests/payments/test_payments.py::test_handles_token_67 PASSED             [ 17%]
+tests/invoices/test_invoices.py::test_creates_rounding_68 PASSED          [ 18%]
+tests/customers/test_customers.py::test_handles_item_69 PASSED            [ 18%]
+tests/catalog/test_catalog.py::test_updates_discount_70 PASSED            [ 18%]
+tests/inventory/test_inventory.py::test_creates_order_71 PASSED           [ 18%]
+tests/shipping/test_shipping.py::test_computes_item_72 PASSED             [ 19%]
+tests/auth/test_auth.py::test_lists_discount_73 PASSED                    [ 19%]
+tests/pricing/test_pricing.py::test_retries_address_74 PASSED             [ 19%]
+tests/tax/test_tax.py::test_parses_invoice_75 PASSED                      [ 20%]
+tests/discounts/test_discounts.py::test_parses_invoice_76 PASSED          [ 20%]
+tests/reports/test_reports.py::test_computes_token_77 PASSED              [ 20%]
+tests/webhooks/test_webhooks.py::test_formats_invoice_78 PASSED           [ 20%]
+tests/notifications/test_notifications.py::test_lists_token_79 PASSED     [ 21%]
+tests/cart/test_cart.py::test_paginates_currency_80 PASSED                [ 21%]
+tests/orders/test_orders.py::test_lists_discount_81 PASSED                [ 21%]
+tests/refunds/test_refunds.py::test_parses_total_82 PASSED                [ 21%]
+tests/payments/test_payments.py::test_creates_payload_83 PASSED           [ 22%]
+tests/invoices/test_invoices.py::test_deletes_invoice_84 PASSED           [ 22%]
+tests/customers/test_customers.py::test_formats_item_85 PASSED            [ 22%]
+tests/catalog/test_catalog.py::test_paginates_refund_86 PASSED            [ 22%]
+tests/inventory/test_inventory.py::test_rejects_currency_87 PASSED        [ 23%]
+tests/shipping/test_shipping.py::test_paginates_batch_88 PASSED           [ 23%]
+tests/auth/test_auth.py::test_handles_page_89 PASSED                      [ 23%]
+tests/pricing/test_pricing.py::test_creates_total_90 PASSED               [ 23%]
+tests/tax/test_tax.py::test_updates_currency_91 PASSED                    [ 24%]
+tests/discounts/test_discounts.py::test_updates_customer_92 PASSED        [ 24%]
+tests/reports/test_reports.py::test_updates_rounding_93 PASSED            [ 24%]
+tests/webhooks/test_webhooks.py::test_updates_payload_94 PASSED           [ 25%]
+tests/notifications/test_notifications.py::test_parses_discount_95 PASSED [ 25%]
+tests/cart/test_cart.py::test_serializes_payload_96 PASSED                [ 25%]
+tests/orders/test_orders.py::test_parses_invoice_97 PASSED                [ 25%]
+tests/refunds/test_refunds.py::test_computes_order_98 PASSED              [ 26%]
+tests/payments/test_payments.py::test_formats_item_99 PASSED              [ 26%]
+tests/invoices/test_invoices.py::test_rejects_total_100 PASSED            [ 26%]
+tests/customers/test_customers.py::test_deletes_discount_101 PASSED       [ 26%]
+tests/catalog/test_catalog.py::test_updates_page_102 PASSED               [ 27%]
+tests/inventory/test_inventory.py::test_caches_token_103 PASSED           [ 27%]
+tests/shipping/test_shipping.py::test_paginates_token_104 PASSED          [ 27%]
+tests/auth/test_auth.py::test_computes_page_105 PASSED                    [ 27%]
+tests/pricing/test_pricing.py::test_paginates_currency_106 PASSED         [ 28%]
+tests/tax/test_tax.py::test_retries_refund_107 PASSED                     [ 28%]
+tests/discounts/test_discounts.py::test_validates_address_108 PASSED      [ 28%]
+tests/reports/test_reports.py::test_updates_batch_109 PASSED              [ 28%]
+tests/webhooks/test_webhooks.py::test_deletes_currency_110 PASSED         [ 29%]
+tests/notifications/test_notifications.py::test_parses_discount_111 PASSED [ 29%]
+tests/cart/test_cart.py::test_rejects_batch_112 PASSED                    [ 29%]
+tests/orders/test_orders.py::test_updates_batch_113 PASSED                [ 30%]
+tests/refunds/test_refunds.py::test_computes_refund_114 PASSED            [ 30%]
+tests/payments/test_payments.py::test_validates_address_115 PASSED        [ 30%]
+tests/invoices/test_invoices.py::test_handles_address_116 PASSED          [ 30%]
+tests/customers/test_customers.py::test_rejects_discount_117 PASSED       [ 31%]
+tests/catalog/test_catalog.py::test_handles_item_118 PASSED               [ 31%]
+tests/inventory/test_inventory.py::test_paginates_discount_119 PASSED     [ 31%]
+tests/api/test_api.py::test_create_order FAILED                           [ 31%]
+tests/auth/test_auth.py::test_caches_total_121 PASSED                     [ 32%]
+tests/pricing/test_pricing.py::test_parses_page_122 PASSED                [ 32%]
+tests/tax/test_tax.py::test_deletes_token_123 PASSED                      [ 32%]
+tests/discounts/test_discounts.py::test_parses_payload_124 PASSED         [ 32%]
+tests/reports/test_reports.py::test_creates_refund_125 PASSED             [ 33%]
+tests/webhooks/test_webhooks.py::test_validates_payload_126 PASSED        [ 33%]
+tests/notifications/test_notifications.py::test_updates_batch_127 PASSED  [ 33%]
+tests/cart/test_cart.py::test_retries_token_128 PASSED                    [ 33%]
+tests/orders/test_orders.py::test_retries_address_129 PASSED              [ 34%]
+tests/refunds/test_refunds.py::test_serializes_address_130 PASSED         [ 34%]
+tests/payments/test_payments.py::test_creates_invoice_131 PASSED          [ 34%]
+tests/invoices/test_invoices.py::test_caches_invoice_132 PASSED           [ 35%]
+tests/customers/test_customers.py::test_retries_batch_133 PASSED          [ 35%]
+tests/catalog/test_catalog.py::test_formats_order_134 PASSED              [ 35%]
+tests/inventory/test_inventory.py::test_rejects_currency_135 PASSED       [ 35%]
+tests/shipping/test_shipping.py::test_updates_refund_136 PASSED           [ 36%]
+tests/auth/test_auth.py::test_retries_item_137 PASSED                     [ 36%]
+tests/pricing/test_pricing.py::test_computes_currency_138 PASSED          [ 36%]
+tests/tax/test_tax.py::test_deletes_payload_139 PASSED                    [ 36%]
+tests/discounts/test_discounts.py::test_updates_refund_140 PASSED         [ 37%]
+tests/reports/test_reports.py::test_formats_discount_141 PASSED           [ 37%]
+tests/webhooks/test_webhooks.py::test_creates_timeout_142 PASSED          [ 37%]
+tests/notifications/test_notifications.py::test_computes_payload_143 PASSED [ 37%]
+tests/cart/test_cart.py::test_lists_page_144 PASSED                       [ 38%]
+tests/orders/test_orders.py::test_lists_invoice_145 PASSED                [ 38%]
+tests/refunds/test_refunds.py::test_formats_page_146 PASSED               [ 38%]
+tests/payments/test_payments.py::test_validates_rounding_147 PASSED       [ 38%]
+tests/invoices/test_invoices.py::test_lists_refund_148 PASSED             [ 39%]
+tests/customers/test_customers.py::test_serializes_order_149 PASSED       [ 39%]
+tests/catalog/test_catalog.py::test_validates_invoice_150 PASSED          [ 39%]
+tests/inventory/test_inventory.py::test_rejects_batch_151 PASSED          [ 40%]
+tests/shipping/test_shipping.py::test_serializes_order_152 PASSED         [ 40%]
+tests/auth/test_auth.py::test_handles_page_153 PASSED                     [ 40%]
+tests/pricing/test_pricing.py::test_paginates_total_154 PASSED            [ 40%]
+tests/tax/test_tax.py::test_rejects_batch_155 PASSED                      [ 41%]
+tests/discounts/test_discounts.py::test_paginates_currency_156 PASSED     [ 41%]
+tests/reports/test_reports.py::test_caches_currency_157 PASSED            [ 41%]
+tests/webhooks/test_webhooks.py::test_deletes_order_158 PASSED            [ 41%]
+tests/notifications/test_notifications.py::test_computes_customer_159 PASSED [ 42%]
+tests/cart/test_cart.py::test_creates_total_160 PASSED                    [ 42%]
+tests/orders/test_orders.py::test_parses_customer_161 PASSED              [ 42%]
+tests/refunds/test_refunds.py::test_creates_currency_162 PASSED           [ 42%]
+tests/payments/test_payments.py::test_validates_refund_163 PASSED         [ 43%]
+tests/invoices/test_invoices.py::test_paginates_refund_164 PASSED         [ 43%]
+tests/customers/test_customers.py::test_deletes_token_165 PASSED          [ 43%]
+tests/catalog/test_catalog.py::test_serializes_address_166 PASSED         [ 43%]
+tests/inventory/test_inventory.py::test_validates_rounding_167 PASSED     [ 44%]
+tests/shipping/test_shipping.py::test_retries_rounding_168 PASSED         [ 44%]
+tests/auth/test_auth.py::test_caches_total_169 PASSED                     [ 44%]
+tests/pricing/test_pricing.py::test_handles_item_170 PASSED               [ 45%]
+tests/tax/test_tax.py::test_lists_page_171 PASSED                         [ 45%]
+tests/discounts/test_discounts.py::test_caches_payload_172 PASSED         [ 45%]
+tests/reports/test_reports.py::test_updates_address_173 PASSED            [ 45%]
+tests/webhooks/test_webhooks.py::test_deletes_currency_174 PASSED         [ 46%]
+tests/notifications/test_notifications.py::test_deletes_rounding_175 PASSED [ 46%]
+tests/cart/test_cart.py::test_parses_page_176 PASSED                      [ 46%]
+tests/orders/test_orders.py::test_paginates_currency_177 PASSED           [ 46%]
+tests/refunds/test_refunds.py::test_retries_order_178 PASSED              [ 47%]
+tests/payments/test_payments.py::test_retries_customer_179 PASSED         [ 47%]
+tests/invoices/test_invoices.py::test_deletes_payload_180 PASSED          [ 47%]
+tests/customers/test_customers.py::test_paginates_item_181 PASSED         [ 47%]
+tests/catalog/test_catalog.py::test_creates_address_182 PASSED            [ 48%]
+tests/inventory/test_inventory.py::test_computes_token_183 PASSED         [ 48%]
+tests/shipping/test_shipping.py::test_rejects_payload_184 PASSED          [ 48%]
+tests/auth/test_auth.py::test_computes_batch_185 PASSED                   [ 48%]
+tests/pricing/test_pricing.py::test_deletes_item_186 PASSED               [ 49%]
+tests/tax/test_tax.py::test_retries_batch_187 PASSED                      [ 49%]
+tests/discounts/test_discounts.py::test_retries_invoice_188 PASSED        [ 49%]
+tests/reports/test_reports.py::test_serializes_invoice_189 PASSED         [ 50%]
+tests/webhooks/test_webhooks.py::test_creates_order_190 PASSED            [ 50%]
+tests/notifications/test_notifications.py::test_lists_token_191 PASSED    [ 50%]
+tests/cart/test_cart.py::test_rejects_total_192 PASSED                    [ 50%]
+tests/orders/test_orders.py::test_validates_address_193 PASSED            [ 51%]
+tests/refunds/test_refunds.py::test_paginates_timeout_194 PASSED          [ 51%]
+tests/payments/test_payments.py::test_computes_batch_195 PASSED           [ 51%]
+tests/invoices/test_invoices.py::test_parses_total_196 PASSED             [ 51%]
+tests/customers/test_customers.py::test_formats_total_197 PASSED          [ 52%]
+tests/catalog/test_catalog.py::test_parses_batch_198 PASSED               [ 52%]
+tests/inventory/test_inventory.py::test_deletes_timeout_199 PASSED        [ 52%]
+tests/db/test_repository.py::test_repository_query_0 ERROR                [ 52%]
+tests/db/test_repository.py::test_repository_query_1 ERROR                [ 53%]
+tests/db/test_repository.py::test_repository_query_2 ERROR                [ 53%]
+tests/db/test_repository.py::test_repository_query_3 ERROR                [ 53%]
+tests/db/test_repository.py::test_repository_query_4 ERROR                [ 53%]
+tests/reports/test_reports.py::test_updates_item_205 PASSED               [ 54%]
+tests/webhooks/test_webhooks.py::test_parses_payload_206 PASSED           [ 54%]
+tests/notifications/test_notifications.py::test_retries_page_207 PASSED   [ 54%]
+tests/cart/test_cart.py::test_serializes_refund_208 PASSED                [ 55%]
+tests/orders/test_orders.py::test_creates_order_209 PASSED                [ 55%]
+tests/refunds/test_refunds.py::test_rejects_timeout_210 PASSED            [ 55%]
+tests/payments/test_payments.py::test_parses_customer_211 PASSED          [ 55%]
+tests/invoices/test_invoices.py::test_validates_address_212 PASSED        [ 56%]
+tests/customers/test_customers.py::test_creates_discount_213 PASSED       [ 56%]
+tests/catalog/test_catalog.py::test_creates_currency_214 PASSED           [ 56%]
+tests/inventory/test_inventory.py::test_serializes_refund_215 PASSED      [ 56%]
+tests/shipping/test_shipping.py::test_paginates_rounding_216 PASSED       [ 57%]
+tests/auth/test_auth.py::test_retries_page_217 PASSED                     [ 57%]
+tests/pricing/test_pricing.py::test_handles_total_218 PASSED              [ 57%]
+tests/tax/test_tax.py::test_updates_discount_219 PASSED                   [ 57%]
+tests/discounts/test_discounts.py::test_lists_currency_220 PASSED         [ 58%]
+tests/reports/test_reports.py::test_parses_customer_221 PASSED            [ 58%]
+tests/webhooks/test_webhooks.py::test_caches_address_222 PASSED           [ 58%]
+tests/notifications/test_notifications.py::test_retries_page_223 PASSED   [ 58%]
+tests/cart/test_cart.py::test_lists_order_224 PASSED                      [ 59%]
+tests/orders/test_orders.py::test_serializes_invoice_225 PASSED           [ 59%]
+tests/refunds/test_refunds.py::test_validates_order_226 PASSED            [ 59%]
+tests/payments/test_payments.py::test_creates_refund_227 PASSED           [ 60%]
+tests/invoices/test_invoices.py::test_retries_timeout_228 PASSED          [ 60%]
+tests/customers/test_customers.py::test_validates_refund_229 PASSED       [ 60%]
+tests/catalog/test_catalog.py::test_validates_order_230 PASSED            [ 60%]
+tests/inventory/test_inventory.py::test_computes_address_231 PASSED       [ 61%]
+tests/shipping/test_shipping.py::test_serializes_refund_232 PASSED        [ 61%]
+tests/auth/test_auth.py::test_computes_currency_233 PASSED                [ 61%]
+tests/pricing/test_pricing.py::test_serializes_refund_234 PASSED          [ 61%]
+tests/tax/test_tax.py::test_parses_invoice_235 PASSED                     [ 62%]
+tests/discounts/test_discounts.py::test_handles_total_236 PASSED          [ 62%]
+tests/reports/test_reports.py::test_lists_invoice_237 PASSED              [ 62%]
+tests/webhooks/test_webhooks.py::test_serializes_total_238 PASSED         [ 62%]
+tests/notifications/test_notifications.py::test_updates_total_239 PASSED  [ 63%]
+tests/cart/test_cart.py::test_updates_item_240 PASSED                     [ 63%]
+tests/orders/test_orders.py::test_retries_payload_241 PASSED              [ 63%]
+tests/refunds/test_refunds.py::test_computes_batch_242 PASSED             [ 63%]
+tests/payments/test_payments.py::test_caches_item_243 PASSED              [ 64%]
+tests/invoices/test_invoices.py::test_deletes_refund_244 PASSED           [ 64%]
+tests/customers/test_customers.py::test_paginates_batch_245 PASSED        [ 64%]
+tests/catalog/test_catalog.py::test_deletes_currency_246 PASSED           [ 65%]
+tests/inventory/test_inventory.py::test_computes_invoice_247 PASSED       [ 65%]
+tests/shipping/test_shipping.py::test_serializes_invoice_248 PASSED       [ 65%]
+tests/auth/test_auth.py::test_deletes_order_249 PASSED                    [ 65%]
+tests/pricing/test_pricing.py::test_rejects_payload_250 PASSED            [ 66%]
+tests/tax/test_tax.py::test_computes_refund_251 PASSED                    [ 66%]
+tests/discounts/test_discounts.py::test_validates_invoice_252 PASSED      [ 66%]
+tests/reports/test_reports.py::test_paginates_timeout_253 PASSED          [ 66%]
+tests/webhooks/test_webhooks.py::test_validates_timeout_254 PASSED        [ 67%]
+tests/notifications/test_notifications.py::test_paginates_discount_255 PASSED [ 67%]
+tests/cart/test_cart.py::test_lists_batch_256 PASSED                      [ 67%]
+tests/orders/test_orders.py::test_handles_currency_257 PASSED             [ 67%]
+tests/refunds/test_refunds.py::test_caches_currency_258 PASSED            [ 68%]
+tests/payments/test_payments.py::test_handles_page_259 PASSED             [ 68%]
+tests/invoices/test_invoices.py::test_parses_payload_260 PASSED           [ 68%]
+tests/customers/test_customers.py::test_deletes_item_261 PASSED           [ 68%]
+tests/catalog/test_catalog.py::test_paginates_refund_262 PASSED           [ 69%]
+tests/inventory/test_inventory.py::test_formats_timeout_263 PASSED        [ 69%]
+tests/shipping/test_shipping.py::test_rejects_item_264 PASSED             [ 69%]
+tests/auth/test_auth.py::test_computes_order_265 PASSED                   [ 70%]
+tests/pricing/test_pricing.py::test_creates_address_266 PASSED            [ 70%]
+tests/tax/test_tax.py::test_rejects_invoice_267 PASSED                    [ 70%]
+tests/discounts/test_discounts.py::test_updates_discount_268 PASSED       [ 70%]
+tests/reports/test_reports.py::test_handles_timeout_269 PASSED            [ 71%]
+tests/webhooks/test_webhooks.py::test_formats_batch_270 PASSED            [ 71%]
+tests/notifications/test_notifications.py::test_serializes_item_271 PASSED [ 71%]
+tests/cart/test_cart.py::test_computes_token_272 PASSED                   [ 71%]
+tests/orders/test_orders.py::test_computes_token_273 PASSED               [ 72%]
+tests/refunds/test_refunds.py::test_creates_refund_274 PASSED             [ 72%]
+tests/payments/test_payments.py::test_validates_customer_275 PASSED       [ 72%]
+tests/invoices/test_invoices.py::test_parses_item_276 PASSED              [ 72%]
+tests/customers/test_customers.py::test_formats_timeout_277 PASSED        [ 73%]
+tests/catalog/test_catalog.py::test_formats_page_278 PASSED               [ 73%]
+tests/inventory/test_inventory.py::test_validates_batch_279 PASSED        [ 73%]
+tests/shipping/test_shipping.py::test_validates_address_280 PASSED        [ 73%]
+tests/auth/test_auth.py::test_rejects_payload_281 PASSED                  [ 74%]
+tests/pricing/test_pricing.py::test_deletes_token_282 PASSED              [ 74%]
+tests/tax/test_tax.py::test_serializes_rounding_283 PASSED                [ 74%]
+tests/discounts/test_discounts.py::test_computes_payload_284 PASSED       [ 75%]
+tests/reports/test_reports.py::test_validates_customer_285 PASSED         [ 75%]
+tests/webhooks/test_webhooks.py::test_serializes_batch_286 PASSED         [ 75%]
+tests/notifications/test_notifications.py::test_lists_discount_287 PASSED [ 75%]
+tests/cart/test_cart.py::test_parses_item_288 PASSED                      [ 76%]
+tests/orders/test_orders.py::test_caches_order_289 PASSED                 [ 76%]
+tests/refunds/test_refunds.py::test_creates_rounding_290 PASSED           [ 76%]
+tests/payments/test_payments.py::test_retries_refund_291 PASSED           [ 76%]
+tests/invoices/test_invoices.py::test_parses_discount_292 PASSED          [ 77%]
+tests/customers/test_customers.py::test_caches_refund_293 PASSED          [ 77%]
+tests/catalog/test_catalog.py::test_paginates_order_294 PASSED            [ 77%]
+tests/inventory/test_inventory.py::test_creates_batch_295 PASSED          [ 77%]
+tests/shipping/test_shipping.py::test_lists_total_296 PASSED              [ 78%]
+tests/auth/test_auth.py::test_rejects_item_297 PASSED                     [ 78%]
+tests/pricing/test_pricing.py::test_serializes_page_298 PASSED            [ 78%]
+tests/tax/test_tax.py::test_serializes_invoice_299 PASSED                 [ 78%]
+tests/discounts/test_discounts.py::test_caches_page_300 PASSED            [ 79%]
+tests/reports/test_reports.py::test_updates_invoice_301 PASSED            [ 79%]
+tests/webhooks/test_webhooks.py::test_handles_batch_302 PASSED            [ 79%]
+tests/notifications/test_notifications.py::test_validates_refund_303 PASSED [ 80%]
+tests/cart/test_cart.py::test_formats_payload_304 PASSED                  [ 80%]
+tests/orders/test_orders.py::test_handles_address_305 PASSED              [ 80%]
+tests/refunds/test_refunds.py::test_deletes_rounding_306 PASSED           [ 80%]
+tests/payments/test_payments.py::test_lists_customer_307 PASSED           [ 81%]
+tests/invoices/test_invoices.py::test_formats_page_308 PASSED             [ 81%]
+tests/customers/test_customers.py::test_creates_invoice_309 PASSED        [ 81%]
+tests/catalog/test_catalog.py::test_computes_page_310 PASSED              [ 81%]
+tests/inventory/test_inventory.py::test_retries_currency_311 PASSED       [ 82%]
+tests/shipping/test_shipping.py::test_retries_invoice_312 PASSED          [ 82%]
+tests/auth/test_auth.py::test_rejects_refund_313 PASSED                   [ 82%]
+tests/pricing/test_pricing.py::test_caches_refund_314 PASSED              [ 82%]
+tests/tax/test_tax.py::test_retries_currency_315 PASSED                   [ 83%]
+tests/discounts/test_discounts.py::test_retries_rounding_316 PASSED       [ 83%]
+tests/reports/test_reports.py::test_rejects_page_317 PASSED               [ 83%]
+tests/webhooks/test_webhooks.py::test_parses_total_318 PASSED             [ 83%]
+tests/notifications/test_notifications.py::test_serializes_refund_319 PASSED [ 84%]
+tests/cart/test_cart.py::test_lists_batch_320 PASSED                      [ 84%]
+tests/orders/test_orders.py::test_updates_token_321 PASSED                [ 84%]
+tests/refunds/test_refunds.py::test_rejects_order_322 PASSED              [ 85%]
+tests/payments/test_payments.py::test_rejects_customer_323 PASSED         [ 85%]
+tests/invoices/test_invoices.py::test_lists_currency_324 PASSED           [ 85%]
+tests/customers/test_customers.py::test_serializes_refund_325 PASSED      [ 85%]
+tests/catalog/test_catalog.py::test_handles_invoice_326 PASSED            [ 86%]
+tests/inventory/test_inventory.py::test_deletes_discount_327 PASSED       [ 86%]
+tests/shipping/test_shipping.py::test_deletes_rounding_328 PASSED         [ 86%]
+tests/auth/test_auth.py::test_validates_discount_329 PASSED               [ 86%]
+tests/pricing/test_pricing.py::test_parses_rounding_330 PASSED            [ 87%]
+tests/tax/test_tax.py::test_creates_customer_331 PASSED                   [ 87%]
+tests/discounts/test_discounts.py::test_paginates_token_332 PASSED        [ 87%]
+tests/reports/test_reports.py::test_updates_discount_333 PASSED           [ 87%]
+tests/webhooks/test_webhooks.py::test_creates_rounding_334 PASSED         [ 88%]
+tests/notifications/test_notifications.py::test_validates_batch_335 PASSED [ 88%]
+tests/cart/test_cart.py::test_retries_page_336 PASSED                     [ 88%]
+tests/orders/test_orders.py::test_retries_total_337 PASSED                [ 88%]
+tests/refunds/test_refunds.py::test_creates_currency_338 PASSED           [ 89%]
+tests/payments/test_payments.py::test_validates_invoice_339 PASSED        [ 89%]
+tests/invoices/test_invoices.py::test_handles_order_340 PASSED            [ 89%]
+tests/customers/test_customers.py::test_creates_payload_341 PASSED        [ 90%]
+tests/catalog/test_catalog.py::test_validates_discount_342 PASSED         [ 90%]
+tests/inventory/test_inventory.py::test_validates_discount_343 PASSED     [ 90%]
+tests/shipping/test_shipping.py::test_caches_customer_344 PASSED          [ 90%]
+tests/auth/test_auth.py::test_formats_batch_345 PASSED                    [ 91%]
+tests/pricing/test_pricing.py::test_formats_address_346 PASSED            [ 91%]
+tests/tax/test_tax.py::test_parses_invoice_347 PASSED                     [ 91%]
+tests/discounts/test_discounts.py::test_serializes_payload_348 PASSED     [ 91%]
+tests/reports/test_reports.py::test_updates_page_349 PASSED               [ 92%]
+tests/webhooks/test_webhooks.py::test_validates_page_350 PASSED           [ 92%]
+tests/notifications/test_notifications.py::test_computes_address_351 PASSED [ 92%]
+tests/cart/test_cart.py::test_rejects_total_352 PASSED                    [ 92%]
+tests/orders/test_orders.py::test_deletes_rounding_353 PASSED             [ 93%]
+tests/refunds/test_refunds.py::test_validates_refund_354 PASSED           [ 93%]
+tests/payments/test_payments.py::test_serializes_order_355 PASSED         [ 93%]
+tests/invoices/test_invoices.py::test_retries_refund_356 PASSED           [ 93%]
+tests/customers/test_customers.py::test_validates_address_357 PASSED      [ 94%]
+tests/catalog/test_catalog.py::test_caches_payload_358 PASSED             [ 94%]
+tests/inventory/test_inventory.py::test_computes_page_359 PASSED          [ 94%]
+tests/shipping/test_shipping.py::test_rejects_discount_360 PASSED         [ 95%]
+tests/auth/test_auth.py::test_lists_token_361 PASSED                      [ 95%]
+tests/pricing/test_pricing.py::test_retries_refund_362 PASSED             [ 95%]
+tests/tax/test_tax.py::test_caches_payload_363 PASSED                     [ 95%]
+tests/discounts/test_discounts.py::test_lists_order_364 PASSED            [ 96%]
+tests/reports/test_reports.py::test_validates_order_365 PASSED            [ 96%]
+tests/webhooks/test_webhooks.py::test_paginates_discount_366 PASSED       [ 96%]
+tests/notifications/test_notifications.py::test_updates_discount_367 PASSED [ 96%]
+tests/cart/test_cart.py::test_validates_currency_368 PASSED               [ 97%]
+tests/orders/test_orders.py::test_parses_discount_369 PASSED              [ 97%]
+tests/refunds/test_refunds.py::test_retries_page_370 PASSED               [ 97%]
+tests/payments/test_payments.py::test_updates_customer_371 PASSED         [ 97%]
+tests/invoices/test_invoices.py::test_parses_discount_372 PASSED          [ 98%]
+tests/customers/test_customers.py::test_updates_total_373 PASSED          [ 98%]
+tests/catalog/test_catalog.py::test_creates_page_374 PASSED               [ 98%]
+tests/inventory/test_inventory.py::test_computes_order_375 PASSED         [ 98%]
+tests/shipping/test_shipping.py::test_rejects_order_376 PASSED            [ 99%]
+tests/auth/test_auth.py::test_lists_order_377 PASSED                      [ 99%]
+tests/pricing/test_pricing.py::test_parses_item_378 PASSED                [ 99%]
+tests/tax/test_tax.py::test_formats_timeout_379 PASSED                    [100%]
+
+==================================== ERRORS ====================================
+_____________________ ERROR at setup of test_repository_query_0 _____________________
+
+    @pytest.fixture
+    def db_session():
+>       engine = create_engine(settings.DATABASE_URL)
+
+tests/conftest.py:31:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.venv/lib/python3.11/site-packages/sqlalchemy/engine/create.py:610: in create_engine
+    dbapi = dbapi_meth(**dbapi_args)
+.venv/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/psycopg2.py:690: in import_dbapi
+    import psycopg2
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    """
+>   from psycopg2._psycopg import (                     # noqa
+        BINARY, NUMBER, STRING, DATETIME, ROWID,
+E   ImportError: libpq.so.5: cannot open shared object file: No such file or directory
+
+.venv/lib/python3.11/site-packages/psycopg2/__init__.py:51: ImportError
+_____________________ ERROR at setup of test_repository_query_1 _____________________
+
+    @pytest.fixture
+    def db_session():
+>       engine = create_engine(settings.DATABASE_URL)
+
+tests/conftest.py:31:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.venv/lib/python3.11/site-packages/sqlalchemy/engine/create.py:610: in create_engine
+    dbapi = dbapi_meth(**dbapi_args)
+.venv/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/psycopg2.py:690: in import_dbapi
+    import psycopg2
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    """
+>   from psycopg2._psycopg import (                     # noqa
+        BINARY, NUMBER, STRING, DATETIME, ROWID,
+E   ImportError: libpq.so.5: cannot open shared object file: No such file or directory
+
+.venv/lib/python3.11/site-packages/psycopg2/__init__.py:51: ImportError
+_____________________ ERROR at setup of test_repository_query_2 _____________________
+
+    @pytest.fixture
+    def db_session():
+>       engine = create_engine(settings.DATABASE_URL)
+
+tests/conftest.py:31:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.venv/lib/python3.11/site-packages/sqlalchemy/engine/create.py:610: in create_engine
+    dbapi = dbapi_meth(**dbapi_args)
+.venv/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/psycopg2.py:690: in import_dbapi
+    import psycopg2
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    """
+>   from psycopg2._psycopg import (                     # noqa
+        BINARY, NUMBER, STRING, DATETIME, ROWID,
+E   ImportError: libpq.so.5: cannot open shared object file: No such file or directory
+
+.venv/lib/python3.11/site-packages/psycopg2/__init__.py:51: ImportError
+_____________________ ERROR at setup of test_repository_query_3 _____________________
+
+    @pytest.fixture
+    def db_session():
+>       engine = create_engine(settings.DATABASE_URL)
+
+tests/conftest.py:31:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.venv/lib/python3.11/site-packages/sqlalchemy/engine/create.py:610: in create_engine
+    dbapi = dbapi_meth(**dbapi_args)
+.venv/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/psycopg2.py:690: in import_dbapi
+    import psycopg2
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    """
+>   from psycopg2._psycopg import (                     # noqa
+        BINARY, NUMBER, STRING, DATETIME, ROWID,
+E   ImportError: libpq.so.5: cannot open shared object file: No such file or directory
+
+.venv/lib/python3.11/site-packages/psycopg2/__init__.py:51: ImportError
+_____________________ ERROR at setup of test_repository_query_4 _____________________
+
+    @pytest.fixture
+    def db_session():
+>       engine = create_engine(settings.DATABASE_URL)
+
+tests/conftest.py:31:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.venv/lib/python3.11/site-packages/sqlalchemy/engine/create.py:610: in create_engine
+    dbapi = dbapi_meth(**dbapi_args)
+.venv/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/psycopg2.py:690: in import_dbapi
+    import psycopg2
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    """
+>   from psycopg2._psycopg import (                     # noqa
+        BINARY, NUMBER, STRING, DATETIME, ROWID,
+E   ImportError: libpq.so.5: cannot open shared object file: No such file or directory
+
+.venv/lib/python3.11/site-packages/psycopg2/__init__.py:51: ImportError
+=================================== FAILURES ===================================
+_________________________ test_refund_partial __________________________
+
+    def test_refund_partial():
+        order = make_order(total=Decimal("100.00"), paid=True)
+        refund = compute_refund(order, percent=30)
+>       assert refund.amount == Decimal("70.00")
+E       AssertionError: assert Decimal('60.00') == Decimal('70.00')
+E        +  where Decimal('60.00') = Refund(order_id=1, amount=Decimal('60.00'), reason=None).amount
+
+tests/refunds/test_refunds.py:42: AssertionError
+----------------------------- Captured stdout call -----------------------------
+computing refund for order 1
+applying fee policy DefaultFeePolicy(rate=0.1)
+------------------------------ Captured log call -------------------------------
+INFO     shop.refunds.service:service.py:88 refund computed order=1 amount=60.00
+____________________________ test_create_order _____________________________
+
+client = <FlaskClient <Flask 'shop'>>
+
+    def test_create_order(client):
+>       resp = client.post("/orders", json={"items": [1, 2]})
+
+tests/api/test_api.py:18:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.venv/lib/python3.11/site-packages/werkzeug/test.py:1167: in post
+    return self.open(*args, **kw)
+.venv/lib/python3.11/site-packages/flask/testing.py:232: in open
+    response = super().open(
+.venv/lib/python3.11/site-packages/werkzeug/test.py:1116: in open
+    response = self.run_wsgi_app(request.environ, buffered=buffered)
+.venv/lib/python3.11/site-packages/werkzeug/test.py:988: in run_wsgi_app
+    rv = run_wsgi_app(self.application, environ, buffered=buffered)
+.venv/lib/python3.11/site-packages/flask/app.py:1498: in wsgi_app
+    response = self.handle_exception(e)
+.venv/lib/python3.11/site-packages/flask/app.py:1476: in wsgi_app
+    response = self.full_dispatch_request()
+shop/api/orders.py:27: in create_order
+    customer = load_customer(payload)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+payload = {'items': [1, 2]}
+
+    def load_customer(payload: dict) -> Customer:
+>       customer_id = payload["customer_id"]
+E       KeyError: 'customer_id'
+
+shop/customers/loader.py:12: KeyError
+=========================== short test summary info ============================
+FAILED tests/refunds/test_refunds.py::test_refund_partial - AssertionError: assert Decimal('60.00') == Decimal('70.00')
+FAILED tests/api/test_api.py::test_create_order - KeyError: 'customer_id'
+ERROR tests/db/test_repository.py::test_repository_query_0 - ImportError: libpq.so.5: cannot open shared object file: No such file or directory
+ERROR tests/db/test_repository.py::test_repository_query_1 - ImportError: libpq.so.5: cannot open shared object file: No such file or directory
+ERROR tests/db/test_repository.py::test_repository_query_2 - ImportError: libpq.so.5: cannot open shared object file: No such file or directory
+ERROR tests/db/test_repository.py::test_repository_query_3 - ImportError: libpq.so.5: cannot open shared object file: No such file or directory
+ERROR tests/db/test_repository.py::test_repository_query_4 - ImportError: libpq.so.5: cannot open shared object file: No such file or directory
+============= 2 failed, 373 passed, 5 errors in 14.87s (0:00:14) ==============

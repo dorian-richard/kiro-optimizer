@@ -1,0 +1,27 @@
+{
+  "name": "kiro-optimizer-infra",
+  "version": "0.1.0",
+  "description": "AWS CDK v2 app for the centralized KiroOptimizer (kopt) deployment",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "synth": "cdk synth",
+    "diff": "cdk diff",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "tsx --test test/*.test.ts"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "2.273.0",
+    "constructs": "10.8.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "aws-cdk": "2.1145.0",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3"
+  }
+}

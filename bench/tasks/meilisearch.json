@@ -1,0 +1,225 @@
+{
+  "repo": {
+    "name": "meilisearch",
+    "url": "https://github.com/meilisearch/meilisearch.git",
+    "tag": "v1.54.3",
+    "commit": "7ebd97e38c36882b0c78d79e433b9115b4f003b3",
+    "language": "rust",
+    "path": "bench/repos/meilisearch"
+  },
+  "notes": "Gold = non-test Rust code only (tests/ directories and *_test.rs excluded), outside the Enterprise Edition files (enterprise_edition modules, BUSL-1.1). Dynamic search rules and the disabled-typos-on-numbers setting are recent features. `search` is the phrase an agent would derive from the question (English, no identifier the developer did not give). Re-check with `kopt bench meilisearch --verify`.",
+  "tasks": [
+    {
+      "id": "ms-locate-tenant-token",
+      "kind": "locate",
+      "lang": "en",
+      "question": "Where is a tenant token (a JWT signed with an API key) verified, including its expiration date, before a search request is accepted?",
+      "search": "tenant token jwt verify api key expiration search",
+      "gold": {
+        "files": ["crates/meilisearch/src/extractors/authentication/mod.rs"],
+        "symbols": [
+          { "name": "authenticate_tenant_token", "file": "crates/meilisearch/src/extractors/authentication/mod.rs", "line": 305, "kind": "function" },
+          { "name": "tenant_token_validation", "file": "crates/meilisearch/src/extractors/authentication/mod.rs", "line": 207, "kind": "function" },
+          { "name": "extract_key_id", "file": "crates/meilisearch/src/extractors/authentication/mod.rs", "line": 216, "kind": "function" }
+        ]
+      },
+      "verifiedBy": "Read extractors/authentication/mod.rs@v1.54.3: ActionPolicy::authenticate_tenant_token (search/chat actions only) reads the key uid with extract_key_id (insecure decode), regenerates the key with auth.generate_key, decodes the Claims with tenant_token_validation (HS256/384/512, exp not required) and returns ExpiredTenantToken when now > exp."
+    },
+    {
+      "id": "ms-locate-filter-precedence",
+      "kind": "locate",
+      "lang": "en",
+      "question": "Where is the search filter syntax parsed so that OR binds weaker than AND, AND weaker than NOT, with a maximum nesting depth?",
+      "search": "filter expression parser or and not precedence depth",
+      "gold": {
+        "files": ["crates/filter-parser/src/lib.rs"],
+        "symbols": [
+          { "name": "parse_or", "file": "crates/filter-parser/src/lib.rs", "line": 672, "kind": "function" },
+          { "name": "parse_and", "file": "crates/filter-parser/src/lib.rs", "line": 695, "kind": "function" },
+          { "name": "parse_not", "file": "crates/filter-parser/src/lib.rs", "line": 720, "kind": "function" }
+        ]
+      },
+      "verifiedBy": "Read crates/filter-parser/src/lib.rs@v1.54.3 (nom grammar): parse_expression = parse_or -> parse_and ('AND' list) -> parse_not ('NOT' prefix) -> parse_primary; each level returns DepthLimitReached past MAX_FILTER_DEPTH."
+    },
+    {
+      "id": "ms-locate-disabled-typos",
+      "kind": "locate",
+      "lang": "en",
+      "question": "With the typo tolerance setting `disableOnNumbers`, where is it decided that a word must only be matched exactly?",
+      "search": "disableOnNumbers typo tolerance word exact",
+      "gold": {
+        "files": ["crates/milli/src/disabled_typos_terms.rs"],
+        "symbols": [
+          { "name": "is_exact", "file": "crates/milli/src/disabled_typos_terms.rs", "line": 38, "kind": "method" },
+          { "name": "DisabledTyposTerms", "file": "crates/milli/src/disabled_typos_terms.rs", "line": 10, "kind": "struct" }
+        ]
+      },
+      "verifiedBy": "Read disabled_typos_terms.rs@v1.54.3: DisabledTyposTerms { disable_on_numbers } (camelCase serde) is stored in the index main db; is_exact(word) returns true when disable_on_numbers and every char is numeric or ASCII punctuation."
+    },
+    {
+      "id": "ms-locate-index-eviction",
+      "kind": "locate",
+      "lang": "en",
+      "question": "When too many indexes are open at the same time, where does the index scheduler evict the least recently used index and start closing it?",
+      "search": "open indexes evict least recently used close index",
+      "gold": {
+        "files": ["crates/index-scheduler/src/index_mapper/index_map.rs", "crates/index-scheduler/src/lru.rs"],
+        "symbols": [
+          { "name": "create", "file": "crates/index-scheduler/src/index_mapper/index_map.rs", "line": 176, "kind": "method" },
+          { "name": "close", "file": "crates/index-scheduler/src/index_mapper/index_map.rs", "line": 238, "kind": "method" },
+          { "name": "insert", "file": "crates/index-scheduler/src/lru.rs", "line": 165, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read @v1.54.3: IndexMap::create inserts the opened index in the LruMap `available`; LruMap::insert returns InsertionOutcome::Evicted when the capacity is reached, and create then calls IndexMap::close on the evicted index (prepare_for_closing, moved to `unavailable` with a new generation)."
+    },
+    {
+      "id": "ms-explain-autobatch",
+      "kind": "explain",
+      "lang": "en",
+      "question": "How does the task scheduler decide which enqueued tasks of one index can be processed together in a single batch, and when does it stop adding tasks to the batch?",
+      "search": "scheduler enqueued tasks batch together index stop reason",
+      "gold": {
+        "files": ["crates/index-scheduler/src/scheduler/autobatcher.rs", "crates/index-scheduler/src/scheduler/create_batch.rs"],
+        "symbols": [
+          { "name": "autobatch", "file": "crates/index-scheduler/src/scheduler/autobatcher.rs", "line": 570, "kind": "function" },
+          { "name": "accumulate", "file": "crates/index-scheduler/src/scheduler/autobatcher.rs", "line": 255, "kind": "method" },
+          { "name": "BatchKind", "file": "crates/index-scheduler/src/scheduler/autobatcher.rs", "line": 90, "kind": "enum" },
+          { "name": "create_next_batch_unprioritized", "file": "crates/index-scheduler/src/scheduler/create_batch.rs", "line": 708, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read @v1.54.3: create_next_batch_unprioritized collects the enqueued tasks of the index and calls autobatcher::autobatch, which starts a BatchKind from the first task (BatchKind::new) and folds the next ones with BatchKind::accumulate until it returns ControlFlow::Break with a BatchStopReason."
+    },
+    {
+      "id": "ms-explain-dynamic-rules",
+      "kind": "explain",
+      "lang": "en",
+      "question": "With dynamic search rules (pinning or boosting documents), how are the rules that apply to a search selected (time window, query and filter conditions), and how are pinned documents kept out of the organic results?",
+      "search": "dynamic search rules pin documents time query filter conditions",
+      "gold": {
+        "files": [
+          "crates/milli/src/dynamic_search_rules/mod.rs",
+          "crates/milli/src/dynamic_search_rules/condition.rs",
+          "crates/milli/src/dynamic_search_rules/action.rs"
+        ],
+        "symbols": [
+          { "name": "resolve_actions", "file": "crates/milli/src/dynamic_search_rules/mod.rs", "line": 127, "kind": "method" },
+          { "name": "active_rules_for_query", "file": "crates/milli/src/dynamic_search_rules/condition.rs", "line": 18, "kind": "method" },
+          { "name": "apply_time_conditions", "file": "crates/milli/src/dynamic_search_rules/condition.rs", "line": 34, "kind": "method" },
+          { "name": "find_actions", "file": "crates/milli/src/dynamic_search_rules/action.rs", "line": 49, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read milli/src/dynamic_search_rules@v1.54.3: resolve_actions calls active_rules_for_query (active rules filtered by apply_time_conditions, apply_query_conditions, apply_filter_conditions), then iterates find_actions over rules sorted by precedence, removing each pinned id from `universe` (so it cannot appear organically and must pass the filter) within the DsrFuel limits."
+    },
+    {
+      "id": "ms-explain-bucket-sort",
+      "kind": "explain",
+      "lang": "en",
+      "question": "How does the search apply the ranking rules one after another, splitting the candidate documents into buckets until enough results have been collected?",
+      "search": "ranking rules buckets candidates sort results",
+      "gold": {
+        "files": ["crates/milli/src/search/new/bucket_sort.rs", "crates/milli/src/search/new/ranking_rules.rs"],
+        "symbols": [
+          { "name": "bucket_sort", "file": "crates/milli/src/search/new/bucket_sort.rs", "line": 23, "kind": "function" },
+          { "name": "maybe_add_to_results", "file": "crates/milli/src/search/new/bucket_sort.rs", "line": 315, "kind": "function" },
+          { "name": "RankingRule", "file": "crates/milli/src/search/new/ranking_rules.rs", "line": 26, "kind": "trait" },
+          { "name": "next_bucket", "file": "crates/milli/src/search/new/ranking_rules.rs", "line": 53, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read @v1.54.3: bucket_sort keeps a stack of RankingRule instances, calls next_bucket on the current rule to get a bucket of candidates, descends to the next rule for buckets with more than one document, and adds finished buckets to the results through maybe_add_to_results (distinct handling, offset/limit) until `length` results are collected."
+    },
+    {
+      "id": "ms-usage-is-exact",
+      "kind": "usage",
+      "lang": "en",
+      "question": "Where does indexing call `DisabledTyposTerms::is_exact` to decide that a word goes into the exact-word databases?",
+      "search": "DisabledTyposTerms is_exact",
+      "gold": {
+        "files": [
+          "crates/milli/src/update/index_documents/extract/extract_word_docids.rs",
+          "crates/milli/src/update/new/extract/searchable/extract_word_docids.rs",
+          "crates/milli/src/update/new/indexer/mod.rs"
+        ],
+        "symbols": [
+          { "name": "extract_word_docids", "file": "crates/milli/src/update/index_documents/extract/extract_word_docids.rs", "line": 28, "kind": "function" },
+          { "name": "extract_document_change", "file": "crates/milli/src/update/new/extract/searchable/extract_word_docids.rs", "line": 333, "kind": "method" },
+          { "name": "extract_document_from_settings_change", "file": "crates/milli/src/update/new/extract/searchable/extract_word_docids.rs", "line": 570, "kind": "method" },
+          { "name": "extract_numbers_from_words_fst", "file": "crates/milli/src/update/new/indexer/mod.rs", "line": 675, "kind": "function" }
+        ]
+      },
+      "verifiedBy": "git grep '.is_exact(' in crates/milli/src@v1.54.3 (tests excluded): legacy extract_word_docids (130, 143), the new pipeline's extract_document_change (351) and extract_document_from_settings_change (730-825), and extract_numbers_from_words_fst (indexer/mod.rs:687, used by migrate_numbers)."
+    },
+    {
+      "id": "ms-usage-close-for-resize",
+      "kind": "usage",
+      "lang": "en",
+      "question": "Who calls `IndexMap::close_for_resize`?",
+      "search": "IndexMap close_for_resize",
+      "gold": {
+        "files": ["crates/index-scheduler/src/index_mapper/mod.rs"],
+        "symbols": [
+          { "name": "resize_index", "file": "crates/index-scheduler/src/index_mapper/mod.rs", "line": 372, "kind": "method" },
+          { "name": "close_index", "file": "crates/index-scheduler/src/index_mapper/mod.rs", "line": 397, "kind": "method" },
+          { "name": "rollback_index", "file": "crates/index-scheduler/src/index_mapper/mod.rs", "line": 524, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "git grep -w close_for_resize @v1.54.3: defined index_map.rs:226; called by IndexMapper::resize_index (380, with map size growth), IndexMapper::close_index (405) and IndexMapper::rollback_index (546)."
+    },
+    {
+      "id": "ms-usage-facet-bounds",
+      "kind": "usage",
+      "lang": "en",
+      "question": "Which functions call `find_docids_of_facet_within_bounds` to look up documents whose facet value lies in a range?",
+      "search": "find_docids_of_facet_within_bounds",
+      "gold": {
+        "files": ["crates/milli/src/dynamic_search_rules/condition.rs", "crates/milli/src/search/facet/filter/index_filter.rs"],
+        "symbols": [
+          { "name": "apply_time_conditions", "file": "crates/milli/src/dynamic_search_rules/condition.rs", "line": 34, "kind": "method" },
+          { "name": "apply_filter_conditions", "file": "crates/milli/src/dynamic_search_rules/condition.rs", "line": 190, "kind": "method" },
+          { "name": "resolve_constraints", "file": "crates/milli/src/dynamic_search_rules/condition.rs", "line": 302, "kind": "method" },
+          { "name": "evaluate_operator", "file": "crates/milli/src/search/facet/filter/index_filter.rs", "line": 109, "kind": "function" },
+          { "name": "explore_facet_levels", "file": "crates/milli/src/search/facet/filter/index_filter.rs", "line": 332, "kind": "function" }
+        ]
+      },
+      "verifiedBy": "git grep -w find_docids_of_facet_within_bounds @v1.54.3 (tests excluded): defined facet_range_search.rs:15; called in condition.rs at 47/65 (apply_time_conditions), 214 (apply_filter_conditions), 321/334 (resolve_constraints) and index_filter.rs at 273 (evaluate_operator, string prefix range) and 353 (explore_facet_levels)."
+    },
+    {
+      "id": "ms-impact-bucket-sort",
+      "kind": "impact",
+      "lang": "en",
+      "question": "If `bucket_sort` stopped returning per-document scores, which search entry points would be affected?",
+      "search": "bucket_sort scores",
+      "gold": {
+        "files": ["crates/milli/src/search/new/bucket_sort.rs", "crates/milli/src/search/new/mod.rs"],
+        "symbols": [
+          { "name": "bucket_sort", "file": "crates/milli/src/search/new/bucket_sort.rs", "line": 23, "kind": "function" },
+          { "name": "execute_vector_search", "file": "crates/milli/src/search/new/mod.rs", "line": 744, "kind": "function" },
+          { "name": "execute_search", "file": "crates/milli/src/search/new/mod.rs", "line": 809, "kind": "function" }
+        ]
+      },
+      "verifiedBy": "git grep -w bucket_sort @v1.54.3 (tests excluded): defined bucket_sort.rs:23 (returns BucketSortOutput { docids, scores, all_candidates, degraded }); called by execute_vector_search (783) and twice by execute_search (848, 867)."
+    },
+    {
+      "id": "ms-impact-search-rules",
+      "kind": "impact",
+      "lang": "en",
+      "question": "If `AuthFilter::get_index_search_rules` stopped returning the tenant-token filter of an index, which single-index search routes (search with GET and POST, facet search, similar documents) would stop applying it?",
+      "search": "AuthFilter get_index_search_rules tenant token filter search routes",
+      "gold": {
+        "files": [
+          "crates/meilisearch-auth/src/lib.rs",
+          "crates/meilisearch/src/routes/indexes/search.rs",
+          "crates/meilisearch/src/routes/indexes/facet_search.rs",
+          "crates/meilisearch/src/routes/indexes/similar.rs"
+        ],
+        "symbols": [
+          { "name": "get_index_search_rules", "file": "crates/meilisearch-auth/src/lib.rs", "line": 291, "kind": "method" },
+          { "name": "legacy_search_with_url_query", "file": "crates/meilisearch/src/routes/indexes/search.rs", "line": 631, "kind": "function" },
+          { "name": "legacy_search_with_post", "file": "crates/meilisearch/src/routes/indexes/search.rs", "line": 962, "kind": "function" },
+          { "name": "search", "file": "crates/meilisearch/src/routes/indexes/facet_search.rs", "line": 302, "kind": "function" },
+          { "name": "similar", "file": "crates/meilisearch/src/routes/indexes/similar.rs", "line": 204, "kind": "function" }
+        ]
+      },
+      "verifiedBy": "git grep -w get_index_search_rules @v1.54.3: AuthFilter::get_index_search_rules (meilisearch-auth/src/lib.rs:291) is called in routes/indexes/search.rs:650 (legacy_search_with_url_query) and 982 (legacy_search_with_post), facet_search.rs:324 (search) and similar.rs:213 (similar); multi-search, chat and document routes also call it but are outside the question."
+    }
+  ]
+}

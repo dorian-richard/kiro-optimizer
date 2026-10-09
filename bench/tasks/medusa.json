@@ -1,0 +1,232 @@
+{
+  "repo": {
+    "name": "medusa",
+    "url": "https://github.com/medusajs/medusa.git",
+    "tag": "v2.21.2",
+    "commit": "020565398e436a2bc65777a3b1ad347b4735d6df",
+    "language": "typescript",
+    "path": "bench/repos/medusa"
+  },
+  "notes": "Gold = non-test code only, outside the Enterprise Edition paths listed in ENTERPRISE-LICENSE.md (RBAC/SSO). Two tasks target the React/TSX admin dashboard (TSX grammar). `search` is the phrase an agent would derive from the question (English, no identifier the developer did not give). Re-check with `kopt bench medusa --verify`.",
+  "tasks": [
+    {
+      "id": "md-locate-permanent-failure",
+      "kind": "locate",
+      "lang": "en",
+      "question": "When a workflow step calls `StepResponse.permanentFailure()`, where is that error recognised by the orchestrator so that the step is failed for good instead of retried?",
+      "search": "StepResponse permanentFailure permanent step failure error retry",
+      "gold": {
+        "files": [
+          "packages/core/workflows-sdk/src/utils/composer/helpers/step-response.ts",
+          "packages/core/orchestration/src/transaction/errors.ts",
+          "packages/core/orchestration/src/transaction/transaction-orchestrator.ts"
+        ],
+        "symbols": [
+          { "name": "permanentFailure", "file": "packages/core/workflows-sdk/src/utils/composer/helpers/step-response.ts", "line": 120, "kind": "method" },
+          { "name": "isPermanentStepFailureError", "file": "packages/core/orchestration/src/transaction/errors.ts", "line": 18, "kind": "method" },
+          { "name": "executeSyncStep", "file": "packages/core/orchestration/src/transaction/transaction-orchestrator.ts", "line": 1207, "kind": "method" },
+          { "name": "executeAsyncStep", "file": "packages/core/orchestration/src/transaction/transaction-orchestrator.ts", "line": 1252, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read @v2.21.2: StepResponse.permanentFailure throws PermanentStepFailureError; TransactionOrchestrator.executeSyncStep (1240) and executeAsyncStep (1291) test PermanentStepFailureError.isPermanentStepFailureError(error) and call handleStepFailure(..., true) (forced permanent failure) instead of the retryable path."
+    },
+    {
+      "id": "md-locate-available-quantity",
+      "kind": "locate",
+      "lang": "en",
+      "question": "Where is the available quantity of an inventory item across several stock locations computed (stocked minus reserved)?",
+      "search": "inventory item available quantity stock locations stocked reserved",
+      "gold": {
+        "files": ["packages/modules/inventory/src/repositories/inventory-level.ts", "packages/modules/inventory/src/services/inventory-module.ts"],
+        "symbols": [
+          { "name": "getAvailableQuantity", "file": "packages/modules/inventory/src/repositories/inventory-level.ts", "line": 32, "kind": "method" },
+          { "name": "retrieveAvailableQuantity", "file": "packages/modules/inventory/src/services/inventory-module.ts", "line": 1033, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read @v2.21.2: InventoryModuleService.retrieveAvailableQuantity delegates to inventoryLevelService_.getAvailableQuantity, which calls InventoryLevelRepository.getAvailableQuantity: a knex query on inventory_level summing raw_stocked_quantity - raw_reserved_quantity over the given location ids."
+    },
+    {
+      "id": "md-locate-capture-payment",
+      "kind": "locate",
+      "lang": "en",
+      "question": "On the admin dashboard's order page, where does the capture-payment action ask for confirmation and then call the API?",
+      "search": "admin order payment capture confirmation",
+      "gold": {
+        "files": [
+          "packages/admin/dashboard/src/routes/orders/order-detail/components/order-payment-section/order-payment-section.tsx",
+          "packages/admin/dashboard/src/hooks/api/payments.tsx"
+        ],
+        "symbols": [
+          { "name": "Payment", "file": "packages/admin/dashboard/src/routes/orders/order-detail/components/order-payment-section/order-payment-section.tsx", "line": 131, "kind": "function" },
+          { "name": "useCapturePayment", "file": "packages/admin/dashboard/src/hooks/api/payments.tsx", "line": 66, "kind": "function" }
+        ]
+      },
+      "verifiedBy": "Read @v2.21.2 (TSX): the Payment component of order-payment-section.tsx defines handleCapture, which awaits prompt({ title: orders.payment.capture ... }) then mutateAsync from useCapturePayment(order.id, payment.id) (hooks/api/payments.tsx:66)."
+    },
+    {
+      "id": "md-locate-lock-renewal",
+      "kind": "locate",
+      "lang": "en",
+      "question": "With the Redis locking provider, where is the lock lease extended while a long-running job still holds it, and what happens when the lease is lost?",
+      "search": "redis lock lease extend renew long running job lost",
+      "gold": {
+        "files": ["packages/modules/providers/locking-redis/src/services/redis-lock.ts"],
+        "symbols": [
+          { "name": "renewUntilStopped", "file": "packages/modules/providers/locking-redis/src/services/redis-lock.ts", "line": 235, "kind": "method" },
+          { "name": "execute", "file": "packages/modules/providers/locking-redis/src/services/redis-lock.ts", "line": 158, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read redis-lock.ts@v2.21.2: RedisLockingProvider.execute acquires the keys then starts renewUntilStopped(keys, ownerId, expireSeconds), which re-runs the owner-checked extendLock Lua command every third of the lease and aborts the job's signal with a CONFLICT error when a key was lost; execute rethrows signal.reason."
+    },
+    {
+      "id": "md-explain-compensation",
+      "kind": "explain",
+      "lang": "en",
+      "question": "In the workflow engine, what happens when a step fails permanently: how does the transaction switch to compensation and which steps get rolled back?",
+      "search": "workflow transaction step permanent failure compensate rollback",
+      "gold": {
+        "files": ["packages/core/orchestration/src/transaction/transaction-orchestrator.ts"],
+        "symbols": [
+          { "name": "setStepFailure", "file": "packages/core/orchestration/src/transaction/transaction-orchestrator.ts", "line": 756, "kind": "method" },
+          { "name": "checkAllSteps", "file": "packages/core/orchestration/src/transaction/transaction-orchestrator.ts", "line": 324, "kind": "method" },
+          { "name": "flagStepsToRevert", "file": "packages/core/orchestration/src/transaction/transaction-orchestrator.ts", "line": 523, "kind": "method" },
+          { "name": "getCompensationSteps", "file": "packages/core/orchestration/src/transaction/transaction-orchestrator.ts", "line": 191, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read transaction-orchestrator.ts@v2.21.2: setStepFailure marks PERMANENT_FAILURE once failures > maxRetries and sets flow.state = WAITING_TO_COMPENSATE unless continueOnPermanentFailure/skipOnPermanentFailure; checkAllSteps then switches to COMPENSATING and calls flagStepsToRevert (beginCompensation on done/failed steps); computeCurrentTransactionState then walks getCompensationSteps (steps sorted by depth, deepest first)."
+    },
+    {
+      "id": "md-explain-buy-get",
+      "kind": "explain",
+      "lang": "en",
+      "question": "How is a 'buy X get Y' promotion applied to cart items: which items qualify, and how are the bought and the discounted quantities consumed over repeated applications?",
+      "search": "buy get promotion eligible items quantities apply",
+      "gold": {
+        "files": ["packages/modules/promotion/src/utils/compute-actions/buy-get.ts"],
+        "symbols": [
+          { "name": "getComputedActionsForBuyGet", "file": "packages/modules/promotion/src/utils/compute-actions/buy-get.ts", "line": 502, "kind": "function" },
+          { "name": "preparePromotionApplicationState", "file": "packages/modules/promotion/src/utils/compute-actions/buy-get.ts", "line": 142, "kind": "function" },
+          { "name": "applyPromotionToTargetItems", "file": "packages/modules/promotion/src/utils/compute-actions/buy-get.ts", "line": 308, "kind": "function" },
+          { "name": "filterItemsByPromotionRules", "file": "packages/modules/promotion/src/utils/compute-actions/buy-get.ts", "line": 487, "kind": "function" }
+        ]
+      },
+      "verifiedBy": "Read buy-get.ts@v2.21.2: getComputedActionsForBuyGet filters buy and target items with filterItemsByPromotionRules, computes remaining quantities, then loops (bounded by MAX_PROMOTION_ITERATIONS) over preparePromotionApplicationState + applyPromotionToTargetItems, updating eligible quantities each round."
+    },
+    {
+      "id": "md-explain-price-lists",
+      "kind": "explain",
+      "lang": "en",
+      "question": "When a product variant has a default price plus sale and override price-list prices, how does the pricing module pick the calculated price and the original price?",
+      "search": "pricing calculated price original price price list sale override",
+      "gold": {
+        "files": ["packages/modules/pricing/src/services/pricing-module.ts", "packages/modules/pricing/src/repositories/pricing.ts"],
+        "symbols": [
+          { "name": "calculatePrices", "file": "packages/modules/pricing/src/services/pricing-module.ts", "line": 391, "kind": "method" },
+          { "name": "calculatePrices", "file": "packages/modules/pricing/src/repositories/pricing.ts", "line": 66, "kind": "method" },
+          { "name": "PricingModuleService", "file": "packages/modules/pricing/src/services/pricing-module.ts", "line": 96, "kind": "class" }
+        ]
+      },
+      "verifiedBy": "Read @v2.21.2: PricingRepository.calculatePrices queries candidate prices for the context; PricingModuleService.calculatePrices groups them per price set: OVERRIDE price-list price wins (calculated and original), SALE takes the lower of price-list and default price, original = non-sale price-list price or default."
+    },
+    {
+      "id": "md-usage-cancel-transaction",
+      "kind": "usage",
+      "lang": "en",
+      "question": "Who calls `TransactionOrchestrator.cancelTransaction`? I need every caller before changing how cancellation is checkpointed.",
+      "search": "TransactionOrchestrator cancelTransaction",
+      "gold": {
+        "files": ["packages/core/orchestration/src/transaction/transaction-orchestrator.ts", "packages/core/orchestration/src/workflow/local-workflow.ts"],
+        "symbols": [
+          { "name": "handleStepSuccess", "file": "packages/core/orchestration/src/transaction/transaction-orchestrator.ts", "line": 1320, "kind": "method" },
+          { "name": "handleStepFailure", "file": "packages/core/orchestration/src/transaction/transaction-orchestrator.ts", "line": 1360, "kind": "method" },
+          { "name": "registerStepSuccess", "file": "packages/core/orchestration/src/transaction/transaction-orchestrator.ts", "line": 1966, "kind": "method" },
+          { "name": "registerStepFailure", "file": "packages/core/orchestration/src/transaction/transaction-orchestrator.ts", "line": 2025, "kind": "method" },
+          { "name": "cancel", "file": "packages/core/orchestration/src/workflow/local-workflow.ts", "line": 397, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "git grep cancelTransaction in packages/@v2.21.2 (tests excluded): transaction-orchestrator.ts:1346 (handleStepSuccess), 1389 (handleStepFailure), 2002 (registerStepSuccess), 2065 (registerStepFailure); local-workflow.ts:431 (LocalWorkflow.cancel); definition at 1465."
+    },
+    {
+      "id": "md-usage-refund-hook",
+      "kind": "usage",
+      "lang": "en",
+      "question": "Which admin dashboard components call the `useRefundPayment` mutation hook?",
+      "search": "useRefundPayment",
+      "gold": {
+        "files": [
+          "packages/admin/dashboard/src/routes/orders/order-create-refund/components/create-refund-form/create-refund-form.tsx",
+          "packages/admin/dashboard/src/routes/orders/order-balance-settlement/components/order-balance-settlement-form/order-balance-settlement-form.tsx"
+        ],
+        "symbols": [
+          { "name": "CreateRefundForm", "file": "packages/admin/dashboard/src/routes/orders/order-create-refund/components/create-refund-form/create-refund-form.tsx", "line": 44, "kind": "function" },
+          { "name": "OrderBalanceSettlementForm", "file": "packages/admin/dashboard/src/routes/orders/order-balance-settlement/components/order-balance-settlement-form/order-balance-settlement-form.tsx", "line": 55, "kind": "function" }
+        ]
+      },
+      "verifiedBy": "git grep -w useRefundPayment in packages/admin/dashboard/src@v2.21.2 (TSX): defined hooks/api/payments.tsx:92; used by CreateRefundForm (create-refund-form.tsx:101) and OrderBalanceSettlementForm (order-balance-settlement-form.tsx:97) only."
+    },
+    {
+      "id": "md-usage-rules-valid",
+      "kind": "usage",
+      "lang": "en",
+      "question": "Where is `areRulesValidForContext` called when the promotion module computes actions?",
+      "search": "areRulesValidForContext",
+      "gold": {
+        "files": [
+          "packages/modules/promotion/src/services/promotion-module.ts",
+          "packages/modules/promotion/src/utils/compute-actions/buy-get.ts",
+          "packages/modules/promotion/src/utils/compute-actions/line-items.ts",
+          "packages/modules/promotion/src/utils/compute-actions/shipping-methods.ts"
+        ],
+        "symbols": [
+          { "name": "computeActions", "file": "packages/modules/promotion/src/services/promotion-module.ts", "line": 697, "kind": "method" },
+          { "name": "filterItemsByPromotionRules", "file": "packages/modules/promotion/src/utils/compute-actions/buy-get.ts", "line": 487, "kind": "function" },
+          { "name": "getValidItemsForPromotion", "file": "packages/modules/promotion/src/utils/compute-actions/line-items.ts", "line": 199, "kind": "function" },
+          { "name": "getComputedActionsForShippingMethods", "file": "packages/modules/promotion/src/utils/compute-actions/shipping-methods.ts", "line": 19, "kind": "function" }
+        ]
+      },
+      "verifiedBy": "git grep -w areRulesValidForContext @v2.21.2 (tests excluded): defined validations/promotion-rule.ts:55; called in PromotionModuleService.computeActions (934), filterItemsByPromotionRules (buy-get.ts:493), getValidItemsForPromotion (line-items.ts:242) and getComputedActionsForShippingMethods (shipping-methods.ts:35)."
+    },
+    {
+      "id": "md-impact-budget-exceeded",
+      "kind": "impact",
+      "lang": "en",
+      "question": "If `computeActionForBudgetExceeded` started to report the budget as exceeded when it is exactly reached (>= instead of >), which promotion computations would change?",
+      "search": "computeActionForBudgetExceeded campaign budget",
+      "gold": {
+        "files": [
+          "packages/modules/promotion/src/utils/compute-actions/usage.ts",
+          "packages/modules/promotion/src/services/promotion-module.ts",
+          "packages/modules/promotion/src/utils/compute-actions/buy-get.ts",
+          "packages/modules/promotion/src/utils/compute-actions/line-items.ts",
+          "packages/modules/promotion/src/utils/compute-actions/shipping-methods.ts"
+        ],
+        "symbols": [
+          { "name": "computeActionForBudgetExceeded", "file": "packages/modules/promotion/src/utils/compute-actions/usage.ts", "line": 27, "kind": "function" },
+          { "name": "computeActions", "file": "packages/modules/promotion/src/services/promotion-module.ts", "line": 697, "kind": "method" },
+          { "name": "applyPromotionToTargetItems", "file": "packages/modules/promotion/src/utils/compute-actions/buy-get.ts", "line": 308, "kind": "function" },
+          { "name": "applyPromotionToItems", "file": "packages/modules/promotion/src/utils/compute-actions/line-items.ts", "line": 49, "kind": "function" },
+          { "name": "applyPromotionToShippingMethods", "file": "packages/modules/promotion/src/utils/compute-actions/shipping-methods.ts", "line": 62, "kind": "function" }
+        ]
+      },
+      "verifiedBy": "git grep -w computeActionForBudgetExceeded @v2.21.2 (tests excluded): called in PromotionModuleService.computeActions (906, use-by-attribute budgets), applyPromotionToTargetItems (buy-get.ts:357), applyPromotionToItems (line-items.ts:157) and applyPromotionToShippingMethods (shipping-methods.ts:105 and 175)."
+    },
+    {
+      "id": "md-impact-transaction-key",
+      "kind": "impact",
+      "lang": "en",
+      "question": "If I change the separator `TransactionOrchestrator.getKeyName` uses to build transaction and idempotency keys, which code depends on that key format?",
+      "search": "TransactionOrchestrator getKeyName separator idempotency key",
+      "gold": {
+        "files": ["packages/core/orchestration/src/transaction/transaction-orchestrator.ts", "packages/core/orchestration/src/transaction/distributed-transaction.ts"],
+        "symbols": [
+          { "name": "getKeyName", "file": "packages/core/orchestration/src/transaction/transaction-orchestrator.ts", "line": 163, "kind": "method" },
+          { "name": "createStepPayload", "file": "packages/core/orchestration/src/transaction/transaction-orchestrator.ts", "line": 1115, "kind": "method" },
+          { "name": "getTransactionAndStepFromIdempotencyKey", "file": "packages/core/orchestration/src/transaction/transaction-orchestrator.ts", "line": 1820, "kind": "method" },
+          { "name": "saveCheckpoint", "file": "packages/core/orchestration/src/transaction/distributed-transaction.ts", "line": 498, "kind": "method" },
+          { "name": "loadTransaction", "file": "packages/core/orchestration/src/transaction/distributed-transaction.ts", "line": 599, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "git grep getKeyName / SEPARATOR @v2.21.2: getKeyName joins with SEPARATOR ':'; callers createStepPayload (idempotency_key, 1124), DistributedTransaction.saveCheckpoint (524) and DistributedTransaction.loadTransaction (604); getTransactionAndStepFromIdempotencyKey parses keys with split(SEPARATOR) (1826). Redis cache/lock providers have unrelated private getKeyName methods."
+    }
+  ]
+}

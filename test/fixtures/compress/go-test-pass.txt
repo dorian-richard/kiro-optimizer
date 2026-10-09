@@ -1,0 +1,614 @@
+=== RUN   TestValidatesBatch0
+    cart_test.go:20: using fixture discount.json
+--- PASS: TestValidatesBatch0 (0.00s)
+=== RUN   TestHandlesRounding1
+--- PASS: TestHandlesRounding1 (0.01s)
+=== RUN   TestListsBatch2
+--- PASS: TestListsBatch2 (0.02s)
+=== RUN   TestParsesCurrency3
+--- PASS: TestParsesCurrency3 (0.03s)
+=== RUN   TestCreatesCurrency4
+--- PASS: TestCreatesCurrency4 (0.04s)
+=== RUN   TestValidatesAddress5
+    cart_test.go:25: using fixture invoice.json
+--- PASS: TestValidatesAddress5 (0.05s)
+=== RUN   TestHandlesTotal6
+--- PASS: TestHandlesTotal6 (0.06s)
+=== RUN   TestHandlesCurrency7
+--- PASS: TestHandlesCurrency7 (0.07s)
+=== RUN   TestRetriesRounding8
+--- PASS: TestRetriesRounding8 (0.08s)
+=== RUN   TestListsItem9
+--- PASS: TestListsItem9 (0.09s)
+=== RUN   TestCachesRounding10
+    cart_test.go:30: using fixture currency.json
+--- PASS: TestCachesRounding10 (0.00s)
+=== RUN   TestRetriesToken11
+--- PASS: TestRetriesToken11 (0.01s)
+=== RUN   TestHandlesRefund12
+--- PASS: TestHandlesRefund12 (0.02s)
+=== RUN   TestFormatsTimeout13
+--- PASS: TestFormatsTimeout13 (0.03s)
+=== RUN   TestFormatsTimeout14
+--- PASS: TestFormatsTimeout14 (0.04s)
+=== RUN   TestCreatesTimeout15
+    cart_test.go:35: using fixture page.json
+--- PASS: TestCreatesTimeout15 (0.05s)
+=== RUN   TestParsesCustomer16
+--- PASS: TestParsesCustomer16 (0.06s)
+=== RUN   TestValidatesTotal17
+--- PASS: TestValidatesTotal17 (0.07s)
+=== RUN   TestRetriesPage18
+--- PASS: TestRetriesPage18 (0.08s)
+=== RUN   TestPaginatesCustomer19
+--- PASS: TestPaginatesCustomer19 (0.09s)
+=== RUN   TestPaginatesBatch20
+    cart_test.go:40: using fixture customer.json
+--- PASS: TestPaginatesBatch20 (0.00s)
+=== RUN   TestCreatesInvoice21
+--- PASS: TestCreatesInvoice21 (0.01s)
+PASS
+ok  	github.com/acme/shop/internal/cart	0.010s
+=== RUN   TestDeletesDiscount0
+    order_test.go:20: using fixture customer.json
+--- PASS: TestDeletesDiscount0 (0.00s)
+=== RUN   TestCreatesPayload1
+--- PASS: TestCreatesPayload1 (0.01s)
+=== RUN   TestCachesPayload2
+--- PASS: TestCachesPayload2 (0.02s)
+=== RUN   TestRetriesPayload3
+--- PASS: TestRetriesPayload3 (0.03s)
+=== RUN   TestComputesTimeout4
+--- PASS: TestComputesTimeout4 (0.04s)
+=== RUN   TestCachesRefund5
+    order_test.go:25: using fixture timeout.json
+--- PASS: TestCachesRefund5 (0.05s)
+=== RUN   TestValidatesDiscount6
+--- PASS: TestValidatesDiscount6 (0.06s)
+=== RUN   TestDeletesPayload7
+--- PASS: TestDeletesPayload7 (0.07s)
+=== RUN   TestValidatesCurrency8
+--- PASS: TestValidatesCurrency8 (0.08s)
+=== RUN   TestHandlesBatch9
+--- PASS: TestHandlesBatch9 (0.09s)
+=== RUN   TestSerializesRefund10
+    order_test.go:30: using fixture timeout.json
+--- PASS: TestSerializesRefund10 (0.00s)
+=== RUN   TestListsRefund11
+--- PASS: TestListsRefund11 (0.01s)
+=== RUN   TestListsDiscount12
+--- PASS: TestListsDiscount12 (0.02s)
+=== RUN   TestCachesDiscount13
+--- PASS: TestCachesDiscount13 (0.03s)
+=== RUN   TestValidatesAddress14
+--- PASS: TestValidatesAddress14 (0.04s)
+=== RUN   TestComputesTotal15
+    order_test.go:35: using fixture order.json
+--- PASS: TestComputesTotal15 (0.05s)
+=== RUN   TestListsOrder16
+--- PASS: TestListsOrder16 (0.06s)
+=== RUN   TestCreatesRounding17
+--- PASS: TestCreatesRounding17 (0.07s)
+=== RUN   TestRetriesPage18
+--- PASS: TestRetriesPage18 (0.08s)
+=== RUN   TestValidatesCustomer19
+--- PASS: TestValidatesCustomer19 (0.09s)
+=== RUN   TestSerializesCurrency20
+    order_test.go:40: using fixture address.json
+--- PASS: TestSerializesCurrency20 (0.00s)
+=== RUN   TestComputesAddress21
+--- PASS: TestComputesAddress21 (0.01s)
+PASS
+ok  	github.com/acme/shop/internal/order	0.017s
+=== RUN   TestValidatesToken0
+    refund_test.go:20: using fixture item.json
+--- PASS: TestValidatesToken0 (0.00s)
+=== RUN   TestFormatsTimeout1
+--- PASS: TestFormatsTimeout1 (0.01s)
+=== RUN   TestDeletesToken2
+--- PASS: TestDeletesToken2 (0.02s)
+=== RUN   TestPaginatesPayload3
+--- PASS: TestPaginatesPayload3 (0.03s)
+=== RUN   TestPaginatesTimeout4
+--- PASS: TestPaginatesTimeout4 (0.04s)
+=== RUN   TestCreatesInvoice5
+    refund_test.go:25: using fixture timeout.json
+--- PASS: TestCreatesInvoice5 (0.05s)
+=== RUN   TestRetriesTimeout6
+--- PASS: TestRetriesTimeout6 (0.06s)
+=== RUN   TestHandlesItem7
+--- PASS: TestHandlesItem7 (0.07s)
+=== RUN   TestRejectsDiscount8
+--- PASS: TestRejectsDiscount8 (0.08s)
+=== RUN   TestListsOrder9
+--- PASS: TestListsOrder9 (0.09s)
+=== RUN   TestCreatesTotal10
+    refund_test.go:30: using fixture token.json
+--- PASS: TestCreatesTotal10 (0.00s)
+=== RUN   TestCreatesRounding11
+--- PASS: TestCreatesRounding11 (0.01s)
+=== RUN   TestHandlesCurrency12
+--- PASS: TestHandlesCurrency12 (0.02s)
+=== RUN   TestComputesItem13
+--- PASS: TestComputesItem13 (0.03s)
+=== RUN   TestSerializesBatch14
+--- PASS: TestSerializesBatch14 (0.04s)
+=== RUN   TestUpdatesInvoice15
+    refund_test.go:35: using fixture discount.json
+--- PASS: TestUpdatesInvoice15 (0.05s)
+=== RUN   TestDeletesToken16
+--- PASS: TestDeletesToken16 (0.06s)
+=== RUN   TestDeletesToken17
+--- PASS: TestDeletesToken17 (0.07s)
+=== RUN   TestPaginatesToken18
+--- PASS: TestPaginatesToken18 (0.08s)
+=== RUN   TestRejectsInvoice19
+--- PASS: TestRejectsInvoice19 (0.09s)
+=== RUN   TestDeletesInvoice20
+    refund_test.go:40: using fixture rounding.json
+--- PASS: TestDeletesInvoice20 (0.00s)
+=== RUN   TestParsesItem21
+--- PASS: TestParsesItem21 (0.01s)
+PASS
+ok  	github.com/acme/shop/internal/refund	0.024s
+=== RUN   TestCreatesRounding0
+    payment_test.go:20: using fixture payload.json
+--- PASS: TestCreatesRounding0 (0.00s)
+=== RUN   TestParsesAddress1
+--- PASS: TestParsesAddress1 (0.01s)
+=== RUN   TestRejectsRefund2
+--- PASS: TestRejectsRefund2 (0.02s)
+=== RUN   TestComputesInvoice3
+--- PASS: TestComputesInvoice3 (0.03s)
+=== RUN   TestUpdatesBatch4
+--- PASS: TestUpdatesBatch4 (0.04s)
+=== RUN   TestCreatesDiscount5
+    payment_test.go:25: using fixture customer.json
+--- PASS: TestCreatesDiscount5 (0.05s)
+=== RUN   TestDeletesTotal6
+--- PASS: TestDeletesTotal6 (0.06s)
+=== RUN   TestCreatesBatch7
+--- PASS: TestCreatesBatch7 (0.07s)
+=== RUN   TestCreatesInvoice8
+--- PASS: TestCreatesInvoice8 (0.08s)
+=== RUN   TestHandlesDiscount9
+--- PASS: TestHandlesDiscount9 (0.09s)
+=== RUN   TestComputesOrder10
+    payment_test.go:30: using fixture timeout.json
+--- PASS: TestComputesOrder10 (0.00s)
+=== RUN   TestHandlesRounding11
+--- PASS: TestHandlesRounding11 (0.01s)
+=== RUN   TestListsInvoice12
+--- PASS: TestListsInvoice12 (0.02s)
+=== RUN   TestRejectsPage13
+--- PASS: TestRejectsPage13 (0.03s)
+=== RUN   TestListsItem14
+--- PASS: TestListsItem14 (0.04s)
+=== RUN   TestParsesTotal15
+    payment_test.go:35: using fixture page.json
+--- PASS: TestParsesTotal15 (0.05s)
+=== RUN   TestDeletesItem16
+--- PASS: TestDeletesItem16 (0.06s)
+=== RUN   TestHandlesPayload17
+--- PASS: TestHandlesPayload17 (0.07s)
+=== RUN   TestFormatsTimeout18
+--- PASS: TestFormatsTimeout18 (0.08s)
+=== RUN   TestComputesTimeout19
+--- PASS: TestComputesTimeout19 (0.09s)
+=== RUN   TestCreatesCustomer20
+    payment_test.go:40: using fixture token.json
+--- PASS: TestCreatesCustomer20 (0.00s)
+=== RUN   TestHandlesItem21
+--- PASS: TestHandlesItem21 (0.01s)
+PASS
+ok  	github.com/acme/shop/internal/payment	0.031s
+=== RUN   TestRejectsPage0
+    invoice_test.go:20: using fixture refund.json
+--- PASS: TestRejectsPage0 (0.00s)
+=== RUN   TestDeletesTimeout1
+--- PASS: TestDeletesTimeout1 (0.01s)
+=== RUN   TestPaginatesOrder2
+--- PASS: TestPaginatesOrder2 (0.02s)
+=== RUN   TestListsBatch3
+--- PASS: TestListsBatch3 (0.03s)
+=== RUN   TestFormatsDiscount4
+--- PASS: TestFormatsDiscount4 (0.04s)
+=== RUN   TestListsAddress5
+    invoice_test.go:25: using fixture currency.json
+--- PASS: TestListsAddress5 (0.05s)
+=== RUN   TestCreatesDiscount6
+--- PASS: TestCreatesDiscount6 (0.06s)
+=== RUN   TestRejectsToken7
+--- PASS: TestRejectsToken7 (0.07s)
+=== RUN   TestCachesPage8
+--- PASS: TestCachesPage8 (0.08s)
+=== RUN   TestPaginatesTimeout9
+--- PASS: TestPaginatesTimeout9 (0.09s)
+=== RUN   TestPaginatesCurrency10
+    invoice_test.go:30: using fixture order.json
+--- PASS: TestPaginatesCurrency10 (0.00s)
+=== RUN   TestUpdatesCurrency11
+--- PASS: TestUpdatesCurrency11 (0.01s)
+=== RUN   TestFormatsTotal12
+--- PASS: TestFormatsTotal12 (0.02s)
+=== RUN   TestComputesTotal13
+--- PASS: TestComputesTotal13 (0.03s)
+=== RUN   TestDeletesOrder14
+--- PASS: TestDeletesOrder14 (0.04s)
+=== RUN   TestParsesItem15
+    invoice_test.go:35: using fixture timeout.json
+--- PASS: TestParsesItem15 (0.05s)
+=== RUN   TestPaginatesDiscount16
+--- PASS: TestPaginatesDiscount16 (0.06s)
+=== RUN   TestUpdatesCurrency17
+--- PASS: TestUpdatesCurrency17 (0.07s)
+=== RUN   TestCreatesAddress18
+--- PASS: TestCreatesAddress18 (0.08s)
+=== RUN   TestParsesItem19
+--- PASS: TestParsesItem19 (0.09s)
+=== RUN   TestFormatsPayload20
+    invoice_test.go:40: using fixture batch.json
+--- PASS: TestFormatsPayload20 (0.00s)
+=== RUN   TestHandlesCurrency21
+--- PASS: TestHandlesCurrency21 (0.01s)
+PASS
+ok  	github.com/acme/shop/internal/invoice	0.038s
+=== RUN   TestPaginatesDiscount0
+    customer_test.go:20: using fixture page.json
+--- PASS: TestPaginatesDiscount0 (0.00s)
+=== RUN   TestUpdatesDiscount1
+--- PASS: TestUpdatesDiscount1 (0.01s)
+=== RUN   TestHandlesPage2
+--- PASS: TestHandlesPage2 (0.02s)
+=== RUN   TestComputesTimeout3
+--- PASS: TestComputesTimeout3 (0.03s)
+=== RUN   TestRejectsTotal4
+--- PASS: TestRejectsTotal4 (0.04s)
+=== RUN   TestComputesPage5
+    customer_test.go:25: using fixture address.json
+--- PASS: TestComputesPage5 (0.05s)
+=== RUN   TestCachesItem6
+--- PASS: TestCachesItem6 (0.06s)
+=== RUN   TestRejectsToken7
+--- PASS: TestRejectsToken7 (0.07s)
+=== RUN   TestDeletesTotal8
+--- PASS: TestDeletesTotal8 (0.08s)
+=== RUN   TestPaginatesItem9
+--- PASS: TestPaginatesItem9 (0.09s)
+=== RUN   TestCachesToken10
+    customer_test.go:30: using fixture discount.json
+--- PASS: TestCachesToken10 (0.00s)
+=== RUN   TestHandlesCustomer11
+--- PASS: TestHandlesCustomer11 (0.01s)
+=== RUN   TestDeletesItem12
+--- PASS: TestDeletesItem12 (0.02s)
+=== RUN   TestCreatesToken13
+--- PASS: TestCreatesToken13 (0.03s)
+=== RUN   TestValidatesRounding14
+--- PASS: TestValidatesRounding14 (0.04s)
+=== RUN   TestDeletesPayload15
+    customer_test.go:35: using fixture address.json
+--- PASS: TestDeletesPayload15 (0.05s)
+=== RUN   TestSerializesAddress16
+--- PASS: TestSerializesAddress16 (0.06s)
+=== RUN   TestValidatesTotal17
+--- PASS: TestValidatesTotal17 (0.07s)
+=== RUN   TestUpdatesRefund18
+--- PASS: TestUpdatesRefund18 (0.08s)
+=== RUN   TestRejectsBatch19
+--- PASS: TestRejectsBatch19 (0.09s)
+=== RUN   TestValidatesCustomer20
+    customer_test.go:40: using fixture page.json
+--- PASS: TestValidatesCustomer20 (0.00s)
+=== RUN   TestParsesPage21
+--- PASS: TestParsesPage21 (0.01s)
+PASS
+ok  	github.com/acme/shop/internal/customer	0.045s
+=== RUN   TestCachesPayload0
+    catalog_test.go:20: using fixture item.json
+--- PASS: TestCachesPayload0 (0.00s)
+=== RUN   TestRetriesCurrency1
+--- PASS: TestRetriesCurrency1 (0.01s)
+=== RUN   TestComputesOrder2
+--- PASS: TestComputesOrder2 (0.02s)
+=== RUN   TestValidatesToken3
+--- PASS: TestValidatesToken3 (0.03s)
+=== RUN   TestSerializesCurrency4
+--- PASS: TestSerializesCurrency4 (0.04s)
+=== RUN   TestPaginatesCustomer5
+    catalog_test.go:25: using fixture timeout.json
+--- PASS: TestPaginatesCustomer5 (0.05s)
+=== RUN   TestParsesAddress6
+--- PASS: TestParsesAddress6 (0.06s)
+=== RUN   TestHandlesPage7
+--- PASS: TestHandlesPage7 (0.07s)
+=== RUN   TestDeletesRounding8
+--- PASS: TestDeletesRounding8 (0.08s)
+=== RUN   TestHandlesRounding9
+--- PASS: TestHandlesRounding9 (0.09s)
+=== RUN   TestDeletesPayload10
+    catalog_test.go:30: using fixture token.json
+--- PASS: TestDeletesPayload10 (0.00s)
+=== RUN   TestDeletesPage11
+--- PASS: TestDeletesPage11 (0.01s)
+=== RUN   TestSerializesToken12
+--- PASS: TestSerializesToken12 (0.02s)
+=== RUN   TestParsesCurrency13
+--- PASS: TestParsesCurrency13 (0.03s)
+=== RUN   TestComputesInvoice14
+--- PASS: TestComputesInvoice14 (0.04s)
+=== RUN   TestUpdatesPage15
+    catalog_test.go:35: using fixture discount.json
+--- PASS: TestUpdatesPage15 (0.05s)
+=== RUN   TestRejectsCurrency16
+--- PASS: TestRejectsCurrency16 (0.06s)
+=== RUN   TestCachesRefund17
+--- PASS: TestCachesRefund17 (0.07s)
+=== RUN   TestCachesToken18
+--- PASS: TestCachesToken18 (0.08s)
+=== RUN   TestPaginatesTimeout19
+--- PASS: TestPaginatesTimeout19 (0.09s)
+=== RUN   TestUpdatesAddress20
+    catalog_test.go:40: using fixture item.json
+--- PASS: TestUpdatesAddress20 (0.00s)
+=== RUN   TestRetriesCustomer21
+--- PASS: TestRetriesCustomer21 (0.01s)
+PASS
+ok  	github.com/acme/shop/internal/catalog	0.052s
+=== RUN   TestValidatesBatch0
+    inventory_test.go:20: using fixture token.json
+--- PASS: TestValidatesBatch0 (0.00s)
+=== RUN   TestUpdatesCustomer1
+--- PASS: TestUpdatesCustomer1 (0.01s)
+=== RUN   TestComputesRounding2
+--- PASS: TestComputesRounding2 (0.02s)
+=== RUN   TestDeletesDiscount3
+--- PASS: TestDeletesDiscount3 (0.03s)
+=== RUN   TestPaginatesDiscount4
+--- PASS: TestPaginatesDiscount4 (0.04s)
+=== RUN   TestParsesCurrency5
+    inventory_test.go:25: using fixture token.json
+--- PASS: TestParsesCurrency5 (0.05s)
+=== RUN   TestDeletesInvoice6
+--- PASS: TestDeletesInvoice6 (0.06s)
+=== RUN   TestPaginatesTimeout7
+--- PASS: TestPaginatesTimeout7 (0.07s)
+=== RUN   TestRejectsToken8
+--- PASS: TestRejectsToken8 (0.08s)
+=== RUN   TestComputesDiscount9
+--- PASS: TestComputesDiscount9 (0.09s)
+=== RUN   TestHandlesToken10
+    inventory_test.go:30: using fixture rounding.json
+--- PASS: TestHandlesToken10 (0.00s)
+=== RUN   TestValidatesToken11
+--- PASS: TestValidatesToken11 (0.01s)
+=== RUN   TestFormatsCustomer12
+--- PASS: TestFormatsCustomer12 (0.02s)
+=== RUN   TestListsInvoice13
+--- PASS: TestListsInvoice13 (0.03s)
+=== RUN   TestListsRounding14
+--- PASS: TestListsRounding14 (0.04s)
+=== RUN   TestCreatesRounding15
+    inventory_test.go:35: using fixture invoice.json
+--- PASS: TestCreatesRounding15 (0.05s)
+=== RUN   TestHandlesToken16
+--- PASS: TestHandlesToken16 (0.06s)
+=== RUN   TestRejectsToken17
+--- PASS: TestRejectsToken17 (0.07s)
+=== RUN   TestRejectsDiscount18
+--- PASS: TestRejectsDiscount18 (0.08s)
+=== RUN   TestPaginatesPayload19
+--- PASS: TestPaginatesPayload19 (0.09s)
+=== RUN   TestDeletesCustomer20
+    inventory_test.go:40: using fixture timeout.json
+--- PASS: TestDeletesCustomer20 (0.00s)
+=== RUN   TestCachesPage21
+--- PASS: TestCachesPage21 (0.01s)
+PASS
+ok  	github.com/acme/shop/internal/inventory	0.059s
+=== RUN   TestListsPayload0
+    shipping_test.go:20: using fixture item.json
+--- PASS: TestListsPayload0 (0.00s)
+=== RUN   TestHandlesToken1
+--- PASS: TestHandlesToken1 (0.01s)
+=== RUN   TestCreatesInvoice2
+--- PASS: TestCreatesInvoice2 (0.02s)
+=== RUN   TestHandlesToken3
+--- PASS: TestHandlesToken3 (0.03s)
+=== RUN   TestValidatesDiscount4
+--- PASS: TestValidatesDiscount4 (0.04s)
+=== RUN   TestComputesTimeout5
+    shipping_test.go:25: using fixture refund.json
+--- PASS: TestComputesTimeout5 (0.05s)
+=== RUN   TestCachesToken6
+--- PASS: TestCachesToken6 (0.06s)
+=== RUN   TestHandlesRefund7
+--- PASS: TestHandlesRefund7 (0.07s)
+=== RUN   TestFormatsRefund8
+--- PASS: TestFormatsRefund8 (0.08s)
+=== RUN   TestHandlesItem9
+--- PASS: TestHandlesItem9 (0.09s)
+=== RUN   TestUpdatesDiscount10
+    shipping_test.go:30: using fixture total.json
+--- PASS: TestUpdatesDiscount10 (0.00s)
+=== RUN   TestSerializesTotal11
+--- PASS: TestSerializesTotal11 (0.01s)
+=== RUN   TestCreatesTimeout12
+--- PASS: TestCreatesTimeout12 (0.02s)
+=== RUN   TestCachesDiscount13
+--- PASS: TestCachesDiscount13 (0.03s)
+=== RUN   TestPaginatesInvoice14
+--- PASS: TestPaginatesInvoice14 (0.04s)
+=== RUN   TestParsesTimeout15
+    shipping_test.go:35: using fixture payload.json
+--- PASS: TestParsesTimeout15 (0.05s)
+=== RUN   TestValidatesToken16
+--- PASS: TestValidatesToken16 (0.06s)
+=== RUN   TestRetriesInvoice17
+--- PASS: TestRetriesInvoice17 (0.07s)
+=== RUN   TestRejectsTotal18
+--- PASS: TestRejectsTotal18 (0.08s)
+=== RUN   TestPaginatesOrder19
+--- PASS: TestPaginatesOrder19 (0.09s)
+=== RUN   TestListsBatch20
+    shipping_test.go:40: using fixture order.json
+--- PASS: TestListsBatch20 (0.00s)
+=== RUN   TestUpdatesPayload21
+--- PASS: TestUpdatesPayload21 (0.01s)
+PASS
+ok  	github.com/acme/shop/internal/shipping	0.066s
+=== RUN   TestValidatesAddress0
+    auth_test.go:20: using fixture rounding.json
+--- PASS: TestValidatesAddress0 (0.00s)
+=== RUN   TestListsDiscount1
+--- PASS: TestListsDiscount1 (0.01s)
+=== RUN   TestRejectsCustomer2
+--- PASS: TestRejectsCustomer2 (0.02s)
+=== RUN   TestComputesOrder3
+--- PASS: TestComputesOrder3 (0.03s)
+=== RUN   TestSerializesRounding4
+--- PASS: TestSerializesRounding4 (0.04s)
+=== RUN   TestSerializesTotal5
+    auth_test.go:25: using fixture discount.json
+--- PASS: TestSerializesTotal5 (0.05s)
+=== RUN   TestRetriesRefund6
+--- PASS: TestRetriesRefund6 (0.06s)
+=== RUN   TestSerializesDiscount7
+--- PASS: TestSerializesDiscount7 (0.07s)
+=== RUN   TestFormatsCurrency8
+--- PASS: TestFormatsCurrency8 (0.08s)
+=== RUN   TestListsTimeout9
+--- PASS: TestListsTimeout9 (0.09s)
+=== RUN   TestFormatsCurrency10
+    auth_test.go:30: using fixture customer.json
+--- PASS: TestFormatsCurrency10 (0.00s)
+=== RUN   TestRetriesBatch11
+--- PASS: TestRetriesBatch11 (0.01s)
+=== RUN   TestUpdatesBatch12
+--- PASS: TestUpdatesBatch12 (0.02s)
+=== RUN   TestHandlesPage13
+--- PASS: TestHandlesPage13 (0.03s)
+=== RUN   TestDeletesOrder14
+--- PASS: TestDeletesOrder14 (0.04s)
+=== RUN   TestComputesAddress15
+    auth_test.go:35: using fixture customer.json
+--- PASS: TestComputesAddress15 (0.05s)
+=== RUN   TestRejectsItem16
+--- PASS: TestRejectsItem16 (0.06s)
+=== RUN   TestRejectsRounding17
+--- PASS: TestRejectsRounding17 (0.07s)
+=== RUN   TestFormatsPayload18
+--- PASS: TestFormatsPayload18 (0.08s)
+=== RUN   TestHandlesTotal19
+--- PASS: TestHandlesTotal19 (0.09s)
+=== RUN   TestCachesPage20
+    auth_test.go:40: using fixture rounding.json
+--- PASS: TestCachesPage20 (0.00s)
+=== RUN   TestRejectsOrder21
+--- PASS: TestRejectsOrder21 (0.01s)
+PASS
+ok  	github.com/acme/shop/internal/auth	0.073s
+=== RUN   TestCreatesAddress0
+    pricing_test.go:20: using fixture refund.json
+--- PASS: TestCreatesAddress0 (0.00s)
+=== RUN   TestComputesRounding1
+--- PASS: TestComputesRounding1 (0.01s)
+=== RUN   TestFormatsItem2
+--- PASS: TestFormatsItem2 (0.02s)
+=== RUN   TestDeletesCurrency3
+--- PASS: TestDeletesCurrency3 (0.03s)
+=== RUN   TestCachesPayload4
+--- PASS: TestCachesPayload4 (0.04s)
+=== RUN   TestSerializesCustomer5
+    pricing_test.go:25: using fixture currency.json
+--- PASS: TestSerializesCustomer5 (0.05s)
+=== RUN   TestSerializesTotal6
+--- PASS: TestSerializesTotal6 (0.06s)
+=== RUN   TestRejectsPayload7
+--- PASS: TestRejectsPayload7 (0.07s)
+=== RUN   TestHandlesTotal8
+--- PASS: TestHandlesTotal8 (0.08s)
+=== RUN   TestCreatesOrder9
+--- PASS: TestCreatesOrder9 (0.09s)
+=== RUN   TestCachesBatch10
+    pricing_test.go:30: using fixture item.json
+--- PASS: TestCachesBatch10 (0.00s)
+=== RUN   TestComputesRefund11
+--- PASS: TestComputesRefund11 (0.01s)
+=== RUN   TestHandlesItem12
+--- PASS: TestHandlesItem12 (0.02s)
+=== RUN   TestHandlesCurrency13
+--- PASS: TestHandlesCurrency13 (0.03s)
+=== RUN   TestRejectsBatch14
+--- PASS: TestRejectsBatch14 (0.04s)
+=== RUN   TestFormatsDiscount15
+    pricing_test.go:35: using fixture refund.json
+--- PASS: TestFormatsDiscount15 (0.05s)
+=== RUN   TestPaginatesItem16
+--- PASS: TestPaginatesItem16 (0.06s)
+=== RUN   TestCreatesPayload17
+--- PASS: TestCreatesPayload17 (0.07s)
+=== RUN   TestRetriesRounding18
+--- PASS: TestRetriesRounding18 (0.08s)
+=== RUN   TestUpdatesItem19
+--- PASS: TestUpdatesItem19 (0.09s)
+=== RUN   TestCachesTimeout20
+    pricing_test.go:40: using fixture customer.json
+--- PASS: TestCachesTimeout20 (0.00s)
+=== RUN   TestRejectsPage21
+--- PASS: TestRejectsPage21 (0.01s)
+PASS
+ok  	github.com/acme/shop/internal/pricing	0.080s
+=== RUN   TestRetriesToken0
+    tax_test.go:20: using fixture order.json
+--- PASS: TestRetriesToken0 (0.00s)
+=== RUN   TestFormatsPage1
+--- PASS: TestFormatsPage1 (0.01s)
+=== RUN   TestUpdatesPage2
+--- PASS: TestUpdatesPage2 (0.02s)
+=== RUN   TestListsRounding3
+--- PASS: TestListsRounding3 (0.03s)
+=== RUN   TestRetriesAddress4
+--- PASS: TestRetriesAddress4 (0.04s)
+=== RUN   TestRejectsCustomer5
+    tax_test.go:25: using fixture total.json
+--- PASS: TestRejectsCustomer5 (0.05s)
+=== RUN   TestSerializesRounding6
+--- PASS: TestSerializesRounding6 (0.06s)
+=== RUN   TestHandlesRounding7
+--- PASS: TestHandlesRounding7 (0.07s)
+=== RUN   TestPaginatesDiscount8
+--- PASS: TestPaginatesDiscount8 (0.08s)
+=== RUN   TestHandlesRefund9
+--- PASS: TestHandlesRefund9 (0.09s)
+=== RUN   TestDeletesToken10
+    tax_test.go:30: using fixture token.json
+--- PASS: TestDeletesToken10 (0.00s)
+=== RUN   TestComputesTimeout11
+--- PASS: TestComputesTimeout11 (0.01s)
+=== RUN   TestPaginatesPayload12
+--- PASS: TestPaginatesPayload12 (0.02s)
+=== RUN   TestRejectsCurrency13
+--- PASS: TestRejectsCurrency13 (0.03s)
+=== RUN   TestCreatesTotal14
+--- PASS: TestCreatesTotal14 (0.04s)
+=== RUN   TestRejectsPayload15
+    tax_test.go:35: using fixture refund.json
+--- PASS: TestRejectsPayload15 (0.05s)
+=== RUN   TestHandlesRounding16
+--- PASS: TestHandlesRounding16 (0.06s)
+=== RUN   TestCreatesRounding17
+--- PASS: TestCreatesRounding17 (0.07s)
+=== RUN   TestPaginatesToken18
+--- PASS: TestPaginatesToken18 (0.08s)
+=== RUN   TestParsesTimeout19
+--- PASS: TestParsesTimeout19 (0.09s)
+=== RUN   TestListsCurrency20
+    tax_test.go:40: using fixture discount.json
+--- PASS: TestListsCurrency20 (0.00s)
+=== RUN   TestCachesItem21
+--- PASS: TestCachesItem21 (0.01s)
+PASS
+ok  	github.com/acme/shop/internal/tax	0.087s
+?   	github.com/acme/shop/cmd/shop	[no test files]
+?   	github.com/acme/shop/internal/version	[no test files]

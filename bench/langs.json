@@ -1,0 +1,133 @@
+{
+  "version": 1,
+  "notes": "One representative open-source repository per language supported by the indexer (12 grammars: TSX is measured inside the TypeScript repo, and JavaScript also goes through the TSX grammar). Checkouts live in bench/repos/<name> (gitignored, read-only, never built or executed): git clone --depth 1 --branch <tag> <url> bench/repos/<name>, or `kopt bench all --clone`. files/loc = files and newline count of the primary language in `git ls-files` at the tag (tests and fixtures included). Gold items avoid enterprise-licensed parts of medusa and meilisearch.",
+  "repos": [
+    {
+      "name": "spring-framework",
+      "language": "java",
+      "otherLanguages": ["kotlin"],
+      "url": "https://github.com/spring-projects/spring-framework.git",
+      "tag": "v7.0.9",
+      "commit": "82a6b40b9366ec181ededdad282b307ee5381a52",
+      "license": "Apache-2.0",
+      "files": 9210,
+      "loc": 1500787,
+      "reason": "Reference enterprise Java framework (DI container, transactions, MVC). Large multi-module Gradle build; several tasks target APIs new in 7.0 (core.retry, resilience, API versioning) that models cannot answer from memory."
+    },
+    {
+      "name": "django",
+      "language": "python",
+      "url": "https://github.com/django/django.git",
+      "tag": "6.1.2",
+      "commit": "2212534bae393714e1e51db2341d4fd5545e19f6",
+      "license": "BSD-3-Clause",
+      "files": 2919,
+      "loc": 524516,
+      "reason": "Large, idiomatic Python web framework (ORM, migrations, middleware, templates) with deep package nesting and dynamic dispatch."
+    },
+    {
+      "name": "medusa",
+      "language": "typescript",
+      "otherLanguages": ["tsx", "javascript"],
+      "url": "https://github.com/medusajs/medusa.git",
+      "tag": "v2.21.2",
+      "commit": "020565398e436a2bc65777a3b1ad347b4735d6df",
+      "license": "MIT (except files listed in ENTERPRISE-LICENSE.md)",
+      "files": 8000,
+      "loc": 931608,
+      "reason": "Enterprise commerce platform: TypeScript monorepo of domain modules (order, cart, payment, inventory), a workflow engine with compensation, DI container and a large React/TSX admin dashboard. Less famous internals than Angular or NestJS."
+    },
+    {
+      "name": "webpack",
+      "language": "javascript",
+      "otherLanguages": ["typescript"],
+      "url": "https://github.com/webpack/webpack.git",
+      "tag": "v5.111.1",
+      "commit": "5a106753839fd7e1b86138c3a5f6b348341147a7",
+      "license": "MIT",
+      "files": 15715,
+      "loc": 582325,
+      "reason": "Large plain-JavaScript (CommonJS, JSDoc-typed) codebase with a plugin/hook architecture; ~15k JS files of which most are test cases, which stresses ranking and test demotion."
+    },
+    {
+      "name": "jellyfin",
+      "language": "c_sharp",
+      "url": "https://github.com/jellyfin/jellyfin.git",
+      "tag": "v10.11.11",
+      "commit": "1fbd8739292cce610231be93daf43368733edf63",
+      "license": "GPL-2.0",
+      "files": 1960,
+      "loc": 277939,
+      "reason": "Enterprise-style .NET application: ASP.NET Core controllers, dependency injection, EF Core data layer, background tasks and a plugin system. Read-only use."
+    },
+    {
+      "name": "gitea",
+      "language": "go",
+      "otherLanguages": ["typescript"],
+      "url": "https://github.com/go-gitea/gitea.git",
+      "tag": "v28.1.0",
+      "commit": "4ebd5e319b6a9e629bfd7a04292a6fe85b08dee9",
+      "license": "MIT",
+      "files": 3148,
+      "loc": 504963,
+      "reason": "Large Go application with a classic layered layout (models, services, routers, modules), many packages sharing short names, which stresses Go reference resolution."
+    },
+    {
+      "name": "exposed",
+      "language": "kotlin",
+      "url": "https://github.com/JetBrains/Exposed.git",
+      "tag": "1.5.0",
+      "commit": "84361204b6639cad5696506a26595c97afac3531",
+      "license": "Apache-2.0",
+      "files": 860,
+      "loc": 141939,
+      "reason": "Kotlin SQL framework (DSL + DAO, JDBC and R2DBC) built on extension functions, objects and DSL builders: typical of enterprise Kotlin data access."
+    },
+    {
+      "name": "meilisearch",
+      "language": "rust",
+      "url": "https://github.com/meilisearch/meilisearch.git",
+      "tag": "v1.54.3",
+      "commit": "7ebd97e38c36882b0c78d79e433b9115b4f003b3",
+      "license": "MIT (except Enterprise Edition files)",
+      "files": 718,
+      "loc": 268304,
+      "reason": "Rust application (search engine with an HTTP API, task scheduler and indexing pipeline) organized as a Cargo workspace; traits, impl blocks and macros."
+    },
+    {
+      "name": "laravel",
+      "language": "php",
+      "url": "https://github.com/laravel/framework.git",
+      "tag": "v13.35.0",
+      "commit": "a413a9da94884e5e9d58f4e6612884f712827804",
+      "license": "MIT",
+      "files": 3122,
+      "loc": 574366,
+      "reason": "The dominant PHP framework (container, Eloquent ORM, queues, routing); namespaces, traits, facades and magic methods. Tasks favour less-known internals."
+    },
+    {
+      "name": "discourse",
+      "language": "ruby",
+      "otherLanguages": ["javascript"],
+      "url": "https://github.com/discourse/discourse.git",
+      "tag": "v2026.9.0",
+      "commit": "343b20f97ef5f6bd70826ee0e993ba348b210fd5",
+      "license": "GPL-2.0",
+      "files": 12317,
+      "loc": 1422206,
+      "reason": "Large Rails application (models, services, jobs, lib) with metaprogramming, concerns and a JavaScript frontend in the same repo. Read-only use."
+    },
+    {
+      "name": "playframework",
+      "language": "scala",
+      "otherLanguages": ["java"],
+      "url": "https://github.com/playframework/playframework.git",
+      "tag": "3.0.12",
+      "commit": "316f494b2d1292c250c19685f21189ab077d7229",
+      "license": "Apache-2.0",
+      "files": 803,
+      "loc": 114091,
+      "reason": "Enterprise web framework written in Scala with a Java API on top (mixed Scala/Java code base): implicits, case classes, traits, companion objects."
+    }
+  ]
+}

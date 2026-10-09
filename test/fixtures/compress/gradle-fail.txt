@@ -1,0 +1,78 @@
+> Configure project :
+> Task :model:compileJava
+> Task :model:processResources NO-SOURCE
+> Task :model:classes UP-TO-DATE
+> Task :model:compileTestJava
+> Task :model:processTestResources
+> Task :model:testClasses
+> Task :core:compileJava
+> Task :core:processResources NO-SOURCE
+> Task :core:classes UP-TO-DATE
+> Task :core:compileTestJava
+> Task :core:processTestResources
+> Task :core:testClasses
+> Task :persistence:compileJava
+> Task :persistence:processResources NO-SOURCE
+> Task :persistence:classes UP-TO-DATE
+> Task :persistence:compileTestJava
+> Task :persistence:processTestResources
+> Task :persistence:testClasses
+> Task :api:compileJava FAILED
+/home/dev/shop/api/src/main/java/com/acme/shop/api/OrderController.java:42: error: cannot find symbol
+        BigDecimal total = calculator.computeTotal(items);
+                                     ^
+  symbol:   method computeTotal(List<Item>)
+  location: variable calculator of type PriceCalculator
+/home/dev/shop/api/src/main/java/com/acme/shop/api/OrderController.java:57: error: incompatible types: String cannot be converted to int
+        int qty = request.getQuantity();
+                                     ^
+Note: Some input files use unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+2 errors
+
+> Task :core:test FAILED
+
+RefundServiceTest > refundPartial() FAILED
+    org.opentest4j.AssertionFailedError: expected: <70.00> but was: <60.00>
+        at app//org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+        at app//org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+        at app//org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:197)
+        at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:182)
+        at app//org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:1156)
+        at app//com.acme.shop.refunds.RefundServiceTest.refundPartial(RefundServiceTest.java:42)
+
+RefundServiceTest > refundRounding() FAILED
+    org.opentest4j.AssertionFailedError: expected: <33.34> but was: <33.33>
+        at app//org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+        at app//org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:1156)
+        at app//com.acme.shop.refunds.RefundServiceTest.refundRounding(RefundServiceTest.java:61)
+
+248 tests completed, 2 failed, 3 skipped
+
+FAILURE: Build completed with 2 failures.
+
+1: Task failed with an exception.
+-----------
+* What went wrong:
+Execution failed for task ':api:compileJava'.
+> Compilation failed; see the compiler error output for details.
+
+* Try:
+> Run with --info option to get more log output.
+> Run with --scan to get full insights.
+==============================================================================
+
+2: Task failed with an exception.
+-----------
+* What went wrong:
+Execution failed for task ':core:test'.
+> There were failing tests. See the report at: file:///home/dev/shop/core/build/reports/tests/test/index.html
+
+* Try:
+> Run with --scan to get full insights.
+==============================================================================
+
+* Get more help at https://help.gradle.org
+
+BUILD FAILED in 41s
+37 actionable tasks: 12 executed, 25 up-to-date

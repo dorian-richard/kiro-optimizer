@@ -1,0 +1,2657 @@
+{
+  "meta": {
+    "label": "spring-framework",
+    "repo": {
+      "name": "spring-framework",
+      "url": "https://github.com/spring-projects/spring-framework.git",
+      "tag": "v7.0.9",
+      "commit": "82a6b40b9366ec181ededdad282b307ee5381a52",
+      "language": "java",
+      "path": "bench/repos/spring-framework"
+    },
+    "repoRoot": "bench/repos/spring-framework",
+    "headCommit": "82a6b40b9366ec181ededdad282b307ee5381a52",
+    "date": "2026-10-09T09:44:30.612Z",
+    "input": "search",
+    "charsPerToken": 3,
+    "strategies": [
+      "native-naive",
+      "native-ranged",
+      "kopt-pack",
+      "kopt-hits+read"
+    ],
+    "grepLimits": {
+      "maxMatches": 100,
+      "maxChars": 10000,
+      "maxLineChars": 250
+    },
+    "readLimits": {
+      "naiveTopFiles": 3,
+      "naiveMaxLines": 2000,
+      "rangedMatches": 4,
+      "rangedContext": 60
+    },
+    "koptBudgets": {
+      "find": 700,
+      "pack": 2500,
+      "read": 2000
+    },
+    "index": {
+      "built": false,
+      "durationMs": 0,
+      "files": 9552,
+      "symbols": 138619,
+      "path": "bench/repos/.kopt-spring-framework/index.db"
+    },
+    "notes": [],
+    "durationMs": 9088
+  },
+  "results": [
+    {
+      "taskId": "sf-locate-retry-loop",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 23792,
+      "chars": 71372,
+      "toolCalls": 4,
+      "durationMs": 522,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "spring-core/src/main/java/org/springframework/core/retry/RetryTemplate.java"
+        ],
+        "symbolsMissed": [
+          "RetryTemplate",
+          "execute",
+          "checkIfTimeoutExceeded"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "loop",
+          "chars": 10003,
+          "tokens": 3335
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-web/src/main/java/org/springframework/http/client/ReactorResourceFactory.java",
+          "chars": 11844,
+          "tokens": 3948
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-core/src/main/java/org/springframework/cglib/core/EmitUtils.java",
+          "chars": 37941,
+          "tokens": 12647
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-messaging/src/main/java/org/springframework/messaging/tcp/reactor/ReactorNettyTcpClient.java",
+          "chars": 11584,
+          "tokens": 3862
+        }
+      ]
+    },
+    {
+      "taskId": "sf-locate-retry-loop",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 8971,
+      "chars": 26910,
+      "toolCalls": 4,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "spring-core/src/main/java/org/springframework/core/retry/RetryTemplate.java"
+        ],
+        "symbolsMissed": [
+          "RetryTemplate",
+          "execute",
+          "checkIfTimeoutExceeded"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "loop",
+          "chars": 10003,
+          "tokens": 3335
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-messaging/src/main/java/org/springframework/messaging/tcp/reactor/ReactorNettyTcpClient.java:15-135",
+          "chars": 4652,
+          "tokens": 1551
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-web/src/main/java/org/springframework/http/client/ReactorResourceFactory.java:6-224",
+          "chars": 8316,
+          "tokens": 2772
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-web/src/main/java/org/springframework/web/util/WhatWgUrlParser.java:37-157",
+          "chars": 3939,
+          "tokens": 1313
+        }
+      ]
+    },
+    {
+      "taskId": "sf-locate-retry-loop",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1041,
+      "chars": 3121,
+      "toolCalls": 1,
+      "durationMs": 291,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "spring-core/src/main/java/org/springframework/core/retry/RetryTemplate.java"
+        ],
+        "symbolsMissed": [
+          "RetryTemplate",
+          "execute",
+          "checkIfTimeoutExceeded"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"retry loop back off attempts timeout exceeded\"",
+          "chars": 3121,
+          "tokens": 1041
+        }
+      ]
+    },
+    {
+      "taskId": "sf-locate-retry-loop",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 1773,
+      "chars": 5314,
+      "toolCalls": 3,
+      "durationMs": 36,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "spring-core/src/main/java/org/springframework/core/retry/RetryTemplate.java"
+        ],
+        "symbolsMissed": [
+          "RetryTemplate",
+          "execute",
+          "checkIfTimeoutExceeded"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"retry loop back off attempts timeout exceeded\"",
+          "chars": 2065,
+          "tokens": 689
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#z9d",
+          "chars": 3137,
+          "tokens": 1046
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#z93",
+          "chars": 112,
+          "tokens": 38
+        }
+      ]
+    },
+    {
+      "taskId": "sf-locate-api-version",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 31703,
+      "chars": 95104,
+      "toolCalls": 4,
+      "durationMs": 1416,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "spring-web/src/main/java/org/springframework/web/accept/ApiVersionStrategy.java",
+          "spring-web/src/main/java/org/springframework/web/accept/DefaultApiVersionStrategy.java",
+          "spring-webmvc/src/main/java/org/springframework/web/servlet/handler/AbstractHandlerMapping.java"
+        ],
+        "symbolsMissed": [
+          "resolveParseAndValidateVersion",
+          "DefaultApiVersionStrategy",
+          "validateVersion",
+          "initApiVersion"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "validate",
+          "chars": 10039,
+          "tokens": 3347
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-context-support/src/main/java/org/springframework/mail/javamail/MimeMessageHelper.java",
+          "chars": 51062,
+          "tokens": 17021
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-web/src/main/java/org/springframework/http/CacheControl.java",
+          "chars": 15307,
+          "tokens": 5103
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-web/src/main/java/org/springframework/web/method/HandlerMethod.java",
+          "chars": 18696,
+          "tokens": 6232
+        }
+      ]
+    },
+    {
+      "taskId": "sf-locate-api-version",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 9466,
+      "chars": 28394,
+      "toolCalls": 4,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "spring-web/src/main/java/org/springframework/web/accept/ApiVersionStrategy.java",
+          "spring-web/src/main/java/org/springframework/web/accept/DefaultApiVersionStrategy.java",
+          "spring-webmvc/src/main/java/org/springframework/web/servlet/handler/AbstractHandlerMapping.java"
+        ],
+        "symbolsMissed": [
+          "resolveParseAndValidateVersion",
+          "DefaultApiVersionStrategy",
+          "validateVersion",
+          "initApiVersion"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "validate",
+          "chars": 10039,
+          "tokens": 3347
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-context-support/src/main/java/org/springframework/mail/javamail/MimeMessageHelper.java:118-238",
+          "chars": 5214,
+          "tokens": 1738
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-context-support/src/main/java/org/springframework/mail/javamail/MimeMessageHelper.java:457-577",
+          "chars": 4141,
+          "tokens": 1381
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-web/src/main/java/org/springframework/http/CacheControl.java:1-237",
+          "chars": 9000,
+          "tokens": 3000
+        }
+      ]
+    },
+    {
+      "taskId": "sf-locate-api-version",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1363,
+      "chars": 4088,
+      "toolCalls": 1,
+      "durationMs": 137,
+      "recall": {
+        "fileRecall": 0.6666666666666666,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [
+          "spring-webmvc/src/main/java/org/springframework/web/servlet/handler/AbstractHandlerMapping.java"
+        ],
+        "symbolsMissed": [],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"api version request resolve parse validate handler mapping\"",
+          "chars": 4088,
+          "tokens": 1363
+        }
+      ]
+    },
+    {
+      "taskId": "sf-locate-api-version",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 1152,
+      "chars": 3452,
+      "toolCalls": 3,
+      "durationMs": 55,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.75,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"api version request resolve parse validate handler mapping\"",
+          "chars": 2080,
+          "tokens": 694
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#2gt2",
+          "chars": 783,
+          "tokens": 261
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#2gt3",
+          "chars": 589,
+          "tokens": 197
+        }
+      ]
+    },
+    {
+      "taskId": "sf-locate-sqlstate-lock",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 8382,
+      "chars": 25142,
+      "toolCalls": 4,
+      "durationMs": 332,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "CannotAcquireLockException",
+          "chars": 4950,
+          "tokens": 1650
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-tx/src/main/java/org/springframework/dao/CannotAcquireLockException.java",
+          "chars": 1571,
+          "tokens": 524
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-jdbc/src/main/java/org/springframework/jdbc/support/SQLStateSQLExceptionTranslator.java",
+          "chars": 8383,
+          "tokens": 2795
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-orm/src/main/java/org/springframework/orm/jpa/hibernate/HibernateExceptionTranslator.java",
+          "chars": 10238,
+          "tokens": 3413
+        }
+      ]
+    },
+    {
+      "taskId": "sf-locate-sqlstate-lock",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 6511,
+      "chars": 19527,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "indicatesCannotAcquireLock"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "CannotAcquireLockException",
+          "chars": 4950,
+          "tokens": 1650
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-jdbc/src/test/java/org/springframework/jdbc/support/SQLErrorCodeSQLExceptionTranslatorTests.java:23-143",
+          "chars": 5092,
+          "tokens": 1698
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-jdbc/src/test/java/org/springframework/jdbc/support/SQLExceptionSubclassTranslatorTests.java:13-101",
+          "chars": 4619,
+          "tokens": 1540
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-jdbc/src/test/java/org/springframework/jdbc/support/SQLStateSQLExceptionTranslatorTests.java:62-182",
+          "chars": 3295,
+          "tokens": 1099
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-tx/src/main/java/org/springframework/dao/CannotAcquireLockException.java:1-51",
+          "chars": 1571,
+          "tokens": 524
+        }
+      ]
+    },
+    {
+      "taskId": "sf-locate-sqlstate-lock",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 499,
+      "chars": 1496,
+      "toolCalls": 1,
+      "durationMs": 60,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 1,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [
+          "spring-jdbc/src/main/java/org/springframework/jdbc/support/SQLExceptionSubclassTranslator.java"
+        ],
+        "symbolsMissed": [],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"SQL state 40001 CannotAcquireLockException translate\"",
+          "chars": 1496,
+          "tokens": 499
+        }
+      ]
+    },
+    {
+      "taskId": "sf-locate-sqlstate-lock",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 564,
+      "chars": 1687,
+      "toolCalls": 3,
+      "durationMs": 32,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [
+          "spring-jdbc/src/main/java/org/springframework/jdbc/support/SQLExceptionSubclassTranslator.java"
+        ],
+        "symbolsMissed": [
+          "SQLExceptionSubclassTranslator"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"SQL state 40001 CannotAcquireLockException translate\"",
+          "chars": 826,
+          "tokens": 276
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#1za8",
+          "chars": 643,
+          "tokens": 215
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#1bl6",
+          "chars": 218,
+          "tokens": 73
+        }
+      ]
+    },
+    {
+      "taskId": "sf-locate-advice-order",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 15882,
+      "chars": 47641,
+      "toolCalls": 4,
+      "durationMs": 428,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "precedence",
+          "chars": 9934,
+          "tokens": 3312
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-aop/src/main/java/org/springframework/aop/aspectj/autoproxy/AspectJPrecedenceComparator.java",
+          "chars": 5337,
+          "tokens": 1779
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-aop/src/main/java/org/springframework/aop/aspectj/AspectJAopUtils.java",
+          "chars": 2332,
+          "tokens": 778
+        },
+        {
+          "tool": "read_file",
+          "args": "framework-docs/modules/ROOT/pages/core/aop/ataspectj/advice.adoc",
+          "chars": 30038,
+          "tokens": 10013
+        }
+      ]
+    },
+    {
+      "taskId": "sf-locate-advice-order",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 7360,
+      "chars": 22075,
+      "toolCalls": 4,
+      "durationMs": 4,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "precedence",
+          "chars": 9934,
+          "tokens": 3312
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-aop/src/main/java/org/springframework/aop/aspectj/AspectJAopUtils.java:2-74",
+          "chars": 2329,
+          "tokens": 777
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-aop/src/main/java/org/springframework/aop/aspectj/autoproxy/AspectJAwareAdvisorAutoProxyCreator.java:1-113",
+          "chars": 4475,
+          "tokens": 1492
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-aop/src/main/java/org/springframework/aop/aspectj/autoproxy/AspectJPrecedenceComparator.java:1-148",
+          "chars": 5337,
+          "tokens": 1779
+        }
+      ]
+    },
+    {
+      "taskId": "sf-locate-advice-order",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 805,
+      "chars": 2415,
+      "toolCalls": 1,
+      "durationMs": 164,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"advice precedence same aspect declaration order comparator\"",
+          "chars": 2415,
+          "tokens": 805
+        }
+      ]
+    },
+    {
+      "taskId": "sf-locate-advice-order",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 1879,
+      "chars": 5633,
+      "toolCalls": 3,
+      "durationMs": 77,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"advice precedence same aspect declaration order comparator\"",
+          "chars": 2095,
+          "tokens": 699
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#1t3",
+          "chars": 3370,
+          "tokens": 1124
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#1tf",
+          "chars": 168,
+          "tokens": 56
+        }
+      ]
+    },
+    {
+      "taskId": "sf-explain-concurrency-limit",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 13248,
+      "chars": 39740,
+      "toolCalls": 4,
+      "durationMs": 726,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "throttle",
+          "chars": 9991,
+          "tokens": 3331
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-core/src/main/java/org/springframework/core/task/SimpleAsyncTaskExecutor.java",
+          "chars": 17502,
+          "tokens": 5834
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-context/src/main/java/org/springframework/resilience/annotation/ConcurrencyLimitBeanPostProcessor.java",
+          "chars": 7026,
+          "tokens": 2342
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-context/src/main/java/org/springframework/resilience/annotation/ConcurrencyLimit.java",
+          "chars": 5221,
+          "tokens": 1741
+        }
+      ]
+    },
+    {
+      "taskId": "sf-explain-concurrency-limit",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 9115,
+      "chars": 27340,
+      "toolCalls": 5,
+      "durationMs": 1,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "throttle",
+          "chars": 9991,
+          "tokens": 3331
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-context/src/main/java/org/springframework/resilience/annotation/ConcurrencyLimitBeanPostProcessor.java:19-139",
+          "chars": 5070,
+          "tokens": 1690
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-core/src/main/java/org/springframework/core/task/SimpleAsyncTaskExecutor.java:13-133",
+          "chars": 4476,
+          "tokens": 1492
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-core/src/main/java/org/springframework/core/task/SimpleAsyncTaskExecutor.java:203-323",
+          "chars": 4681,
+          "tokens": 1561
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-core/src/main/java/org/springframework/core/task/SimpleAsyncTaskExecutor.java:373-493",
+          "chars": 3122,
+          "tokens": 1041
+        }
+      ]
+    },
+    {
+      "taskId": "sf-explain-concurrency-limit",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 813,
+      "chars": 2439,
+      "toolCalls": 1,
+      "durationMs": 51,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0.25,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "ConcurrencyLimitInterceptor",
+          "beforeAccess"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"ConcurrencyLimit annotation throttle method invocations limit\"",
+          "chars": 2439,
+          "tokens": 813
+        }
+      ]
+    },
+    {
+      "taskId": "sf-explain-concurrency-limit",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 1584,
+      "chars": 4750,
+      "toolCalls": 3,
+      "durationMs": 32,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0.25,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "ConcurrencyLimitInterceptor",
+          "beforeAccess"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"ConcurrencyLimit annotation throttle method invocations limit\"",
+          "chars": 2013,
+          "tokens": 671
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#gbx",
+          "chars": 2576,
+          "tokens": 859
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#gc2",
+          "chars": 161,
+          "tokens": 54
+        }
+      ]
+    },
+    {
+      "taskId": "sf-explain-retryable",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 8744,
+      "chars": 26228,
+      "toolCalls": 3,
+      "durationMs": 449,
+      "recall": {
+        "fileRecall": 0.3333333333333333,
+        "symbolRecall": 0.25,
+        "defRecall": 0.25,
+        "filesMissed": [
+          "spring-context/src/main/java/org/springframework/resilience/annotation/RetryAnnotationBeanPostProcessor.java",
+          "spring-context/src/main/java/org/springframework/resilience/retry/AbstractRetryInterceptor.java"
+        ],
+        "symbolsMissed": [
+          "RetryAnnotationBeanPostProcessor",
+          "getRetrySpec",
+          "AbstractRetryInterceptor"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "retryable",
+          "chars": 9964,
+          "tokens": 3322
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-core/src/main/java/org/springframework/core/retry/RetryTemplate.java",
+          "chars": 10497,
+          "tokens": 3499
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-core/src/main/java/org/springframework/core/retry/RetryListener.java",
+          "chars": 5767,
+          "tokens": 1923
+        }
+      ]
+    },
+    {
+      "taskId": "sf-explain-retryable",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 7682,
+      "chars": 23041,
+      "toolCalls": 3,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0.3333333333333333,
+        "symbolRecall": 0.25,
+        "defRecall": 0,
+        "filesMissed": [
+          "spring-context/src/main/java/org/springframework/resilience/annotation/RetryAnnotationBeanPostProcessor.java",
+          "spring-context/src/main/java/org/springframework/resilience/retry/AbstractRetryInterceptor.java"
+        ],
+        "symbolsMissed": [
+          "RetryAnnotationBeanPostProcessor",
+          "getRetrySpec",
+          "AbstractRetryInterceptor"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "retryable",
+          "chars": 9964,
+          "tokens": 3322
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-core/src/main/java/org/springframework/core/retry/RetryListener.java:1-141",
+          "chars": 5767,
+          "tokens": 1923
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-core/src/main/java/org/springframework/core/retry/RetryTemplate.java:66-269",
+          "chars": 7310,
+          "tokens": 2437
+        }
+      ]
+    },
+    {
+      "taskId": "sf-explain-retryable",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 2168,
+      "chars": 6502,
+      "toolCalls": 1,
+      "durationMs": 39,
+      "recall": {
+        "fileRecall": 0.3333333333333333,
+        "symbolRecall": 0.75,
+        "defRecall": 0.5,
+        "filesMissed": [
+          "spring-context/src/main/java/org/springframework/resilience/retry/AbstractRetryInterceptor.java",
+          "spring-core/src/main/java/org/springframework/core/retry/RetryTemplate.java"
+        ],
+        "symbolsMissed": [
+          "RetryTemplate"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"Retryable annotation retry interceptor retry policy\"",
+          "chars": 6502,
+          "tokens": 2168
+        }
+      ]
+    },
+    {
+      "taskId": "sf-explain-retryable",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 2701,
+      "chars": 8101,
+      "toolCalls": 3,
+      "durationMs": 40,
+      "recall": {
+        "fileRecall": 0.3333333333333333,
+        "symbolRecall": 0.75,
+        "defRecall": 0.5,
+        "filesMissed": [
+          "spring-context/src/main/java/org/springframework/resilience/retry/AbstractRetryInterceptor.java",
+          "spring-core/src/main/java/org/springframework/core/retry/RetryTemplate.java"
+        ],
+        "symbolsMissed": [
+          "RetryTemplate"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"Retryable annotation retry interceptor retry policy\"",
+          "chars": 2091,
+          "tokens": 697
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#gdx",
+          "chars": 1364,
+          "tokens": 455
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#gf4",
+          "chars": 4646,
+          "tokens": 1549
+        }
+      ]
+    },
+    {
+      "taskId": "sf-explain-config-full-lite",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 30624,
+      "chars": 91868,
+      "toolCalls": 4,
+      "durationMs": 276,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.25,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "checkConfigurationClassCandidate",
+          "enhanceConfigurationClasses",
+          "enhance"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "proxyBeanMethods",
+          "chars": 10010,
+          "tokens": 3337
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-context/src/test/java/org/springframework/context/annotation/BackgroundBootstrapTests.java",
+          "chars": 16373,
+          "tokens": 5458
+        },
+        {
+          "tool": "read_file",
+          "args": "framework-docs/modules/ROOT/pages/core/aot.adoc",
+          "chars": 35217,
+          "tokens": 11739
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-context/src/test/java/org/springframework/context/annotation/ConfigurationClassPostProcessorAotContributionTests.java",
+          "chars": 30268,
+          "tokens": 10090
+        }
+      ]
+    },
+    {
+      "taskId": "sf-explain-config-full-lite",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 9933,
+      "chars": 29795,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.75,
+        "defRecall": 0.25,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "checkConfigurationClassCandidate"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "proxyBeanMethods",
+          "chars": 10010,
+          "tokens": 3337
+        },
+        {
+          "tool": "read_file",
+          "args": "framework-docs/modules/ROOT/pages/core/aot.adoc:88-208",
+          "chars": 5858,
+          "tokens": 1953
+        },
+        {
+          "tool": "read_file",
+          "args": "framework-docs/modules/ROOT/pages/core/aot.adoc:228-348",
+          "chars": 4065,
+          "tokens": 1355
+        },
+        {
+          "tool": "read_file",
+          "args": "framework-docs/modules/ROOT/pages/core/aot.adoc:378-498",
+          "chars": 4120,
+          "tokens": 1374
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassPostProcessor.java:495-615",
+          "chars": 5742,
+          "tokens": 1914
+        }
+      ]
+    },
+    {
+      "taskId": "sf-explain-config-full-lite",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 594,
+      "chars": 1782,
+      "toolCalls": 1,
+      "durationMs": 124,
+      "recall": {
+        "fileRecall": 0.3333333333333333,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [
+          "spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassUtils.java",
+          "spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassPostProcessor.java"
+        ],
+        "symbolsMissed": [
+          "checkConfigurationClassCandidate",
+          "enhanceConfigurationClasses"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"configuration class full lite proxyBeanMethods enhance cglib\"",
+          "chars": 1782,
+          "tokens": 594
+        }
+      ]
+    },
+    {
+      "taskId": "sf-explain-config-full-lite",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 870,
+      "chars": 2608,
+      "toolCalls": 3,
+      "durationMs": 64,
+      "recall": {
+        "fileRecall": 0.3333333333333333,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [
+          "spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassUtils.java",
+          "spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassPostProcessor.java"
+        ],
+        "symbolsMissed": [
+          "checkConfigurationClassCandidate",
+          "enhanceConfigurationClasses"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"configuration class full lite proxyBeanMethods enhance cglib\"",
+          "chars": 2056,
+          "tokens": 686
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#dtz",
+          "chars": 141,
+          "tokens": 47
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#qej",
+          "chars": 411,
+          "tokens": 137
+        }
+      ]
+    },
+    {
+      "taskId": "sf-explain-exponential-backoff",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 15790,
+      "chars": 47368,
+      "toolCalls": 4,
+      "durationMs": 383,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0.25,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "computeNextInterval",
+          "applyJitter"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "ExponentialBackOff",
+          "chars": 7623,
+          "tokens": 2541
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-core/src/test/java/org/springframework/util/ExponentialBackOffTests.java",
+          "chars": 6175,
+          "tokens": 2059
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-core/src/test/java/org/springframework/core/retry/RetryPolicyTests.java",
+          "chars": 13839,
+          "tokens": 4613
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-core/src/main/java/org/springframework/core/retry/RetryPolicy.java",
+          "chars": 19731,
+          "tokens": 6577
+        }
+      ]
+    },
+    {
+      "taskId": "sf-explain-exponential-backoff",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 6864,
+      "chars": 20588,
+      "toolCalls": 4,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "ExponentialBackOff",
+          "chars": 7623,
+          "tokens": 2541
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-core/src/main/java/org/springframework/util/backoff/ExponentialBackOff.java:3-188",
+          "chars": 5909,
+          "tokens": 1970
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-core/src/main/java/org/springframework/util/backoff/ExponentialBackOff.java:219-339",
+          "chars": 3769,
+          "tokens": 1257
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-core/src/test/java/org/springframework/util/ExponentialBackOffTests.java:1-98",
+          "chars": 3287,
+          "tokens": 1096
+        }
+      ]
+    },
+    {
+      "taskId": "sf-explain-exponential-backoff",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 1142,
+      "chars": 3424,
+      "toolCalls": 1,
+      "durationMs": 59,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"ExponentialBackOff next interval multiplier jitter max interval\"",
+          "chars": 3424,
+          "tokens": 1142
+        }
+      ]
+    },
+    {
+      "taskId": "sf-explain-exponential-backoff",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 1436,
+      "chars": 4305,
+      "toolCalls": 3,
+      "durationMs": 35,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"ExponentialBackOff next interval multiplier jitter max interval\"",
+          "chars": 1444,
+          "tokens": 482
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#za9",
+          "chars": 2286,
+          "tokens": 762
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#zb8",
+          "chars": 575,
+          "tokens": 192
+        }
+      ]
+    },
+    {
+      "taskId": "sf-usage-fail-early",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 19851,
+      "chars": 59551,
+      "toolCalls": 2,
+      "durationMs": 234,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "isFailEarlyOnGlobalRollbackOnly",
+          "chars": 495,
+          "tokens": 165
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-tx/src/main/java/org/springframework/transaction/support/AbstractPlatformTransactionManager.java",
+          "chars": 59056,
+          "tokens": 19686
+        }
+      ]
+    },
+    {
+      "taskId": "sf-usage-fail-early",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 4794,
+      "chars": 14381,
+      "toolCalls": 3,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "isFailEarlyOnGlobalRollbackOnly",
+          "chars": 495,
+          "tokens": 165
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-tx/src/main/java/org/springframework/transaction/support/AbstractPlatformTransactionManager.java:264-384",
+          "chars": 5549,
+          "tokens": 1850
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-tx/src/main/java/org/springframework/transaction/support/AbstractPlatformTransactionManager.java:736-977",
+          "chars": 8337,
+          "tokens": 2779
+        }
+      ]
+    },
+    {
+      "taskId": "sf-usage-fail-early",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 265,
+      "chars": 795,
+      "toolCalls": 1,
+      "durationMs": 45,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"isFailEarlyOnGlobalRollbackOnly\"",
+          "chars": 795,
+          "tokens": 265
+        }
+      ]
+    },
+    {
+      "taskId": "sf-usage-fail-early",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 375,
+      "chars": 1121,
+      "toolCalls": 3,
+      "durationMs": 17,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.3333333333333333,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "processCommit",
+          "processRollback"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"isFailEarlyOnGlobalRollbackOnly\"",
+          "chars": 615,
+          "tokens": 205
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#20gp",
+          "chars": 223,
+          "tokens": 75
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#20go",
+          "chars": 283,
+          "tokens": 95
+        }
+      ]
+    },
+    {
+      "taskId": "sf-usage-trigger-flush",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 16454,
+      "chars": 49359,
+      "toolCalls": 4,
+      "durationMs": 228,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "DataSourceTransactionObject"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "TransactionSynchronizationUtils|triggerFlush",
+          "chars": 8345,
+          "tokens": 2782
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-tx/src/main/java/org/springframework/transaction/support/TransactionSynchronizationManager.java",
+          "chars": 22089,
+          "tokens": 7363
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-tx/src/main/java/org/springframework/transaction/jta/JtaAfterCompletionSynchronization.java",
+          "chars": 2677,
+          "tokens": 893
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-tx/src/main/java/org/springframework/transaction/reactive/TransactionSynchronizationManager.java",
+          "chars": 16248,
+          "tokens": 5416
+        }
+      ]
+    },
+    {
+      "taskId": "sf-usage-trigger-flush",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 6597,
+      "chars": 19786,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "TransactionSynchronizationUtils|triggerFlush",
+          "chars": 8345,
+          "tokens": 2782
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-jdbc/src/main/java/org/springframework/jdbc/datasource/DataSourceTransactionManager.java:459-524",
+          "chars": 1948,
+          "tokens": 650
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-tx/src/main/java/org/springframework/transaction/jta/JtaTransactionObject.java:23-87",
+          "chars": 1968,
+          "tokens": 656
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-tx/src/main/java/org/springframework/transaction/reactive/TransactionSynchronizationUtils.java:1-101",
+          "chars": 3868,
+          "tokens": 1290
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-tx/src/main/java/org/springframework/transaction/support/TransactionSynchronizationUtils.java:1-99",
+          "chars": 3657,
+          "tokens": 1219
+        }
+      ]
+    },
+    {
+      "taskId": "sf-usage-trigger-flush",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 749,
+      "chars": 2245,
+      "toolCalls": 1,
+      "durationMs": 50,
+      "recall": {
+        "fileRecall": 0.3333333333333333,
+        "symbolRecall": 1,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [
+          "spring-jdbc/src/main/java/org/springframework/jdbc/datasource/DataSourceTransactionManager.java",
+          "spring-tx/src/main/java/org/springframework/transaction/jta/JtaTransactionObject.java"
+        ],
+        "symbolsMissed": [],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"TransactionSynchronizationUtils triggerFlush\"",
+          "chars": 2245,
+          "tokens": 749
+        }
+      ]
+    },
+    {
+      "taskId": "sf-usage-trigger-flush",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 997,
+      "chars": 2988,
+      "toolCalls": 3,
+      "durationMs": 43,
+      "recall": {
+        "fileRecall": 0.3333333333333333,
+        "symbolRecall": 0.3333333333333333,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [
+          "spring-jdbc/src/main/java/org/springframework/jdbc/datasource/DataSourceTransactionManager.java",
+          "spring-tx/src/main/java/org/springframework/transaction/jta/JtaTransactionObject.java"
+        ],
+        "symbolsMissed": [
+          "DataSourceTransactionObject",
+          "JtaTransactionObject"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"TransactionSynchronizationUtils triggerFlush\"",
+          "chars": 1021,
+          "tokens": 341
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#20fe",
+          "chars": 371,
+          "tokens": 124
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#20f9",
+          "chars": 1596,
+          "tokens": 532
+        }
+      ]
+    },
+    {
+      "taskId": "sf-usage-imported-by",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 26310,
+      "chars": 78927,
+      "toolCalls": 4,
+      "durationMs": 286,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "getImportedBy",
+          "chars": 621,
+          "tokens": 207
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClass.java",
+          "chars": 10623,
+          "tokens": 3541
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassBeanDefinitionReader.java",
+          "chars": 21622,
+          "tokens": 7208
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassParser.java",
+          "chars": 46061,
+          "tokens": 15354
+        }
+      ]
+    },
+    {
+      "taskId": "sf-usage-imported-by",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 3582,
+      "chars": 10741,
+      "toolCalls": 4,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "getImportedBy",
+          "chars": 621,
+          "tokens": 207
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClass.java:119-239",
+          "chars": 3443,
+          "tokens": 1148
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassBeanDefinitionReader.java:452-533",
+          "chars": 2425,
+          "tokens": 809
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassParser.java:686-806",
+          "chars": 4252,
+          "tokens": 1418
+        }
+      ]
+    },
+    {
+      "taskId": "sf-usage-imported-by",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 478,
+      "chars": 1434,
+      "toolCalls": 1,
+      "durationMs": 27,
+      "recall": {
+        "fileRecall": 0.6666666666666666,
+        "symbolRecall": 1,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [
+          "spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassBeanDefinitionReader.java"
+        ],
+        "symbolsMissed": [],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"ConfigurationClass getImportedBy\"",
+          "chars": 1434,
+          "tokens": 478
+        }
+      ]
+    },
+    {
+      "taskId": "sf-usage-imported-by",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 1689,
+      "chars": 5063,
+      "toolCalls": 3,
+      "durationMs": 18,
+      "recall": {
+        "fileRecall": 0.6666666666666666,
+        "symbolRecall": 0.3333333333333333,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [
+          "spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassBeanDefinitionReader.java"
+        ],
+        "symbolsMissed": [
+          "TrackedConditionEvaluator",
+          "getEnclosingConfigurationClass"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"ConfigurationClass getImportedBy\"",
+          "chars": 1880,
+          "tokens": 627
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#dwl",
+          "chars": 176,
+          "tokens": 59
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#dvx",
+          "chars": 3007,
+          "tokens": 1003
+        }
+      ]
+    },
+    {
+      "taskId": "sf-usage-lru-drain",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 14167,
+      "chars": 42496,
+      "toolCalls": 4,
+      "durationMs": 389,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "drain",
+          "chars": 7614,
+          "tokens": 2538
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-core/src/main/java/org/springframework/util/ConcurrentLruCache.java",
+          "chars": 15314,
+          "tokens": 5105
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-web/src/test/java/org/springframework/http/client/SimpleClientHttpResponseTests.java",
+          "chars": 4981,
+          "tokens": 1661
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-web/src/test/java/org/springframework/http/codec/json/JacksonJsonEncoderTests.java",
+          "chars": 14587,
+          "tokens": 4863
+        }
+      ]
+    },
+    {
+      "taskId": "sf-usage-lru-drain",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 5850,
+      "chars": 17550,
+      "toolCalls": 3,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "drain",
+          "chars": 7614,
+          "tokens": 2538
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-core/src/main/java/org/springframework/util/ConcurrentLruCache.java:13-203",
+          "chars": 5559,
+          "tokens": 1853
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-core/src/main/java/org/springframework/util/ConcurrentLruCache.java:253-436",
+          "chars": 4377,
+          "tokens": 1459
+        }
+      ]
+    },
+    {
+      "taskId": "sf-usage-lru-drain",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 776,
+      "chars": 2328,
+      "toolCalls": 1,
+      "durationMs": 63,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "drainOperations",
+          "processRead",
+          "processWrite"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"concurrent lru cache drain buffered read write operations\"",
+          "chars": 2328,
+          "tokens": 776
+        }
+      ]
+    },
+    {
+      "taskId": "sf-usage-lru-drain",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 955,
+      "chars": 2862,
+      "toolCalls": 3,
+      "durationMs": 40,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "drainOperations",
+          "processRead",
+          "processWrite"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"concurrent lru cache drain buffered read write operations\"",
+          "chars": 1917,
+          "tokens": 639
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#yep",
+          "chars": 670,
+          "tokens": 224
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#yev",
+          "chars": 275,
+          "tokens": 92
+        }
+      ]
+    },
+    {
+      "taskId": "sf-impact-shortcut",
+      "kind": "impact",
+      "strategy": "native-naive",
+      "tokens": 56263,
+      "chars": 168786,
+      "toolCalls": 4,
+      "durationMs": 283,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "ConstructorResolver|setShortcutIfPossible",
+          "chars": 9999,
+          "tokens": 3333
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-expression/src/main/java/org/springframework/expression/spel/support/StandardEvaluationContext.java",
+          "chars": 22729,
+          "tokens": 7577
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-beans/src/main/java/org/springframework/beans/factory/support/ConstructorResolver.java",
+          "chars": 56924,
+          "tokens": 18975
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-beans/src/main/java/org/springframework/beans/factory/support/AbstractAutowireCapableBeanFactory.java",
+          "chars": 79134,
+          "tokens": 26378
+        }
+      ]
+    },
+    {
+      "taskId": "sf-impact-shortcut",
+      "kind": "impact",
+      "strategy": "native-ranged",
+      "tokens": 9517,
+      "chars": 28544,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.3333333333333333,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "createArgumentArray",
+          "resolvePreparedArguments"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "ConstructorResolver|setShortcutIfPossible",
+          "chars": 9999,
+          "tokens": 3333
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-beans/src/main/java/org/springframework/beans/factory/support/ConstructorResolver.java:39-159",
+          "chars": 4807,
+          "tokens": 1603
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-beans/src/main/java/org/springframework/beans/factory/support/ConstructorResolver.java:875-995",
+          "chars": 4537,
+          "tokens": 1513
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-expression/src/main/java/org/springframework/expression/spel/support/StandardEvaluationContext.java:46-166",
+          "chars": 5105,
+          "tokens": 1702
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-expression/src/main/java/org/springframework/expression/spel/support/StandardEvaluationContext.java:204-324",
+          "chars": 4096,
+          "tokens": 1366
+        }
+      ]
+    },
+    {
+      "taskId": "sf-impact-shortcut",
+      "kind": "impact",
+      "strategy": "kopt-pack",
+      "tokens": 572,
+      "chars": 1715,
+      "toolCalls": 1,
+      "durationMs": 69,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"ConstructorResolver setShortcutIfPossible\"",
+          "chars": 1715,
+          "tokens": 572
+        }
+      ]
+    },
+    {
+      "taskId": "sf-impact-shortcut",
+      "kind": "impact",
+      "strategy": "kopt-hits+read",
+      "tokens": 2425,
+      "chars": 7269,
+      "toolCalls": 3,
+      "durationMs": 49,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"ConstructorResolver setShortcutIfPossible\"",
+          "chars": 760,
+          "tokens": 254
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#6ch",
+          "chars": 538,
+          "tokens": 180
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#6by",
+          "chars": 5971,
+          "tokens": 1991
+        }
+      ]
+    },
+    {
+      "taskId": "sf-impact-primary-conflict",
+      "kind": "impact",
+      "strategy": "native-naive",
+      "tokens": 40375,
+      "chars": 121120,
+      "toolCalls": 4,
+      "durationMs": 585,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "conflict",
+          "chars": 9944,
+          "tokens": 3315
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-web/src/main/java/org/springframework/web/client/HttpClientErrorException.java",
+          "chars": 13545,
+          "tokens": 4515
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-beans/src/main/java/org/springframework/beans/factory/support/DefaultListableBeanFactory.java",
+          "chars": 78244,
+          "tokens": 26082
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-webflux/src/main/java/org/springframework/web/reactive/function/client/WebClientResponseException.java",
+          "chars": 19387,
+          "tokens": 6463
+        }
+      ]
+    },
+    {
+      "taskId": "sf-impact-primary-conflict",
+      "kind": "impact",
+      "strategy": "native-ranged",
+      "tokens": 9017,
+      "chars": 27048,
+      "toolCalls": 5,
+      "durationMs": 1,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "doResolveDependency"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "conflict",
+          "chars": 9944,
+          "tokens": 3315
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-beans/src/main/java/org/springframework/beans/factory/support/DefaultListableBeanFactory.java:2219-2339",
+          "chars": 5103,
+          "tokens": 1701
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-context/src/main/java/org/springframework/context/annotation/ClassPathBeanDefinitionScanner.java:302-396",
+          "chars": 4162,
+          "tokens": 1388
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-web/src/main/java/org/springframework/web/client/HttpClientErrorException.java:210-330",
+          "chars": 4368,
+          "tokens": 1456
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-webflux/src/main/java/org/springframework/web/reactive/function/client/WebClientResponseException.java:369-489",
+          "chars": 3471,
+          "tokens": 1157
+        }
+      ]
+    },
+    {
+      "taskId": "sf-impact-primary-conflict",
+      "kind": "impact",
+      "strategy": "kopt-pack",
+      "tokens": 921,
+      "chars": 2761,
+      "toolCalls": 1,
+      "durationMs": 73,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "doResolveDependency"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"primary bean conflict parent bean factory autowiring\"",
+          "chars": 2761,
+          "tokens": 921
+        }
+      ]
+    },
+    {
+      "taskId": "sf-impact-primary-conflict",
+      "kind": "impact",
+      "strategy": "kopt-hits+read",
+      "tokens": 1003,
+      "chars": 3003,
+      "toolCalls": 3,
+      "durationMs": 46,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "doResolveDependency"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"primary bean conflict parent bean factory autowiring\"",
+          "chars": 2074,
+          "tokens": 692
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#4kn",
+          "chars": 112,
+          "tokens": 38
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#7a2",
+          "chars": 817,
+          "tokens": 273
+        }
+      ]
+    },
+    {
+      "taskId": "sf-impact-cleanup-txinfo",
+      "kind": "impact",
+      "strategy": "native-naive",
+      "tokens": 23146,
+      "chars": 69432,
+      "toolCalls": 4,
+      "durationMs": 202,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "TransactionAspectSupport|cleanupTransactionInfo",
+          "chars": 4039,
+          "tokens": 1347
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-tx/src/main/java/org/springframework/transaction/interceptor/TransactionAspectSupport.java",
+          "chars": 43430,
+          "tokens": 14477
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-tx/src/test/java/org/springframework/transaction/interceptor/AbstractTransactionAspectTests.java",
+          "chars": 17773,
+          "tokens": 5925
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-aspects/src/main/java/org/springframework/transaction/aspectj/AbstractTransactionAspect.aj",
+          "chars": 4190,
+          "tokens": 1397
+        }
+      ]
+    },
+    {
+      "taskId": "sf-impact-cleanup-txinfo",
+      "kind": "impact",
+      "strategy": "native-ranged",
+      "tokens": 7378,
+      "chars": 22126,
+      "toolCalls": 4,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "TransactionAspectSupport|cleanupTransactionInfo",
+          "chars": 4039,
+          "tokens": 1347
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-aspects/src/main/java/org/springframework/transaction/aspectj/AbstractTransactionAspect.aj:1-108",
+          "chars": 4183,
+          "tokens": 1395
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-tx/src/main/java/org/springframework/transaction/interceptor/TransactionAspectSupport.java:33-251",
+          "chars": 9859,
+          "tokens": 3287
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-tx/src/main/java/org/springframework/transaction/interceptor/TransactionAspectSupport.java:684-804",
+          "chars": 4045,
+          "tokens": 1349
+        }
+      ]
+    },
+    {
+      "taskId": "sf-impact-cleanup-txinfo",
+      "kind": "impact",
+      "strategy": "kopt-pack",
+      "tokens": 329,
+      "chars": 985,
+      "toolCalls": 1,
+      "durationMs": 46,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"TransactionAspectSupport cleanupTransactionInfo\"",
+          "chars": 985,
+          "tokens": 329
+        }
+      ]
+    },
+    {
+      "taskId": "sf-impact-cleanup-txinfo",
+      "kind": "impact",
+      "strategy": "kopt-hits+read",
+      "tokens": 2385,
+      "chars": 7151,
+      "toolCalls": 3,
+      "durationMs": 36,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"TransactionAspectSupport cleanupTransactionInfo\"",
+          "chars": 973,
+          "tokens": 325
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#2005",
+          "chars": 255,
+          "tokens": 85
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#1zz1",
+          "chars": 5923,
+          "tokens": 1975
+        }
+      ]
+    }
+  ],
+  "aggregates": [
+    {
+      "strategy": "native-naive",
+      "tasks": 15,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 19851,
+      "meanTokens": 22982,
+      "p90Tokens": 40375,
+      "totalTokens": 344731,
+      "totalChars": 1034134,
+      "meanToolCalls": 3.8,
+      "meanFileRecall": 0.8222222222222223,
+      "meanSymbolRecall": 0.7111111111111111,
+      "meanDefRecall": 0.6333333333333333,
+      "found": 9,
+      "foundRate": 0.6,
+      "tokensPerFound": 38303
+    },
+    {
+      "strategy": "native-ranged",
+      "tasks": 15,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 7378,
+      "meanTokens": 7509,
+      "p90Tokens": 9517,
+      "totalTokens": 112637,
+      "totalChars": 337846,
+      "meanToolCalls": 4.2,
+      "meanFileRecall": 0.8222222222222223,
+      "meanSymbolRecall": 0.7,
+      "meanDefRecall": 0.5722222222222222,
+      "found": 8,
+      "foundRate": 0.5333333333333333,
+      "tokensPerFound": 14080
+    },
+    {
+      "strategy": "kopt-pack",
+      "tasks": 15,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 776,
+      "meanTokens": 834,
+      "p90Tokens": 1363,
+      "totalTokens": 12515,
+      "totalChars": 37530,
+      "meanToolCalls": 1,
+      "meanFileRecall": 0.7222222222222222,
+      "meanSymbolRecall": 0.75,
+      "meanDefRecall": 0.4277777777777777,
+      "found": 5,
+      "foundRate": 0.3333333333333333,
+      "tokensPerFound": 2503
+    },
+    {
+      "strategy": "kopt-hits+read",
+      "tasks": 15,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 1436,
+      "meanTokens": 1453,
+      "p90Tokens": 2425,
+      "totalTokens": 21788,
+      "totalChars": 65307,
+      "meanToolCalls": 3,
+      "meanFileRecall": 0.7444444444444446,
+      "meanSymbolRecall": 0.5944444444444443,
+      "meanDefRecall": 0.5222222222222221,
+      "found": 5,
+      "foundRate": 0.3333333333333333,
+      "tokensPerFound": 4358
+    }
+  ],
+  "paired": [
+    {
+      "a": "native-naive",
+      "b": "kopt-pack",
+      "nRun": 15,
+      "nBoth": 4,
+      "onlyA": 5,
+      "onlyB": 1,
+      "medianRatio": 0.013781786249144305,
+      "geoMeanRatio": 0.017683238988102982,
+      "bCheaper": 4
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-pack",
+      "nRun": 15,
+      "nBoth": 4,
+      "onlyA": 4,
+      "onlyB": 1,
+      "medianRatio": 0.08232621506049229,
+      "geoMeanRatio": 0.08183762110330706,
+      "bCheaper": 4
+    },
+    {
+      "a": "native-naive",
+      "b": "kopt-hits+read",
+      "nRun": 15,
+      "nBoth": 3,
+      "onlyA": 6,
+      "onlyB": 2,
+      "medianRatio": 0.10304156225697744,
+      "geoMeanRatio": 0.08069394726666582,
+      "bCheaper": 3
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-hits+read",
+      "nRun": 15,
+      "nBoth": 3,
+      "onlyA": 5,
+      "onlyB": 2,
+      "medianRatio": 0.25529891304347824,
+      "geoMeanRatio": 0.25845917542362756,
+      "bCheaper": 3
+    },
+    {
+      "a": "native-naive",
+      "b": "native-ranged",
+      "nRun": 15,
+      "nBoth": 6,
+      "onlyA": 3,
+      "onlyB": 2,
+      "medianRatio": 0.365845320644104,
+      "geoMeanRatio": 0.33366194010389605,
+      "bCheaper": 6
+    }
+  ],
+  "byKind": [
+    {
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tasks": 4,
+      "found": 2,
+      "medianTokens": 19837
+    },
+    {
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tasks": 4,
+      "found": 1,
+      "medianTokens": 8165.5
+    },
+    {
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tasks": 4,
+      "found": 1,
+      "medianTokens": 923
+    },
+    {
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tasks": 4,
+      "found": 2,
+      "medianTokens": 1462.5
+    },
+    {
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tasks": 4,
+      "found": 1,
+      "medianTokens": 14519
+    },
+    {
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tasks": 4,
+      "found": 2,
+      "medianTokens": 8398.5
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tasks": 4,
+      "found": 1,
+      "medianTokens": 977.5
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tasks": 4,
+      "found": 1,
+      "medianTokens": 1510
+    },
+    {
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tasks": 4,
+      "found": 3,
+      "medianTokens": 18152.5
+    },
+    {
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tasks": 4,
+      "found": 4,
+      "medianTokens": 5322
+    },
+    {
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tasks": 4,
+      "found": 1,
+      "medianTokens": 613.5
+    },
+    {
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tasks": 4,
+      "found": 0,
+      "medianTokens": 976
+    },
+    {
+      "kind": "impact",
+      "strategy": "native-naive",
+      "tasks": 3,
+      "found": 3,
+      "medianTokens": 40375
+    },
+    {
+      "kind": "impact",
+      "strategy": "native-ranged",
+      "tasks": 3,
+      "found": 1,
+      "medianTokens": 9017
+    },
+    {
+      "kind": "impact",
+      "strategy": "kopt-pack",
+      "tasks": 3,
+      "found": 2,
+      "medianTokens": 572
+    },
+    {
+      "kind": "impact",
+      "strategy": "kopt-hits+read",
+      "tasks": 3,
+      "found": 2,
+      "medianTokens": 2385
+    }
+  ]
+}

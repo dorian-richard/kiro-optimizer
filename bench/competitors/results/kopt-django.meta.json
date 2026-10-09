@@ -1,0 +1,98 @@
+{
+  "label": "kopt",
+  "tool": "kopt",
+  "package": "kiro-optimizer",
+  "version": "0.1.0",
+  "mode": "default",
+  "repo": {
+    "name": "django",
+    "url": "https://github.com/django/django.git",
+    "tag": "6.1.2",
+    "commit": "2212534bae393714e1e51db2341d4fd5545e19f6",
+    "language": "python",
+    "path": "bench/repos/django"
+  },
+  "headCommit": "2212534bae393714e1e51db2341d4fd5545e19f6",
+  "commitMatchesTasks": true,
+  "date": "2026-10-09T11:11:54.786Z",
+  "container": {
+    "node": "v22.23.3",
+    "arch": "arm64",
+    "platform": "linux",
+    "cpus": 10,
+    "memBytes": 8214851584,
+    "network": "none"
+  },
+  "primaryTool": "kopt_find",
+  "toolArgsExample": {
+    "query": "<input>",
+    "mode": "pack"
+  },
+  "serverCommand": {
+    "command": "kopt",
+    "args": [
+      "mcp",
+      "--root",
+      "/work/<repo>"
+    ]
+  },
+  "oneSessionPerTask": true,
+  "indexOk": true,
+  "indexMs": 7334,
+  "indexSteps": [
+    {
+      "command": "kopt index --root /work/django",
+      "ms": 7334,
+      "exit": 0,
+      "signal": null
+    }
+  ],
+  "copyMs": 1342,
+  "indexDirs": [
+    "/home/bench/.cache/kopt"
+  ],
+  "indexSizeBytes": 53616640,
+  "modelBytes": 0,
+  "indexStatus": "indexed 2964 files (2964 parsed, 0 unchanged, 0 deleted) · 50978 symbols · 163844 refs · 7.2s",
+  "surface": {
+    "serverInfo": {
+      "name": "kopt",
+      "version": "0.1.0"
+    },
+    "toolCount": 6,
+    "toolNames": [
+      "kopt_find",
+      "kopt_read",
+      "kopt_outline",
+      "kopt_refs",
+      "kopt_run",
+      "kopt_expand"
+    ],
+    "toolsChars": 2809,
+    "toolsEstTokens": 937,
+    "instructionsChars": 374,
+    "instructionsEstTokens": 125,
+    "primaryToolListed": true,
+    "file": "kopt.surface.json"
+  },
+  "inputs": {
+    "search": {
+      "file": "kopt-django.jsonl",
+      "tasks": 15,
+      "failures": 0,
+      "queryMsMedian": 140,
+      "queryMsP90": 161,
+      "startupMsMedian": 142
+    },
+    "question": {
+      "file": "kopt-django-question.jsonl",
+      "tasks": 15,
+      "failures": 0,
+      "queryMsMedian": 149,
+      "queryMsP90": 162,
+      "startupMsMedian": 128
+    }
+  },
+  "charsPerToken": 3,
+  "errors": []
+}
