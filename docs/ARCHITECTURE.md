@@ -1,179 +1,220 @@
-# KiroOptimizer : architecture et choix de conception
+# kiro-optimizer: architecture and design decisions
 
-> Statut : prototype v0.1 (octobre 2026). Ce document explique pourquoi l'outil est construit ainsi.
-> Les sources détaillées (dépôts lus, docs Kiro, benchmarks publiés) sont résumées en annexe.
+> Status: prototype v0.1 (October 2026). This document explains why the tool is built the way it is.
+> The detailed sources (repositories read, Kiro docs, published benchmarks) are summarized in the appendix.
 
-## 1. Le problème, tel qu'il se pose réellement dans Kiro
+## 1. The problem as it actually exists in Kiro
 
-### 1.1 Ce que Kiro facture
-- Kiro facture des **crédits par requête**, fractionnés au centième, multipliés par le coefficient du modèle :
+### 1.1 How Kiro bills
+- Kiro bills **credits per request**, metered to 0.01. The amount is multiplied by the model factor:
   Auto 1.0x, Haiku 4.5 0.4x, Sonnet 1.3x, Opus 5.5 2.0x, Opus 5 2.2x, Qwen3 Coder Next 0.05x.
-- La consommation dépend de la taille totale de la requête (tokens), de la sortie générée et de l'effort de
-  raisonnement. Une sonde tierce indique qu'un préfixe déjà en cache est facturé **au même prix**. Le cache
-  améliore la latence, pas la facture (à confirmer sur votre propre contrat Kiro, cf. §6).
-- **Conséquence clé :** chaque token entré dans le contexte est refacturé à **chaque tour suivant** de la session.
-  Le coût réel ≈ Σ(tours) × (préfixe fixe + historique résident) + sorties. On doit donc réduire à la fois
-  **ce qui entre** dans le contexte, **combien de temps cela y reste** et **le nombre de tours**.
+- Consumption depends on the total request size (tokens), on the generated output and on the reasoning effort.
+  A third-party probe found that a prefix already in cache is billed **the same**. So caching improves latency,
+  not the bill. This should be confirmed on your own Kiro plan (see §7).
+- **Key consequence:** every token that enters the context is billed again on **every later turn** of the session.
+  Real cost ≈ Σ(turns) × (fixed prefix + resident history) + outputs. We must therefore reduce three things:
+  **what enters** the context, **how long it stays there**, and **the number of turns**.
 
-### 1.2 Ce que Kiro ne permet pas
-- **Pas de proxy LLM.** Le trafic part vers l'API Kiro et aucune option ne le redirige vers une passerelle ou
-  vers Bedrock (issue #34 ouverte depuis 07/2025). Les CGU interdisent les « harnais tiers ». Les approches de type
-  proxy de compression (Headroom, proxy caveman, lean-ctx) sont donc exclues.
-- **Les hooks ne réécrivent rien.** Un hook peut seulement *bloquer* (exit 2 : stderr envoyé au modèle, ce qui coûte
-  un tour) ou *ajouter* du contexte (stdout, uniquement sur SessionStart et UserPromptSubmit). Une compression
-  « transparente » des sorties des outils natifs est impossible.
-- Les hooks de type `command` ne consomment **aucun crédit**. Les hooks de type `agent` en consomment (nouvelle boucle).
+### 1.2 What Kiro does not allow
+- **No LLM proxy.** Traffic goes to the Kiro API, and no option redirects it to a gateway or to your own Bedrock
+  (issue #34 has been open since 07/2025). The pricing FAQ also forbids third-party harnesses that route requests
+  outside Kiro. This rules out compression proxies such as Headroom, the caveman proxy or lean-ctx.
+- **Hooks cannot rewrite anything.** A hook can only do two things:
+  - *block*: exit 2, and stderr is sent to the model, which costs one extra turn;
+  - *add context*: stdout, and only on SessionStart and UserPromptSubmit.
 
-### 1.3 Ce que nous contrôlons entièrement
-1. **La sortie de nos outils MCP** : elle entre telle quelle dans le contexte, sans troncature côté client.
-2. Le **préfixe fixe** : steering (modes `always`/`auto`/`fileMatch`/`manual`), schémas d'outils et instructions MCP.
-3. **Les hooks command** (gratuits) : compter, garder, bloquer à bon escient et mesurer.
-4. Les **agents personnalisés** : choix du modèle par sous-agent et liste d'outils autorisés.
-5. **`.kiroignore`** : un filtre déterministe, sans tour supplémentaire, sur les lectures et les recherches.
+  So built-in tool outputs cannot be compressed transparently.
+- `command` hooks consume **no credits**. `agent` hooks do, because they start a new agent loop.
 
-## 2. Pourquoi KiroGraph et CodeGraph économisent peu (vérifié dans le code)
+### 1.3 What we fully control
+1. **The output of our MCP tools.** It enters the context verbatim, and the client does not truncate it.
+2. The **fixed prefix**: steering (`always` / `auto` / `fileMatch` / `manual`), tool schemas and MCP instructions.
+3. **Command hooks** (free): count, gate, block where it pays off, and measure.
+4. **Custom agents**: the model per sub-agent and the tool allow-list.
+5. **`.kiroignore`**: a deterministic filter on reads and searches that costs no extra turn.
 
-| Constat | KiroGraph 1.4 | CodeGraph 1.6 |
+## 2. Why KiroGraph and CodeGraph save little (verified in their source code)
+
+| Finding | KiroGraph 1.4 | CodeGraph 1.6 |
 |---|---|---|
-| Recherche lexicale | **cassée** : jointure FTS5 `TEXT id = rowid` qui renvoie toujours 0 ligne ; recherche exacte sensible à la casse sur des mots en minuscules | correcte (FTS5) |
-| Taille des réponses | jusqu'à 10 corps complets, coupés à 15 000 caractères en plein bloc | jusqu'à 25 000 caractères (~11k tokens) par appel, code verbatim numéroté |
-| Déduplication entre appels | non | désactivée par défaut |
-| Préfixe fixe | 127 outils (~6-13k tokens de schémas) et un steering `always` de 1 à 8k tokens | 1 outil (bien) |
-| Fraîcheur | sync au Stop via `git status`, ratée sur pull/commit, inopérante en CLI | daemon + watcher (bien), dérive de 4,3 % des arêtes |
-| Mesure | contrefactuels codés en dur (1 500 tokens par fichier « évité »), échecs comptés comme 100 % d'économie | A/B réel mais 1 question, dépôts célèbres, cache reads comptés comme tokens ; à 3 tours : −24 %, et **+17 % sur Django** |
-| Centralisation | aucune (stdio, index local par développeur) | aucune |
-| Leviers de sortie / boucles | non (sauf un steering « caveman » optionnel) | non |
+| Lexical search | **broken**: the FTS5 join `TEXT id = rowid` always returns 0 rows; exact, case-sensitive lookups of lower-cased words | correct (FTS5) |
+| Response size | up to 10 full symbol bodies, cut at 15,000 chars in the middle of a code block | up to 25,000 chars (~11k tokens) per call, verbatim line-numbered code |
+| Cross-call dedup | no | off by default |
+| Fixed prefix | 127 tools (~6-13k tokens of schemas), plus `always` steering of 1-8k tokens | 1 tool (good) |
+| Freshness | sync on Stop via `git status`; misses pulls and commits; inactive on the CLI | daemon and watcher (good), 4.3% edge drift |
+| Measurement | hard-coded counterfactuals (1,500 tokens per "avoided" file); failures counted as 100% savings | real A/B, but 1 question on famous repos, with cache reads counted as tokens; at 3 turns: −24%, and **+17% on Django** |
+| Centralization | none (stdio, local index per developer) | none |
+| Output / loop levers | none (only optional "caveman" steering) | none |
 
-À noter aussi : CodeGraph laisse en moyenne **+82 % de contexte de récupération résident** en fin de session.
-Ce contexte est refacturé à chaque tour.
+CodeGraph also leaves on average **+82% more retrieval context resident** at the end of a session, and that context
+is billed again on every turn.
 
-**Leçon centrale.** La récupération de code n'est qu'une petite part de la dépense. La dépense vient surtout
-(a) des tours × l'historique résident, (b) des logs de build/test verbeux et répétés, (c) des lectures de
-fichiers entiers, (d) du préfixe fixe et (e) des boucles qui s'emballent. Dans les issues Kiro, on trouve une
-session de plus de 1 000 crédits, dont 42 exécutions de pytest, et des boucles review→correction sans disjoncteur.
+**Core lesson.** Code retrieval is a small share of the spend. Most of it comes from:
+- turns × resident history;
+- verbose and repeated build and test logs;
+- whole-file reads;
+- the fixed prefix;
+- runaway loops.
 
-## 3. Architecture cible
+Kiro's issue tracker shows a session of more than 1,000 credits that included 42 pytest runs, and review→fix loops
+with no circuit breaker.
+
+## 3. Target architecture
 
 ```mermaid
 flowchart LR
-  subgraph Poste développeur
-    K[Kiro IDE / CLI] -- MCP stdio --> L[kopt mcp<br/>index local + overlay fichiers modifiés]
-    K -- hooks command (gratuits) --> H[kopt hook<br/>gouverneur de session]
-    K -. steering ≤140 mots .-> K
-    H --> T[(télémétrie locale JSONL)]
+  subgraph Developer machine
+    K[Kiro IDE / Kiro CLI] -- MCP stdio --> L[kopt mcp<br/>local index + dirty-file overlay]
+    K -- command hooks, free --> H[kopt hook<br/>session governor]
+    K -. steering under 140 words .-> K
+    T2[Any terminal / agent] -- shell --> C2[kopt CLI<br/>same tools, same output]
+    H --> T[(local telemetry JSONL)]
     L --> T
   end
-  subgraph Compte AWS du client
-    CB[CodeBuild par dépôt<br/>webhook push + nightly] -->|snapshot SQLite + blobs| S3[(S3 KMS)]
-    S3 --> F[ECS Fargate : kopt serve<br/>MCP Streamable HTTP multi-dépôts]
-    C[Cognito / IdP client] -. OAuth PKCE .-> K
-    F --> CW[CloudWatch EMF<br/>dashboard économies]
-    KU[Export usage Kiro<br/>CSV crédits/jour] --> S3
+  subgraph Customer AWS account
+    CB[CodeBuild per repo<br/>push webhook + nightly] -->|SQLite snapshot + blobs| S3[(S3 KMS)]
+    S3 --> F[ECS Fargate: kopt serve<br/>multi-repo Streamable HTTP MCP]
+    C[Cognito / corporate IdP] -. OAuth PKCE .-> K
+    F --> CW[CloudWatch EMF<br/>savings dashboard]
+    KU[Kiro usage export<br/>credits per user per day] --> S3
   end
-  K -- MCP HTTPS + OAuth --> F
+  K -- MCP over HTTPS + OAuth --> F
   T -- POST /telemetry --> F
-  L -- kopt sync : snapshot du commit --> S3
+  L -- kopt sync: snapshot for this commit --> S3
 ```
 
-### 3.1 Les cinq leviers, par ordre d'impact attendu
+### 3.1 The five levers, by expected impact
 
-1. **Sorties de commandes compressées (`kopt_run` / `kopt_expand`)**
-   Les tests, builds et linters renvoient seulement le verdict, les échecs et les erreurs (avec file:line et les
-   frames du dépôt). Le log complet est stocké et consultable par handle. **Une commande identique relancée sans
-   modification de fichier n'est pas réexécutée** : le résultat précédent est rendu, sans tour supplémentaire ni
-   minutes de build. Le gain est mesurable exactement, puisque la sortie brute est connue.
-2. **Gouverneur de session (hooks command, gratuits)**
-   - Disjoncteur : nombre maximal d'appels d'outils par session (Kiro n'a pas de budget en crédits).
-   - Blocage *une seule fois* des lectures de fichiers entiers au-delà de N lignes, avec une alternative précise
-     (outline, plage de lignes).
-   - Redirection *une seule fois* des commandes de test/build verbeuses vers `kopt_run`.
-   - Blocage des relances identiques sans modification de fichier.
-   - Mesure par outil de la taille des sorties des outils natifs (PostToolUse). C'est l'observabilité qui manque
-     aujourd'hui pour savoir où part le contexte.
-   - Règle « une seule fois » : un blocage coûte un tour. On ne bloque que là où le gain attendu dépasse
-     largement ce coût, et on ne bloque jamais deux fois la même chose (pas de boucle bloquante).
-3. **Navigation de code budgétée (`kopt_find` / `kopt_read` / `kopt_outline` / `kopt_refs`)**
-   - Plafond dur en tokens sur chaque réponse, texte compact (jamais de JSON), handles courts `#3mv`.
-   - Déduplication par session : un symbole déjà montré n'est pas renvoyé, avec une fenêtre bornée parce que la
-     compaction Kiro efface les résultats MCP.
-   - Mode `pack` : le contexte d'une tâche en un seul appel (pointeurs + 1 à 3 corps), pour réduire le nombre de tours.
-   - Recherche hybride à tokenisation « code » (camelCase/snake_case), BM25 pondéré par colonne, centralité
-     (PageRank) et déclassement des tests.
-   - `outline` : squelettes de fichiers et carte du dépôt personnalisée par le focus de la tâche (à la aider).
-4. **Préfixe fixe minimal**
-   - 6 outils aux descriptions courtes, instructions MCP < 600 caractères, steering `always` < 140 mots.
-   - Les consignes de spec passent en mode `auto` (chargées seulement si pertinentes).
-   - `.kiroignore` généré : lockfiles, bundles minifiés, code généré, snapshots, gros fichiers de données.
-5. **Leviers de sortie et routage de modèle**
-   - Steering « sortie » : ne pas recopier le code ni le plan, éditer par remplacement minimal, pas de résumé non
-     demandé, s'arrêter aux critères d'acceptation. Gain mesuré dans la littérature : environ −8 % de tokens de
-     sortie (pas −65 % comme annoncé par certains outils).
-   - Sous-agent `kopt-explorer` sur Haiku 4.5 (0.4x) pour l'exploration, qui renvoie des spans file:line plutôt que
-     du code.
+1. **Compressed command outputs (`kopt_run` / `kopt_expand`).** Tests, builds and linters return only the verdict,
+   the failures and the errors, with file:line and the frames that belong to the repo. The full log is stored and
+   available by handle. **An identical command re-run with no file change is not executed again**: the previous
+   result is returned, which saves both a turn and the build minutes. The savings are measured exactly, since the
+   raw output is known.
+2. **Session governor (command hooks, free):**
+   - a circuit breaker on tool calls per session (Kiro has no credit budget);
+   - a *one-time* block of whole-file reads above N lines, with a precise alternative (outline or line range);
+   - a *one-time* redirect of verbose test/build commands to `kopt_run`;
+   - a block on identical re-runs with no file change;
+   - per-tool measurement of built-in tool output sizes (PostToolUse). This is the observability that is missing
+     today to see where context goes.
 
-### 3.2 Mode centralisé (chez le client)
-- **Indexation une fois par commit en CI** (CodeBuild, webhook), et non sur chaque poste. Le snapshot SQLite
-  contient le code (blobs gzip) et est servi par **un serveur MCP HTTP multi-dépôts** (Fargate) authentifié en
-  OAuth (Cognito ou IdP du client, client public PKCE avec `oauth.clientId` dans `mcp.json`, car Cognito ne fait
-  pas de DCR).
-- **Recherche inter-dépôts** : « qui consomme cette API dans les 50 dépôts » est une capacité centrale qu'aucun
-  outil local n'offre.
-- **Overlay local** : `kopt sync` télécharge le snapshot du commit courant puis réindexe seulement les fichiers
-  modifiés localement. Le poste n'a jamais à indexer un dépôt de 2M de lignes à froid.
-- **Télémétrie centrale** : événements des outils et des hooks, plus les crédits par requête récoltés localement
-  dans les sessions Kiro CLI, envoyés à `/telemetry`, transformés en métriques CloudWatch EMF et affichés sur un
-  dashboard. On croise avec l'export d'usage Kiro (crédits/jour/utilisateur) pour une comparaison par cohorte.
-- **Pas d'exécution distante** : `kopt_run` n'existe pas en mode HTTP. Les commandes s'exécutent toujours sur le
-  poste.
-- Données : le code reste dans le compte AWS du client (S3 KMS, VPC). Les prompts Kiro, eux, partent toujours
-  vers le service Kiro (hors de notre périmètre).
+   "One-time" matters: a block costs a turn, so we only block where the expected gain far exceeds that cost, and we
+   never block the same thing twice (no blocking loops).
+3. **Budgeted code navigation (`kopt_find` / `kopt_read` / `kopt_outline` / `kopt_refs`):**
+   - a hard token cap on every response, compact text (never JSON), short `#3mv` handles;
+   - per-session dedup, with a bounded window because Kiro's compaction erases MCP results;
+   - a `pack` mode that returns task-level context in a single call (fewer turns);
+   - hybrid search with code-aware tokenization (camelCase/snake_case), column-weighted BM25, centrality (PageRank)
+     and demotion of tests;
+   - `outline` for file skeletons and an aider-style repo map personalized by the task focus.
+4. **Minimal fixed prefix:**
+   - 6 tools with short descriptions and MCP instructions under 600 chars;
+   - `always` steering under 140 words, with spec guidance in `auto` mode (loaded only when relevant);
+   - a generated `.kiroignore` covering lockfiles, minified bundles, generated code, snapshots and large data files.
+5. **Output levers and model routing:**
+   - "output" steering: don't restate code or the plan, edit with minimal replacements, no unrequested summaries,
+     stop at the acceptance criteria. Measured gain in the literature: about −8% output tokens, not the −65% some
+     tools advertise;
+   - a `kopt-explorer` sub-agent on Haiku 4.5 (0.4x) for exploration, returning file:line spans rather than code.
 
-## 4. Choix techniques
-- **TypeScript / Node ≥ 22, zéro dépendance native** : SQLite via `node:sqlite` (FTS5 inclus) et tree-sitter en WASM.
-  Installation possible sur des postes verrouillés (pas de prebuild natif à télécharger) et image Docker simple.
-- **SQLite par dépôt et par commit** : un artefact immuable, facile à mettre en cache, à versionner dans S3 et à
-  servir en lecture. C'est le même format que l'index local.
-- **Tree-sitter** pour 12 langages (Java, TS/JS, Python, C#, Go, Kotlin, Rust, PHP, Ruby, Scala). La résolution
-  des références privilégie la précision : une référence ambiguë reste non résolue. Évolution prévue : SCIP
-  (scip-java, scip-typescript, scip-dotnet) en CI pour une résolution exacte sur les stacks Java/.NET.
-- **Pas d'embeddings dans la v0.1** : le lexical code-aware bien fait, avec centralité, couvre l'essentiel pour
-  les agents, qui formulent des requêtes avec des identifiants. Les embeddings (Titan v2 à 0,02 $/M tokens en CI)
-  sont une option pour la v0.2 si le banc de mesure montre un déficit de rappel sur les requêtes en langage naturel.
+### 3.2 Centralized mode (in the customer's account)
+- **Index once per commit in CI** (CodeBuild webhook) instead of on every laptop. The SQLite snapshot embeds the
+  code (gzip blobs) and is served by **one multi-repository HTTP MCP server** (Fargate). Authentication is OAuth
+  (Cognito or the corporate IdP), with a public PKCE client configured through `oauth.clientId` in `mcp.json`,
+  because Cognito does not support dynamic client registration.
+- **Cross-repository search**: "who consumes this API across all 50 repositories" is a central capability that no
+  local tool offers.
+- **Local overlay**: `kopt sync` downloads the snapshot for the current commit, then re-indexes only locally modified
+  files. A laptop never cold-indexes a 2M-line repository.
+- **Central telemetry**: tool and hook events, plus per-request credits collected locally from Kiro CLI sessions,
+  are posted to `/telemetry`. There they become CloudWatch EMF metrics and feed a dashboard. They are cross-checked
+  with Kiro's usage export (credits per user per day) for cohort comparisons.
+- **No remote execution**: `kopt_run` does not exist in HTTP mode. Commands always run on the developer machine.
+- Data: the code stays in the customer's AWS account (S3 with KMS, VPC). Kiro prompts still go to the Kiro service,
+  which is outside our scope.
 
-## 5. Mesure : prouver avant d'affirmer
-- **Banc hors ligne** (`kopt bench`) sur deux grands dépôts (spring-framework, django), avec des tâches en anglais
-  et en français dont les réponses de référence sont vérifiées dans le code. On compare 4 stratégies (grep + lecture
-  de fichiers entiers façon Kiro, grep + plages, `kopt_find pack`, `kopt_find` + `read`) sur les tokens renvoyés et
-  le rappel. C'est un indicateur, **pas** une économie de crédits.
-- **A/B en ligne** (`bench/ab/`) avec `kiro-cli --no-interactive --output-format stream-json`, sur les mêmes
-  tâches, N répétitions, bras stock contre bras kopt, crédits lus dans le flux, comparaison appariée seulement sur
-  les tâches réussies par les deux bras, IC 95 % par bootstrap. **Seul ce chiffre compte** pour annoncer une économie.
-- **En production** : comparaison par cohorte (différence de différences) des crédits/jour issus de l'export
-  Kiro, plus la télémétrie fine.
-- Règle : le champ `baselineTokens` n'est renseigné que lorsque le contrefactuel est exactement calculable (sortie
-  brute d'une commande, fichier complet).
+## 4. Surface compatibility
 
-## 6. Questions ouvertes à valider avant un déploiement
-1. Les stacks visées : langages (Java/Spring ? .NET ?), monorepo ou polyrepo, nombre et taille des dépôts.
-2. Les surfaces utilisées : Kiro IDE 1.x, CLI 2.x ou CLI V3 ? Les leviers diffèrent (Tool Search et `.kiroignore`
-   uniquement en CLI V3, `read_code` uniquement dans l'IDE…).
-3. Le plan Kiro (Pro/Enterprise, IAM Identity Center) : il conditionne la gouvernance MCP (registre), l'export
-   d'usage et la télémétrie OTel.
-4. Une sonde d'une journée sur le compte Kiro de l'organisation : prompts fixes avec un préfixe de taille variable et une sortie de
-   longueur variable, crédits lus à chaque requête. Objectif : établir la pondération réelle entrée, sortie et cache.
-5. Le modèle par défaut (Auto ou modèle épinglé) et la politique de sous-agents.
+| Capability | Kiro IDE 1.x | Kiro CLI V3 | Kiro CLI 2.x (legacy) | Standalone `kopt` CLI |
+|---|---|---|---|---|
+| MCP tools | `.kiro/settings/mcp.json` (+ `autoApprove`) | `mcp.json` through the agent (`includeMcpJson`) + `allowedTools` | same as V3 | n/a: same operations as commands (`kopt find/read/outline/refs/run/expand`) |
+| Hooks | `.kiro/hooks/kopt.json` (v1 schema) | same file | hooks embedded in agent config (object form: `agentSpawn`, `userPromptSubmit`, `preToolUse`, `postToolUse`, `stop`) | n/a |
+| Block semantics | exit 2 (the IDE also treats other non-zero codes as blocking) | exit 2 only | exit 2 | n/a |
+| Allow path | **must be silent**: in the IDE, any PreToolUse output intercepts the tool call | silent | silent | n/a |
+| Steering | all inclusion modes | all modes | only `always` loads automatically | n/a |
+| `.kiroignore` | yes (+ `kiroAgent.agentIgnoreFiles` setting) | yes (workspace) | no | the indexer honors it |
+| Built-in tool names | `read_file`, `read_code`, `grep_search`, … | `read`, `grep`, `glob`, `shell`, `write`, … | `fs_read`, `execute_bash`, `fs_write`, … | n/a |
+| Credit telemetry | daily admin export | per request (session files) | per request (session files) | n/a |
 
-## 7. Feuille de route
-- **v0.1 (ce prototype)** : index local + 6 outils budgétés + compression des sorties + gouverneur + installation
-  Kiro + télémétrie + infra CDK + banc de mesure.
-- **v0.2** : SCIP en CI pour Java/TS/.NET ; recherche inter-dépôts ; embeddings optionnels ; « Code Mode »
-  (le modèle écrit un script qui interroge l'index côté serveur et seul le résultat entre en contexte).
-- **v0.3** : modèle « fast apply » sur Bedrock (édition par snippets `// ... existing code ...`, pour moins de
-  tokens de sortie) ; sélection des tests impactés (Gradle/Maven/Jest/pytest) ; pruner de sorties appris.
+The governor normalizes tool names and payload shapes across surfaces, and de-duplicates events in case both hook
+formats are active.
 
-## Annexe : principales sources
-- Code lu : KiroGraph v1.4.0 (commit 3457727), CodeGraph v1.6.2 (b635dd4), sdl-mcp, CodeGraphContext, codegraph-rust.
-- Docs Kiro (258 pages, IDE 1.2 et CLI 2.28/V3) : hooks, MCP (OAuth, Tool Search), steering, `.kiroignore`, modèles et crédits, gouvernance entreprise.
-- Analyse en lecture seule du bundle Kiro IDE (0.12 et 1.2.56) : sémantique des hooks, injection des instructions MCP plafonnée à 2 048 caractères, plafond de `read_file` à 2 000 lignes, compaction des résultats MCP.
-- Littérature : The Complexity Trap (NeurIPS 2025, masquage des observations ≈ −50 % de coût), SWE-Pruner, AgentDiet, étude JetBrains sur la concision (−8,5 % de tokens de sortie), Anthropic Tool Search (−85 % de schémas).
-- Issues Kiro : #11786 (session de plus de 1 000 crédits), #11477 (absence de disjoncteur), #9576 (pas de réécriture d'entrée dans les hooks), #7557 (pas de steering imposé par l'administrateur).
+## 5. Technical choices
+- **TypeScript / Node ≥ 22, zero native dependencies**: SQLite through `node:sqlite` (FTS5 included) and tree-sitter
+  as WASM. It installs on locked-down laptops (no native prebuild to download) and builds into a simple Docker image.
+- **One SQLite file per repository and commit**: an immutable artifact that is easy to cache, version in S3 and serve
+  read-only. It is the same format as the local index.
+- **Tree-sitter** for 12 languages (Java, TS/JS, Python, C#, Go, Kotlin, Rust, PHP, Ruby, Scala). Reference
+  resolution favors precision: an ambiguous reference stays unresolved. Planned next step: SCIP (scip-java,
+  scip-typescript, scip-dotnet) in CI for exact resolution on Java and .NET stacks.
+- **No embeddings in v0.1.** Well-done code-aware lexical search plus centrality covers most agent queries, because
+  agents query with identifiers. Embeddings (Titan v2 at $0.02 per million tokens, in CI) are a v0.2 option if the
+  benchmark shows a recall gap on natural-language queries.
+
+## 6. Measurement: prove before claiming
+- **Offline benchmark** (`kopt bench`) on two large repositories (spring-framework, django), with verified gold
+  answers. It compares 4 strategies on tokens returned and recall:
+  - Kiro-style grep plus whole-file reads;
+  - grep plus line ranges;
+  - `kopt_find pack`;
+  - `kopt_find` plus `read`.
+
+  This is an indicator, **not** a credit saving.
+- **Online A/B** (`bench/ab/`) with `kiro-cli --no-interactive --output-format stream-json`:
+  - same tasks, N repetitions, stock arm vs kopt arm;
+  - credits read from the stream;
+  - paired comparison restricted to tasks both arms solved;
+  - bootstrap 95% CI.
+
+  **Only this number** supports a savings claim.
+- **In production**: a cohort comparison (difference-in-differences) of daily credits from the Kiro export, plus
+  the fine-grained telemetry.
+- Rule: `baselineTokens` is only set when the counterfactual is exactly computable (raw command output, full file).
+
+## 7. Open questions before a deployment
+1. Target stacks: languages (Java/Spring? .NET?), monorepo or polyrepo, number and size of repositories.
+2. Surfaces in use: Kiro IDE 1.x, CLI 2.x or CLI V3? Some levers differ: Tool Search and `.kiroignore` exist only in
+   CLI V3, and `read_code` only in the IDE.
+3. The Kiro plan (Pro or Enterprise with IAM Identity Center). It determines MCP governance (registry), the usage
+   export and OTel telemetry.
+4. A one-day probe on the organization's Kiro account: fixed prompts with varying prefix and output sizes, reading
+   the credits of each request. Goal: establish the real weighting of input, output and cache.
+5. Default model (Auto or pinned) and the sub-agent policy.
+
+## 8. Roadmap
+- **v0.1 (this prototype)**: local index, 6 budgeted tools, output compression, governor, Kiro setup for IDE and CLI,
+  telemetry, CDK infrastructure, benchmark harness.
+- **v0.2**:
+  - SCIP in CI for Java, TS and .NET;
+  - cross-repository search;
+  - optional embeddings;
+  - "Code Mode": the model writes a script that queries the index server-side, and only the result enters context.
+- **v0.3**:
+  - a "fast apply" model on Bedrock: snippet edits with `// ... existing code ...`, for fewer output tokens;
+  - impacted-test selection (Gradle, Maven, Jest, pytest);
+  - a learned output pruner.
+
+## Appendix: main sources
+- Source code read: KiroGraph v1.4.0 (commit 3457727), CodeGraph v1.6.2 (b635dd4), sdl-mcp, CodeGraphContext,
+  codegraph-rust.
+- Kiro docs (258 pages, IDE 1.2 and CLI 2.28/V3): hooks, MCP (OAuth, Tool Search), steering, `.kiroignore`, models
+  and credits, enterprise governance.
+- Read-only analysis of the installed Kiro IDE bundle (0.12 and 1.2.56):
+  - hook semantics;
+  - MCP instructions injected into context, capped at 2,048 chars;
+  - the 2,000-line `read_file` cap;
+  - compaction of MCP results.
+- Literature: The Complexity Trap (NeurIPS 2025: observation masking ≈ −50% cost), SWE-Pruner, AgentDiet, the
+  JetBrains study on terse output (−8.5% output tokens), and Anthropic Tool Search (−85% of schema tokens).
+- Kiro issues: #11786 (a session of more than 1,000 credits), #11477 (no circuit breaker), #9576 (hooks cannot
+  rewrite input), #7557 (no admin-enforced steering).

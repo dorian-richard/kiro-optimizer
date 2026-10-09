@@ -1,77 +1,83 @@
 # kiro-optimizer (`kopt`)
 
-> **EN.** Token optimizer for [Kiro](https://kiro.dev) (IDE and CLI). It combines budgeted code-intelligence MCP
-> tools, command-output compression, session-governor hooks and an optional centralized deployment on AWS. It cuts
-> both input and output tokens on large codebases without proxying Kiro's LLM traffic, which Kiro does not allow.
+Token optimizer for [Kiro](https://kiro.dev). It cuts both input and output tokens on large codebases. It does
+not proxy Kiro's LLM traffic, because Kiro does not allow that.
 
-**Statut : prototype en cours de développement (v0.1).** Les interfaces peuvent encore changer.
+It provides:
+- budgeted code-intelligence MCP tools;
+- command-output compression;
+- session-governor hooks;
+- an optional centralized deployment on AWS.
 
-## Pourquoi un nouvel outil
+It works on three surfaces: **Kiro IDE**, **Kiro CLI** (V3 and legacy 2.x), and the **standalone `kopt` CLI**,
+which any terminal or agent can call.
 
-Sur de gros dépôts, les outils de « code graph » existants (KiroGraph, CodeGraph) économisent peu. Le fait central :
-Kiro facture des crédits par requête, proportionnels à la taille totale de la requête. Or chaque token entré dans
-le contexte est **refacturé à chaque tour suivant**.
+**Status: prototype under active development (v0.1).** Interfaces may still change.
 
-La dépense vient donc surtout :
-- de l'historique résident multiplié par le nombre de tours ;
-- des logs de build et de test, verbeux et souvent relancés ;
-- des lectures de fichiers entiers ;
-- du préfixe fixe (steering, schémas d'outils) ;
-- des boucles d'agent qui s'emballent.
+## Why another tool
 
-Un graphe de code ne traite qu'une petite part de ces postes. L'analyse détaillée, vérifiée dans le code des
-outils existants et dans la documentation Kiro, est dans [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+On large repositories, existing "code graph" tools (KiroGraph, CodeGraph) save little. Kiro bills credits per
+request, and the cost grows with the total request size. Every token that enters the context is **billed again on
+every later turn** of the session.
 
-## Les cinq leviers
+Real spend therefore comes from:
+- resident history multiplied by the number of turns;
+- verbose build and test logs that get re-run;
+- whole-file reads;
+- the fixed prefix (steering, tool schemas);
+- runaway agent loops.
 
-1. **`kopt_run` / `kopt_expand`** : les tests, builds et linters ne renvoient que le verdict, les échecs et les
-   erreurs. Le log complet reste accessible par handle. Une commande identique, relancée sans modification de
-   fichier, n'est pas réexécutée.
-2. **Gouverneur de session** (hooks `command` Kiro, qui ne consomment aucun crédit) :
-   - disjoncteur sur le nombre d'appels d'outils ;
-   - redirection, une seule fois, des lectures de fichiers entiers trop gros ;
-   - redirection, une seule fois, des commandes verbeuses vers `kopt_run` ;
-   - blocage des relances identiques ;
-   - mesure de la taille des sorties des outils natifs.
-3. **Navigation de code budgétée** (`kopt_find`, `kopt_read`, `kopt_outline`, `kopt_refs`) :
-   - plafond dur en tokens, sortie compacte (jamais de JSON), handles courts `#3mv` ;
-   - déduplication par session ;
-   - mode `pack`, qui fournit le contexte d'une tâche en un seul appel ;
-   - recherche lexicale « code-aware » combinée à la centralité (PageRank).
-4. **Préfixe fixe minimal** : 6 outils, steering `always` de moins de 140 mots, `.kiroignore` généré.
-5. **Leviers de sortie** : steering de concision et d'édition minimale, et sous-agent d'exploration sur un modèle
-   économique.
+A code graph only addresses a small slice of that. The detailed analysis is in
+[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). It was verified against the source code of the existing tools and
+against the Kiro documentation.
+
+## The five levers
+
+1. **`kopt_run` / `kopt_expand`**: tests, builds and linters return only the verdict, the failures and the errors.
+   The full log stays available by handle. An identical command re-run with no file change is not executed again.
+2. **Session governor**, built on Kiro `command` hooks, which consume no credits. It provides:
+   - a tool-call circuit breaker;
+   - a one-time redirect of whole-file reads of big files;
+   - a one-time redirect of verbose commands to `kopt_run`;
+   - blocking of identical re-runs;
+   - per-tool measurement of built-in tool output sizes.
+3. **Budgeted code navigation** (`kopt_find`, `kopt_read`, `kopt_outline`, `kopt_refs`):
+   - hard token caps, compact text output (never JSON), short handles such as `#3mv`;
+   - per-session dedup;
+   - a `pack` mode that returns task-level context in one call;
+   - code-aware lexical search plus centrality (PageRank).
+4. **Minimal fixed prefix**: 6 tools, `always` steering under 140 words, and a generated `.kiroignore`.
+5. **Output levers**: steering for concise answers and minimal edits, plus an exploration sub-agent on a cheaper model.
 
 ## Architecture
 
-- **Local** : `kopt mcp` (MCP stdio), `kopt hook` (gouverneur) et un index SQLite local (`node:sqlite`, FTS5)
-  alimenté par tree-sitter (WASM). Aucune dépendance native.
-- **Centralisé (AWS, chez le client)** :
-  - indexation par commit en CI (CodeBuild), avec des snapshots stockés dans S3 (KMS) ;
-  - serveur MCP Streamable HTTP multi-dépôts sur ECS Fargate, authentifié en OAuth (Cognito ou IdP) ;
-  - télémétrie CloudWatch avec dashboard des économies ;
-  - infrastructure en AWS CDK.
+- **Local**: `kopt mcp` (stdio MCP server), `kopt hook` (governor), and a local SQLite index (`node:sqlite`,
+  FTS5) built with tree-sitter (WASM). No native dependencies.
+- **Centralized (in the customer's AWS account)**:
+  - per-commit indexing in CI (CodeBuild), with snapshots stored in S3 (KMS);
+  - a multi-repository Streamable HTTP MCP server on ECS Fargate with OAuth (Cognito or the corporate IdP);
+  - CloudWatch telemetry and a savings dashboard;
+  - infrastructure as AWS CDK.
 
-Voir [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) et [docs/CONTRACTS.md](docs/CONTRACTS.md).
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) and [docs/CONTRACTS.md](docs/CONTRACTS.md).
 
-## Démarrage rapide (cible v0.1)
+## Quick start (v0.1 target)
 
 ```bash
 nvm use 22            # Node >= 22.13
 npm install && npm run build
-npx kopt index        # indexe le dépôt courant dans .kopt/index.db
-npx kopt init         # configure Kiro : mcp.json, steering, hooks, agent explorer, .kiroignore
-npx kopt stats        # tokens renvoyés, économies mesurées, blocages du gouverneur
+npx kopt index        # index the current repository into .kopt/index.db
+npx kopt init         # configure Kiro: mcp.json, steering, hooks, explorer agent, .kiroignore
+npx kopt stats        # tokens returned, measured savings, governor blocks
 ```
 
-## Mesure
+## Measurement
 
-Aucun chiffre d'économie n'est annoncé sans mesure. Deux outils sont prévus :
-- `kopt bench` : un banc hors ligne sur de grands dépôts open source, avec des tâches dont les réponses de
-  référence sont vérifiées.
-- `bench/ab/` : un A/B en ligne avec `kiro-cli` en mode non interactif. Il compare les crédits sur des tâches
-  appariées et ne retient que celles réussies par les deux bras.
+No savings figure is claimed without measurement:
+- `kopt bench` is an offline benchmark on large open-source repositories, using tasks with verified gold answers.
+- `bench/ab/` is an online A/B harness that runs `kiro-cli` in non-interactive mode. It compares credits on paired
+  tasks and only counts tasks that both arms solved.
 
-## Licence
+## License
 
 [MIT](LICENSE)
