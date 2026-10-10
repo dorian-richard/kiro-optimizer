@@ -1,0 +1,182 @@
+
+> shop@1.0.0 test
+> node --test
+
+TAP version 13
+# Subtest: cart
+    # Subtest: sums prices times quantities
+    ok 1 - sums prices times quantities
+      ---
+      duration_ms: 1.210875
+      type: 'test'
+      ...
+    # Subtest: returns 0 for an empty cart
+    ok 2 - returns 0 for an empty cart
+      ---
+      duration_ms: 0.05775
+      type: 'test'
+      ...
+    # Subtest: applies a percentage discount
+    ok 3 - applies a percentage discount
+      ---
+      duration_ms: 0.062542
+      type: 'test'
+      ...
+    # Subtest: rejects a discount over 100
+    ok 4 - rejects a discount over 100
+      ---
+      duration_ms: 0.25275
+      type: 'test'
+      ...
+    # Subtest: rounds a discounted amount to cents
+    ok 5 - rounds a discounted amount to cents
+      ---
+      duration_ms: 0.055833
+      type: 'test'
+      ...
+    # Subtest: treats a missing cart as empty
+    not ok 6 - treats a missing cart as empty
+      ---
+      duration_ms: 0.075625
+      type: 'test'
+      location: '/home/dev/shop/test/cart.test.js:26:3'
+      failureType: 'testCodeFailure'
+      error: "Cannot read properties of null (reading 'reduce')"
+      code: 'ERR_TEST_FAILURE'
+      name: 'TypeError'
+      stack: |-
+        total (file:///home/dev/shop/src/cart.js:2:16)
+        TestContext.<anonymous> (file:///home/dev/shop/test/cart.test.js:27:18)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Suite.processPendingSubtests (node:internal/test_runner/test:744:18)
+        Test.postRun (node:internal/test_runner/test:1173:19)
+        Test.run (node:internal/test_runner/test:1101:12)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    # Subtest: parses quantity "3"
+    ok 7 - parses quantity "3"
+      ---
+      duration_ms: 0.105333
+      type: 'test'
+      ...
+    # Subtest: parses quantity "12"
+    ok 8 - parses quantity "12"
+      ---
+      duration_ms: 0.162875
+      type: 'test'
+      ...
+    # Subtest: parses quantity "x"
+    ok 9 - parses quantity "x"
+      ---
+      duration_ms: 0.179125
+      type: 'test'
+      ...
+    # Subtest: parses quantity ""
+    ok 10 - parses quantity ""
+      ---
+      duration_ms: 0.286416
+      type: 'test'
+      ...
+    1..10
+not ok 1 - cart
+  ---
+  duration_ms: 3.065167
+  type: 'suite'
+  location: '/home/dev/shop/test/cart.test.js:5:1'
+  failureType: 'subtestsFailed'
+  error: '1 subtest failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: summarizes an open order
+ok 2 - summarizes an open order
+  ---
+  duration_ms: 0.871375
+  type: 'test'
+  ...
+# Subtest: summarizes a paid order
+not ok 3 - summarizes a paid order
+  ---
+  duration_ms: 0.742875
+  type: 'test'
+  location: '/home/dev/shop/test/order.test.js:9:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      {
+        id: 8,
+        lines: 1,
+    +   status: 'paid'
+    -   status: 'shipped'
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    id: 8
+    lines: 1
+    status: 'shipped'
+  actual:
+    id: 8
+    lines: 1
+    status: 'paid'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///home/dev/shop/test/order.test.js:10:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: moves an order to the next status
+ok 4 - moves an order to the next status
+  ---
+  duration_ms: 0.083791
+  type: 'test'
+  ...
+# Subtest: delivered orders have no next status
+ok 5 - delivered orders have no next status
+  ---
+  duration_ms: 0.125709
+  type: 'test'
+  ...
+# Subtest: cancelled orders go back to open
+not ok 6 - cancelled orders go back to open
+  ---
+  duration_ms: 0.207708
+  type: 'test'
+  location: '/home/dev/shop/test/order.test.js:22:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + undefined
+    - 'open'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'open'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///home/dev/shop/test/order.test.js:23:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+1..6
+# tests 15
+# suites 1
+# pass 12
+# fail 3
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 70.002083

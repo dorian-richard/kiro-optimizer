@@ -1,0 +1,111 @@
+
+> shop@1.0.0 test
+> node --test
+
+TAP version 13
+# Subtest: cart
+    # Subtest: sums prices times quantities
+    ok 1 - sums prices times quantities
+      ---
+      duration_ms: 1.016
+      type: 'test'
+      ...
+    # Subtest: returns 0 for an empty cart
+    ok 2 - returns 0 for an empty cart
+      ---
+      duration_ms: 0.081292
+      type: 'test'
+      ...
+    # Subtest: applies a percentage discount
+    ok 3 - applies a percentage discount
+      ---
+      duration_ms: 0.109208
+      type: 'test'
+      ...
+    # Subtest: rejects a discount over 100
+    ok 4 - rejects a discount over 100
+      ---
+      duration_ms: 0.28025
+      type: 'test'
+      ...
+    # Subtest: rounds a discounted amount to cents
+    ok 5 - rounds a discounted amount to cents
+      ---
+      duration_ms: 0.060375
+      type: 'test'
+      ...
+    # Subtest: treats a missing cart as empty
+    ok 6 - treats a missing cart as empty
+      ---
+      duration_ms: 0.045584
+      type: 'test'
+      ...
+    # Subtest: parses quantity "3"
+    ok 7 - parses quantity "3"
+      ---
+      duration_ms: 0.056
+      type: 'test'
+      ...
+    # Subtest: parses quantity "12"
+    ok 8 - parses quantity "12"
+      ---
+      duration_ms: 0.129667
+      type: 'test'
+      ...
+    # Subtest: parses quantity "x"
+    ok 9 - parses quantity "x"
+      ---
+      duration_ms: 0.141292
+      type: 'test'
+      ...
+    # Subtest: parses quantity ""
+    ok 10 - parses quantity ""
+      ---
+      duration_ms: 0.299084
+      type: 'test'
+      ...
+    1..10
+ok 1 - cart
+  ---
+  duration_ms: 3.033208
+  type: 'suite'
+  ...
+# Subtest: summarizes an open order
+ok 2 - summarizes an open order
+  ---
+  duration_ms: 0.754792
+  type: 'test'
+  ...
+# Subtest: summarizes a paid order
+ok 3 - summarizes a paid order
+  ---
+  duration_ms: 0.071375
+  type: 'test'
+  ...
+# Subtest: moves an order to the next status
+ok 4 - moves an order to the next status
+  ---
+  duration_ms: 0.074459
+  type: 'test'
+  ...
+# Subtest: delivered orders have no next status
+ok 5 - delivered orders have no next status
+  ---
+  duration_ms: 0.552375
+  type: 'test'
+  ...
+# Subtest: cancelled orders go back to open
+ok 6 - cancelled orders go back to open
+  ---
+  duration_ms: 0.08725
+  type: 'test'
+  ...
+1..6
+# tests 15
+# suites 1
+# pass 15
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 67.47775

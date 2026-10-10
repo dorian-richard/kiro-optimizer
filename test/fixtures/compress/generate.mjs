@@ -5,7 +5,10 @@
 // repository's own `npx vitest run` (passing, and with one injected failing assertion) and `npm run build` (after
 // renaming ToolResult.tokens), captured through kopt_run's runner with the worktree path rewritten to /home/dev/shop.
 // vitest-kopt-many-fail.txt (19 failures in 4 files) and vitest-kopt-diff-fail.txt (5 failures with object diffs)
-// are stored kopt_run logs of two failing runs of this repository's suite.
+// are stored kopt_run logs of two failing runs of this repository's suite. node-test-*.txt are real node:test runs
+// (Node 22) of a small project, captured through kopt_run's runner: `npm test` failing (TAP, node's reporter when
+// the output is not a terminal) and passing, `node --test --test-reporter=spec` failing, and `node --test` with a
+// test file that does not load, an assertion on numbers, a custom message, a timeout and a skipped test.
 
 import { writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';

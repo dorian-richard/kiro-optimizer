@@ -28,10 +28,10 @@ is [`docs/benchmarks.html`](benchmarks.html), published at
   every answer correct in both arms. Over every v0.2 run pooled: <!--v:ab.pooled.ex-->-18% [-31%, -5%]<!--/v-->.
 - **Real agents, test diagnosis.** No measurable saving: <!--v:ab.rn.primary-->+16% [-31%, +67%]<!--/v--> over
   <!--v:ab.rnTasks-->6<!--/v--> tasks. kopt cuts what the agent reads, not the number of calls.
-- **Command output.** On <!--v:compress.fixtures-->50<!--/v--> committed test, build and git outputs (45 generated in
-  each tool's format, 5 real runs), kopt's filters
-  return <!--v:compress.out-->10,402<!--/v--> of <!--v:compress.raw-->286,154<!--/v--> tokens
-  (<!--v:compress.reduction-->96.4%<!--/v--> removed). In the agent runs, `kopt run` turned
+- **Command output.** On <!--v:compress.fixtures-->54<!--/v--> committed test, build and git outputs (<!--v:compress.generated-->45<!--/v--> generated in
+  each tool's format, <!--v:compress.real-->9<!--/v--> real runs), kopt's filters
+  return <!--v:compress.out-->11,096<!--/v--> of <!--v:compress.raw-->290,658<!--/v--> tokens
+  (<!--v:compress.reduction-->96.2%<!--/v--> removed). In the agent runs, `kopt run` turned
   <!--v:ab.rawTest-->152.2k<!--/v--> tokens of raw test output into <!--v:ab.koptTest-->15.2k<!--/v-->.
 - **Large repositories.** On elasticsearch (<!--v:scale.esIndexed-->33,090<!--/v--> files indexed), search answers
   <!--v:scale.esFind-->32 s<!--/v--> after the first start and callers <!--v:scale.esRefs-->87 s<!--/v-->; the index
@@ -242,19 +242,20 @@ are not sampled, so their precision is not measured. The index times of this run
 ## Command-output compression
 
 `kopt_run` (`kopt run` on the command line) runs a test, build or lint command and returns only the verdict, the
-failures and the errors; the full log stays on disk behind a handle. The table below runs kopt's filters on the 50
-outputs committed in `test/fixtures/compress`, at the default budget of 900 tokens
-([`bench/results/compression.md`](../bench/results/compression.md), produced by `node bench/compress/run.mjs`). 45 of
-them are generated in each tool's CI format (long passing runs generated, failing sections written by hand); 5 are
-real runs of this repository's own suite and build.
+failures and the errors; the full log stays on disk behind a handle. The table below runs kopt's filters on the
+<!--v:compress.fixtures-->54<!--/v--> outputs committed in `test/fixtures/compress`, at the default budget of 900 tokens
+([`bench/results/compression.md`](../bench/results/compression.md), produced by `node bench/compress/run.mjs`).
+<!--v:compress.generated-->45<!--/v--> of them are generated in each tool's CI format (long passing runs generated,
+failing sections written by hand); <!--v:compress.real-->9<!--/v--> are real runs: this repository's own suite and
+build, and node:test (TAP and spec reporters) on a small project.
 
 <!-- BEGIN generated:compression-totals -->
 | Set | Fixtures | Raw tokens | kopt tokens | Reduction (total) | Median reduction | Smallest reduction |
 |---|---|---|---|---|---|---|
-| all fixtures | 50 | 286,154 | 10,402 | 96.4% | 93.8% | 42.5% |
-| exit 0 (passing runs, git) | 15 | 87,544 | 2,145 | 97.5% | 99.4% | 79.8% |
-| exit non-zero (failures) | 35 | 198,610 | 8,257 | 95.8% | 91.8% | 42.5% |
-| real runs of this repository | 5 | 32,729 | 1,889 | 94.2% | 94.1% | 60.7% |
+| all fixtures | 54 | 290,658 | 11,096 | 96.2% | 93.2% | 42.5% |
+| exit 0 (passing runs, git) | 16 | 88,324 | 2,158 | 97.6% | 99.3% | 79.8% |
+| exit non-zero (failures) | 38 | 202,334 | 8,938 | 95.6% | 91.2% | 42.5% |
+| real runs | 9 | 37,233 | 2,583 | 93.1% | 91.0% | 60.7% |
 | generated fixtures | 45 | 253,425 | 8,513 | 96.6% | 93.5% | 42.5% |
 <!-- END generated:compression-totals -->
 
@@ -262,7 +263,7 @@ real runs of this repository's own suite and build.
 | Tool family | Fixtures | Raw tokens | kopt tokens | Reduction | Smallest reduction |
 |---|---|---|---|---|---|
 | Python | 3 | 25,115 | 559 | 97.8% | 63.0% |
-| JavaScript / TypeScript | 19 | 144,310 | 4,245 | 97.1% | 42.5% |
+| JavaScript / TypeScript | 23 | 148,814 | 4,939 | 96.7% | 42.5% |
 | JVM | 7 | 25,575 | 1,197 | 95.3% | 75.1% |
 | .NET | 6 | 8,040 | 904 | 88.8% | 56.2% |
 | Go | 3 | 34,423 | 383 | 98.9% | 80.6% |
@@ -280,7 +281,7 @@ xychart-beta horizontal
   title "kopt_run filters: tokens removed, per tool family (%)"
   x-axis ["Python", "JavaScript / TypeScript", "JVM", ".NET", "Go", "Rust", "Ruby", "PHP", "Other", "git"]
   y-axis "reduction %" 0 --> 100
-  bar [97.8, 97.1, 95.3, 88.8, 98.9, 96.9, 95.7, 96.2, 96.7, 82.7]
+  bar [97.8, 96.7, 95.3, 88.8, 98.9, 96.9, 95.7, 96.2, 96.7, 82.7]
 ```
 <!-- END generated:chart-compress -->
 

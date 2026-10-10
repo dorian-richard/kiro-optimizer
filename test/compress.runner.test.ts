@@ -416,6 +416,34 @@ describe('expand', () => {
   });
 });
 
+describe('kopt_run on a failing node:test suite (live, this Node)', () => {
+  it('keeps the failing test, its assertion values and file:line; drops the TAP noise', async () => {
+    const root = tempDir('nodetest');
+    mkdirSync(join(root, 'test'), { recursive: true });
+    writeFileSync(join(root, 'package.json'), '{ "name": "t", "version": "1.0.0", "private": true, "type": "module" }\n');
+    writeFileSync(
+      join(root, 'test', 'math.test.js'),
+      [
+        "import { test } from 'node:test';",
+        "import assert from 'node:assert/strict';",
+        "test('adds numbers', () => { assert.equal(1 + 1, 2); });",
+        "test('rejects bad input', () => { assert.strictEqual(2 + 2, 5); });",
+        '',
+      ].join('\n'),
+    );
+    const cfg = config(root);
+    const r = await runCommand({ command: nodeCommand(['--test']) }, newToolContext(cfg));
+    expect(r.meta?.exitCode).toBe(1);
+    expect(r.meta?.filter, r.text).toBe('node-test');
+    expect(r.text).toMatch(/^1 failed, 1 passed \(2 tests\) in \d+ms$/m);
+    expect(r.text).toMatch(/^FAIL test[\\/]math\.test\.js > rejects bad input$/m);
+    expect(r.text).toContain('4 !== 5');
+    expect(r.text).toContain('expected: 5 · actual: 4');
+    expect(r.text).toMatch(/at test[\\/]math\.test\.js:4:\d+/);
+    expect(r.text).not.toMatch(/# (?:suites|cancelled|todo|duration_ms)|failureType|adds numbers/);
+  });
+});
+
 describe('OutputStore log reads', () => {
   it('serves only plain log files it wrote: no handle path tricks, no links', () => {
     const dataDir = tempDir('logread');

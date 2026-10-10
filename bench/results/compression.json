@@ -8,35 +8,35 @@
   "note": "filter output only, against the normalized raw output; a kopt_run answer adds a header and the log handle line (about 20-40 tokens) and, on a failing run with the index ready, up to 200 tokens of source hints",
   "totals": {
     "all": {
-      "fixtures": 50,
-      "rawTokens": 286154,
-      "outTokens": 10402,
-      "reduction": 0.9636489442747611,
-      "medianReduction": 0.937756526074881,
+      "fixtures": 54,
+      "rawTokens": 290658,
+      "outTokens": 11096,
+      "reduction": 0.9618245498145587,
+      "medianReduction": 0.9316229922459152,
       "minReduction": 0.42500000000000004
     },
     "exit0": {
-      "fixtures": 15,
-      "rawTokens": 87544,
-      "outTokens": 2145,
-      "reduction": 0.9754980352736909,
-      "medianReduction": 0.9937018894331701,
+      "fixtures": 16,
+      "rawTokens": 88324,
+      "outTokens": 2158,
+      "reduction": 0.9755672297450296,
+      "medianReduction": 0.9932413190481358,
       "minReduction": 0.798410896708286
     },
     "exitNonZero": {
-      "fixtures": 35,
-      "rawTokens": 198610,
-      "outTokens": 8257,
-      "reduction": 0.9584260611248174,
-      "medianReduction": 0.9184258535314047,
+      "fixtures": 38,
+      "rawTokens": 202334,
+      "outTokens": 8938,
+      "reduction": 0.9558255162256467,
+      "medianReduction": 0.911777373875557,
       "minReduction": 0.42500000000000004
     },
     "real": {
-      "fixtures": 5,
-      "rawTokens": 32729,
-      "outTokens": 1889,
-      "reduction": 0.9422836016987992,
-      "medianReduction": 0.9407996763535837,
+      "fixtures": 9,
+      "rawTokens": 37233,
+      "outTokens": 2583,
+      "reduction": 0.9306260575296108,
+      "medianReduction": 0.9096464426014841,
       "minReduction": 0.6065259117082533
     },
     "generated": {
@@ -60,11 +60,11 @@
     },
     {
       "family": "JavaScript / TypeScript",
-      "fixtures": 19,
-      "rawTokens": 144310,
-      "outTokens": 4245,
-      "reduction": 0.9705841591019333,
-      "medianReduction": 0.9577052868391451,
+      "fixtures": 23,
+      "rawTokens": 148814,
+      "outTokens": 4939,
+      "reduction": 0.9668109183275767,
+      "medianReduction": 0.9407996763535837,
       "minReduction": 0.42500000000000004
     },
     {
@@ -790,6 +790,58 @@
       "rawTokens": 521,
       "outTokens": 205,
       "reduction": 0.6065259117082533
+    },
+    {
+      "fixture": "node-test-fail.txt",
+      "command": "npm test",
+      "exitCode": 1,
+      "outcome": "fail",
+      "family": "JavaScript / TypeScript",
+      "origin": "real",
+      "filter": "node-test",
+      "rawChars": 4913,
+      "rawTokens": 1638,
+      "outTokens": 238,
+      "reduction": 0.8547008547008547
+    },
+    {
+      "fixture": "node-test-spec-fail.txt",
+      "command": "node --test --test-reporter=spec",
+      "exitCode": 1,
+      "outcome": "fail",
+      "family": "JavaScript / TypeScript",
+      "origin": "real",
+      "filter": "node-test",
+      "rawChars": 3264,
+      "rawTokens": 1088,
+      "outTokens": 238,
+      "reduction": 0.78125
+    },
+    {
+      "fixture": "node-test-pass.txt",
+      "command": "npm test",
+      "exitCode": 0,
+      "outcome": "pass",
+      "family": "JavaScript / TypeScript",
+      "origin": "real",
+      "filter": "node-test",
+      "rawChars": 2339,
+      "rawTokens": 780,
+      "outTokens": 13,
+      "reduction": 0.9833333333333333
+    },
+    {
+      "fixture": "node-test-load-fail.txt",
+      "command": "node --test",
+      "exitCode": 1,
+      "outcome": "fail",
+      "family": "JavaScript / TypeScript",
+      "origin": "real",
+      "filter": "node-test",
+      "rawChars": 2993,
+      "rawTokens": 998,
+      "outTokens": 205,
+      "reduction": 0.7945891783567134
     }
   ]
 }

@@ -189,25 +189,28 @@ export function relativizeRoot(text: string, roots: string[], platform: NodeJS.P
   let out = text;
   const win = platform === 'win32';
   const ci = win || platform === 'darwin';
+  const variants = new Set<string>();
   for (const root of roots) {
     const trimmed = root ? root.replace(/[\\/]+$/, '') : '';
     // Never strip a bare filesystem root (`/`, `C:`): it would mangle every absolute path in the output.
     if (!trimmed || /^[A-Za-z]:$/.test(trimmed)) continue;
-    const variants = new Set([trimmed]);
+    variants.add(trimmed);
     if (win) {
       variants.add(trimmed.replace(/\\/g, '/'));
       variants.add(trimmed.replace(/\//g, '\\'));
       variants.add(trimmed.replace(/\//g, '\\').replace(/\\/g, '\\\\'));
     }
-    for (const v of variants) {
-      const hay = ci ? out.toLowerCase() : out;
-      if (!hay.includes(ci ? v.toLowerCase() : v)) continue;
-      const re = new RegExp(`${escapeRe(v)}(?:[\\\\/]+([^\\s:'"),\\]<>|]*)|(?=[\\s:'"),\\]]|$))`, ci ? 'gmi' : 'gm');
-      out = out.replace(re, (_m, rest: string | undefined) => {
-        if (rest === undefined || rest === '') return '.';
-        return win ? rest.replace(/\\+/g, '/') : rest;
-      });
-    }
+  }
+  // Longest first, and only where a path starts: `/var/x` must not eat the middle of `/private/var/x/a.js` (macOS
+  // prints both spellings of a temp folder).
+  for (const v of [...variants].sort((a, b) => b.length - a.length)) {
+    const hay = ci ? out.toLowerCase() : out;
+    if (!hay.includes(ci ? v.toLowerCase() : v)) continue;
+    const re = new RegExp(`(?<![\\w.~-])${escapeRe(v)}(?:[\\\\/]+([^\\s:'"),\\]<>|]*)|(?=[\\s:'"),\\]]|$))`, ci ? 'gmi' : 'gm');
+    out = out.replace(re, (_m, rest: string | undefined) => {
+      if (rest === undefined || rest === '') return '.';
+      return win ? rest.replace(/\\+/g, '/') : rest;
+    });
   }
   return out;
 }

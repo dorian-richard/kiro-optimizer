@@ -16,6 +16,7 @@ import { jest, vitest } from './jest.js';
 import { json } from './json.js';
 import { maven } from './maven.js';
 import { mocha } from './mocha.js';
+import { nodeTest } from './nodetest.js';
 import { npm } from './npm.js';
 import { phpunit } from './phpunit.js';
 import { pytest, unittest } from './pytest.js';
@@ -25,14 +26,14 @@ import { tsc } from './tsc.js';
 import { xunit } from './xunit.js';
 
 export const FILTERS: readonly Filter[] = [
-  pytest, unittest, jest, vitest, mocha, rspec, phpunit, maven, gradle, sbt, dotnet, xunit, go, tsc, eslint, cargo, bazel, git, json, npm,
+  pytest, unittest, jest, vitest, mocha, nodeTest, rspec, phpunit, maven, gradle, sbt, dotnet, xunit, go, tsc, eslint, cargo, bazel, git, json, npm,
 ];
 
 /** Outputs this small are returned verbatim: nothing to gain, and verbatim is always trustworthy. */
 export const PASSTHROUGH_TOKENS = 120;
 /** Test, build and lint filters whose success output is a complete verdict line. */
 export const VERDICT_FILTERS: ReadonlySet<string> = new Set([
-  'pytest', 'unittest', 'jest', 'vitest', 'mocha', 'rspec', 'phpunit', 'maven', 'gradle', 'sbt', 'dotnet', 'xunit', 'go', 'tsc',
+  'pytest', 'unittest', 'jest', 'vitest', 'mocha', 'node-test', 'rspec', 'phpunit', 'maven', 'gradle', 'sbt', 'dotnet', 'xunit', 'go', 'tsc',
   'eslint', 'cargo', 'bazel',
 ]);
 const SAMPLE_CHARS = 64 * 1024;

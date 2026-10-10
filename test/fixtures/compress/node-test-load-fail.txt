@@ -1,0 +1,98 @@
+TAP version 13
+# file:///home/dev/shop/test/bad.test.mjs:2
+# test("x", () => { const a = ; });
+#                             ^
+# SyntaxError: Unexpected token ';'
+#     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+#     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:110:18)
+#     at \#translate (node:internal/modules/esm/loader:559:20)
+#     at afterLoad (node:internal/modules/esm/loader:612:29)
+#     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:617:12)
+#     at \#createModuleJob (node:internal/modules/esm/loader:640:36)
+#     at \#getJobFromResolveResult (node:internal/modules/esm/loader:353:34)
+#     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:321:41)
+#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:680:25)
+# Node.js v22.23.3
+# Subtest: test/bad.test.mjs
+not ok 1 - test/bad.test.mjs
+  ---
+  duration_ms: 40.924541
+  type: 'test'
+  location: '/home/dev/shop/test/bad.test.mjs:1:1'
+  failureType: 'testCodeFailure'
+  exitCode: 1
+  signal: ~
+  error: 'test failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: numbers
+not ok 2 - numbers
+  ---
+  duration_ms: 0.811666
+  type: 'test'
+  location: '/home/dev/shop/test/more.test.mjs:3:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    4 !== 5
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 5
+  actual: 4
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///home/dev/shop/test/more.test.mjs:3:32)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.start (node:internal/test_runner/test:944:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+# Subtest: custom
+not ok 3 - custom
+  ---
+  duration_ms: 0.298834
+  type: 'test'
+  location: '/home/dev/shop/test/more.test.mjs:4:1'
+  failureType: 'testCodeFailure'
+  error: 'the cart must not be empty'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///home/dev/shop/test/more.test.mjs:4:31)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: slow
+not ok 4 - slow
+  ---
+  duration_ms: 50.941125
+  type: 'test'
+  location: '/home/dev/shop/test/more.test.mjs:5:1'
+  failureType: 'testTimeoutFailure'
+  error: 'test timed out after 50ms'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: later
+ok 5 - later # SKIP
+  ---
+  duration_ms: 0.292333
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 0
+# fail 3
+# cancelled 1
+# skipped 1
+# todo 0
+# duration_ms 563.336667

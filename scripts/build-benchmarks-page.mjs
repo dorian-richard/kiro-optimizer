@@ -312,6 +312,8 @@ const VALUES = {
   'ab.adoptFinal': String(AB.diagnosis.koptAdoption.explore.final.koptCallsPerRun),
   'ab.driftA': relCi(R1.kinds.explore.metrics.measuredRebased.driftA),
   'compress.fixtures': String(C.totals.all.fixtures),
+  'compress.generated': String(C.totals.generated.fixtures),
+  'compress.real': String(C.totals.real.fixtures),
   'compress.raw': int(C.totals.all.rawTokens),
   'compress.out': int(C.totals.all.outTokens),
   'compress.reduction': pct1(C.totals.all.reduction),
@@ -638,7 +640,7 @@ const BLOCKS = {
     return mdTable(['Input', 'Strategy', 'Found', 'Median tokens', 'Tokens per found task', 'Symbol / file / definition recall'], rows);
   },
   'compression-totals': () => {
-    const label = { all: 'all fixtures', exit0: 'exit 0 (passing runs, git)', exitNonZero: 'exit non-zero (failures)', real: 'real runs of this repository', generated: 'generated fixtures' };
+    const label = { all: 'all fixtures', exit0: 'exit 0 (passing runs, git)', exitNonZero: 'exit non-zero (failures)', real: 'real runs', generated: 'generated fixtures' };
     return mdTable(['Set', 'Fixtures', 'Raw tokens', 'kopt tokens', 'Reduction (total)', 'Median reduction', 'Smallest reduction'],
       Object.entries(C.totals).map(([k, t]) => [label[k] ?? k, String(t.fixtures), int(t.rawTokens), int(t.outTokens), pct1(t.reduction), pct1(t.medianReduction), pct1(t.minReduction)]));
   },

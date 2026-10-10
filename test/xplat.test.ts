@@ -492,6 +492,13 @@ describe('output normalization', () => {
     expect(relativizeRoot('/srv/repo/a\\b.txt and /srv/Repo/c', ['/srv/repo'], 'linux')).toBe('a\\b.txt and /srv/Repo/c');
     expect(relativizeRoot('/usr/lib/x C:\\x', ['/', 'C:\\'], 'win32')).toBe('/usr/lib/x C:\\x');
   });
+
+  it('macOS temp folders: both spellings, the longer one first (node:test prints the real path)', () => {
+    const roots = ['/var/folders/x/T/kopt-a', '/private/var/folders/x/T/kopt-a'];
+    const text = "location: '/private/var/folders/x/T/kopt-a/test/a.test.js:4:1'\nat (file:///var/folders/x/T/kopt-a/src/b.js:2:3)";
+    expect(relativizeRoot(text, roots, 'darwin')).toBe("location: 'test/a.test.js:4:1'\nat (file://src/b.js:2:3)");
+    expect(relativizeRoot('/srv/old/var/folders/x/T/kopt-a/z', roots, 'darwin')).toBe('/srv/old/var/folders/x/T/kopt-a/z');
+  });
 });
 
 // ---------------------------------------------------------------------------------------------------------------

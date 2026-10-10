@@ -16,7 +16,7 @@ a 42-word steering file. Everything runs locally: no server, no cloud account, n
 |---|---|---|---|
 | **A real agent explores unfamiliar code** (<!--v:ab.exTasks-->15<!--/v--> tasks on 9 open-source repositories, 2 runs each) | session cost = 100 | session cost = 77 | **<!--v:ab.ex.primary-->-23% [-38%, -8%]<!--/v-->** (95% confidence interval), cheaper on <!--v:ab.ex.primaryLower-->13/15<!--/v--> tasks, every answer still correct |
 | **One code search** (<!--v:offline.tasks-->138<!--/v--> tasks, 11 languages) | <!--v:ranged.median-->6,675<!--/v--> tokens, complete answer in <!--v:ranged.found-->54/138 (39%)<!--/v--> | <!--v:kopt.median-->1,299<!--/v--> tokens, complete answer in <!--v:kopt.found-->108/138 (78%)<!--/v--> | **<!--v:ratio.medianRanged-->5.1x<!--/v--> fewer tokens, and the answer found twice as often** |
-| **Test, build and git output** (50 outputs) | <!--v:compress.raw-->286,154<!--/v--> tokens | <!--v:compress.out-->10,402<!--/v--> tokens | **<!--v:compress.reduction-->96.4%<!--/v--> fewer tokens**, failures and file:line kept |
+| **Test, build and git output** (<!--v:compress.fixtures-->54<!--/v--> outputs) | <!--v:compress.raw-->290,658<!--/v--> tokens | <!--v:compress.out-->11,096<!--/v--> tokens | **<!--v:compress.reduction-->96.2%<!--/v--> fewer tokens**, failures and file:line kept |
 | A real agent diagnoses failing tests (6 tasks) | | | no measurable saving: <!--v:ab.rn.primary-->+16% [-31%, +67%]<!--/v--> |
 | **Kiro credits** | | | **not measured yet**: measure them on your repository with `kopt bench ab` |
 

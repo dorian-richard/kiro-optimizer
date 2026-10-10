@@ -30,7 +30,8 @@ const { estimateTokens } = await imp('core/tokens.js');
 
 // [fixture, command, exit code, family, origin]. origin: 'generated' = imitates the tool's CI output
 // (test/fixtures/compress/generate.mjs: long passing runs generated, failing sections written by hand);
-// 'real' = a real run of this repository's own test suite or build, paths rewritten to the fixture root.
+// 'real' = a real run (this repository's own test suite or build, or node:test on a small project), captured
+// through kopt_run's runner, paths rewritten to the fixture root.
 const CASES = [
   ['pytest-pass.txt', 'pytest -v', 0, 'Python'],
   ['pytest-fail.txt', 'python -m pytest -v', 1, 'Python'],
@@ -82,6 +83,10 @@ const CASES = [
   ['vitest-kopt-many-fail.txt', 'npx vitest run', 1, 'JavaScript / TypeScript', 'real'],
   ['vitest-kopt-diff-fail.txt', 'npx vitest run', 1, 'JavaScript / TypeScript', 'real'],
   ['build-kopt-fail.txt', 'npm run build', 2, 'JavaScript / TypeScript', 'real'],
+  ['node-test-fail.txt', 'npm test', 1, 'JavaScript / TypeScript', 'real'],
+  ['node-test-spec-fail.txt', 'node --test --test-reporter=spec', 1, 'JavaScript / TypeScript', 'real'],
+  ['node-test-pass.txt', 'npm test', 0, 'JavaScript / TypeScript', 'real'],
+  ['node-test-load-fail.txt', 'node --test', 1, 'JavaScript / TypeScript', 'real'],
 ];
 
 const rows = CASES.map(([file, command, exitCode, family, origin = 'generated']) => {
@@ -134,7 +139,7 @@ const result = {
   rows,
 };
 
-const SET_LABELS = { all: 'all', exit0: 'exit 0 (passing runs, git)', exitNonZero: 'exit non-zero (failures)', real: 'real runs of this repository', generated: 'generated fixtures' };
+const SET_LABELS = { all: 'all', exit0: 'exit 0 (passing runs, git)', exitNonZero: 'exit non-zero (failures)', real: 'real runs', generated: 'generated fixtures' };
 const fmt = (n) => n.toLocaleString('en-US');
 const pct = (x) => `${(x * 100).toFixed(1)}%`;
 const md = [
@@ -146,7 +151,8 @@ const md = [
   'handle line (about 20-40 tokens), and on a failing run with the index ready up to 200 tokens of source hints.',
   '',
   '"generated" fixtures imitate each tool\'s CI output (`test/fixtures/compress/generate.mjs`: long passing runs generated,',
-  'failing sections written by hand); "real" fixtures are real runs of this repository\'s own suite and build.',
+  'failing sections written by hand); "real" fixtures are real runs: this repository\'s own suite and build, and node:test',
+  '(TAP and spec reporters) on a small project.',
   '',
   '| set | fixtures | raw tokens | kopt tokens | reduction (total) | median reduction | smallest reduction |',
   '|---|---|---|---|---|---|---|',

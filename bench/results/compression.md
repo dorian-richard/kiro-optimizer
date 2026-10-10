@@ -6,14 +6,15 @@ and progress redraws removed), "kopt" is what the filter returns. A kopt_run ans
 handle line (about 20-40 tokens), and on a failing run with the index ready up to 200 tokens of source hints.
 
 "generated" fixtures imitate each tool's CI output (`test/fixtures/compress/generate.mjs`: long passing runs generated,
-failing sections written by hand); "real" fixtures are real runs of this repository's own suite and build.
+failing sections written by hand); "real" fixtures are real runs: this repository's own suite and build, and node:test
+(TAP and spec reporters) on a small project.
 
 | set | fixtures | raw tokens | kopt tokens | reduction (total) | median reduction | smallest reduction |
 |---|---|---|---|---|---|---|
-| all | 50 | 286,154 | 10,402 | 96.4% | 93.8% | 42.5% |
-| exit 0 (passing runs, git) | 15 | 87,544 | 2,145 | 97.5% | 99.4% | 79.8% |
-| exit non-zero (failures) | 35 | 198,610 | 8,257 | 95.8% | 91.8% | 42.5% |
-| real runs of this repository | 5 | 32,729 | 1,889 | 94.2% | 94.1% | 60.7% |
+| all | 54 | 290,658 | 11,096 | 96.2% | 93.2% | 42.5% |
+| exit 0 (passing runs, git) | 16 | 88,324 | 2,158 | 97.6% | 99.3% | 79.8% |
+| exit non-zero (failures) | 38 | 202,334 | 8,938 | 95.6% | 91.2% | 42.5% |
+| real runs | 9 | 37,233 | 2,583 | 93.1% | 91.0% | 60.7% |
 | generated fixtures | 45 | 253,425 | 8,513 | 96.6% | 93.5% | 42.5% |
 
 | fixture | command | exit | origin | filter | raw tokens | kopt tokens | reduction |
@@ -68,3 +69,7 @@ failing sections written by hand); "real" fixtures are real runs of this reposit
 | vitest-kopt-many-fail.txt | `npx vitest run` | 1 | real | vitest | 14,831 | 878 | 94.1% |
 | vitest-kopt-diff-fail.txt | `npx vitest run` | 1 | real | vitest | 6,873 | 621 | 91.0% |
 | build-kopt-fail.txt | `npm run build` | 2 | real | tsc | 521 | 205 | 60.7% |
+| node-test-fail.txt | `npm test` | 1 | real | node-test | 1,638 | 238 | 85.5% |
+| node-test-spec-fail.txt | `node --test --test-reporter=spec` | 1 | real | node-test | 1,088 | 238 | 78.1% |
+| node-test-pass.txt | `npm test` | 0 | real | node-test | 780 | 13 | 98.3% |
+| node-test-load-fail.txt | `node --test` | 1 | real | node-test | 998 | 205 | 79.5% |

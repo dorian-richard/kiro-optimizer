@@ -111,7 +111,7 @@ annoncent. Les tâches de l'A/B étaient en lecture seule : l'effet sur la sorti
 | Benchmark hors ligne, une étape d'exploration, 138 tâches, 11 langages | kopt trouve 108/138 (78 %) des tâches, médiane 1 299 tokens ; recherche native disciplinée 54/138 (39 %) à 6 675 | pas une session, pas des crédits |
 | A/B avec agents réels, exploration (15 tâches, 2 passages par bras) | coût de session mesuré -23 % [-38 %, -8 %], 13 tâches sur 15 moins chères, toutes les réponses justes | pas Kiro, pas des crédits |
 | A/B avec agents réels, diagnostic de tests (6 tâches) | +16 % [-31 %, +67 %] : pas de gain mesurable | idem |
-| Compression de sortie, 50 sorties de commandes commitées (45 générées au format de chaque outil, 5 vraies exécutions) | 96,4 % des tokens retirés ; dans l'A/B, 152,2k tokens de sortie de tests réduits à 15,2k | pas un taux de conservation de l'information |
+| Compression de sortie, 54 sorties de commandes commitées (45 générées au format de chaque outil, 9 vraies exécutions) | 96,2 % des tokens retirés ; dans l'A/B, 152,2k tokens de sortie de tests réduits à 15,2k | pas un taux de conservation de l'information |
 | Gros dépôts (elasticsearch, VS Code) | recherche disponible 32 s après le premier démarrage sur 33 090 fichiers, index de 941 Mo | macOS seulement |
 | Crédits Kiro | **non mesurés** | — |
 
@@ -355,13 +355,13 @@ dépôt (`~/.m2` et ses SNAPSHOT), l'heure, ni l'instabilité d'un test. Après 
 
 ### 22. La compression peut-elle faire disparaître l'assertion en échec ?
 
-Sur les 50 sorties commitées (45 générées au format de chaque outil, 5 vraies exécutions de ce dépôt), les filtres
-retirent 96,4 % des tokens, et `test/compress.filters.test.ts` vérifie, sortie par sortie, que le test en échec,
-l'assertion, les valeurs attendues et reçues et les cadres de pile du dépôt survivent. Dans l'A/B, le bras kopt a
-trouvé la cause racine dans les 12 passages de diagnostic, avec 15,2k tokens de sortie de tests au lieu de 152,2k.
+Sur les 54 sorties commitées (45 générées au format de chaque outil, 9 vraies exécutions : la suite et le build de ce
+dépôt, et `node:test` sur un petit projet), les filtres retirent 96,2 % des tokens, et `test/compress.filters.test.ts`
+vérifie, sortie par sortie, que le test en échec, l'assertion, les valeurs attendues et reçues et les cadres de pile
+du dépôt survivent. Dans l'A/B, le bras kopt a trouvé la cause racine dans les 12 passages de diagnostic, avec 15,2k
+tokens de sortie de tests au lieu de 152,2k.
 
-Les trous connus : pas de filtre pour la sortie TAP de `node --test` (le filtre générique peut perdre le nom du test
-et les valeurs comparées) ; un build Maven ou Gradle qui réussit est réduit à son verdict, si bien qu'un goal dont la
+Les trous connus : un build Maven ou Gradle qui réussit est réduit à son verdict, si bien qu'un goal dont la
 sortie est le contenu (`mvn dependency:tree`) demande un second appel. Le journal complet reste lisible avec
 `kopt_read <handle>`, filtrable par `grep`. Il n'existe pas de corpus de vrais journaux de CI pour mesurer un taux de
 perte.

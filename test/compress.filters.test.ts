@@ -80,6 +80,11 @@ describe('compress filters on realistic outputs', () => {
     ['vitest-kopt-pass.txt', 'npx vitest run', 0],
     ['vitest-kopt-fail.txt', 'npx vitest run', 1],
     ['build-kopt-fail.txt', 'npm run build', 2],
+    // real node:test runs of a small project (TAP under kopt_run, spec, a file that does not load)
+    ['node-test-fail.txt', 'npm test', 1],
+    ['node-test-spec-fail.txt', 'node --test --test-reporter=spec', 1],
+    ['node-test-pass.txt', 'npm test', 0],
+    ['node-test-load-fail.txt', 'node --test', 1],
   ];
 
   it.each(cases)('%s respects the budget at %s', (name, command, code) => {
@@ -371,6 +376,65 @@ describe('compress filters on realistic outputs', () => {
     expect(r.text).toContain('same error in 1 more: refunds refund29 › "before each" hook for "refunds the full amount"');
     expect(r.text).not.toMatch(/node_modules|node:internal|✔/);
     expect(r.ratio).toBeGreaterThan(0.9);
+  });
+
+  // Acceptance test of v0.2.0: the summary of a failing `npm test` (node:test, TAP) kept the YAML keys and the seven
+  // counters, and lost the failing test names and the expected / actual values.
+  it('node:test (TAP, as npm test prints it under kopt_run): failing test names, assertion diff, values and file:line', () => {
+    const r = run('node-test-fail.txt', 'npm test', 1);
+    expect(r.filter).toBe('node-test');
+    const lines = r.text.split('\n');
+    expect(lines[0]).toMatch(/^3 failed, 12 passed \(15 tests, 1 suite\) in \d+ms$/);
+    expect(r.text).toContain(
+      [
+        'FAIL test/cart.test.js > cart > treats a missing cart as empty',
+        "  TypeError: Cannot read properties of null (reading 'reduce')",
+        '  at total (src/cart.js:2:16)',
+        '  at test/cart.test.js:27:18',
+      ].join('\n'),
+    );
+    expect(r.text).toContain(
+      [
+        'FAIL test/order.test.js > summarizes a paid order',
+        '  AssertionError: Expected values to be strictly deep-equal:',
+        '  + actual - expected',
+        '    {',
+        '      id: 8,',
+        '      lines: 1,',
+        "  +   status: 'paid'",
+        "  -   status: 'shipped'",
+        '    }',
+        '  at test/order.test.js:10:10',
+      ].join('\n'),
+    );
+    expect(r.text).toContain("FAIL test/order.test.js > cancelled orders go back to open\n  AssertionError: Expected values to be strictly equal:");
+    expect(r.text).toContain("  expected: 'open' · actual: undefined\n  at test/order.test.js:23:10");
+    // dropped: passing tests, the suite that failed through its subtest, YAML keys, runner frames, zero counters
+    expect(r.text).not.toMatch(/sums prices|subtest failed|failureType|duration_ms|ERR_ASSERTION|runInAsyncScope|node:internal|# (?:suites|cancelled|todo)|file:\/\//);
+    expect(r.ratio).toBeGreaterThan(0.8);
+  });
+
+  it('node:test spec reporter: the same failures as TAP', () => {
+    const tap = run('node-test-fail.txt', 'npm test', 1).text.split('\n').slice(1).join('\n');
+    const spec = run('node-test-spec-fail.txt', 'node --test --test-reporter=spec', 1);
+    expect(spec.filter).toBe('node-test');
+    expect(spec.text.split('\n')[0]).toMatch(/^3 failed, 12 passed \(15 tests, 1 suite\) in \d+ms$/);
+    expect(spec.text.split('\n').slice(1).join('\n')).toBe(tap);
+    expect(spec.text).not.toMatch(/✔|ℹ|generatedMessage|diff: 'simple'/);
+  });
+
+  it('node:test: a passing run is its verdict line; a file that does not load, values, custom messages, timeouts', () => {
+    const pass = run('node-test-pass.txt', 'npm test', 0);
+    expect(pass.filter).toBe('node-test');
+    expect(pass.text).toMatch(/^15 passed \(15 tests, 1 suite\) in \d+ms$/);
+    const r = run('node-test-load-fail.txt', 'node --test', 1);
+    expect(r.text.split('\n')[0]).toMatch(/^3 failed, 0 passed, 1 cancelled, 1 skipped \(5 tests\) in \d+ms$/);
+    expect(r.text).toContain("FAIL test/bad.test.mjs\n  test/bad.test.mjs:2\n  test(\"x\", () => { const a = ; });");
+    expect(r.text).toContain("  SyntaxError: Unexpected token ';'");
+    expect(r.text).toContain('FAIL test/more.test.mjs > numbers\n  AssertionError: Expected values to be strictly equal:\n  4 !== 5\n  expected: 5 · actual: 4\n  at test/more.test.mjs:3:32');
+    expect(r.text).toContain('FAIL test/more.test.mjs > custom\n  AssertionError: the cart must not be empty\n  expected: true · actual: false\n  at test/more.test.mjs:4:31');
+    expect(r.text).toContain('FAIL test/more.test.mjs > slow\n  test timed out after 50ms\n  at test/more.test.mjs:5');
+    expect(r.text).not.toMatch(/later|test failed|compileSourceTextModule|Node\.js v/);
   });
 
   it('rspec: failures with expected/got, repo frames and rerun location; dots, gems and pending list dropped', () => {

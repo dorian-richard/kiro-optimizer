@@ -1,0 +1,89 @@
+▶ cart
+  ✔ sums prices times quantities (1.196375ms)
+  ✔ returns 0 for an empty cart (0.062458ms)
+  ✔ applies a percentage discount (0.062625ms)
+  ✔ rejects a discount over 100 (0.280875ms)
+  ✔ rounds a discounted amount to cents (0.057209ms)
+  ✖ treats a missing cart as empty (0.078083ms)
+  ✔ parses quantity "3" (0.108875ms)
+  ✔ parses quantity "12" (0.162458ms)
+  ✔ parses quantity "x" (0.1815ms)
+  ✔ parses quantity "" (0.295458ms)
+✖ cart (3.128333ms)
+✔ summarizes an open order (0.812416ms)
+✖ summarizes a paid order (0.893292ms)
+✔ moves an order to the next status (0.137583ms)
+✔ delivered orders have no next status (0.104291ms)
+✖ cancelled orders go back to open (0.20475ms)
+ℹ tests 15
+ℹ suites 1
+ℹ pass 12
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 64.497916
+
+✖ failing tests:
+
+test at test/cart.test.js:26:3
+✖ treats a missing cart as empty (0.078083ms)
+  TypeError: Cannot read properties of null (reading 'reduce')
+      at total (file:///home/dev/shop/src/cart.js:2:16)
+      at TestContext.<anonymous> (file:///home/dev/shop/test/cart.test.js:27:18)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Suite.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+
+test at test/order.test.js:9:1
+✖ summarizes a paid order (0.893292ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+      id: 8,
+      lines: 1,
+  +   status: 'paid'
+  -   status: 'shipped'
+    }
+  
+      at TestContext.<anonymous> (file:///home/dev/shop/test/order.test.js:10:10)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { id: 8, lines: 1, status: 'paid' },
+    expected: { id: 8, lines: 1, status: 'shipped' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at test/order.test.js:22:1
+✖ cancelled orders go back to open (0.20475ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + undefined
+  - 'open'
+  
+      at TestContext.<anonymous> (file:///home/dev/shop/test/order.test.js:23:10)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 'open',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

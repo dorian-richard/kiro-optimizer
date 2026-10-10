@@ -101,7 +101,7 @@ flowchart LR
    the failures and the errors, with file:line and the frames that belong to the repo. The full log is stored and
    available by handle. **An identical command re-run with no file change is not executed again**: the previous
    result is returned, which saves the build minutes and the re-sent output (the model still makes the call). The
-   per-call reduction is computable, since the raw output is known: <!--v:compress.reduction-->96.4%<!--/v--> of the
+   per-call reduction is computable, since the raw output is known: <!--v:compress.reduction-->96.2%<!--/v--> of the
    tokens on the committed fixtures, and <!--v:ab.rawTest-->152.2k<!--/v--> raw test-output tokens reduced to
    <!--v:ab.koptTest-->15.2k<!--/v--> in the agent A/B. The workspace fingerprint covers git state, `.env*` files,
    installed dependencies, ignored lockfiles and build outputs; not environment variables or external services.

@@ -55,7 +55,7 @@ callees of #qz loadConfig:
 
 kopt_read {"target": "#qz"}            -> the 28 lines of loadConfig
 kopt_refs {"target": "#qz"}            -> 17 usages in 9 files (+3 through the config() wrapper), one line per usage
-kopt_run  {"command": "npm test"}      -> verdict + failures (a median of 188 tokens on the 35 failing fixtures, 738 per kopt run in the agent A/B)
+kopt_run  {"command": "npm test"}      -> verdict + failures (a median of 196 tokens on the 38 failing fixtures, 738 per kopt run in the agent A/B)
 kopt_read {"target": "o3fad54", "grep": "TypeError"}
 kopt_read {"target": "src/core", "mode": "outline"}  -> map of src/core: the main symbols of each file
 ```
