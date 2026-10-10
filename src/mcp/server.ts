@@ -15,7 +15,7 @@ import { withModules, type Modules } from './modules.js';
 import { compileTools, executeTool, oneLine, parseToolArgs, serverInstructions, toolDefinitions, toolNeedsStore, type ToolName } from './tools.js';
 
 export const SERVER_NAME = 'kopt';
-export const SERVER_VERSION = '0.1.0';
+export const SERVER_VERSION = '0.2.0';
 
 /** The repository the server answers for. */
 export interface RepoHandle {

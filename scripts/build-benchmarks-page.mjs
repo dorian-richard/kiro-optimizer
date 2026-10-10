@@ -25,7 +25,7 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const MD_PATH = join(ROOT, 'docs', 'BENCHMARKS.md');
 const HTML_PATH = join(ROOT, 'docs', 'benchmarks.html');
 /** Other pages whose marked numbers (`<!--v:KEY-->...<!--/v-->`) are kept in sync with the same data. */
-const VALUE_PAGES = ['README.md', 'docs/ARCHITECTURE.md'];
+const VALUE_PAGES = ['README.md', 'docs/ARCHITECTURE.md', 'docs/COMMANDS.md', 'docs/HOW-IT-WORKS.md', 'docs/CONFIGURATION.md'];
 const REPO_URL = 'https://github.com/dorian-richard/kiro-optimizer';
 const BLOB = `${REPO_URL}/blob/main/`;
 const CHECK = process.argv.includes('--check');

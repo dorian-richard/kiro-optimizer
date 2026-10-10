@@ -46,9 +46,11 @@ Puis **redémarrez Kiro** (dans l'IDE : recharger la fenêtre). kopt démarre al
 > tester la version que décrit ce guide, lancez setup depuis un checkout de celle-ci :
 > `npm ci && npm run build && node dist/bin.js setup --global`.
 
-Pour tester une version précise et pouvoir dire laquelle (`kopt --version` affiche encore 0.1.0), épinglez un commit :
+Pour tester une version précise et pouvoir dire laquelle (`kopt --version` affiche 0.2.0), épinglez l'étiquette
+de la version, ou un commit précis :
 
 ```bash
+npx -y github:dorian-richard/kiro-optimizer#v0.2.0 setup
 npx -y github:dorian-richard/kiro-optimizer#<SHA complet> setup
 ```
 

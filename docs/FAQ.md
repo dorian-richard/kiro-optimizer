@@ -5,7 +5,7 @@ bases de code : sur quoi repose le gain annoncé, ce qui a vraiment été mesur�
 mal tourner. Chaque réponse distingue ce qui est **mesuré** (avec le fichier de résultats), ce qui est **lu dans le
 code ou la documentation**, et ce qui n'est **pas mesuré**.
 
-État : kopt v0.2 (pré-version, pas encore étiquetée ; le paquet affiche toujours 0.1.0), au 2026-10-10. Les chiffres
+État : kopt v0.2.0 (étiquette git `v0.2.0`), au 2026-10-10. Les chiffres
 viennent des fichiers de `bench/results` ; la source tenue à jour est [BENCHMARKS.md](BENCHMARKS.md) (en anglais),
 avec une version HTML à graphiques, [benchmarks.html](benchmarks.html), qui sera publiée à l'adresse
 <https://dorian-richard.github.io/kiro-optimizer/benchmarks.html> une fois la v0.2 sur `main` et GitHub Pages activé
@@ -550,7 +550,7 @@ Pas encore comme il faudrait :
   release, pas de somme de contrôle. Le paquet est `private` et n'est pas sur npm.
 - **Le nom `kiro-optimizer` n'est pas réservé sur le registre npm** (404 le 2026-10-10) : si quelqu'un le publiait, un
   `npm update -g` de routine pourrait remplacer kopt, hooks compris.
-- `kopt --version` affiche toujours 0.1.0 : il ne dit pas quel commit est installé.
+- `kopt --version` affiche 0.2.0 : pour savoir exactement quel commit est installé, épinglez l'étiquette `v0.2.0` ou un SHA.
 - Les dépendances sont en plages `^` et npm n'applique pas le lockfile d'une dépendance git.
 - **Épingler** : `npx -y github:dorian-richard/kiro-optimizer#<SHA complet de 40 caractères> setup`. **Revenir en
   arrière** : la même commande avec un SHA plus ancien. **Retirer** : `kopt uninstall`, puis

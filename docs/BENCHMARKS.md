@@ -7,12 +7,10 @@ section covers indexing on two large repositories. Every number on this page com
 [`bench/results`](../bench/results), and **none of them is a Kiro credit**: Kiro credits have not been measured by us
 (see [Limits](#limits-what-these-numbers-are-not)). Teams can measure their own with `kopt bench ab`.
 
-kopt v0.2, the development line that follows the v0.1 prototype (the package still reports version
-<!--v:version-->0.1.0<!--/v-->). Measured on 2026-10-09 and 2026-10-10. Builds and dates per data set:
+kopt <!--v:version-->0.2.0<!--/v--> (git tag `v0.2.0`), the release that follows the v0.1 prototype. Measured on 2026-10-09 and 2026-10-10. Builds and dates per data set:
 [Data sources and versions](#data-sources-and-versions). An HTML version with charts, generated from the same data,
-is [`docs/benchmarks.html`](benchmarks.html); it will be published at
-<https://dorian-richard.github.io/kiro-optimizer/benchmarks.html> once v0.2 is on `main` and GitHub Pages is enabled
-(not yet).
+is [`docs/benchmarks.html`](benchmarks.html), published at
+<https://dorian-richard.github.io/kiro-optimizer/benchmarks.html>.
 
 ## At a glance
 

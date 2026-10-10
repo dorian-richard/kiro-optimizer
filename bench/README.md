@@ -1,8 +1,8 @@
 # kopt benchmarks
 
 This folder measures whether kopt really reduces what Kiro bills. The results, with charts, are in
-[docs/BENCHMARKS.md](../docs/BENCHMARKS.md) and [docs/benchmarks.html](../docs/benchmarks.html) (to be published at
-<https://dorian-richard.github.io/kiro-optimizer/benchmarks.html> once v0.2 is on `main`), both generated from
+[docs/BENCHMARKS.md](../docs/BENCHMARKS.md) and [docs/benchmarks.html](../docs/benchmarks.html) (published at
+<https://dorian-richard.github.io/kiro-optimizer/benchmarks.html>), both generated from
 `bench/results` by `npm run bench:page` (`scripts/build-benchmarks-page.mjs`). There are four
 levels:
 
@@ -361,7 +361,8 @@ adds.
 ## Benchmark pages (`scripts/build-benchmarks-page.mjs`)
 
 `npm run bench:page` rewrites the generated blocks and marked numbers of `docs/BENCHMARKS.md` (and the marked
-numbers of `README.md` and `docs/ARCHITECTURE.md`) from the result files, then converts `docs/BENCHMARKS.md` into the
+numbers of `README.md`, `docs/ARCHITECTURE.md`, `docs/COMMANDS.md`, `docs/HOW-IT-WORKS.md` and
+`docs/CONFIGURATION.md`) from the result files, then converts `docs/BENCHMARKS.md` into the
 self-contained `docs/benchmarks.html` (inline SVG charts, light and dark themes, a data table next to every chart).
 `npm run bench:page -- --check` exits with 1 when a generated file is out of date; `test/benchmarks-page.test.ts`
 runs that check and a sanity check of the HTML page in CI. After a new result file, run `npm run bench:page` and
