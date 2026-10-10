@@ -17,22 +17,25 @@
 //    `kopt hook <event> --legacy` builds the event from it (see legacyEvent).
 // When two hook formats are active for the same session (e.g. ~/.kiro/hooks/kopt.json plus a workspace copy,
 // or CLI agent hooks plus V3 global hooks), the same event arrives twice: events tagged with different
-// `--source` values within 2 s are processed once (see isDuplicate).
+// `--source` values within 2 s are processed once (see isDuplicate). Prompt events are matched on the prompt text
+// alone: IDE 0.x legacy hooks carry no session id.
+// Exit codes: only 0 and 2. In Kiro IDE 1.x a Stop hook that exits 1 means "continue the agent", so Stop always exits
+// 0 (the launcher written by setup also maps every failure to a silent 0).
 
 import { createHash } from 'node:crypto';
-import { appendFileSync, existsSync, mkdirSync, readFileSync, renameSync, statSync, utimesSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, renameSync, statSync, utimesSync, writeFileSync } from 'node:fs';
 import { isAbsolute, join, resolve } from 'node:path';
 import type { KoptConfig } from '../core/config.js';
-import { findProjectRoot, indexPath, isUnsafeRoot, loadConfig } from '../core/config.js';
+import { findProjectRoot, indexPath, isUnsafeRoot, loadConfig, userDirFor } from '../core/config.js';
 import { estimateTokens } from '../core/tokens.js';
 import type { TelemetryEvent } from '../core/types.js';
 import { kiroHomeDir } from '../kiro/paths.js';
-import { readTextFile, repoRelative } from '../telemetry/fsutil.js';
+import { appendPrivateFile, atomicWrite, mkdirPrivate, readJson, readTextFile, repoRelative, withFileLock } from '../telemetry/fsutil.js';
 import { pruneTelemetry, record } from '../telemetry/record.js';
-import { atomicWrite, readJson, withFileLock } from '../telemetry/fsutil.js';
-import { analyzeCommand } from './commands.js';
-import { loadSession, newSession, pruneSessions, saveSession, sessionFile, withSessionLock, type SessionState } from './session.js';
-import { classifyTool, readRequests, writtenPaths } from './tools.js';
+import { analyzeCommand, isReadOnlyCommand } from './commands.js';
+import { governorFingerprint } from './fingerprint.js';
+import { loadSession, newSession, pruneSessions, saveSession, sessionFile, sessionsDir, withSessionLock, type SessionState } from './session.js';
+import { classifyTool, koptToolName, readRequests, writtenPaths } from './tools.js';
 
 export interface HookEvent {
   hook_event_name: string;
@@ -79,10 +82,30 @@ export function canonicalEvent(name: unknown): string | undefined {
 const SESSION_START_MAX = 250;
 const REFRESH_THROTTLE_MS = 60_000;
 const IMAGE_EXT = /\.(png|jpe?g|gif|webp|bmp|ico|svgz)$/i;
+/** Redirects to kopt_run per session: the first ones teach the model; more would only cost turns. */
+export const MAX_REDIRECTS_PER_SESSION = 3;
+/** IDE 0.x legacy hooks carry no chat id: a pause this long starts a new pseudo-session. */
+export const LEGACY_SESSION_IDLE_MS = 30 * 60_000;
 
 function sessionIdOf(e: HookEvent): string {
   const id = e.session_id ?? (e as { sessionId?: unknown }).sessionId ?? process.env.KIRO_SESSION_ID;
   return typeof id === 'string' && id ? id : `anon-${new Date().toISOString().slice(0, 10)}`;
+}
+
+/**
+ * Session id for an IDE 0.x legacy hook event (no stdin, no chat id): one pseudo-session per workspace that ends
+ * after LEGACY_SESSION_IDLE_MS without a prompt, so a new chat gets pointers that an earlier one received.
+ */
+export function legacySessionId(config: KoptConfig, now = Date.now()): string {
+  const tag = createHash('sha1').update(config.root).digest('hex').slice(0, 8);
+  const file = join(sessionsDir(config.userDir), `_legacy-${tag}.last.json`);
+  return withFileLock(file + '.lock', () => {
+    const last = readJson<{ id?: string; at?: number }>(file, {});
+    const fresh = typeof last.id === 'string' && typeof last.at === 'number' && now - last.at < LEGACY_SESSION_IDLE_MS && now >= last.at;
+    const id = fresh ? last.id! : `legacy-${tag}-${now.toString(36)}`;
+    atomicWrite(file, JSON.stringify({ id, at: now }));
+    return id;
+  }, { timeoutMs: 150, staleMs: 2000, runUnlocked: true }) ?? `legacy-${tag}`;
 }
 
 /** Repo-relative forward-slash path when inside root (case-insensitive where the filesystem is), else the absolute path. */
@@ -96,47 +119,69 @@ function fmtK(n: number): string {
 
 export function logHookError(config: KoptConfig | undefined, err: unknown, event?: unknown): void {
   try {
-    const dir = config?.userDir ?? process.env.KOPT_HOME;
-    if (!dir) return;
-    mkdirSync(dir, { recursive: true });
+    const dir = config?.userDir ?? userDirFor();
+    mkdirPrivate(dir);
     const file = join(dir, 'hook-errors.log');
     try {
       if (statSync(file).size > 1_000_000) renameSync(file, file + '.1');
     } catch { /* first error */ }
     const name = (event as HookEvent | undefined)?.hook_event_name;
     const msg = err instanceof Error ? (err.stack ?? err.message).split('\n').slice(0, 4).join(' | ') : String(err);
-    appendFileSync(file, `${new Date().toISOString()} ${String(name ?? '?')} ${msg}\n`);
+    appendPrivateFile(file, `${new Date().toISOString()} ${String(name ?? '?')} ${msg}\n`);
   } catch {
     // nothing left to do
   }
 }
 
-/** Is the kopt MCP server configured and enabled (workspace config wins over user config)? */
-export function koptMcpInstalled(root: string): boolean {
+/** The `kopt` entry of mcp.json (workspace config wins over user config), when present. */
+export function koptMcpEntry(root: string): Record<string, any> | undefined {
   const home = kiroHomeDir();
   for (const file of [join(root, '.kiro', 'settings', 'mcp.json'), join(home, 'settings', 'mcp.json')]) {
     try {
       const cfg = JSON.parse(readTextFile(file));
       const s = cfg?.mcpServers?.kopt;
-      if (s && typeof s === 'object') return s.disabled !== true;
+      if (s && typeof s === 'object' && !Array.isArray(s)) return s;
     } catch { /* missing or invalid */ }
   }
-  return false;
+  return undefined;
 }
 
-/** Line count of a file, or undefined when it cannot exceed `threshold` / is not a text file. */
-function bigFileLines(abs: string, threshold: number): { lines: number; bytes: number } | undefined {
+/** Is the kopt MCP server configured and enabled? */
+export function koptMcpInstalled(root: string): boolean {
+  const s = koptMcpEntry(root);
+  return !!s && s.disabled !== true;
+}
+
+/**
+ * Can the agent call kopt_run? The server registers it unless its entry disables it (`disabledTools` lists it, or
+ * env KOPT_DISABLE_RUN=1). Redirecting to a tool the model cannot call would cost two requests for nothing.
+ */
+export function koptRunAvailable(root: string): boolean {
+  const s = koptMcpEntry(root);
+  if (!s || s.disabled === true) return false;
+  const disabled = Array.isArray(s.disabledTools) ? s.disabledTools.map(String) : [];
+  if (disabled.some((t: string) => koptToolName(t) === 'kopt_run' || t === '*')) return false;
+  const env = s.env && typeof s.env === 'object' ? s.env : {};
+  if (String(env.KOPT_DISABLE_RUN ?? '') === '1') return false;
+  return true;
+}
+
+/**
+ * Size of a text file whose whole-file read would cost more than `minTokens` (estimated from its bytes), else
+ * undefined (small, binary, an image, missing).
+ */
+function bigFile(abs: string, minTokens: number, charsPerToken: number): { lines: number; bytes: number; tokens: number } | undefined {
   let st;
   try { st = statSync(abs); } catch { return undefined; }
-  // a file with more than N lines has at least N bytes
-  if (!st.isFile() || st.size <= threshold || IMAGE_EXT.test(abs)) return undefined;
-  if (st.size > 64 * 1024 * 1024) return { lines: Math.round(st.size / 40), bytes: st.size };
+  const tokens = st.size / (charsPerToken || 3);
+  if (!st.isFile() || tokens <= minTokens || IMAGE_EXT.test(abs)) return undefined;
+  if (st.size > 64 * 1024 * 1024) return { lines: Math.round(st.size / 40), bytes: st.size, tokens };
   const buf = readFileSync(abs);
   if (buf.subarray(0, 8192).includes(0)) return undefined; // binary
   let lines = 0;
   for (let i = buf.indexOf(10); i !== -1; i = buf.indexOf(10, i + 1)) lines++;
   if (buf.length && buf[buf.length - 1] !== 10) lines++;
-  return lines > threshold ? { lines, bytes: st.size } : undefined;
+  return { lines, bytes: st.size, tokens };
 }
 
 function blockEvent(config: KoptConfig, session: string, tool: string | undefined, reason: BlockReason): void {
@@ -162,7 +207,7 @@ function preToolUse(event: HookEvent, config: KoptConfig): HookOutcome {
     if (g.maxToolCallsPerSession > 0 && s.toolCalls - s.budgetFrom > g.maxToolCallsPerSession) {
       reason = 'budget';
       out = block(s, reason, `kopt governor: session tool-call budget (${g.maxToolCallsPerSession}) reached. Stop here: summarize what is done and what remains, and ask the user before continuing.`);
-    } else if (cls === 'read' && g.bigFileLines > 0) {
+    } else if (cls === 'read' && g.bigFileLines > 0 && (g.bigFileTokens ?? 8000) > 0) {
       const base = typeof event.cwd === 'string' && event.cwd ? event.cwd : root;
       const msgs: string[] = [];
       for (const r of readRequests(event.tool_input, g.bigFileLines)) {
@@ -170,43 +215,37 @@ function preToolUse(event: HookEvent, config: KoptConfig): HookOutcome {
         const abs = isAbsolute(r.path) ? r.path : resolve(base, r.path);
         const shown = displayPath(root, abs);
         if (s.deniedReads[shown]) continue; // the second identical attempt goes through (no deadlock)
-        const big = bigFileLines(abs, g.bigFileLines);
+        const big = bigFile(abs, g.bigFileTokens ?? 8000, config.charsPerToken);
         if (!big) continue;
         s.deniedReads[shown] = 1;
-        const tok = big.bytes / (config.charsPerToken || 3);
-        msgs.push(`${shown} has ${big.lines} lines (~${fmtK(tok)} tokens). Use kopt_outline path=${shown} or kopt_read ${shown}:<a>-<b>, or read with offset/limit.`);
+        msgs.push(`${shown} is ~${fmtK(big.tokens)} tokens (${big.lines} lines). Use kopt_read ${shown} mode=outline or kopt_read ${shown}:<a>-<b>, or read with offset/limit.`);
       }
       if (msgs.length) {
         reason = 'big-read';
         out = block(s, reason, 'kopt: ' + msgs.join('\nkopt: '));
       }
     } else if (cls === 'shell') {
-      const input = event.tool_input ?? {};
-      const cmd = typeof input.command === 'string' ? input.command : Array.isArray(input.command) ? input.command.join(' ') : undefined;
-      const info = cmd ? analyzeCommand(cmd) : undefined;
-      if (info?.kind) {
-        let cwdRel = '';
-        if (typeof input.cwd === 'string' && input.cwd) {
-          const abs = isAbsolute(input.cwd) ? input.cwd : resolve(root, input.cwd);
-          const d = displayPath(root, abs);
-          cwdRel = d === abs ? '' : d;
-        }
-        if (info.cdDir) cwdRel = cwdRel ? `${cwdRel}/${info.cdDir}` : info.cdDir;
-        const key = `${cwdRel}|${info.key}`;
-        if (g.enforceRunForVerbose && !s.redirected[key] && koptMcpInstalled(root)) {
+      const run = shellRun(event, root);
+      if (run?.info.kind) {
+        const { info, key, cwdRel } = run;
+        const redirects = Object.keys(s.redirected).length;
+        if (g.enforceRunForVerbose && info.verbose && !s.redirected[key] && redirects < MAX_REDIRECTS_PER_SESSION && koptRunAvailable(root)) {
           s.redirected[key] = 1;
           reason = 'verbose-cmd';
           const q = info.core.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
           const cwdPart = cwdRel && cwdRel !== '.' ? ` cwd="${cwdRel}"` : '';
-          out = block(s, reason, `kopt: use kopt_run with command="${q}"${cwdPart}: same execution, returns only failures/errors (full log via kopt_expand).`);
+          out = block(s, reason, `kopt: use kopt_run with command="${q}"${cwdPart}: same execution, returns only failures/errors (full log via kopt_read <handle>).`);
         } else if (g.blockDuplicateRuns) {
           const prev = s.runs[key];
-          if (prev && prev.writeSeq === s.writeSeq && prev.dupBlockedAt !== s.writeSeq) {
-            prev.dupBlockedAt = s.writeSeq;
+          const sameState = !!prev && prev.writeSeq === s.writeSeq && (prev.promptSeq ?? 0) === s.promptSeq && prev.dupBlockedAt !== s.writeSeq;
+          // writes the hooks did not see (shell, the user's editor, git checkout): compare the workspace itself
+          const unchanged = sameState && (prev!.fp === undefined || governorFingerprint(root, ownDirs(config)) === prev!.fp);
+          if (unchanged) {
+            prev!.dupBlockedAt = s.writeSeq;
             reason = 'duplicate-run';
-            out = block(s, reason, 'kopt governor: identical command already ran this session and no file changed since; reuse its result.');
+            out = block(s, reason, 'kopt governor: identical command already ran this session and no file changed since; reuse its result (run it again to override).');
           } else {
-            s.runs[key] = { at: Date.now(), writeSeq: s.writeSeq, dupBlockedAt: prev?.writeSeq === s.writeSeq ? prev.dupBlockedAt : undefined };
+            s.runs[key] = { at: Date.now(), writeSeq: s.writeSeq, promptSeq: s.promptSeq, dupBlockedAt: sameState ? prev!.dupBlockedAt : undefined };
           }
         }
       }
@@ -216,6 +255,27 @@ function preToolUse(event: HookEvent, config: KoptConfig): HookOutcome {
   });
   if (reason) blockEvent(config, sid, tool, reason);
   return outcome;
+}
+
+/** kopt's own folders, whose changes never count as workspace changes. */
+function ownDirs(config: KoptConfig): string[] {
+  return [config.dataDir, config.userDir, join(config.root, '.kopt')];
+}
+
+/** The shell command of a tool call, its classification and its identity (working directory + command). */
+function shellRun(event: HookEvent, root: string): { info: ReturnType<typeof analyzeCommand>; key: string; cwdRel: string } | undefined {
+  const input = event.tool_input ?? {};
+  const cmd = typeof input.command === 'string' ? input.command : Array.isArray(input.command) ? input.command.join(' ') : undefined;
+  if (!cmd) return undefined;
+  const info = analyzeCommand(cmd);
+  let cwdRel = '';
+  if (typeof input.cwd === 'string' && input.cwd) {
+    const abs = isAbsolute(input.cwd) ? input.cwd : resolve(root, input.cwd);
+    const d = displayPath(root, abs);
+    cwdRel = d === abs ? '' : d;
+  }
+  if (info.cdDir) cwdRel = cwdRel ? `${cwdRel}/${info.cdDir}` : info.cdDir;
+  return { info, key: `${cwdRel}|${info.key}`, cwdRel };
 }
 
 /** Text the model receives from a tool response: all string leaves (bounded walk). */
@@ -251,7 +311,7 @@ function markWrite(config: KoptConfig, sid: string, paths: string[], base: strin
     if (rel === abs || rel.startsWith('.git/') || rel.startsWith('.kopt/')) continue;
     rels.push(rel);
   }
-  if (rels.length) appendFileSync(join(config.dataDir, 'dirty'), rels.join('\n') + '\n');
+  if (rels.length) appendPrivateFile(join(config.dataDir, 'dirty'), rels.join('\n') + '\n');
 }
 
 function postToolUse(event: HookEvent, config: KoptConfig): HookOutcome {
@@ -260,15 +320,26 @@ function postToolUse(event: HookEvent, config: KoptConfig): HookOutcome {
   const cls = classifyTool(tool);
   const text = responseText(event.tool_response);
   const ev: TelemetryEvent = { ts: Date.now(), kind: 'hook', session: sid, tool, bytes: Buffer.byteLength(text, 'utf8'), tokensOut: estimateTokens(text) };
-  if (cls === 'shell') {
-    const cmd = event.tool_input?.command;
-    const kind = typeof cmd === 'string' ? analyzeCommand(cmd).kind : undefined;
-    if (kind) ev.meta = { cmd: kind };
-  }
+  const base = typeof event.cwd === 'string' && event.cwd ? event.cwd : config.root;
+  const run = cls === 'shell' || (cls === 'kopt' && koptToolName(tool) === 'kopt_run') ? shellRun(event, config.root) : undefined;
+  if (run?.info.kind) ev.meta = { cmd: run.info.kind };
   record(ev, config);
   if (cls === 'write') {
-    const base = typeof event.cwd === 'string' && event.cwd ? event.cwd : config.root;
     markWrite(config, sid, writtenPaths(event.tool_input), base);
+  } else if (run && !run.info.kind && !isReadOnlyCommand(run.info.command)) {
+    // sed -i, git checkout / stash, npm install, codegen, formatters...: the workspace may have changed
+    markWrite(config, sid, [], base);
+  } else if (run?.info.kind && cls === 'shell' && config.governor.blockDuplicateRuns) {
+    // state right after the run: an identical re-run is a duplicate only if nothing changed since
+    const fp = governorFingerprint(config.root, ownDirs(config));
+    withSessionLock(config.userDir, sid, () => {
+      const s = loadSession(config.userDir, sid);
+      const r = s.runs[run.key];
+      if (r) {
+        r.fp = fp;
+        saveSession(config.userDir, s);
+      }
+    });
   }
   return { exitCode: 0 };
 }
@@ -293,10 +364,10 @@ async function userPromptSubmit(event: HookEvent, config: KoptConfig): Promise<H
     const s = loadSession(config.userDir, sid);
     sent = [...s.frontSent];
     // The budget stop asks the agent to check with the user: a new user prompt re-arms the budget.
-    if (max > 0 && s.toolCalls - s.budgetFrom >= max) {
-      s.budgetFrom = s.toolCalls;
-      saveSession(config.userDir, s);
-    }
+    if (max > 0 && s.toolCalls - s.budgetFrom >= max) s.budgetFrom = s.toolCalls;
+    // "run it again" from the user is never a duplicate run
+    s.promptSeq++;
+    saveSession(config.userDir, s);
   });
   if (isUnsafeRoot(config.root)) return { exitCode: 0 };
   const before = sent.length;
@@ -331,15 +402,19 @@ function throttle(path: string, ms: number): boolean {
   }
 }
 
+/** Undefined when there is no index yet or its first build has not completed (a build is running or was cut short). */
 async function indexSummary(config: KoptConfig): Promise<{ commit?: string; symbols?: number } | undefined> {
   if (!existsSync(indexPath(config))) return undefined;
   const spec = '../store/store.js';
   const { Store } = await import(spec);
   const store = Store.open(indexPath(config), { root: config.root, readonly: true });
   try {
+    if (!store.getMeta('indexed_at')) return undefined;
     const commit = store.getMeta('commit') as string | undefined;
-    const row = store.prepare('SELECT count(*) AS n FROM symbols').get() as { n: number } | undefined;
-    return { commit, symbols: row?.n };
+    // the indexer records the count at the end of each pass (counting 500k+ rows costs a few dozen ms)
+    const recorded = Number(store.getMeta('symbol_count'));
+    const symbols = Number.isFinite(recorded) && recorded > 0 ? recorded : (store.prepare('SELECT count(*) AS n FROM symbols').get() as { n: number } | undefined)?.n;
+    return { commit, symbols };
   } finally {
     store.close();
   }
@@ -354,13 +429,13 @@ async function sessionStart(event: HookEvent, config: KoptConfig): Promise<HookO
   if (!koptMcpInstalled(config.root)) return { exitCode: 0 };
   let info: { commit?: string; symbols?: number } | undefined;
   try { info = await indexSummary(config); } catch (err) { logHookError(config, err, event); }
-  const advice = 'Prefer kopt_find/kopt_read/kopt_outline over grep + whole-file reads; kopt_run for tests/builds.';
+  const advice = `Prefer kopt_find/kopt_read/kopt_refs over grep + whole-file reads${koptRunAvailable(config.root) ? '; kopt_run for tests/builds' : ''}.`;
   let line: string;
   if (info) {
     const at = info.commit ? ` @${info.commit.slice(0, 7)}` : '';
     const n = typeof info.symbols === 'number' ? `, ${info.symbols} symbols` : '';
     line = `kopt: index${at}${n}. ${advice}`;
-    if (throttle(join(config.dataDir, '.refresh-spawned'), REFRESH_THROTTLE_MS)) (await import('./spawn.js')).spawnKopt(['index', '--refresh'], config.root);
+    if (throttle(join(config.dataDir, '.refresh-spawned'), REFRESH_THROTTLE_MS)) (await import('./spawn.js')).spawnKopt(['index', '--refresh', '--if-idle'], config.root);
   } else {
     line = `kopt: index building in the background. ${advice}`;
   }
@@ -390,8 +465,12 @@ function stableJson(x: unknown, depth = 0): string {
   return `{${Object.keys(x).sort().map((k) => `${JSON.stringify(k)}:${stableJson((x as Record<string, unknown>)[k], depth + 1)}`).join(',')}}`;
 }
 
-/** Identity of an event for de-duplication: session + event + tool + input. */
+/**
+ * Identity of an event for de-duplication: session + event + tool + input. A prompt is identified by its text alone:
+ * IDE 0.x legacy prompt hooks (still run by IDE 1.x in workspaces that have them) carry no session id.
+ */
 export function eventKey(event: HookEvent, name: string): string {
+  if (name === 'UserPromptSubmit') return createHash('sha1').update(`prompt|${promptText(event)}`).digest('hex').slice(0, 16);
   const subject = event.tool_input ?? event.prompt ?? event.file_path ?? event.filePath ?? '';
   return createHash('sha1').update(`${sessionIdOf(event)}|${name}|${event.tool_name ?? ''}|${stableJson(subject)}`).digest('hex').slice(0, 16);
 }
@@ -407,7 +486,9 @@ export function isDuplicate(event: HookEvent, name: string, config: KoptConfig, 
   const source = typeof event._kopt_source === 'string' && event._kopt_source ? event._kopt_source : undefined;
   if (!source) return false;
   const key = eventKey(event, name);
-  const file = sessionFile(config.userDir, sessionIdOf(event)).replace(/\.json$/, '.recent.json');
+  const file = name === 'UserPromptSubmit'
+    ? join(sessionsDir(config.userDir), '_prompts.recent.json')
+    : sessionFile(config.userDir, sessionIdOf(event)).replace(/\.json$/, '.recent.json');
   return withFileLock(file + '.lock', () => {
     const recent = readJson<{ e?: RecentEntry[] }>(file, {}).e ?? [];
     const live = recent.filter((r) => r && now - r.t < 10_000 && now >= r.t - 1000);
@@ -456,6 +537,9 @@ export async function handleHook(event: HookEvent, config: KoptConfig): Promise<
     if (!event || typeof event !== 'object') return { exitCode: 0 };
     const name = canonicalEvent(event.hook_event_name);
     if (!name || name === 'Manual') return { exitCode: 0 };
+    if (event._kopt_source === 'legacy' && !event.session_id && !(event as { sessionId?: unknown }).sessionId && !process.env.KIRO_SESSION_ID) {
+      event.session_id = legacySessionId(config);
+    }
     if (isDuplicate(event, name, config)) return { exitCode: 0 };
     switch (name) {
       case 'PreToolUse': return preToolUse(event, config);
@@ -465,7 +549,7 @@ export async function handleHook(event: HookEvent, config: KoptConfig): Promise<
       case 'PostFileSave':
       case 'PostFileCreate':
       case 'PostFileDelete': return fileEvent(event, config);
-      case 'Stop': return await stop(event, config);
+      case 'Stop': return { ...(await stop(event, config)), exitCode: 0 }; // exit 1 would mean "continue the agent" in IDE 1.x
       default: return { exitCode: 0 };
     }
   } catch (err) {
@@ -522,7 +606,7 @@ export async function runHookCli(argv: string[] = []): Promise<number> {
     if (source) event._kopt_source = source;
     if (process.env.KOPT_HOOKS === '0') return 0;
     const cwd = typeof event.cwd === 'string' && event.cwd && existsSync(event.cwd) ? event.cwd : process.cwd();
-    config = loadConfig(process.env.KOPT_ROOT || findProjectRoot(cwd));
+    config = loadConfig(process.env.KOPT_ROOT || findProjectRoot(cwd), { onWarning: hookWarningSink() });
     const out = await handleHook(event, config);
     if (out.stdout) await writeOut(process.stdout, out.stdout);
     if (out.stderr) await writeOut(process.stderr, out.stderr.endsWith('\n') ? out.stderr : out.stderr + '\n');
@@ -533,5 +617,13 @@ export async function runHookCli(argv: string[] = []): Promise<number> {
   }
 }
 
+/**
+ * Where a hook's warnings go (an invalid config file, for example): <userDir>/hook-errors.log, never stdout/stderr,
+ * because any output on the allow path intercepts the tool call in Kiro.
+ */
+export function hookWarningSink(): (message: string) => void {
+  return (message) => logHookError(undefined, message);
+}
+
 /** Internals exposed for tests. */
-export const _internal = { bigFileLines, sessionIdOf, displayPath };
+export const _internal = { bigFile, sessionIdOf, displayPath };

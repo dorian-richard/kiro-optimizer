@@ -1,0 +1,3 @@
+{"arm":"A","repo":"laravel","task":"lv-usage-image-driver","rep":1,"ts":"2026-10-09T23:19:46.450Z","ms":9,"cmd":"grep -rn \"resolveDriver\\|function \" src/Illuminate/Image/Image.php","kopt":false,"chars":5510,"tokens":1837,"lines":63,"truncated":false,"exit":0}
+{"arm":"A","repo":"laravel","task":"lv-usage-image-driver","rep":1,"ts":"2026-10-09T23:19:50.818Z","ms":8,"cmd":"sed -n 410,580p src/Illuminate/Image/Image.php","kopt":false,"chars":4500,"tokens":1500,"lines":172,"truncated":false,"exit":0}
+{"arm":"A","repo":"laravel","task":"lv-usage-image-driver","rep":1,"ts":"2026-10-09T23:19:54.270Z","ms":316,"cmd":"grep -rn \"resolveDriver\" src/Illuminate/Image tests","kopt":false,"chars":527,"tokens":176,"lines":6,"truncated":false,"exit":0}

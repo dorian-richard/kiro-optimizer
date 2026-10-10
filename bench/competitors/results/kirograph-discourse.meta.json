@@ -1,0 +1,119 @@
+{
+  "label": "kirograph",
+  "tool": "kirograph",
+  "package": "kirograph",
+  "version": "1.4.0",
+  "mode": "default",
+  "repo": {
+    "name": "discourse",
+    "url": "https://github.com/discourse/discourse.git",
+    "tag": "v2026.9.0",
+    "commit": "343b20f97ef5f6bd70826ee0e993ba348b210fd5",
+    "language": "ruby",
+    "path": "bench/repos/discourse"
+  },
+  "headCommit": "343b20f97ef5f6bd70826ee0e993ba348b210fd5",
+  "commitMatchesTasks": true,
+  "date": "2026-10-09T13:49:57.215Z",
+  "image": "kopt-bench/kirograph:1.4.0",
+  "imageId": "sha256:bc769b34b739a6d6b3ed1f2954ed9df3e387e6c6dcfc597528ca16d232dac57e",
+  "engine": "docker",
+  "limits": "memory=3g cpus=8",
+  "cgroupMemory": {
+    "maxBytes": 3221225472,
+    "peakBytes": 1794850816,
+    "oomKills": 0
+  },
+  "container": {
+    "node": "v22.23.3",
+    "arch": "arm64",
+    "platform": "linux",
+    "cpus": 10,
+    "memBytes": 8214851584,
+    "network": "none"
+  },
+  "primaryTool": "kirograph_context",
+  "toolArgsExample": {
+    "task": "<input>"
+  },
+  "serverCommand": {
+    "command": "kirograph",
+    "args": [
+      "serve",
+      "--mcp",
+      "--path",
+      "/work/<repo>"
+    ]
+  },
+  "oneSessionPerTask": true,
+  "indexOk": true,
+  "indexMs": 932990,
+  "indexSteps": [
+    {
+      "command": "kirograph init /work/discourse",
+      "ms": 334,
+      "exit": 0,
+      "signal": null,
+      "oomKills": 0
+    },
+    {
+      "command": "kirograph index /work/discourse",
+      "ms": 932656,
+      "exit": 0,
+      "signal": null,
+      "oomKills": 0
+    }
+  ],
+  "copyMs": 28948,
+  "indexDirs": [
+    "<repo>/.kirograph"
+  ],
+  "indexSizeBytes": 160423769,
+  "modelBytes": 0,
+  "indexStatus": "Graph\n  Files      21160\n  Symbols    61501\n  Edges      235642\n  Frameworks express, rails\n\n  By kind\n  ┌────────────┬──────────────────┐\n  │ method     │ 28796            │\n  ├────────────┼──────────────────┤\n  │ constant   │ 12814            │\n  ├────────────┼──────────────────┤\n  │ import     │ 8791             │\n  ├────────────┼──────────────────┤\n  │ class      │ 5675             │\n  ├────────────┼──────────────────┤\n  │ function   │ 2797             │\n  ├────────────┼──────────────────┤\n  │ variable   │ 2305             │\n  ├────────────┼──────────────────┤\n  │ interface  │ 211              │\n  ├────────────┼──────────────────┤\n  │ type_alias │ 112              │\n  └────────────┴──────────────────┘\n\n  By language\n  ┌────────────┬──────────────────┐\n  │ ruby       │ 12395            │\n  ├────────────┼──────────────────┤\n  │ yaml       │ 4335             │\n  ├────────────┼──────────────────┤\n  │ javascript │ 3329             │\n  ├────────────┼──────────────────┤\n  │ scss       │ 718              │\n  ├────────────┼──────────────────┤\n  │ html       │ 199              │\n  ├────────────┼──────────────────┤\n  │ typescript │ 159              │\n  ├────────────┼──────────────────┤\n  │ sql        │ 20               │\n  ├────────────┼──────────────────┤\n  │ css        │ 5                │\n  └────────────┴──────────────────┘\n\n  Sync\n  Status     idle\n  Pending    223 files pending\n  ⚠ Index may be stale. Run `kirograph sync` to update.\n\n  Semantic Search\n  Status     disabled",
+  "surface": {
+    "serverInfo": {
+      "name": "kirograph",
+      "version": "0.1.0"
+    },
+    "toolCount": 7,
+    "toolNames": [
+      "kirograph_search",
+      "kirograph_context",
+      "kirograph_node",
+      "kirograph_gain",
+      "kirograph_read",
+      "kirograph_retrieve",
+      "kirograph_budget"
+    ],
+    "toolsChars": 4418,
+    "toolsEstTokens": 1473,
+    "instructionsChars": 0,
+    "instructionsEstTokens": 0,
+    "primaryToolListed": true,
+    "file": "kirograph.surface.json"
+  },
+  "inputs": {
+    "search": {
+      "file": "kirograph-discourse.jsonl",
+      "tasks": 12,
+      "failures": 3,
+      "queryMsMedian": 59,
+      "queryMsP90": 75,
+      "startupMsMedian": 155
+    },
+    "question": {
+      "file": "kirograph-discourse-question.jsonl",
+      "tasks": 12,
+      "failures": 6,
+      "queryMsMedian": 30,
+      "queryMsP90": 51,
+      "startupMsMedian": 150
+    }
+  },
+  "charsPerToken": 3,
+  "errors": [
+    "3/12 search queries failed or returned isError",
+    "6/12 question queries failed or returned isError"
+  ]
+}

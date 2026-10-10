@@ -123,10 +123,15 @@ export function pathEntries(h: HostEnv = hostEnv()): string[] {
   return raw.split(listSep(h)).filter(Boolean);
 }
 
-/** `which`: first executable named `cmd` on PATH (PATHEXT on Windows). `skip` filters out directories. */
+/**
+ * `which`: first executable named `cmd` on PATH (PATHEXT on Windows). `skip` filters out directories.
+ * Windows: a name without a PATHEXT extension is only tried with one: an extensionless file of that name (a Git Bash
+ * or npm shell shim) is not something CreateProcess can start.
+ */
 export function which(cmd: string, h: HostEnv = hostEnv(), skip?: (dir: string) => boolean): string | undefined {
   const p = pathFor(h.platform);
-  const exts = h.platform === 'win32' ? ['', ...(h.env.PATHEXT || '.COM;.EXE;.BAT;.CMD').split(';').map((e) => e.toLowerCase())] : [''];
+  const pathExt = (h.env.PATHEXT || '.COM;.EXE;.BAT;.CMD').split(';').filter(Boolean).map((e) => e.toLowerCase());
+  const exts = h.platform === 'win32' ? (pathExt.includes(p.extname(cmd).toLowerCase()) ? [''] : pathExt) : [''];
   for (const dir of pathEntries(h)) {
     if (skip?.(dir)) continue;
     for (const ext of exts) {

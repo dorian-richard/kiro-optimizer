@@ -1,0 +1,755 @@
+{
+  "meta": {
+    "label": "heldout-jellyfin-question",
+    "repo": {
+      "name": "jellyfin",
+      "url": "https://github.com/jellyfin/jellyfin.git",
+      "tag": "v10.11.11",
+      "commit": "1fbd8739292cce610231be93daf43368733edf63",
+      "language": "c_sharp",
+      "path": "bench/repos/jellyfin"
+    },
+    "repoRoot": "bench/repos/jellyfin",
+    "headCommit": "1fbd8739292cce610231be93daf43368733edf63",
+    "date": "2026-10-09T20:18:11.131Z",
+    "input": "question",
+    "charsPerToken": 3,
+    "strategies": [
+      "native-naive",
+      "native-ranged",
+      "kopt-pack",
+      "kopt-hits+read",
+      "kirograph",
+      "codegraph"
+    ],
+    "grepLimits": {
+      "maxMatches": 100,
+      "maxChars": 10000,
+      "maxLineChars": 250
+    },
+    "readLimits": {
+      "naiveTopFiles": 3,
+      "naiveMaxLines": 2000,
+      "rangedMatches": 4,
+      "rangedContext": 60
+    },
+    "koptBudgets": {
+      "find": 700,
+      "pack": 2500,
+      "read": 3000
+    },
+    "index": {
+      "built": false,
+      "durationMs": 0,
+      "files": 1922,
+      "symbols": 17980,
+      "path": "<index-dir>/.kopt-jellyfin/index.db"
+    },
+    "notes": [
+      "kirograph: outputs loaded from bench/competitors/results/kirograph-jellyfin.jsonl",
+      "codegraph: outputs loaded from bench/competitors/results/codegraph-jellyfin.jsonl"
+    ],
+    "durationMs": 741
+  },
+  "results": [
+    {
+      "taskId": "ho-jf-locate-remote-bitrate",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 20300,
+      "chars": 60897,
+      "toolCalls": 4,
+      "durationMs": 282,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "GetMaxBitrate"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "clients|outside",
+          "chars": 8589,
+          "tokens": 2863
+        },
+        {
+          "tool": "read_file",
+          "args": "Emby.Server.Implementations/SyncPlay/Group.cs",
+          "chars": 24522,
+          "tokens": 8174
+        },
+        {
+          "tool": "read_file",
+          "args": ".github/ISSUE_TEMPLATE/issue report.yml",
+          "chars": 10514,
+          "tokens": 3505
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Jellyfin.Drawing/ImageProcessor.cs",
+          "chars": 17272,
+          "tokens": 5758
+        }
+      ]
+    },
+    {
+      "taskId": "ho-jf-locate-remote-bitrate",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 8157,
+      "chars": 24469,
+      "toolCalls": 5,
+      "durationMs": 1,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "GetMaxBitrate"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "clients|outside",
+          "chars": 8589,
+          "tokens": 2863
+        },
+        {
+          "tool": "read_file",
+          "args": "Jellyfin.Api/Controllers/ImageController.cs:1869-1989",
+          "chars": 3716,
+          "tokens": 1239
+        },
+        {
+          "tool": "read_file",
+          "args": "README.md:94-203",
+          "chars": 7664,
+          "tokens": 2555
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Jellyfin.Database/Jellyfin.Database.Implementations/Enums/ChromecastVersion.cs:1-18",
+          "chars": 369,
+          "tokens": 123
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Jellyfin.Drawing/ImageProcessor.cs:164-284",
+          "chars": 4131,
+          "tokens": 1377
+        }
+      ]
+    },
+    {
+      "taskId": "ho-jf-locate-remote-bitrate",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1381,
+      "chars": 4143,
+      "toolCalls": 1,
+      "durationMs": 53,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"Where does Jellyfin cap the streaming bitrate for clients that are outside the local network?\"",
+          "chars": 4143,
+          "tokens": 1381
+        }
+      ]
+    },
+    {
+      "taskId": "ho-jf-locate-remote-bitrate",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 1177,
+      "chars": 3529,
+      "toolCalls": 3,
+      "durationMs": 24,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"Where does Jellyfin cap the streaming bitrate for clients that are outside the local network?\"",
+          "chars": 2075,
+          "tokens": 692
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#je",
+          "chars": 1040,
+          "tokens": 347
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#co7",
+          "chars": 414,
+          "tokens": 138
+        }
+      ]
+    },
+    {
+      "taskId": "ho-jf-locate-remote-bitrate",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "skipped": "no kirograph result line for this task",
+      "tokens": 0,
+      "chars": 0,
+      "toolCalls": 0,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "Jellyfin.Api/Helpers/MediaInfoHelper.cs"
+        ],
+        "symbolsMissed": [
+          "GetMaxBitrate"
+        ],
+        "found": false
+      },
+      "calls": []
+    },
+    {
+      "taskId": "ho-jf-locate-remote-bitrate",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "skipped": "no codegraph result line for this task",
+      "tokens": 0,
+      "chars": 0,
+      "toolCalls": 0,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "Jellyfin.Api/Helpers/MediaInfoHelper.cs"
+        ],
+        "symbolsMissed": [
+          "GetMaxBitrate"
+        ],
+        "found": false
+      },
+      "calls": []
+    },
+    {
+      "taskId": "ho-jf-explain-stream-copy",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 40195,
+      "chars": 120583,
+      "toolCalls": 4,
+      "durationMs": 277,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "CanStreamCopyVideo"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "decide|copied|being",
+          "chars": 10017,
+          "tokens": 3339
+        },
+        {
+          "tool": "read_file",
+          "args": "MediaBrowser.Model/Extensions/ContainerHelper.cs",
+          "chars": 6609,
+          "tokens": 2203
+        },
+        {
+          "tool": "read_file",
+          "args": "MediaBrowser.Controller/MediaEncoding/EncodingHelper.cs",
+          "chars": 86669,
+          "tokens": 28890
+        },
+        {
+          "tool": "read_file",
+          "args": "Emby.Server.Implementations/IO/LibraryMonitor.cs",
+          "chars": 17288,
+          "tokens": 5763
+        }
+      ]
+    },
+    {
+      "taskId": "ho-jf-explain-stream-copy",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 6773,
+      "chars": 20314,
+      "toolCalls": 5,
+      "durationMs": 1,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "CanStreamCopyVideo"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "decide|copied|being",
+          "chars": 10017,
+          "tokens": 3339
+        },
+        {
+          "tool": "read_file",
+          "args": "Emby.Server.Implementations/Library/Resolvers/TV/SeriesResolver.cs:5-125",
+          "chars": 4377,
+          "tokens": 1459
+        },
+        {
+          "tool": "read_file",
+          "args": "MediaBrowser.Controller/Channels/IDisableMediaSourceDisplay.cs:1-13",
+          "chars": 304,
+          "tokens": 102
+        },
+        {
+          "tool": "read_file",
+          "args": "MediaBrowser.Controller/Entities/ISupportsBoxSetGrouping.cs:1-12",
+          "chars": 401,
+          "tokens": 134
+        },
+        {
+          "tool": "read_file",
+          "args": "MediaBrowser.Controller/MediaEncoding/EncodingHelper.cs:241-361",
+          "chars": 5215,
+          "tokens": 1739
+        }
+      ]
+    },
+    {
+      "taskId": "ho-jf-explain-stream-copy",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 1431,
+      "chars": 4292,
+      "toolCalls": 1,
+      "durationMs": 40,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"How does Jellyfin decide whether a video stream can be copied as is instead of being transcoded?\"",
+          "chars": 4292,
+          "tokens": 1431
+        }
+      ]
+    },
+    {
+      "taskId": "ho-jf-explain-stream-copy",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 2299,
+      "chars": 6894,
+      "toolCalls": 3,
+      "durationMs": 24,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"How does Jellyfin decide whether a video stream can be copied as is instead of being transcoded?\"",
+          "chars": 2068,
+          "tokens": 690
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#452",
+          "chars": 3893,
+          "tokens": 1298
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#45o",
+          "chars": 933,
+          "tokens": 311
+        }
+      ]
+    },
+    {
+      "taskId": "ho-jf-explain-stream-copy",
+      "kind": "explain",
+      "strategy": "kirograph",
+      "skipped": "no kirograph result line for this task",
+      "tokens": 0,
+      "chars": 0,
+      "toolCalls": 0,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "MediaBrowser.Controller/MediaEncoding/EncodingHelper.cs"
+        ],
+        "symbolsMissed": [
+          "CanStreamCopyVideo"
+        ],
+        "found": false
+      },
+      "calls": []
+    },
+    {
+      "taskId": "ho-jf-explain-stream-copy",
+      "kind": "explain",
+      "strategy": "codegraph",
+      "skipped": "no codegraph result line for this task",
+      "tokens": 0,
+      "chars": 0,
+      "toolCalls": 0,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "MediaBrowser.Controller/MediaEncoding/EncodingHelper.cs"
+        ],
+        "symbolsMissed": [
+          "CanStreamCopyVideo"
+        ],
+        "found": false
+      },
+      "calls": []
+    }
+  ],
+  "aggregates": [
+    {
+      "strategy": "native-naive",
+      "tasks": 2,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 30247.5,
+      "meanTokens": 30248,
+      "p90Tokens": 40195,
+      "totalTokens": 60495,
+      "totalChars": 181480,
+      "meanToolCalls": 4,
+      "meanFileRecall": 1,
+      "meanSymbolRecall": 0,
+      "meanDefRecall": 0,
+      "found": 0,
+      "foundRate": 0,
+      "tokensPerFound": null
+    },
+    {
+      "strategy": "native-ranged",
+      "tasks": 2,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 7465,
+      "meanTokens": 7465,
+      "p90Tokens": 8157,
+      "totalTokens": 14930,
+      "totalChars": 44783,
+      "meanToolCalls": 5,
+      "meanFileRecall": 1,
+      "meanSymbolRecall": 0,
+      "meanDefRecall": 0,
+      "found": 0,
+      "foundRate": 0,
+      "tokensPerFound": null
+    },
+    {
+      "strategy": "kopt-pack",
+      "tasks": 2,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 1406,
+      "meanTokens": 1406,
+      "p90Tokens": 1431,
+      "totalTokens": 2812,
+      "totalChars": 8435,
+      "meanToolCalls": 1,
+      "meanFileRecall": 1,
+      "meanSymbolRecall": 1,
+      "meanDefRecall": 1,
+      "found": 2,
+      "foundRate": 1,
+      "tokensPerFound": 1406
+    },
+    {
+      "strategy": "kopt-hits+read",
+      "tasks": 2,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 1738,
+      "meanTokens": 1738,
+      "p90Tokens": 2299,
+      "totalTokens": 3476,
+      "totalChars": 10423,
+      "meanToolCalls": 3,
+      "meanFileRecall": 1,
+      "meanSymbolRecall": 1,
+      "meanDefRecall": 1,
+      "found": 2,
+      "foundRate": 1,
+      "tokensPerFound": 1738
+    },
+    {
+      "strategy": "kirograph",
+      "tasks": 0,
+      "skipped": 2,
+      "errors": 0,
+      "medianTokens": 0,
+      "meanTokens": 0,
+      "p90Tokens": 0,
+      "totalTokens": 0,
+      "totalChars": 0,
+      "meanToolCalls": 0,
+      "meanFileRecall": 0,
+      "meanSymbolRecall": 0,
+      "meanDefRecall": 0,
+      "found": 0,
+      "foundRate": 0,
+      "tokensPerFound": null
+    },
+    {
+      "strategy": "codegraph",
+      "tasks": 0,
+      "skipped": 2,
+      "errors": 0,
+      "medianTokens": 0,
+      "meanTokens": 0,
+      "p90Tokens": 0,
+      "totalTokens": 0,
+      "totalChars": 0,
+      "meanToolCalls": 0,
+      "meanFileRecall": 0,
+      "meanSymbolRecall": 0,
+      "meanDefRecall": 0,
+      "found": 0,
+      "foundRate": 0,
+      "tokensPerFound": null
+    }
+  ],
+  "paired": [
+    {
+      "a": "native-naive",
+      "b": "kopt-pack",
+      "nRun": 2,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 2,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-pack",
+      "nRun": 2,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 2,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-naive",
+      "b": "kopt-hits+read",
+      "nRun": 2,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 2,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-hits+read",
+      "nRun": 2,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 2,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "kirograph",
+      "b": "kopt-pack",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "codegraph",
+      "b": "kopt-pack",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "kirograph",
+      "b": "kopt-hits+read",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "codegraph",
+      "b": "kopt-hits+read",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-ranged",
+      "b": "kirograph",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-ranged",
+      "b": "codegraph",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-naive",
+      "b": "native-ranged",
+      "nRun": 2,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    }
+  ],
+  "byKind": [
+    {
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 20300
+    },
+    {
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 8157
+    },
+    {
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tasks": 1,
+      "found": 1,
+      "medianTokens": 1381
+    },
+    {
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tasks": 1,
+      "found": 1,
+      "medianTokens": 1177
+    },
+    {
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 40195
+    },
+    {
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 6773
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tasks": 1,
+      "found": 1,
+      "medianTokens": 1431
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tasks": 1,
+      "found": 1,
+      "medianTokens": 2299
+    }
+  ]
+}

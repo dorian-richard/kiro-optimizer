@@ -3,7 +3,7 @@
 // leak, and IDE 0.x legacy invocations (stdin left open, data in USER_PROMPT) must not wait for stdin.
 
 import { spawn } from 'node:child_process';
-import { mkdirSync, mkdtempSync, realpathSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -45,7 +45,8 @@ beforeAll(() => {
   tmp = realpathSync(mkdtempSync(join(tmpdir(), 'kopt-hookshell-')));
   repo = join(tmp, 'repo');
   mkdirSync(join(repo, '.git'), { recursive: true });
-  writeFileSync(join(repo, 'Big.java'), Array.from({ length: 1500 }, (_, i) => `int f${i};`).join('\n') + '\n');
+  // ~75 KB, ~25k tokens: above the big-read threshold (governor.bigFileTokens, 8000)
+  writeFileSync(join(repo, 'Big.java'), Array.from({ length: 1500 }, (_, i) => `int field${i} = compute(${i}, "padding padding padding");`).join('\n') + '\n');
   const kiroHome = join(tmp, 'kiro');
   mkdirSync(join(kiroHome, 'settings'), { recursive: true });
   writeFileSync(join(kiroHome, 'settings', 'mcp.json'), JSON.stringify({ mcpServers: { kopt: { command: 'kopt', args: ['mcp'] } } }));
@@ -81,7 +82,7 @@ describe('kopt hook through a shell', () => {
     const r = await runShell(COMMAND, JSON.stringify({ hook_event_name: 'PreToolUse', session_id: 'block', cwd: repo, tool_name: 'read_file', tool_input: { path: 'Big.java' } }));
     expect(r.code).toBe(2);
     expect(r.stdout).toBe('');
-    expect(r.stderr).toMatch(/^kopt: Big\.java has 1500 lines/);
+    expect(r.stderr).toMatch(/^kopt: Big\.java is ~\d+k tokens \(1500 lines\)/);
     expect(r.stderr.trim().split('\n')).toHaveLength(1);
   }, 30_000);
 
@@ -91,6 +92,7 @@ describe('kopt hook through a shell', () => {
     try {
       const store = Store.open(indexPath(loadConfig(repo)));
       store.setMeta('commit', 'abcdef0123456789');
+      store.setMeta('indexed_at', String(Date.now()));
       store.close();
     } finally {
       if (prev === undefined) delete process.env.KOPT_CACHE_DIR;
@@ -107,5 +109,32 @@ describe('kopt hook through a shell', () => {
     const r = await runShell(legacy, undefined, { USER_PROMPT: 'yes' }, true);
     expect([r.code, r.stdout, r.stderr]).toEqual([0, '', '']);
     expect(r.ms).toBeLessThan(4000); // reading stdin would have waited 5 s for a pipe Kiro never closes
+  }, 30_000);
+
+  it('an invalid config file never prints on the allow path: the warning goes to hook-errors.log', async () => {
+    const cfgFile = join(repo, 'kopt.config.json');
+    writeFileSync(cfgFile, '{ "governor": { bigFileLines: 10 } }');
+    try {
+      for (const ev of [
+        { hook_event_name: 'PreToolUse', session_id: 'badcfg', cwd: repo, tool_name: 'read_file', tool_input: { path: 'small.txt' } },
+        { hook_event_name: 'PostToolUse', session_id: 'badcfg', cwd: repo, tool_name: 'read_file', tool_input: { path: 'a' }, tool_response: 'x' },
+        { hook_event_name: 'Stop', session_id: 'badcfg', cwd: repo },
+      ]) {
+        const r = await runShell(COMMAND, JSON.stringify(ev));
+        expect([ev.hook_event_name, r.code, r.stdout, r.stderr]).toEqual([ev.hook_event_name, 0, '', '']);
+      }
+      const log = join(env.KOPT_HOME!, 'hook-errors.log');
+      expect(existsSync(log)).toBe(true);
+      expect(readFileSync(log, 'utf8')).toMatch(/ignoring invalid config .*kopt\.config\.json/);
+    } finally {
+      rmSync(cfgFile, { force: true });
+    }
+  }, 60_000);
+
+  it('Stop always exits 0, even for a payload kopt cannot read (exit 1 = "continue the agent" in Kiro IDE 1.x)', async () => {
+    for (const input of ['not json', JSON.stringify({ hook_event_name: 'Stop' }), '']) {
+      const r = await runShell(COMMAND.replace('hook --source global', 'hook stop --source agent'), input);
+      expect([r.code, r.stdout, r.stderr]).toEqual([0, '', '']);
+    }
   }, 30_000);
 });

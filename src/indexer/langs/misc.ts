@@ -149,16 +149,20 @@ export function visitRust(ex: Ex, node: Node, scope: Scope): void {
     }
     case 'call_expression': {
       const f = node.childForFieldName('function');
-      if (f?.type === 'identifier') ex.addRef(scope, ex.dealias(f.text), 'call', f);
+      if (f?.type === 'identifier') ex.noteCall(node, ex.addRef(scope, ex.dealias(f.text), 'call', f));
       else if (f?.type === 'scoped_identifier') {
         const n = f.childForFieldName('name');
         const p = f.childForFieldName('path');
-        if (n) ex.addRef(scope, n.text, 'call', n, p?.text, p && isUpperStart(baseTypeName(p.text) ?? '') ? `T:${baseTypeName(p.text)}` : undefined);
+        if (n) ex.noteCall(node, ex.addRef(scope, n.text, 'call', n, p?.text, p && isUpperStart(baseTypeName(p.text) ?? '') ? `T:${baseTypeName(p.text)}` : undefined));
       } else if (f?.type === 'field_expression') {
         const n = f.childForFieldName('field');
         const v = f.childForFieldName('value');
-        if (n) ex.addRef(scope, n.text, 'call', n, v?.text, ex.receiverHint(v?.text, scope));
-        if (v) ex.visit(ex, v, scope);
+        const ref = n ? ex.addRef(scope, n.text, 'call', n, v?.text, ex.receiverHint(v?.text, scope)) : undefined;
+        ex.noteCall(node, ref);
+        if (v) {
+          ex.visit(ex, v, scope);
+          ex.chainHint(ref, v);
+        }
       } else if (f) ex.visit(ex, f, scope);
       const args = node.childForFieldName('arguments');
       if (args) ex.visitChildren(args, scope);
@@ -167,9 +171,29 @@ export function visitRust(ex: Ex, node: Node, scope: Scope): void {
     case 'struct_expression': {
       const n = node.childForFieldName('name');
       const name = n ? baseTypeName(n.text) : undefined;
-      if (n && name) ex.addRef(scope, name, 'new', n);
+      if (n && name) ex.noteCall(node, ex.addRef(scope, name, 'new', n));
       const body = node.childForFieldName('body');
-      if (body) ex.visitChildren(body, scope);
+      if (!body) return;
+      // `Foo { bar: 1, baz }`: each field initialized is a write of Foo's field
+      for (const f of body.namedChildren) {
+        if (!f) continue;
+        const fn = f.type === 'field_initializer' ? f.childForFieldName('field') ?? f.namedChildren[0] : f.type === 'shorthand_field_initializer' ? f.namedChildren[0] : null;
+        if (fn && name && /^[A-Za-z_]\w*$/.test(fn.text)) ex.addRef(scope, fn.text, 'write', fn, name, `T:${name}`);
+        const v = f.type === 'field_initializer' ? f.childForFieldName('value') : f.type === 'shorthand_field_initializer' ? null : f;
+        if (v) ex.visit(ex, v, scope);
+      }
+      return;
+    }
+    case 'field_expression':
+      // `self.field`, `x.y = v` (method calls record their callee in call_expression; `t.0` is no field name)
+      ex.memberRef(scope, node, node.childForFieldName('field'), node.childForFieldName('value'));
+      return;
+    case 'scoped_identifier': {
+      // `Kind::Variant`, `Self::LIMIT` used as a value or a pattern (calls, uses and struct literals have their own cases)
+      const n = node.childForFieldName('name');
+      const p = node.childForFieldName('path');
+      const owner = p?.text === 'Self' ? 'Self' : p ? baseTypeName(p.text) : undefined;
+      if (n && p && owner && isUpperStart(owner)) ex.addRef(scope, n.text, 'read', n, p.text, p.text === 'Self' ? undefined : `T:${owner}`);
       return;
     }
     case 'macro_invocation':
@@ -313,20 +337,52 @@ export function visitPhp(ex: Ex, node: Node, scope: Scope): void {
     case 'scoped_call_expression': {
       const n = node.childForFieldName('name');
       const obj = node.childForFieldName('object') ?? node.childForFieldName('scope');
+      let ref;
       if (n) {
         const q = obj?.text;
         const hint = t === 'scoped_call_expression' && q && /^[A-Z]/.test(q) ? `T:${baseTypeName(q)}` : ex.receiverHint(q, scope);
-        ex.addRef(scope, n.text, 'call', n, q, hint);
+        ref = ex.addRef(scope, n.text, 'call', n, q, hint);
+        ex.noteCall(node, ref);
       }
-      if (obj) ex.visit(ex, obj, scope);
+      if (obj) {
+        ex.visit(ex, obj, scope);
+        ex.chainHint(ref, obj);
+      }
       const args = node.childForFieldName('arguments');
       if (args) ex.visitChildren(args, scope);
+      return;
+    }
+    case 'member_access_expression':
+    case 'nullsafe_member_access_expression':
+      // `$this->prop`, `$x?->y`, `$o->p = v` (method calls are member_call_expression)
+      ex.memberRef(scope, node, node.childForFieldName('name'), node.childForFieldName('object'));
+      return;
+    case 'scoped_property_access_expression':
+      // `self::$cache`, `static::$instances`
+      ex.memberRef(scope, node, node.childForFieldName('name'), node.childForFieldName('scope'));
+      return;
+    case 'class_constant_access_expression': {
+      // `Repository::PREFIX`, `self::X`, `static::Y`, `\App\Foo::BAR`; `Foo::class` is only a type use
+      const owner = node.namedChildren[0];
+      const member = node.namedChildren[node.namedChildCount - 1];
+      if (!owner || !member || owner === member) return;
+      const cname = member.type === 'name' ? member.text : undefined;
+      if (owner.type === 'relative_scope') {
+        if (cname && cname !== 'class') ex.addRef(scope, cname, 'type_ref', member, owner.text);
+      } else if (owner.type === 'name' || owner.type === 'qualified_name') {
+        const cls = baseTypeName(phpName(owner) ?? '');
+        if (cls) {
+          const real = ex.dealias(cls);
+          ex.addRef(scope, real, 'type_ref', owner);
+          if (cname && cname !== 'class') ex.addRef(scope, cname, 'type_ref', member, cls, `T:${real}`);
+        }
+      } else ex.visit(ex, owner, scope);
       return;
     }
     case 'object_creation_expression': {
       const n = node.namedChildren.find((c) => c && (c.type === 'name' || c.type === 'qualified_name'));
       const name = n ? baseTypeName(phpName(n) ?? '') : undefined;
-      if (n && name) ex.addRef(scope, ex.dealias(name), 'new', n);
+      if (n && name) ex.noteCall(node, ex.addRef(scope, ex.dealias(name), 'new', n));
       for (const c of node.namedChildren) if (c?.type === 'arguments') ex.visitChildren(c, scope);
       return;
     }
@@ -432,6 +488,78 @@ function scalaVisible(node: Node): boolean {
   return !mods || !/\bprivate\b/.test(mods.text);
 }
 
+function scalaAnnotation(ex: Ex, node: Node, scope: Scope): void {
+  const n = node.childForFieldName('name');
+  const name = n ? baseTypeName(n.text) : undefined;
+  if (n && name) ex.addRef(scope, name, 'type_ref', n);
+  const args = node.childForFieldName('arguments');
+  if (args) ex.visitChildren(args, scope);
+}
+
+/**
+ * `import a.b.C`, `import a.b.{C, D => E}`, `import a.b._` / `a.b.*`, `import a.b.C as D`. tree-sitter-scala
+ * 0.26 gives one `path` field per segment plus selector nodes; the 0.19 grammar (fallback) gave one dotted
+ * path and left the selectors as text.
+ */
+function scalaImport(ex: Ex, node: Node, scope: Scope): void {
+  const parts = node.childrenForFieldName('path').filter((p): p is Node => !!p && p.isNamed);
+  if (!parts.length) return;
+  if (parts.length === 1 && parts[0].type !== 'identifier') {
+    const path = parts[0].text.replace(/\s+/g, '');
+    const rest = node.text.slice(node.text.indexOf(parts[0].text) + parts[0].text.length).trim();
+    if (rest.startsWith('.{') || rest.startsWith('{')) {
+      ex.addImport(path);
+      for (const s of rest.replace(/^\.?\{|\}$/g, '').split(',')) {
+        const nm = s.split('=>')[0].trim();
+        if (nm && nm !== '_') ex.addRef(scope, nm, 'import', node, path);
+      }
+    } else if (rest.startsWith('._') || rest.startsWith('.*')) {
+      ex.addImport(`${path}.*`);
+    } else {
+      ex.addImport(path);
+      const dot = path.lastIndexOf('.');
+      if (dot > 0) ex.addRef(scope, path.slice(dot + 1), 'import', node, path.slice(0, dot));
+    }
+    return;
+  }
+  const path = parts.map((p) => p.text).join('.');
+  let selected = false;
+  for (const c of node.namedChildren) {
+    if (!c || parts.includes(c)) continue;
+    if (c.type === 'namespace_wildcard') {
+      ex.addImport(`${path}.*`);
+      selected = true;
+    } else if (c.type === 'namespace_selectors') {
+      selected = true;
+      ex.addImport(path);
+      for (const s of c.namedChildren) {
+        if (!s) continue;
+        if (s.type === 'namespace_wildcard') ex.addImport(`${path}.*`);
+        else if (s.type === 'identifier') ex.addRef(scope, s.text, 'import', s, path);
+        else if (s.type === 'arrow_renamed_identifier' || s.type === 'as_renamed_identifier') {
+          const n = s.childForFieldName('name');
+          const a = s.childForFieldName('alias');
+          if (!n) continue;
+          ex.addRef(scope, n.text, 'import', n, path);
+          if (a?.type === 'identifier') ex.importAlias.set(a.text, { name: n.text, spec: path });
+        }
+      }
+    } else if (c.type === 'as_renamed_identifier' || c.type === 'arrow_renamed_identifier') {
+      // `import a.b.C as D`: the renamed name is the last segment
+      const n = c.childForFieldName('name');
+      const a = c.childForFieldName('alias');
+      if (!n) continue;
+      selected = true;
+      ex.addImport(`${path}.${n.text}`);
+      ex.addRef(scope, n.text, 'import', n, path);
+      if (a?.type === 'identifier') ex.importAlias.set(a.text, { name: n.text, spec: `${path}.${n.text}` });
+    }
+  }
+  if (selected) return;
+  ex.addImport(path);
+  if (parts.length > 1) ex.addRef(scope, parts[parts.length - 1].text, 'import', parts[parts.length - 1], parts.slice(0, -1).map((p) => p.text).join('.'));
+}
+
 export function visitScala(ex: Ex, node: Node, scope: Scope): void {
   const t = node.type;
   switch (t) {
@@ -445,25 +573,9 @@ export function visitScala(ex: Ex, node: Node, scope: Scope): void {
       if (body) ex.visitChildren(body, scope);
       return;
     }
-    case 'import_declaration': {
-      const path = node.childForFieldName('path')?.text.replace(/\s+/g, '');
-      if (!path) return;
-      const rest = node.text.slice(node.text.indexOf(path) + path.length).trim();
-      if (rest.startsWith('.{') || rest.startsWith('{')) {
-        ex.addImport(path);
-        for (const s of rest.replace(/^\.?\{|\}$/g, '').split(',')) {
-          const nm = s.split('=>')[0].trim();
-          if (nm && nm !== '_') ex.addRef(scope, nm, 'import', node, path);
-        }
-      } else if (rest.startsWith('._') || rest.startsWith('.*')) {
-        ex.addImport(`${path}.*`);
-      } else {
-        ex.addImport(path);
-        const dot = path.lastIndexOf('.');
-        if (dot > 0) ex.addRef(scope, path.slice(dot + 1), 'import', node, path.slice(0, dot));
-      }
+    case 'import_declaration':
+      scalaImport(ex, node, scope);
       return;
-    }
     case 'class_definition':
     case 'object_definition':
     case 'trait_definition':
@@ -483,14 +595,33 @@ export function visitScala(ex: Ex, node: Node, scope: Scope): void {
         }
         for (const a of ext.descendantsOfType('arguments')) if (a) ex.visitChildren(a, inner);
       }
-      for (const p of node.childForFieldName('class_parameters')?.namedChildren ?? []) {
-        if (p?.type !== 'class_parameter') continue;
-        const pn = p.childForFieldName('name');
-        const pt = p.childForFieldName('type');
-        if (pn) inner.vars.set(pn.text, baseTypeName(pt?.text ?? ''));
-        ex.typeRefs(pt, inner, ['type_identifier']);
+      // tree-sitter-scala 0.26 has one `class_parameters` field per parameter list (curried, implicit)
+      for (const list of node.childrenForFieldName('class_parameters')) {
+        if (!list?.isNamed) continue;
+        for (const p of list?.namedChildren ?? []) {
+          if (p?.type !== 'class_parameter') continue;
+          const pn = p.childForFieldName('name');
+          const pt = p.childForFieldName('type');
+          if (pn) inner.vars.set(pn.text, baseTypeName(pt?.text ?? ''));
+          ex.typeRefs(pt, inner, ['type_identifier']);
+        }
       }
-      if (body) ex.visitChildren(body, inner);
+      for (const c of node.namedChildren) if (c?.type === 'annotation') scalaAnnotation(ex, c, inner);
+      if (!body) return;
+      if (body.type === 'enum_body') {
+        for (const group of body.namedChildren) {
+          if (group?.type !== 'enum_case_definitions') {
+            if (group) ex.visit(ex, group, inner);
+            continue;
+          }
+          for (const c of group.namedChildren) {
+            const cn = c?.childForFieldName('name');
+            if (c && cn) ex.addSymbol({ name: cn.text, kind: 'constant', node: c, scope: inner, exported: inner.exported });
+          }
+        }
+        return;
+      }
+      ex.visitChildren(body, inner);
       return;
     }
     case 'function_definition':
@@ -532,27 +663,41 @@ export function visitScala(ex: Ex, node: Node, scope: Scope): void {
       return;
     }
     case 'call_expression': {
-      const f = node.childForFieldName('function');
+      let f = node.childForFieldName('function');
+      // `foo[Int](x)`
+      if (f?.type === 'generic_function') f = f.childForFieldName('function');
       if (f?.type === 'identifier') {
         const name = ex.dealias(f.text);
-        ex.addRef(scope, name, isUpperStart(name) ? 'new' : 'call', f);
+        ex.noteCall(node, ex.addRef(scope, name, isUpperStart(name) ? 'new' : 'call', f));
       } else if (f?.type === 'field_expression') {
         const n = f.childForFieldName('field');
         const v = f.childForFieldName('value');
-        if (n) ex.addRef(scope, n.text, 'call', n, v?.text, ex.receiverHint(v?.text, scope));
-        if (v) ex.visit(ex, v, scope);
+        const ref = n ? ex.addRef(scope, n.text, 'call', n, v?.text, ex.receiverHint(v?.text, scope)) : undefined;
+        ex.noteCall(node, ref);
+        if (v) {
+          ex.visit(ex, v, scope);
+          ex.chainHint(ref, v);
+        }
       } else if (f) ex.visit(ex, f, scope);
       const args = node.childForFieldName('arguments');
       if (args) ex.visitChildren(args, scope);
       return;
     }
+    case 'field_expression':
+      // `obj.field`, `this.x = v`, or a parameterless method (`xs.size`): a read either way
+      ex.memberRef(scope, node, node.childForFieldName('field'), node.childForFieldName('value'));
+      return;
     case 'instance_expression': {
       const ty = node.namedChildren[0];
       const name = ty ? baseTypeName(ty.text) : undefined;
-      if (ty && name) ex.addRef(scope, name, 'new', ty);
-      for (const c of node.namedChildren.slice(1)) if (c) ex.visit(ex, c, scope);
+      if (ty && name) ex.noteCall(node, ex.addRef(scope, name, 'new', ty));
+      // anonymous class bodies hold locals, not members of the enclosing type
+      for (const c of node.namedChildren.slice(1)) if (c) ex.visit(ex, c, c.type === 'template_body' ? { ...scope, local: true } : scope);
       return;
     }
+    case 'annotation':
+      scalaAnnotation(ex, node, scope);
+      return;
     case 'comment':
     case 'string':
     case 'identifier':

@@ -2,15 +2,19 @@
 // opened in Kiro IDE or Kiro CLI, and nothing is written into projects (the index lives in the user cache dir).
 //
 // Files (all under ~/.kiro unless noted; KIRO_HOME / KOPT_KIRO_HOME relocate it):
-//   settings/mcp.json        mcpServers.kopt = { command: "kopt", args: ["mcp"], autoApprove: read-only tools } (merge)
+//   ~/.kopt/bin/kopt[.cmd]   private launcher with the absolute Node + kopt paths; every hook runs it (see command.ts)
+//   settings/mcp.json        mcpServers.kopt = { command: <abs node>, args: [<abs bin.js>, "mcp"], autoApprove: read-only
+//                            tools } (merge: user fields such as env, disabled, autoApprove are kept, even with --force)
 //   hooks/kopt.json          v1 hooks: IDE 1.x and CLI V3 (global hooks)
 //   agents/kopt.json         CLI 2.x agent with embedded object-form hooks + includeMcpJson, set as chat.defaultAgent
 //                            in settings/cli.json (only when unset, or with --force)
 //   agents/kopt-explorer.json  read-only exploration sub-agent on a cheaper model
 //   steering/kopt.md, kopt-specs.md  global steering
-//   settings/kiroignore      generic token-sink patterns (marked block, merged)
+//   settings/kiroignore      build artifacts nobody edits: minified bundles, source maps (marked block, merged)
 //   <IDE user settings.json> kiroAgent.agentIgnoreFiles += ".kiroignore" (IDE only honours workspace .kiroignore then)
 // IDE 0.x has no global hooks: the MCP server writes workspace legacy hooks itself (see legacy.ts).
+// Kiro never runs kopt from the npx cache (npm purges it): when the global npm install is skipped or fails, setup
+// installs a private copy in ~/.kopt/runtime, and refuses to write any configuration if that fails too.
 
 import { spawnSync } from 'node:child_process';
 import { cpSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, realpathSync, rmSync, writeFileSync } from 'node:fs';
@@ -18,10 +22,12 @@ import { tmpdir } from 'node:os';
 import { join, sep } from 'node:path';
 import { pathFor, userDirFor } from '../core/config.js';
 import { packageRoot } from '../hooks/spawn.js';
-import { binPath, hookCommandLine, resolveKoptCommand, type KoptCommand } from './command.js';
+import { mkdirPrivate, tightenDir } from '../telemetry/fsutil.js';
+import { binPath, hookCommandLine, isTransientPath, launcherPath, launcherScript, launcherShell, resolveKoptCommand, type KoptCommand } from './command.js';
 import { describeSurfaces, detectSurfaces, hookPlan, writeSurfacesCache, type HookPlan, type SurfaceChoice, type Surfaces, type VersionRunner } from './detect.js';
 import { ensureArrayValue } from './jsonc.js';
 import { kiroignoreBlock, mergeKiroignore, type KiroignoreSuggestion } from './kiroignore.js';
+import { forgetLegacyWorkspace, legacyWorkspaces, removeLegacyWorkspaceHooks } from './legacy.js';
 import { hostEnv, isNpxCachePath, kiroCliSettingsPath, kiroHomeDir, kiroUserSettingsPath, type HostEnv } from './paths.js';
 import { deepEqual, parseJsonObject, Plan, readState, readText, writeState, type InstallResult, type SetupState } from './plan.js';
 
@@ -29,16 +35,27 @@ export const PACKAGE_NAME = 'kiro-optimizer';
 export const DEFAULT_INSTALL_SPEC = 'github:dorian-richard/kiro-optimizer';
 /** Read-only tools: auto-approved. kopt_run executes commands and keeps Kiro's approval prompt. */
 export const AUTO_APPROVE = ['kopt_find', 'kopt_read', 'kopt_outline', 'kopt_refs', 'kopt_expand'];
+/**
+ * MCP timeouts of the kopt entry, in ms (added when missing; a user's values are kept). Kiro CLI 2.x cuts every MCP
+ * request at 120 s by default (`timeout`, per request), Kiro CLI V3 too (`requestTimeout`; its `timeout` is the
+ * start-up handshake): a Maven or Gradle run through kopt_run (default limit 600 s) would fail half-way. Kiro IDE reads
+ * `timeout` and ignores the other key.
+ */
+export const MCP_TIMEOUTS = { timeout: 900_000, requestTimeout: 900_000 } as const;
 export const DEFAULT_EXPLORER_MODEL = 'claude-haiku-4.5';
 export const IGNORE_SETTING = 'kiroAgent.agentIgnoreFiles';
 export const DEFAULT_AGENT_SETTING = 'chat.defaultAgent';
 
-/** Patterns safe in every repository, for the user-wide ~/.kiro/settings/kiroignore. */
+/**
+ * Patterns for the user-wide ~/.kiro/settings/kiroignore. Kiro IDE denies reads AND writes of matched files with
+ * every tool, and no project can re-include them (each ignore file is its own evaluator; the first match denies). So
+ * only generated build artifacts that nobody edits by hand belong here. Lockfiles and test snapshots, which an agent
+ * may have to read or rewrite (a merge conflict, a snapshot update), are per-project suggestions (`kopt init`).
+ */
 export const GENERIC_IGNORE: KiroignoreSuggestion = (() => {
-  const patterns = ['package-lock.json', 'yarn.lock', 'pnpm-lock.yaml', 'Cargo.lock', 'poetry.lock', 'composer.lock', 'Gemfile.lock', 'go.sum',
-    '*.min.js', '*.min.css', '*.js.map', '*.css.map', '__snapshots__/', '*.snap'];
+  const patterns = ['*.min.js', '*.min.mjs', '*.min.cjs', '*.min.css', '*.js.map', '*.mjs.map', '*.cjs.map', '*.css.map', '*.bundle.js', '*.chunk.js', '*.chunk.css'];
   const reasons: Record<string, string> = {};
-  for (const p of patterns) reasons[p] = p.includes('map') ? 'source maps' : p.includes('min') ? 'minified code' : p.includes('snap') ? 'test snapshots' : 'lockfile';
+  for (const p of patterns) reasons[p] = p.endsWith('.map') ? 'source maps' : p.includes('.min.') ? 'minified code' : 'bundled build output';
   return { patterns, reasons };
 })();
 
@@ -68,8 +85,8 @@ export interface McpMergeOptions {
 
 /**
  * Merge the `kopt` server entry into an mcp.json. User fields (env, disabled, disabledTools, timeouts, autoApprove)
- * and key order are kept; only how the server is started (command, args) is refreshed. Invalid JSON is never
- * overwritten.
+ * and key order are kept, with or without --force: only how the server is started (command, args) is refreshed, and
+ * autoApprove is added when missing. Invalid JSON is never overwritten.
  */
 export function mergeMcpServer(plan: Plan, path: string, desired: Record<string, unknown>, o: McpMergeOptions = {}): void {
   let doc: Record<string, any>;
@@ -82,8 +99,9 @@ export function mergeMcpServer(plan: Plan, path: string, desired: Record<string,
   }
   const servers: Record<string, any> = doc.mcpServers && typeof doc.mcpServers === 'object' && !Array.isArray(doc.mcpServers) ? doc.mcpServers : {};
   const current = servers.kopt;
+  void o.force; // --force must not drop the user's env / disabled / autoApprove edits
   let next: Record<string, unknown>;
-  if (!current || typeof current !== 'object' || o.force) {
+  if (!current || typeof current !== 'object' || Array.isArray(current)) {
     next = desired;
   } else {
     const updates: Record<string, unknown> = { command: desired.command, args: desired.args };
@@ -91,6 +109,7 @@ export function mergeMcpServer(plan: Plan, path: string, desired: Record<string,
     for (const [k, v] of Object.entries(current)) next[k] = k in updates ? updates[k] : v;
     for (const [k, v] of Object.entries(updates)) if (!(k in next)) next[k] = v;
     if (!Array.isArray(current.autoApprove)) next.autoApprove = desired.autoApprove;
+    for (const k of Object.keys(MCP_TIMEOUTS)) if (current[k] === undefined && desired[k] !== undefined) next[k] = desired[k];
   }
   if (deepEqual(current, next)) {
     plan.skipped.push(path);
@@ -127,12 +146,12 @@ function creatablePaths(h: HostEnv): string[] {
 
 /** Write every user-level Kiro file kopt needs (see the header). */
 export function writeUserConfig(o: UserConfigOptions): void {
-  const { h, cmd, plan, hooks, state } = o;
+  const { h, plan, state } = o;
   const kh = kiroHomeDir(h);
   const j = (...p: string[]) => join(kh, ...p);
   const missingBefore = creatablePaths(h).filter((p) => !existsSync(p));
   try {
-    writeUserFiles(o, kh, j);
+    writeUserFiles(o, j);
   } finally {
     if (!plan.dryRun) {
       const created = missingBefore.filter((p) => existsSync(p));
@@ -141,11 +160,25 @@ export function writeUserConfig(o: UserConfigOptions): void {
   }
 }
 
-function writeUserFiles(o: UserConfigOptions, kh: string, j: (...p: string[]) => string): void {
-  const { h, cmd, plan, hooks, state } = o;
+/**
+ * The private launcher hooks run (command.ts). Returns the command to write into hook files: on Windows a launcher
+ * path with spaces becomes its 8.3 short form once the file exists.
+ */
+export function writeLauncher(plan: Plan, cmd: KoptCommand, platform: NodeJS.Platform, env: NodeJS.ProcessEnv = process.env): KoptCommand {
+  if (cmd.kind !== 'launcher' || !cmd.launcher || !cmd.node || !cmd.bin) return cmd;
+  if (!plan.dryRun) mkdirPrivate(pathFor(platform).dirname(cmd.launcher));
+  plan.own(cmd.launcher, launcherScript(cmd.node, cmd.bin, platform, env), 0o755);
+  return { ...cmd, shell: launcherShell(cmd.launcher, platform) };
+}
+
+function writeUserFiles(o: UserConfigOptions, j: (...p: string[]) => string): void {
+  const { h, plan, hooks, state } = o;
+
+  // 0. launcher: every hook runs it by absolute path, so nothing depends on the PATH Kiro was started with
+  const cmd = writeLauncher(plan, o.cmd, h.platform, h.env);
 
   // 1. MCP server (no --root: the server finds the project from MCP roots / its cwd)
-  mergeMcpServer(plan, j('settings', 'mcp.json'), { ...cmd.mcp, autoApprove: [...AUTO_APPROVE] }, { force: plan.force });
+  mergeMcpServer(plan, j('settings', 'mcp.json'), { ...cmd.mcp, autoApprove: [...AUTO_APPROVE], ...MCP_TIMEOUTS }, { force: plan.force });
 
   // 2. v1 hooks (IDE 1.x, CLI V3)
   if (hooks.globalV1) {
@@ -353,6 +386,52 @@ export function globalInstall(o: { want?: boolean; spec?: string; npm?: NpmRunne
   }
 }
 
+/** Package directory of `kiro-optimizer` installed under an npm global prefix. */
+function prefixPackageDir(prefix: string, platform: NodeJS.Platform): string {
+  const p = pathFor(platform);
+  return platform === 'win32' ? p.join(prefix, 'node_modules', PACKAGE_NAME) : p.join(prefix, 'lib', 'node_modules', PACKAGE_NAME);
+}
+
+/**
+ * A private copy of kopt (`npm install -g --prefix <prefix> <tarball>`, default ~/.kopt/runtime), for when the
+ * running copy is the npx cache and the global install was skipped (--no-global) or failed (EACCES on a system
+ * Node, for example): Kiro must never run kopt from the npx cache, which npm purges. The npx copy is packed as-is,
+ * and its dependencies come from npm's cache, which npx has just filled.
+ */
+export function privateInstall(o: { npm?: NpmRunner; pkgRoot?: string; prefix: string; dryRun?: boolean; platform?: NodeJS.Platform }): GlobalInstall {
+  const pkgRoot = o.pkgRoot ?? packageRoot();
+  const platform = o.platform ?? process.platform;
+  const packageDir = prefixPackageDir(o.prefix, platform);
+  const bin = pathFor(platform).join(packageDir, 'dist', 'bin.js');
+  if (o.dryRun) return { action: 'skipped', detail: `would install a private copy of kopt in ${o.prefix}`, packageDir, bin };
+  if (!existsSync(join(pkgRoot, 'dist', 'bin.js')) || !existsSync(join(pkgRoot, 'package.json'))) {
+    return { action: 'failed', detail: `cannot copy kopt from ${pkgRoot}: it is not built` };
+  }
+  const npm = o.npm ?? defaultNpmRunner();
+  let packDir: string | undefined;
+  try {
+    const packed = packForGlobalInstall(npm, pkgRoot, true);
+    packDir = packed.dir;
+    if (!packed.tarball) return { action: 'failed', detail: packed.error ?? `npm pack ${pkgRoot} failed` };
+    mkdirPrivate(o.prefix);
+    const r = npm(['install', '-g', '--prefix', o.prefix, packed.tarball, '--no-fund', '--no-audit', '--prefer-offline']);
+    if (r.status !== 0) {
+      const tail = (r.stderr || r.stdout).trim().split(/\r?\n/).slice(-3).join(' | ');
+      return { action: 'failed', detail: `private install in ${o.prefix} failed (${tail || `exit ${r.status}`})` };
+    }
+    if (!existsSync(bin)) return { action: 'failed', detail: `private install in ${o.prefix} finished but ${bin} is missing` };
+    return { action: 'installed', detail: `installed a private copy of kopt in ${o.prefix} (Kiro runs it by absolute path)`, packageDir, bin };
+  } finally {
+    if (packDir) {
+      try {
+        rmSync(packDir, { recursive: true, force: true });
+      } catch {
+        // temp dir: best effort
+      }
+    }
+  }
+}
+
 export interface SetupOptions {
   /** Install for these surfaces whatever is detected. */
   surface?: SurfaceChoice;
@@ -377,34 +456,70 @@ export interface SetupResult extends InstallResult {
   hooks: HookPlan;
   command: KoptCommand;
   install: GlobalInstall;
+  /** Set when setup wrote nothing because Kiro would have depended on a copy npm deletes (the npx cache). */
+  refused?: string;
+}
+
+/** `KOPT_HOOK_COMMAND`: `shim` (bare kopt on PATH), `node` (no launcher), else the launcher (default). */
+export function commandForm(env: NodeJS.ProcessEnv): 'shim' | 'node' | 'launcher' {
+  return env.KOPT_HOOK_COMMAND === 'node' || env.KOPT_HOOK_COMMAND === 'shim' ? env.KOPT_HOOK_COMMAND : 'launcher';
+}
+
+/** The command Kiro will run for a kopt copy (`bin`): launcher by default, see command.ts. */
+export function userCommand(h: HostEnv, bin: string | undefined, nodePath?: string): KoptCommand {
+  return resolveKoptCommand({ h, bin, nodePath, force: commandForm(h.env), launcher: launcherPath(h) });
 }
 
 export async function setupUser(o: SetupOptions = {}): Promise<SetupResult> {
   const h = o.h ?? hostEnv();
   const userDir = userDirFor({ platform: h.platform, env: h.env, home: h.home });
-  const install: GlobalInstall = o.noInstallStep
+  let install: GlobalInstall = o.noInstallStep
     ? { action: 'skipped', detail: 'no global install step' }
     : globalInstall({ want: o.global, spec: o.installSpec, npm: o.npm, pkgRoot: o.pkgRoot, dryRun: o.dryRun });
   const surfaces = detectSurfaces(h, { surface: o.surface, run: o.runVersion });
   const forced = o.surface ?? (surfaces.ide || surfaces.cli ? undefined : 'all');
   const hooks = hookPlan(surfaces, forced);
-  const bin = h.env.KOPT_CLI || install.bin;
-  const force = h.env.KOPT_HOOK_COMMAND === 'node' || h.env.KOPT_HOOK_COMMAND === 'shim' ? h.env.KOPT_HOOK_COMMAND : undefined;
-  const command = o.command ?? resolveKoptCommand({ h, bin, force });
+  let bin = h.env.KOPT_CLI || install.bin || binPath(o.pkgRoot ?? packageRoot(), h.platform);
+  if (!o.command && isTransientPath(bin)) {
+    // never point Kiro into the npx cache (npm purges it): a private copy in ~/.kopt/runtime instead
+    const priv = privateInstall({ npm: o.npm, pkgRoot: o.pkgRoot, prefix: pathFor(h.platform).join(userDir, 'runtime'), dryRun: o.dryRun, platform: h.platform });
+    if (priv.bin && (priv.action === 'installed' || o.dryRun)) {
+      bin = priv.bin;
+      install = { action: install.action === 'failed' ? 'failed' : priv.action, detail: install.action === 'skipped' ? priv.detail : `${install.detail}; ${priv.detail}`, packageDir: priv.packageDir, bin };
+    } else {
+      const refused = `kopt runs from the npx cache, which npm deletes: nothing was written. ${install.detail}; ${priv.detail}. Fix npm (for example \`npm config set prefix ~/.npm-global\`), or install kopt with \`npm pack github:dorian-richard/kiro-optimizer\` then \`npm install -g ./kiro-optimizer-*.tgz\`, and run kopt setup again.`;
+      const command = userCommand(h, bin);
+      return { written: [], skipped: [], notes: [refused], removed: [], surfaces, hooks, command, install: { ...install, action: 'failed' }, refused };
+    }
+  }
+  const command = o.command ?? userCommand(h, bin);
   const plan = new Plan(!!o.dryRun, !!o.force, userDir);
   const state = readState(userDir);
   writeUserConfig({ h, cmd: command, plan, hooks, surfaces, state, forced, explorerModel: o.explorerModel });
+  if (!o.dryRun && !hooks.legacyWorkspace) {
+    // an IDE upgraded from 0.x to 1.x runs the global hooks: drop the workspace prompt hooks kopt wrote for 0.x
+    const env = h.env.KOPT_LEGACY_WORKSPACE_HOOKS?.toLowerCase();
+    if (!['1', 'on', 'true', 'yes'].includes(env ?? '')) {
+      for (const ws of Object.keys(legacyWorkspaces(userDir))) {
+        plan.removed.push(...removeLegacyWorkspaceHooks(ws));
+        forgetLegacyWorkspace(userDir, ws);
+      }
+    }
+  }
   plan.finish();
   if (!o.dryRun) {
     writeState(userDir, { ...state, version: readPackageVersion(), at: Date.now() });
     writeSurfacesCache(userDir, surfaces);
+    tightenDir(userDir);
   }
   if (!surfaces.ide && !surfaces.cli) plan.notes.push(`${describeSurfaces(surfaces)}: configured for every Kiro surface.`);
   if (hooks.legacyWorkspace) {
     plan.notes.push(`Kiro IDE ${surfaces.ide!.version} (0.x) has no global hooks: the kopt MCP server adds a prompt-pointer hook to each workspace it serves (excluded from git). The full session governor needs Kiro IDE 1.x.`);
   }
-  if (command.kind === 'node') {
-    plan.notes.push(`kopt is not on PATH (or its node is older than 22.13): Kiro will run ${command.shell}.`);
+  if (command.kind === 'shim') {
+    plan.notes.push('KOPT_HOOK_COMMAND=shim: Kiro runs the bare `kopt` command, which must be on the PATH Kiro starts with (not the case for a Kiro IDE started from the Dock or the Start menu with nvm, volta or fnm).');
+  } else if (command.node && command.bin) {
+    plan.notes.push(`Kiro runs kopt with absolute paths (Node ${command.node}, kopt ${command.bin}${command.launcher ? `, hooks through ${command.launcher}` : ''}): no PATH needed. Re-run kopt setup after upgrading or moving Node.`);
   }
   if (o.dryRun) plan.notes.unshift('dry run: nothing was written.');
   return { ...plan.result(), surfaces, hooks, command, install };

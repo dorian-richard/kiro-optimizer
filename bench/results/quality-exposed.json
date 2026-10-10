@@ -1,0 +1,251 @@
+{
+  "repo": "exposed",
+  "language": "kotlin",
+  "repoRoot": "bench/repos/exposed",
+  "headCommit": "84361204b6639cad5696506a26595c97afac3531",
+  "date": "2026-10-09T22:38:17.136Z",
+  "index": {
+    "built": true,
+    "durationMs": 2057,
+    "files": 864,
+    "symbols": 12962,
+    "refs": 78309,
+    "path": "<index-dir>/.kopt-exposed/index.db"
+  },
+  "files": {
+    "indexed": 864,
+    "skipped": 2,
+    "skippedByReason": {
+      "minified": 2
+    },
+    "indexedByLang": {
+      "javascript": 4,
+      "kotlin": 860
+    }
+  },
+  "langs": [
+    {
+      "lang": "kotlin",
+      "files": 860,
+      "lines": 141939,
+      "symbols": 12925,
+      "symbolsPerKloc": 91.06,
+      "byKind": {
+        "method": {
+          "count": 5981,
+          "perKloc": 42.14
+        },
+        "property": {
+          "count": 3684,
+          "perKloc": 25.95
+        },
+        "class": {
+          "count": 1871,
+          "perKloc": 13.18
+        },
+        "function": {
+          "count": 955,
+          "perKloc": 6.73
+        },
+        "constant": {
+          "count": 351,
+          "perKloc": 2.47
+        },
+        "interface": {
+          "count": 70,
+          "perKloc": 0.49
+        },
+        "constructor": {
+          "count": 13,
+          "perKloc": 0.09
+        }
+      },
+      "refs": 78050,
+      "refsResolved": 39809,
+      "resolvedRate": 0.51,
+      "refsWithCandidate": 54636,
+      "resolvedOfCandidates": 0.7286,
+      "refsByKind": {
+        "call": {
+          "total": 40120,
+          "resolved": 19665
+        },
+        "read": {
+          "total": 12602,
+          "resolved": 5266
+        },
+        "type_ref": {
+          "total": 11488,
+          "resolved": 5268
+        },
+        "import": {
+          "total": 8472,
+          "resolved": 5369
+        },
+        "new": {
+          "total": 3431,
+          "resolved": 2553
+        },
+        "inherit": {
+          "total": 1376,
+          "resolved": 1341
+        },
+        "write": {
+          "total": 296,
+          "resolved": 141
+        },
+        "implement": {
+          "total": 265,
+          "resolved": 206
+        }
+      },
+      "parse": {
+        "sampledFiles": 860,
+        "sampledLines": 142799,
+        "filesWithErrors": 10,
+        "errorNodes": 27,
+        "missingNodes": 7,
+        "errorFileRate": 0.0116,
+        "errorsPerKloc": 0.238,
+        "parseFailures": 0,
+        "worst": [
+          {
+            "path": "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/statements/jdbc/JdbcDatabaseMetadataImpl.kt",
+            "errors": 15,
+            "firstErrorLine": 279
+          },
+          {
+            "path": "exposed-maven-plugin/src/test/kotlin/org/jetbrains/exposed/v1/maven/plugin/integrations/helpers/MavenProjectGeneration.kt",
+            "errors": 7,
+            "firstErrorLine": 66
+          },
+          {
+            "path": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/OpBuilder.kt",
+            "errors": 2,
+            "firstErrorLine": 114
+          },
+          {
+            "path": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/Table.kt",
+            "errors": 2,
+            "firstErrorLine": 51
+          },
+          {
+            "path": "exposed-maven-plugin/src/test/resources/template/sourceFiles/Cities.kt",
+            "errors": 2,
+            "firstErrorLine": 1
+          },
+          {
+            "path": "exposed-maven-plugin/src/test/resources/template/sourceFiles/Users.kt",
+            "errors": 2,
+            "firstErrorLine": 1
+          },
+          {
+            "path": "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityClass.kt",
+            "errors": 1,
+            "firstErrorLine": 922
+          },
+          {
+            "path": "exposed-r2dbc-tests/src/test/kotlin/org/jetbrains/exposed/v1/r2dbc/sql/tests/shared/TransactionCoroutineContextTests.kt",
+            "errors": 1,
+            "firstErrorLine": 29
+          }
+        ]
+      },
+      "precision": {
+        "sampled": 30,
+        "nameOk": 30,
+        "startOk": 30,
+        "endOk": 29,
+        "signatureOk": 30,
+        "allOk": 29,
+        "rate": 0.9667,
+        "failures": [
+          {
+            "id": 7024,
+            "path": "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/statements/jdbc/JdbcDatabaseMetadataImpl.kt",
+            "name": "JdbcDatabaseMetadataImpl",
+            "kind": "class",
+            "startLine": 25,
+            "endLine": 305,
+            "checks": {
+              "name": true,
+              "start": true,
+              "end": false,
+              "signature": true
+            },
+            "ok": false,
+            "reasons": [
+              "unbalanced brackets in the declaration (round 0, square 0, curly 5)"
+            ],
+            "firstLine": "@Suppress(\"LargeClass\")",
+            "lastLine": "} else {",
+            "signature": "@Suppress(\"LargeClass\") class JdbcDatabaseMetadataImpl(database: String, val metadata: DatabaseMetaData) : JdbcExposedDatabaseMetadata(database)"
+          }
+        ]
+      }
+    },
+    {
+      "lang": "javascript",
+      "files": 4,
+      "lines": 592,
+      "symbols": 37,
+      "symbolsPerKloc": 62.5,
+      "byKind": {
+        "function": {
+          "count": 30,
+          "perKloc": 50.68
+        },
+        "constant": {
+          "count": 7,
+          "perKloc": 11.82
+        }
+      },
+      "refs": 259,
+      "refsResolved": 29,
+      "resolvedRate": 0.112,
+      "refsWithCandidate": 85,
+      "resolvedOfCandidates": 0.3412,
+      "refsByKind": {
+        "call": {
+          "total": 207,
+          "resolved": 29
+        },
+        "read": {
+          "total": 40,
+          "resolved": 0
+        },
+        "write": {
+          "total": 12,
+          "resolved": 0
+        }
+      },
+      "parse": {
+        "sampledFiles": 0,
+        "sampledLines": 0,
+        "filesWithErrors": 0,
+        "errorNodes": 0,
+        "missingNodes": 0,
+        "errorFileRate": 0,
+        "errorsPerKloc": 0,
+        "parseFailures": 0,
+        "worst": []
+      },
+      "precision": {
+        "sampled": 0,
+        "nameOk": 0,
+        "startOk": 0,
+        "endOk": 0,
+        "signatureOk": 0,
+        "allOk": 0,
+        "rate": 0,
+        "failures": []
+      }
+    }
+  ],
+  "settings": {
+    "parseSamplePerLang": 1000,
+    "precisionSamplePerLang": 30,
+    "seed": "exposed"
+  },
+  "durationMs": 1654
+}

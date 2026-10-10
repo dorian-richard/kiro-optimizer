@@ -10,12 +10,25 @@ export interface Budgets {
   find: number;
   /** kopt_find in `pack` mode (task-level context pack). */
   pack: number;
+  /** kopt_read of a range, or of anything when the call passes maxTokens. */
   read: number;
+  /**
+   * kopt_read of a named function or method (#handle, Class.method, path:line inside it) without maxTokens: the
+   * whole body up to this size in one call (a skeleton card would cost the agent a second call).
+   */
+  readSymbol: number;
+  /** kopt_read of a file or a type (class, struct...) without maxTokens: verbatim up to this size, else a skeleton. */
+  readFile: number;
   outline: number;
   refs: number;
   run: number;
   expand: number;
-  /** UserPromptSubmit front-load (pointers only). 0 disables. */
+  /**
+   * UserPromptSubmit prompt pointers (#handles for the prompt), in tokens. 0 (the default) disables them: on the
+   * 175 bench questions they fired on 55% of the prompts (~126 tokens each, re-billed on every later request) and
+   * only 21% of the pointers named an expected symbol (3 of 9 fired prompts on the agent A/B tasks); the agent's
+   * first kopt_find gives the same pointers, ranked for its own query.
+   */
   frontload: number;
 }
 
@@ -43,9 +56,18 @@ export interface KoptConfig {
   governor: {
     /** Hard stop (exit 2) after this many tool calls in one Kiro session. 0 disables. */
     maxToolCallsPerSession: number;
-    /** Deny whole-file reads (no offset/limit) of files above this many lines. 0 disables. */
+    /**
+     * Whole-file reads: a read with no range, or a range wider than this many lines, counts as whole. 0 disables the
+     * big-read rule.
+     */
     bigFileLines: number;
-    /** Deny verbose test/build shell commands and point to kopt_run. */
+    /**
+     * Deny (once per file) a whole-file read of a file estimated above this many tokens, pointing to its outline or
+     * a line range. A block costs one model request, so only files whose resident cost clearly exceeds it are
+     * blocked. 0 disables the big-read rule.
+     */
+    bigFileTokens: number;
+    /** Deny (once per command) test/build shell commands with predictably long output and point to kopt_run. */
     enforceRunForVerbose: boolean;
     /** Deny re-running an identical test/build command when no file changed since. */
     blockDuplicateRuns: boolean;
@@ -186,11 +208,12 @@ export function defaultConfig(root: string): KoptConfig {
     userDir: userDirFor(),
     exclude: [...DEFAULT_EXCLUDES],
     maxFileBytes: 1_000_000,
-    budgets: { find: 700, pack: 2500, read: 2000, outline: 1200, refs: 900, run: 900, expand: 1500, frontload: 350 },
+    budgets: { find: 700, pack: 2500, read: 3000, readSymbol: 6000, readFile: 4000, outline: 1200, refs: 900, run: 900, expand: 1500, frontload: 0 },
     dedup: { enabled: true, windowCalls: 40, windowMinutes: 30 },
     governor: {
       maxToolCallsPerSession: 200,
       bigFileLines: 800,
+      bigFileTokens: 8000,
       enforceRunForVerbose: true,
       blockDuplicateRuns: true,
     },
@@ -214,11 +237,20 @@ function merge<T>(base: T, over: DeepPartial<T> | undefined): T {
   return out;
 }
 
+export interface LoadConfigOptions {
+  /**
+   * Where warnings go (an invalid config file is skipped with a warning). Default: stderr. Hooks pass a sink that
+   * writes to <userDir>/hook-errors.log: any output on a hook's allow path intercepts the tool call in Kiro.
+   */
+  onWarning?: (message: string) => void;
+}
+
 /**
  * Load config: defaults < ~/.kopt/config.json < <dataDir>/config.json < <root>/kopt.config.json < env.
  * A relative `dataDir` in a config file is resolved against the repo root.
  */
-export function loadConfig(root: string = process.cwd()): KoptConfig {
+export function loadConfig(root: string = process.cwd(), opts: LoadConfigOptions = {}): KoptConfig {
+  const warn = opts.onWarning ?? ((m: string) => process.stderr.write(m + '\n'));
   let cfg = defaultConfig(root);
   const candidates = [join(cfg.userDir, 'config.json'), join(cfg.dataDir, 'config.json'), join(cfg.root, 'kopt.config.json')];
   for (const file of [...new Set(candidates)]) {
@@ -229,10 +261,14 @@ export function loadConfig(root: string = process.cwd()): KoptConfig {
       else if (over && 'dataDir' in over) delete over.dataDir;
       cfg = merge(cfg, over);
     } catch (err) {
-      process.stderr.write(`kopt: ignoring invalid config ${file}: ${(err as Error).message}\n`);
+      warn(`kopt: ignoring invalid config ${file}: ${(err as Error).message}`);
     }
   }
+  // the environment wins over the config files (a kopt.config.json committed in a repository cannot move the
+  // per-user dir away from KOPT_HOME); KOPT_TELEMETRY=0 turns the local usage log off, =1 forces it on
+  if (process.env.KOPT_HOME) cfg.userDir = process.env.KOPT_HOME;
   if (process.env.KOPT_TELEMETRY === '0') cfg.telemetry.enabled = false;
+  else if (process.env.KOPT_TELEMETRY === '1') cfg.telemetry.enabled = true;
   const legacy = process.env.KOPT_LEGACY_WORKSPACE_HOOKS?.toLowerCase();
   if (legacy) {
     const mode = ['1', 'on', 'true', 'yes'].includes(legacy) ? 'on' : ['0', 'off', 'false', 'no'].includes(legacy) ? 'off' : 'auto';

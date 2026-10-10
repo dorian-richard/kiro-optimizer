@@ -1,0 +1,101 @@
+{
+  "label": "codegraph",
+  "tool": "codegraph",
+  "package": "@colbymchenry/codegraph",
+  "version": "1.6.2",
+  "mode": "default",
+  "repo": {
+    "name": "gitea",
+    "url": "https://github.com/go-gitea/gitea.git",
+    "tag": "v28.1.0",
+    "commit": "4ebd5e319b6a9e629bfd7a04292a6fe85b08dee9",
+    "language": "go",
+    "path": "bench/repos/gitea"
+  },
+  "headCommit": "4ebd5e319b6a9e629bfd7a04292a6fe85b08dee9",
+  "commitMatchesTasks": true,
+  "date": "2026-10-09T13:52:05.482Z",
+  "image": "kopt-bench/codegraph:1.6.2",
+  "imageId": "sha256:db8f2e822e3863b14f3c037bc692fb20915bf2e48a3083248d72d3938a716f5a",
+  "engine": "docker",
+  "limits": "memory=6g cpus=8",
+  "cgroupMemory": {
+    "maxBytes": 6442450944,
+    "peakBytes": 2994053120,
+    "oomKills": 0
+  },
+  "container": {
+    "node": "v22.23.3",
+    "arch": "arm64",
+    "platform": "linux",
+    "cpus": 10,
+    "memBytes": 8214851584,
+    "network": "none"
+  },
+  "primaryTool": "codegraph_explore",
+  "toolArgsExample": {
+    "query": "<input>"
+  },
+  "serverCommand": {
+    "command": "codegraph",
+    "args": [
+      "serve",
+      "--mcp"
+    ]
+  },
+  "oneSessionPerTask": true,
+  "indexOk": true,
+  "indexMs": 12108,
+  "indexSteps": [
+    {
+      "command": "codegraph init --yes /work/gitea",
+      "ms": 12108,
+      "exit": 0,
+      "signal": null,
+      "oomKills": 0
+    }
+  ],
+  "copyMs": 14701,
+  "indexDirs": [
+    "<repo>/.codegraph"
+  ],
+  "indexSizeBytes": 176001253,
+  "modelBytes": 0,
+  "indexStatus": "CodeGraph Status\n\nProject: /work/gitea\n\nIndex Statistics:\n  Files:     3,630\n  Nodes:     53,244\n  Edges:     182,264\n  DB Size:   167.85 MB\n  Backend:   node:sqlite — built-in (full WAL)\n  Journal:   wal\n\nNodes by Kind:\n  import          24,857\n  function        12,610\n  method          5,022\n  file            3,434\n  constant        2,362\n  struct          2,237\n  route           842\n  variable        627\n  property        581\n  type_alias      478\n  interface       152\n  component       23\n  class           19\n\nFiles by Language:\n  go              3,139\n  typescript      267\n  yaml            196\n  vue             23\n  liquid          3\n  nix             1\n  xml             1\n\n✓ Index is up to date",
+  "surface": {
+    "serverInfo": {
+      "name": "codegraph",
+      "version": "1.6.2"
+    },
+    "toolCount": 1,
+    "toolNames": [
+      "codegraph_explore"
+    ],
+    "toolsChars": 1725,
+    "toolsEstTokens": 575,
+    "instructionsChars": 6718,
+    "instructionsEstTokens": 2240,
+    "primaryToolListed": true,
+    "file": "codegraph.surface.json"
+  },
+  "inputs": {
+    "search": {
+      "file": "codegraph-gitea.jsonl",
+      "tasks": 12,
+      "failures": 0,
+      "queryMsMedian": 262,
+      "queryMsP90": 428,
+      "startupMsMedian": 181
+    },
+    "question": {
+      "file": "codegraph-gitea-question.jsonl",
+      "tasks": 12,
+      "failures": 0,
+      "queryMsMedian": 519,
+      "queryMsP90": 711,
+      "startupMsMedian": 185
+    }
+  },
+  "charsPerToken": 3,
+  "errors": []
+}

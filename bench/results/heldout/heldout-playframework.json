@@ -1,0 +1,747 @@
+{
+  "meta": {
+    "label": "heldout-playframework",
+    "repo": {
+      "name": "playframework",
+      "url": "https://github.com/playframework/playframework.git",
+      "tag": "3.0.12",
+      "commit": "316f494b2d1292c250c19685f21189ab077d7229",
+      "language": "scala",
+      "path": "bench/repos/playframework"
+    },
+    "repoRoot": "bench/repos/playframework",
+    "headCommit": "316f494b2d1292c250c19685f21189ab077d7229",
+    "date": "2026-10-09T20:18:25.169Z",
+    "input": "search",
+    "charsPerToken": 3,
+    "strategies": [
+      "native-naive",
+      "native-ranged",
+      "kopt-pack",
+      "kopt-hits+read",
+      "kirograph",
+      "codegraph"
+    ],
+    "grepLimits": {
+      "maxMatches": 100,
+      "maxChars": 10000,
+      "maxLineChars": 250
+    },
+    "readLimits": {
+      "naiveTopFiles": 3,
+      "naiveMaxLines": 2000,
+      "rangedMatches": 4,
+      "rangedContext": 60
+    },
+    "koptBudgets": {
+      "find": 700,
+      "pack": 2500,
+      "read": 3000
+    },
+    "index": {
+      "built": false,
+      "durationMs": 0,
+      "files": 1427,
+      "symbols": 18592,
+      "path": "<index-dir>/.kopt-playframework/index.db"
+    },
+    "notes": [
+      "kirograph: outputs loaded from bench/competitors/results/kirograph-playframework.jsonl",
+      "codegraph: outputs loaded from bench/competitors/results/codegraph-playframework.jsonl"
+    ],
+    "durationMs": 1024
+  },
+  "results": [
+    {
+      "taskId": "ho-pf-explain-gzip",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 32324,
+      "chars": 96969,
+      "toolCalls": 4,
+      "durationMs": 419,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "compress",
+          "chars": 9919,
+          "tokens": 3307
+        },
+        {
+          "tool": "read_file",
+          "args": "web/play-filters-helpers/src/main/scala/play/filters/gzip/GzipFilter.scala",
+          "chars": 14408,
+          "tokens": 4803
+        },
+        {
+          "tool": "read_file",
+          "args": "core/play/src/main/resources/reference.conf",
+          "chars": 35436,
+          "tokens": 11812
+        },
+        {
+          "tool": "read_file",
+          "args": "core/play/src/main/scala/play/api/controllers/Assets.scala",
+          "chars": 37206,
+          "tokens": 12402
+        }
+      ]
+    },
+    {
+      "taskId": "ho-pf-explain-gzip",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 9070,
+      "chars": 27207,
+      "toolCalls": 3,
+      "durationMs": 1,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "compress",
+          "chars": 9919,
+          "tokens": 3307
+        },
+        {
+          "tool": "read_file",
+          "args": "core/play/src/main/scala/play/api/controllers/Assets.scala:464-584",
+          "chars": 4274,
+          "tokens": 1425
+        },
+        {
+          "tool": "read_file",
+          "args": "web/play-filters-helpers/src/main/scala/play/filters/gzip/GzipFilter.scala:1-284",
+          "chars": 13014,
+          "tokens": 4338
+        }
+      ]
+    },
+    {
+      "taskId": "ho-pf-explain-gzip",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 1364,
+      "chars": 4090,
+      "toolCalls": 1,
+      "durationMs": 87,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"gzip filter compress response accept encoding status already encoded size threshold\"",
+          "chars": 4090,
+          "tokens": 1364
+        }
+      ]
+    },
+    {
+      "taskId": "ho-pf-explain-gzip",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 1132,
+      "chars": 3394,
+      "toolCalls": 3,
+      "durationMs": 24,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"gzip filter compress response accept encoding status already encoded size threshold\"",
+          "chars": 2065,
+          "tokens": 689
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#a99",
+          "chars": 1134,
+          "tokens": 378
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#a97",
+          "chars": 195,
+          "tokens": 65
+        }
+      ]
+    },
+    {
+      "taskId": "ho-pf-explain-gzip",
+      "kind": "explain",
+      "strategy": "kirograph",
+      "skipped": "no kirograph result line for this task",
+      "tokens": 0,
+      "chars": 0,
+      "toolCalls": 0,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "web/play-filters-helpers/src/main/scala/play/filters/gzip/GzipFilter.scala"
+        ],
+        "symbolsMissed": [
+          "shouldCompress",
+          "gzipIsAcceptedAndPreferredBy"
+        ],
+        "found": false
+      },
+      "calls": []
+    },
+    {
+      "taskId": "ho-pf-explain-gzip",
+      "kind": "explain",
+      "strategy": "codegraph",
+      "skipped": "no codegraph result line for this task",
+      "tokens": 0,
+      "chars": 0,
+      "toolCalls": 0,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "web/play-filters-helpers/src/main/scala/play/filters/gzip/GzipFilter.scala"
+        ],
+        "symbolsMissed": [
+          "shouldCompress",
+          "gzipIsAcceptedAndPreferredBy"
+        ],
+        "found": false
+      },
+      "calls": []
+    },
+    {
+      "taskId": "ho-pf-locate-csp-header",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 11415,
+      "chars": 34240,
+      "toolCalls": 4,
+      "durationMs": 366,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "web/play-filters-helpers/src/main/scala/play/filters/csp/CSPResultProcessor.scala"
+        ],
+        "symbolsMissed": [
+          "generateHeaders"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "nonce",
+          "chars": 9896,
+          "tokens": 3299
+        },
+        {
+          "tool": "read_file",
+          "args": "documentation/manual/working/commonGuide/filters/CspFilter.md",
+          "chars": 16373,
+          "tokens": 5458
+        },
+        {
+          "tool": "read_file",
+          "args": "web/play-filters-helpers/src/main/scala/play/filters/csp/CSPConfig.scala",
+          "chars": 6050,
+          "tokens": 2017
+        },
+        {
+          "tool": "read_file",
+          "args": "core/play/src/main/scala/views/html/helper/CSPNonce.scala",
+          "chars": 1921,
+          "tokens": 641
+        }
+      ]
+    },
+    {
+      "taskId": "ho-pf-locate-csp-header",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 8424,
+      "chars": 25268,
+      "toolCalls": 4,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "web/play-filters-helpers/src/main/scala/play/filters/csp/CSPResultProcessor.scala"
+        ],
+        "symbolsMissed": [
+          "generateHeaders"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "nonce",
+          "chars": 9896,
+          "tokens": 3299
+        },
+        {
+          "tool": "read_file",
+          "args": "documentation/manual/working/commonGuide/filters/CspFilter.md:1-67",
+          "chars": 3259,
+          "tokens": 1087
+        },
+        {
+          "tool": "read_file",
+          "args": "documentation/manual/working/commonGuide/filters/CspFilter.md:127-247",
+          "chars": 6063,
+          "tokens": 2021
+        },
+        {
+          "tool": "read_file",
+          "args": "web/play-filters-helpers/src/main/scala/play/filters/csp/CSPConfig.scala:1-188",
+          "chars": 6050,
+          "tokens": 2017
+        }
+      ]
+    },
+    {
+      "taskId": "ho-pf-locate-csp-header",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1271,
+      "chars": 3811,
+      "toolCalls": 1,
+      "durationMs": 35,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "web/play-filters-helpers/src/main/scala/play/filters/csp/CSPResultProcessor.scala"
+        ],
+        "symbolsMissed": [
+          "generateHeaders"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"content security policy header values csp result nonce\"",
+          "chars": 3811,
+          "tokens": 1271
+        }
+      ]
+    },
+    {
+      "taskId": "ho-pf-locate-csp-header",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 793,
+      "chars": 2377,
+      "toolCalls": 3,
+      "durationMs": 25,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "web/play-filters-helpers/src/main/scala/play/filters/csp/CSPResultProcessor.scala"
+        ],
+        "symbolsMissed": [
+          "generateHeaders"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"content security policy header values csp result nonce\"",
+          "chars": 2063,
+          "tokens": 688
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#8y7",
+          "chars": 153,
+          "tokens": 51
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#8y9",
+          "chars": 161,
+          "tokens": 54
+        }
+      ]
+    },
+    {
+      "taskId": "ho-pf-locate-csp-header",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "skipped": "no kirograph result line for this task",
+      "tokens": 0,
+      "chars": 0,
+      "toolCalls": 0,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "web/play-filters-helpers/src/main/scala/play/filters/csp/CSPResultProcessor.scala"
+        ],
+        "symbolsMissed": [
+          "generateHeaders"
+        ],
+        "found": false
+      },
+      "calls": []
+    },
+    {
+      "taskId": "ho-pf-locate-csp-header",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "skipped": "no codegraph result line for this task",
+      "tokens": 0,
+      "chars": 0,
+      "toolCalls": 0,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "web/play-filters-helpers/src/main/scala/play/filters/csp/CSPResultProcessor.scala"
+        ],
+        "symbolsMissed": [
+          "generateHeaders"
+        ],
+        "found": false
+      },
+      "calls": []
+    }
+  ],
+  "aggregates": [
+    {
+      "strategy": "native-naive",
+      "tasks": 2,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 21869.5,
+      "meanTokens": 21870,
+      "p90Tokens": 32324,
+      "totalTokens": 43739,
+      "totalChars": 131209,
+      "meanToolCalls": 4,
+      "meanFileRecall": 0.5,
+      "meanSymbolRecall": 0.5,
+      "meanDefRecall": 0.5,
+      "found": 1,
+      "foundRate": 0.5,
+      "tokensPerFound": 43739
+    },
+    {
+      "strategy": "native-ranged",
+      "tasks": 2,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 8747,
+      "meanTokens": 8747,
+      "p90Tokens": 9070,
+      "totalTokens": 17494,
+      "totalChars": 52475,
+      "meanToolCalls": 3.5,
+      "meanFileRecall": 0.5,
+      "meanSymbolRecall": 0.5,
+      "meanDefRecall": 0.5,
+      "found": 1,
+      "foundRate": 0.5,
+      "tokensPerFound": 17494
+    },
+    {
+      "strategy": "kopt-pack",
+      "tasks": 2,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 1317.5,
+      "meanTokens": 1318,
+      "p90Tokens": 1364,
+      "totalTokens": 2635,
+      "totalChars": 7901,
+      "meanToolCalls": 1,
+      "meanFileRecall": 0.5,
+      "meanSymbolRecall": 0.5,
+      "meanDefRecall": 0.25,
+      "found": 1,
+      "foundRate": 0.5,
+      "tokensPerFound": 2635
+    },
+    {
+      "strategy": "kopt-hits+read",
+      "tasks": 2,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 962.5,
+      "meanTokens": 963,
+      "p90Tokens": 1132,
+      "totalTokens": 1925,
+      "totalChars": 5771,
+      "meanToolCalls": 3,
+      "meanFileRecall": 0.5,
+      "meanSymbolRecall": 0.5,
+      "meanDefRecall": 0,
+      "found": 1,
+      "foundRate": 0.5,
+      "tokensPerFound": 1925
+    },
+    {
+      "strategy": "kirograph",
+      "tasks": 0,
+      "skipped": 2,
+      "errors": 0,
+      "medianTokens": 0,
+      "meanTokens": 0,
+      "p90Tokens": 0,
+      "totalTokens": 0,
+      "totalChars": 0,
+      "meanToolCalls": 0,
+      "meanFileRecall": 0,
+      "meanSymbolRecall": 0,
+      "meanDefRecall": 0,
+      "found": 0,
+      "foundRate": 0,
+      "tokensPerFound": null
+    },
+    {
+      "strategy": "codegraph",
+      "tasks": 0,
+      "skipped": 2,
+      "errors": 0,
+      "medianTokens": 0,
+      "meanTokens": 0,
+      "p90Tokens": 0,
+      "totalTokens": 0,
+      "totalChars": 0,
+      "meanToolCalls": 0,
+      "meanFileRecall": 0,
+      "meanSymbolRecall": 0,
+      "meanDefRecall": 0,
+      "found": 0,
+      "foundRate": 0,
+      "tokensPerFound": null
+    }
+  ],
+  "paired": [
+    {
+      "a": "native-naive",
+      "b": "kopt-pack",
+      "nRun": 2,
+      "nBoth": 1,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": 0.042197747803489664,
+      "geoMeanRatio": 0.04219774780348967,
+      "bCheaper": 1
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-pack",
+      "nRun": 2,
+      "nBoth": 1,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": 0.1503858875413451,
+      "geoMeanRatio": 0.1503858875413451,
+      "bCheaper": 1
+    },
+    {
+      "a": "native-naive",
+      "b": "kopt-hits+read",
+      "nRun": 2,
+      "nBoth": 1,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": 0.0350204182650662,
+      "geoMeanRatio": 0.0350204182650662,
+      "bCheaper": 1
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-hits+read",
+      "nRun": 2,
+      "nBoth": 1,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": 0.12480705622932746,
+      "geoMeanRatio": 0.12480705622932746,
+      "bCheaper": 1
+    },
+    {
+      "a": "kirograph",
+      "b": "kopt-pack",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "codegraph",
+      "b": "kopt-pack",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "kirograph",
+      "b": "kopt-hits+read",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "codegraph",
+      "b": "kopt-hits+read",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-ranged",
+      "b": "kirograph",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-ranged",
+      "b": "codegraph",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-naive",
+      "b": "native-ranged",
+      "nRun": 2,
+      "nBoth": 1,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": 0.2805964608340552,
+      "geoMeanRatio": 0.2805964608340552,
+      "bCheaper": 1
+    }
+  ],
+  "byKind": [
+    {
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 11415
+    },
+    {
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 8424
+    },
+    {
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 1271
+    },
+    {
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 793
+    },
+    {
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tasks": 1,
+      "found": 1,
+      "medianTokens": 32324
+    },
+    {
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tasks": 1,
+      "found": 1,
+      "medianTokens": 9070
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tasks": 1,
+      "found": 1,
+      "medianTokens": 1364
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tasks": 1,
+      "found": 1,
+      "medianTokens": 1132
+    }
+  ]
+}

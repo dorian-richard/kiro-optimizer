@@ -1,0 +1,303 @@
+{
+  "repo": "discourse",
+  "language": "ruby",
+  "repoRoot": "bench/repos/discourse",
+  "headCommit": "343b20f97ef5f6bd70826ee0e993ba348b210fd5",
+  "date": "2026-10-09T22:39:01.851Z",
+  "index": {
+    "built": true,
+    "durationMs": 10398,
+    "files": 15517,
+    "symbols": 82698,
+    "refs": 507395,
+    "path": "<index-dir>/.kopt-discourse/index.db"
+  },
+  "files": {
+    "indexed": 15517,
+    "skipped": 5,
+    "skippedByReason": {
+      "large": 1,
+      "minified": 4
+    },
+    "indexedByLang": {
+      "javascript": 3325,
+      "ruby": 12033,
+      "typescript": 159
+    }
+  },
+  "langs": [
+    {
+      "lang": "ruby",
+      "files": 12033,
+      "lines": 1399615,
+      "symbols": 61518,
+      "symbolsPerKloc": 43.95,
+      "byKind": {
+        "method": {
+          "count": 40782,
+          "perKloc": 29.14
+        },
+        "class": {
+          "count": 7769,
+          "perKloc": 5.55
+        },
+        "module": {
+          "count": 5953,
+          "perKloc": 4.25
+        },
+        "constant": {
+          "count": 4896,
+          "perKloc": 3.5
+        },
+        "function": {
+          "count": 2118,
+          "perKloc": 1.51
+        }
+      },
+      "refs": 394028,
+      "refsResolved": 84060,
+      "resolvedRate": 0.2133,
+      "refsWithCandidate": 299752,
+      "resolvedOfCandidates": 0.2804,
+      "refsByKind": {
+        "call": {
+          "total": 376459,
+          "resolved": 74837
+        },
+        "new": {
+          "total": 10603,
+          "resolved": 6517
+        },
+        "inherit": {
+          "total": 6966,
+          "resolved": 2706
+        }
+      },
+      "parse": {
+        "sampledFiles": 1000,
+        "sampledLines": 118932,
+        "filesWithErrors": 0,
+        "errorNodes": 0,
+        "missingNodes": 0,
+        "errorFileRate": 0,
+        "errorsPerKloc": 0,
+        "parseFailures": 0,
+        "worst": []
+      },
+      "precision": {
+        "sampled": 30,
+        "nameOk": 30,
+        "startOk": 30,
+        "endOk": 30,
+        "signatureOk": 30,
+        "allOk": 30,
+        "rate": 1,
+        "failures": []
+      }
+    },
+    {
+      "lang": "javascript",
+      "files": 3325,
+      "lines": 411514,
+      "symbols": 18677,
+      "symbolsPerKloc": 45.39,
+      "byKind": {
+        "method": {
+          "count": 5633,
+          "perKloc": 13.69
+        },
+        "field": {
+          "count": 3900,
+          "perKloc": 9.48
+        },
+        "function": {
+          "count": 3393,
+          "perKloc": 8.25
+        },
+        "property": {
+          "count": 2678,
+          "perKloc": 6.51
+        },
+        "class": {
+          "count": 1512,
+          "perKloc": 3.67
+        },
+        "constant": {
+          "count": 1293,
+          "perKloc": 3.14
+        },
+        "constructor": {
+          "count": 268,
+          "perKloc": 0.65
+        }
+      },
+      "refs": 105000,
+      "refsResolved": 31815,
+      "resolvedRate": 0.303,
+      "refsWithCandidate": 75524,
+      "resolvedOfCandidates": 0.4202,
+      "refsByKind": {
+        "call": {
+          "total": 52373,
+          "resolved": 13949
+        },
+        "read": {
+          "total": 29055,
+          "resolved": 9391
+        },
+        "import": {
+          "total": 14322,
+          "resolved": 5273
+        },
+        "write": {
+          "total": 6351,
+          "resolved": 2422
+        },
+        "new": {
+          "total": 1631,
+          "resolved": 331
+        },
+        "inherit": {
+          "total": 1268,
+          "resolved": 449
+        }
+      },
+      "parse": {
+        "sampledFiles": 1000,
+        "sampledLines": 128689,
+        "filesWithErrors": 0,
+        "errorNodes": 0,
+        "missingNodes": 0,
+        "errorFileRate": 0,
+        "errorsPerKloc": 0,
+        "parseFailures": 0,
+        "worst": []
+      },
+      "precision": {
+        "sampled": 30,
+        "nameOk": 30,
+        "startOk": 30,
+        "endOk": 30,
+        "signatureOk": 30,
+        "allOk": 30,
+        "rate": 1,
+        "failures": []
+      }
+    },
+    {
+      "lang": "typescript",
+      "files": 159,
+      "lines": 34426,
+      "symbols": 2503,
+      "symbolsPerKloc": 72.71,
+      "byKind": {
+        "property": {
+          "count": 930,
+          "perKloc": 27.01
+        },
+        "method": {
+          "count": 476,
+          "perKloc": 13.83
+        },
+        "function": {
+          "count": 331,
+          "perKloc": 9.61
+        },
+        "field": {
+          "count": 251,
+          "perKloc": 7.29
+        },
+        "interface": {
+          "count": 211,
+          "perKloc": 6.13
+        },
+        "type": {
+          "count": 112,
+          "perKloc": 3.25
+        },
+        "constant": {
+          "count": 98,
+          "perKloc": 2.85
+        },
+        "class": {
+          "count": 56,
+          "perKloc": 1.63
+        },
+        "constructor": {
+          "count": 36,
+          "perKloc": 1.05
+        },
+        "namespace": {
+          "count": 2,
+          "perKloc": 0.06
+        }
+      },
+      "refs": 8367,
+      "refsResolved": 3888,
+      "resolvedRate": 0.4647,
+      "refsWithCandidate": 6222,
+      "resolvedOfCandidates": 0.6246,
+      "refsByKind": {
+        "call": {
+          "total": 2999,
+          "resolved": 936
+        },
+        "read": {
+          "total": 1979,
+          "resolved": 1026
+        },
+        "type_ref": {
+          "total": 1743,
+          "resolved": 942
+        },
+        "import": {
+          "total": 1064,
+          "resolved": 595
+        },
+        "write": {
+          "total": 369,
+          "resolved": 316
+        },
+        "new": {
+          "total": 153,
+          "resolved": 37
+        },
+        "inherit": {
+          "total": 54,
+          "resolved": 30
+        },
+        "implement": {
+          "total": 6,
+          "resolved": 6
+        }
+      },
+      "parse": {
+        "sampledFiles": 159,
+        "sampledLines": 34585,
+        "filesWithErrors": 0,
+        "errorNodes": 0,
+        "missingNodes": 0,
+        "errorFileRate": 0,
+        "errorsPerKloc": 0,
+        "parseFailures": 0,
+        "worst": []
+      },
+      "precision": {
+        "sampled": 30,
+        "nameOk": 30,
+        "startOk": 30,
+        "endOk": 30,
+        "signatureOk": 30,
+        "allOk": 30,
+        "rate": 1,
+        "failures": []
+      }
+    }
+  ],
+  "settings": {
+    "parseSamplePerLang": 1000,
+    "precisionSamplePerLang": 30,
+    "seed": "discourse"
+  },
+  "durationMs": 2671
+}

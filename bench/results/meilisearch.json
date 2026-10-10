@@ -1,0 +1,3064 @@
+{
+  "meta": {
+    "label": "meilisearch",
+    "repo": {
+      "name": "meilisearch",
+      "url": "https://github.com/meilisearch/meilisearch.git",
+      "tag": "v1.54.3",
+      "commit": "7ebd97e38c36882b0c78d79e433b9115b4f003b3",
+      "language": "rust",
+      "path": "bench/repos/meilisearch"
+    },
+    "repoRoot": "bench/repos/meilisearch",
+    "headCommit": "7ebd97e38c36882b0c78d79e433b9115b4f003b3",
+    "date": "2026-10-09T22:38:36.388Z",
+    "input": "search",
+    "charsPerToken": 3,
+    "strategies": [
+      "native-naive",
+      "native-ranged",
+      "kopt-pack",
+      "kopt-hits+read",
+      "kirograph",
+      "codegraph"
+    ],
+    "grepLimits": {
+      "maxMatches": 100,
+      "maxChars": 10000,
+      "maxLineChars": 250
+    },
+    "readLimits": {
+      "naiveTopFiles": 3,
+      "naiveMaxLines": 2000,
+      "rangedMatches": 4,
+      "rangedContext": 60
+    },
+    "koptBudgets": {
+      "find": 700,
+      "pack": 2500,
+      "read": 3000
+    },
+    "index": {
+      "built": false,
+      "durationMs": 0,
+      "files": 715,
+      "symbols": 18280,
+      "path": "<index-dir>/.kopt-meilisearch/index.db"
+    },
+    "notes": [
+      "kirograph: outputs loaded from bench/competitors/results/kirograph-meilisearch.jsonl",
+      "codegraph: outputs loaded from bench/competitors/results/codegraph-meilisearch.jsonl"
+    ],
+    "durationMs": 3713
+  },
+  "results": [
+    {
+      "taskId": "ms-locate-tenant-token",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 20726,
+      "chars": 62177,
+      "toolCalls": 4,
+      "durationMs": 400,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "crates/meilisearch/src/extractors/authentication/mod.rs"
+        ],
+        "symbolsMissed": [
+          "authenticate_tenant_token",
+          "tenant_token_validation",
+          "extract_key_id"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "jwt|expiration",
+          "chars": 5595,
+          "tokens": 1865
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/meilisearch-auth/src/store.rs",
+          "chars": 16428,
+          "tokens": 5476
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/meilisearch/tests/auth/errors.rs",
+          "chars": 26273,
+          "tokens": 8758
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/meilisearch-auth/src/lib.rs",
+          "chars": 13881,
+          "tokens": 4627
+        }
+      ]
+    },
+    {
+      "taskId": "ms-locate-tenant-token",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 6705,
+      "chars": 20112,
+      "toolCalls": 4,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "crates/meilisearch/src/extractors/authentication/mod.rs"
+        ],
+        "symbolsMissed": [
+          "authenticate_tenant_token",
+          "tenant_token_validation",
+          "extract_key_id"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "jwt|expiration",
+          "chars": 5595,
+          "tokens": 1865
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/meilisearch-auth/src/store.rs:1-152",
+          "chars": 5555,
+          "tokens": 1852
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/meilisearch-auth/src/store.rs:195-315",
+          "chars": 4065,
+          "tokens": 1355
+        },
+        {
+          "tool": "read_file",
+          "args": "external-crates/async-openai/src/types/vector_store.rs:1-113",
+          "chars": 4897,
+          "tokens": 1633
+        }
+      ]
+    },
+    {
+      "taskId": "ms-locate-tenant-token",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1249,
+      "chars": 3746,
+      "toolCalls": 1,
+      "durationMs": 27,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"tenant token jwt verify api key expiration search\"",
+          "chars": 3746,
+          "tokens": 1249
+        }
+      ]
+    },
+    {
+      "taskId": "ms-locate-tenant-token",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 674,
+      "chars": 2017,
+      "toolCalls": 3,
+      "durationMs": 27,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"tenant token jwt verify api key expiration search\"",
+          "chars": 1714,
+          "tokens": 572
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#7ld",
+          "chars": 140,
+          "tokens": 47
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#7l6",
+          "chars": 163,
+          "tokens": 55
+        }
+      ]
+    },
+    {
+      "taskId": "ms-locate-tenant-token",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tokens": 862,
+      "chars": 2585,
+      "toolCalls": 1,
+      "durationMs": 47,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "crates/meilisearch/src/extractors/authentication/mod.rs"
+        ],
+        "symbolsMissed": [
+          "authenticate_tenant_token",
+          "tenant_token_validation",
+          "extract_key_id"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "tenant token jwt verify api key expiration search",
+          "chars": 2585,
+          "tokens": 862
+        }
+      ]
+    },
+    {
+      "taskId": "ms-locate-tenant-token",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tokens": 5282,
+      "chars": 15846,
+      "toolCalls": 1,
+      "durationMs": 445,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "crates/meilisearch/src/extractors/authentication/mod.rs"
+        ],
+        "symbolsMissed": [
+          "authenticate_tenant_token",
+          "tenant_token_validation",
+          "extract_key_id"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "tenant token jwt verify api key expiration search",
+          "chars": 15846,
+          "tokens": 5282
+        }
+      ]
+    },
+    {
+      "taskId": "ms-locate-filter-precedence",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 41802,
+      "chars": 125402,
+      "toolCalls": 4,
+      "durationMs": 256,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "parse_or",
+          "parse_and",
+          "parse_not"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "parser",
+          "chars": 8141,
+          "tokens": 2714
+        },
+        {
+          "tool": "read_file",
+          "args": "Cargo.lock",
+          "chars": 47081,
+          "tokens": 15694
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/meilisearch/src/option.rs",
+          "chars": 56585,
+          "tokens": 18862
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/filter-parser/src/error.rs",
+          "chars": 13595,
+          "tokens": 4532
+        }
+      ]
+    },
+    {
+      "taskId": "ms-locate-filter-precedence",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 5705,
+      "chars": 17110,
+      "toolCalls": 4,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "parse_or",
+          "parse_and",
+          "parse_not"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "parser",
+          "chars": 8141,
+          "tokens": 2714
+        },
+        {
+          "tool": "read_file",
+          "args": "Cargo.lock:2178-2298",
+          "chars": 2570,
+          "tokens": 857
+        },
+        {
+          "tool": "read_file",
+          "args": "Cargo.lock:4354-4474",
+          "chars": 1858,
+          "tokens": 620
+        },
+        {
+          "tool": "read_file",
+          "args": "Cargo.lock:7235-7424",
+          "chars": 4541,
+          "tokens": 1514
+        }
+      ]
+    },
+    {
+      "taskId": "ms-locate-filter-precedence",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1352,
+      "chars": 4054,
+      "toolCalls": 1,
+      "durationMs": 29,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"filter expression parser or and not precedence depth\"",
+          "chars": 4054,
+          "tokens": 1352
+        }
+      ]
+    },
+    {
+      "taskId": "ms-locate-filter-precedence",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 804,
+      "chars": 2406,
+      "toolCalls": 3,
+      "durationMs": 23,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"filter expression parser or and not precedence depth\"",
+          "chars": 1630,
+          "tokens": 544
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#3pw",
+          "chars": 154,
+          "tokens": 52
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#3pl",
+          "chars": 622,
+          "tokens": 208
+        }
+      ]
+    },
+    {
+      "taskId": "ms-locate-filter-precedence",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tokens": 1047,
+      "chars": 3139,
+      "toolCalls": 1,
+      "durationMs": 46,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "parse_or",
+          "parse_and",
+          "parse_not"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "filter expression parser or and not precedence depth",
+          "chars": 3139,
+          "tokens": 1047
+        }
+      ]
+    },
+    {
+      "taskId": "ms-locate-filter-precedence",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tokens": 8317,
+      "chars": 24950,
+      "toolCalls": 1,
+      "durationMs": 254,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "filter expression parser or and not precedence depth",
+          "chars": 24950,
+          "tokens": 8317
+        }
+      ]
+    },
+    {
+      "taskId": "ms-locate-disabled-typos",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 49448,
+      "chars": 148342,
+      "toolCalls": 4,
+      "durationMs": 211,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 1,
+        "defRecall": 0,
+        "filesMissed": [
+          "crates/milli/src/disabled_typos_terms.rs"
+        ],
+        "symbolsMissed": [],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "disableOnNumbers",
+          "chars": 2763,
+          "tokens": 921
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/meilisearch/tests/dumps/mod.rs",
+          "chars": 75527,
+          "tokens": 25176
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/meilisearch/tests/settings/get_settings.rs",
+          "chars": 25265,
+          "tokens": 8422
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/milli/src/update/new/indexer/mod.rs",
+          "chars": 44787,
+          "tokens": 14929
+        }
+      ]
+    },
+    {
+      "taskId": "ms-locate-disabled-typos",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 7821,
+      "chars": 23458,
+      "toolCalls": 5,
+      "durationMs": 1,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.5,
+        "defRecall": 0,
+        "filesMissed": [
+          "crates/milli/src/disabled_typos_terms.rs"
+        ],
+        "symbolsMissed": [
+          "is_exact"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "disableOnNumbers",
+          "chars": 2763,
+          "tokens": 921
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/meilisearch-types/src/settings.rs:289-409",
+          "chars": 6346,
+          "tokens": 2116
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/meilisearch/src/routes/indexes/settings.rs:631-751",
+          "chars": 5469,
+          "tokens": 1823
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/meilisearch/tests/dumps/mod.rs:35-155",
+          "chars": 4904,
+          "tokens": 1635
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/milli/src/update/new/indexer/mod.rs:563-683",
+          "chars": 3976,
+          "tokens": 1326
+        }
+      ]
+    },
+    {
+      "taskId": "ms-locate-disabled-typos",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1327,
+      "chars": 3979,
+      "toolCalls": 1,
+      "durationMs": 27,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"disableOnNumbers typo tolerance word exact\"",
+          "chars": 3979,
+          "tokens": 1327
+        }
+      ]
+    },
+    {
+      "taskId": "ms-locate-disabled-typos",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 709,
+      "chars": 2124,
+      "toolCalls": 3,
+      "durationMs": 21,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"disableOnNumbers typo tolerance word exact\"",
+          "chars": 1694,
+          "tokens": 565
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#8ai",
+          "chars": 311,
+          "tokens": 104
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#8ae",
+          "chars": 119,
+          "tokens": 40
+        }
+      ]
+    },
+    {
+      "taskId": "ms-locate-disabled-typos",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tokens": 824,
+      "chars": 2471,
+      "toolCalls": 1,
+      "durationMs": 37,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "crates/milli/src/disabled_typos_terms.rs"
+        ],
+        "symbolsMissed": [
+          "is_exact",
+          "DisabledTyposTerms"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "disableOnNumbers typo tolerance word exact",
+          "chars": 2471,
+          "tokens": 824
+        }
+      ]
+    },
+    {
+      "taskId": "ms-locate-disabled-typos",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tokens": 8318,
+      "chars": 24954,
+      "toolCalls": 1,
+      "durationMs": 127,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "disableOnNumbers typo tolerance word exact",
+          "chars": 24954,
+          "tokens": 8318
+        }
+      ]
+    },
+    {
+      "taskId": "ms-locate-index-eviction",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 18816,
+      "chars": 56446,
+      "toolCalls": 4,
+      "durationMs": 375,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "evict|recently",
+          "chars": 3198,
+          "tokens": 1066
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/index-scheduler/src/lru.rs",
+          "chars": 6971,
+          "tokens": 2324
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/index-scheduler/src/index_mapper/index_map.rs",
+          "chars": 16227,
+          "tokens": 5409
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/index-scheduler/src/index_mapper/mod.rs",
+          "chars": 30050,
+          "tokens": 10017
+        }
+      ]
+    },
+    {
+      "taskId": "ms-locate-index-eviction",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 6212,
+      "chars": 18635,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "evict|recently",
+          "chars": 3198,
+          "tokens": 1066
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/index-scheduler/src/index_mapper/index_map.rs:1-77",
+          "chars": 3531,
+          "tokens": 1177
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/index-scheduler/src/index_mapper/index_map.rs:132-252",
+          "chars": 4160,
+          "tokens": 1387
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/index-scheduler/src/index_mapper/index_map.rs:310-421",
+          "chars": 4305,
+          "tokens": 1435
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/index-scheduler/src/lru.rs:1-92",
+          "chars": 3441,
+          "tokens": 1147
+        }
+      ]
+    },
+    {
+      "taskId": "ms-locate-index-eviction",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1444,
+      "chars": 4330,
+      "toolCalls": 1,
+      "durationMs": 34,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"open indexes evict least recently used close index\"",
+          "chars": 4330,
+          "tokens": 1444
+        }
+      ]
+    },
+    {
+      "taskId": "ms-locate-index-eviction",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 1145,
+      "chars": 3431,
+      "toolCalls": 3,
+      "durationMs": 30,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"open indexes evict least recently used close index\"",
+          "chars": 1933,
+          "tokens": 645
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#am3",
+          "chars": 951,
+          "tokens": 317
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#alw",
+          "chars": 547,
+          "tokens": 183
+        }
+      ]
+    },
+    {
+      "taskId": "ms-locate-index-eviction",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tokens": 3456,
+      "chars": 10366,
+      "toolCalls": 1,
+      "durationMs": 41,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.3333333333333333,
+        "defRecall": 0,
+        "filesMissed": [
+          "crates/index-scheduler/src/index_mapper/index_map.rs",
+          "crates/index-scheduler/src/lru.rs"
+        ],
+        "symbolsMissed": [
+          "create",
+          "insert"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "open indexes evict least recently used close index",
+          "chars": 10366,
+          "tokens": 3456
+        }
+      ]
+    },
+    {
+      "taskId": "ms-locate-index-eviction",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tokens": 8307,
+      "chars": 24919,
+      "toolCalls": 1,
+      "durationMs": 116,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 1,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [
+          "crates/index-scheduler/src/lru.rs"
+        ],
+        "symbolsMissed": [],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "open indexes evict least recently used close index",
+          "chars": 24919,
+          "tokens": 8307
+        }
+      ]
+    },
+    {
+      "taskId": "ms-explain-autobatch",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 53895,
+      "chars": 161680,
+      "toolCalls": 4,
+      "durationMs": 422,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.5,
+        "defRecall": 0,
+        "filesMissed": [
+          "crates/index-scheduler/src/scheduler/autobatcher.rs",
+          "crates/index-scheduler/src/scheduler/create_batch.rs"
+        ],
+        "symbolsMissed": [
+          "accumulate",
+          "create_next_batch_unprioritized"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "together",
+          "chars": 9456,
+          "tokens": 3152
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/index-scheduler/src/scheduler/test_document_addition.rs",
+          "chars": 46988,
+          "tokens": 15663
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/index-scheduler/src/scheduler/autobatcher_test.rs",
+          "chars": 55090,
+          "tokens": 18364
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/meilisearch/src/routes/indexes/search.rs",
+          "chars": 50146,
+          "tokens": 16716
+        }
+      ]
+    },
+    {
+      "taskId": "ms-explain-autobatch",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 11543,
+      "chars": 34629,
+      "toolCalls": 3,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.25,
+        "defRecall": 0,
+        "filesMissed": [
+          "crates/index-scheduler/src/scheduler/autobatcher.rs",
+          "crates/index-scheduler/src/scheduler/create_batch.rs"
+        ],
+        "symbolsMissed": [
+          "accumulate",
+          "BatchKind",
+          "create_next_batch_unprioritized"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "together",
+          "chars": 9456,
+          "tokens": 3152
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/meilisearch/src/routes/indexes/search.rs:23-323",
+          "chars": 19623,
+          "tokens": 6541
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/meilisearch/src/routes/indexes/search.rs:451-571",
+          "chars": 5550,
+          "tokens": 1850
+        }
+      ]
+    },
+    {
+      "taskId": "ms-explain-autobatch",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 1332,
+      "chars": 3994,
+      "toolCalls": 1,
+      "durationMs": 43,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.25,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"scheduler enqueued tasks batch together index stop reason\"",
+          "chars": 3994,
+          "tokens": 1332
+        }
+      ]
+    },
+    {
+      "taskId": "ms-explain-autobatch",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 1157,
+      "chars": 3466,
+      "toolCalls": 3,
+      "durationMs": 29,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.75,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "create_next_batch_unprioritized"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"scheduler enqueued tasks batch together index stop reason\"",
+          "chars": 2051,
+          "tokens": 684
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#ti",
+          "chars": 1306,
+          "tokens": 436
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#tn",
+          "chars": 109,
+          "tokens": 37
+        }
+      ]
+    },
+    {
+      "taskId": "ms-explain-autobatch",
+      "kind": "explain",
+      "strategy": "kirograph",
+      "tokens": 977,
+      "chars": 2931,
+      "toolCalls": 1,
+      "durationMs": 43,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "autobatch",
+          "accumulate",
+          "BatchKind",
+          "create_next_batch_unprioritized"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "scheduler enqueued tasks batch together index stop reason",
+          "chars": 2931,
+          "tokens": 977
+        }
+      ]
+    },
+    {
+      "taskId": "ms-explain-autobatch",
+      "kind": "explain",
+      "strategy": "codegraph",
+      "tokens": 8318,
+      "chars": 24952,
+      "toolCalls": 1,
+      "durationMs": 169,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0.25,
+        "defRecall": 0.25,
+        "filesMissed": [
+          "crates/index-scheduler/src/scheduler/autobatcher.rs"
+        ],
+        "symbolsMissed": [
+          "autobatch",
+          "accumulate",
+          "BatchKind"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "scheduler enqueued tasks batch together index stop reason",
+          "chars": 24952,
+          "tokens": 8318
+        }
+      ]
+    },
+    {
+      "taskId": "ms-explain-dynamic-rules",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 15806,
+      "chars": 47414,
+      "toolCalls": 3,
+      "durationMs": 398,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "crates/milli/src/dynamic_search_rules/mod.rs",
+          "crates/milli/src/dynamic_search_rules/condition.rs",
+          "crates/milli/src/dynamic_search_rules/action.rs"
+        ],
+        "symbolsMissed": [
+          "resolve_actions",
+          "active_rules_for_query",
+          "apply_time_conditions",
+          "find_actions"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "dynamic",
+          "chars": 9985,
+          "tokens": 3329
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/meilisearch/src/routes/dynamic_search_rules.rs",
+          "chars": 19922,
+          "tokens": 6641
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/meilisearch-types/src/dynamic_search_rules.rs",
+          "chars": 17507,
+          "tokens": 5836
+        }
+      ]
+    },
+    {
+      "taskId": "ms-explain-dynamic-rules",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 7106,
+      "chars": 21314,
+      "toolCalls": 3,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "crates/milli/src/dynamic_search_rules/mod.rs",
+          "crates/milli/src/dynamic_search_rules/condition.rs",
+          "crates/milli/src/dynamic_search_rules/action.rs"
+        ],
+        "symbolsMissed": [
+          "resolve_actions",
+          "active_rules_for_query",
+          "apply_time_conditions",
+          "find_actions"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "dynamic",
+          "chars": 9985,
+          "tokens": 3329
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/meilisearch-types/src/dynamic_search_rules.rs:1-88",
+          "chars": 3483,
+          "tokens": 1161
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/meilisearch/src/routes/dynamic_search_rules.rs:1-223",
+          "chars": 7846,
+          "tokens": 2616
+        }
+      ]
+    },
+    {
+      "taskId": "ms-explain-dynamic-rules",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 1391,
+      "chars": 4171,
+      "toolCalls": 1,
+      "durationMs": 47,
+      "recall": {
+        "fileRecall": 0.3333333333333333,
+        "symbolRecall": 0.25,
+        "defRecall": 0,
+        "filesMissed": [
+          "crates/milli/src/dynamic_search_rules/condition.rs",
+          "crates/milli/src/dynamic_search_rules/action.rs"
+        ],
+        "symbolsMissed": [
+          "active_rules_for_query",
+          "apply_time_conditions",
+          "find_actions"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"dynamic search rules pin documents time query filter conditions\"",
+          "chars": 4171,
+          "tokens": 1391
+        }
+      ]
+    },
+    {
+      "taskId": "ms-explain-dynamic-rules",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 667,
+      "chars": 2000,
+      "toolCalls": 3,
+      "durationMs": 36,
+      "recall": {
+        "fileRecall": 0.3333333333333333,
+        "symbolRecall": 0.25,
+        "defRecall": 0,
+        "filesMissed": [
+          "crates/milli/src/dynamic_search_rules/condition.rs",
+          "crates/milli/src/dynamic_search_rules/action.rs"
+        ],
+        "symbolsMissed": [
+          "active_rules_for_query",
+          "apply_time_conditions",
+          "find_actions"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"dynamic search rules pin documents time query filter conditions\"",
+          "chars": 1680,
+          "tokens": 560
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#asm",
+          "chars": 138,
+          "tokens": 46
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#byj",
+          "chars": 182,
+          "tokens": 61
+        }
+      ]
+    },
+    {
+      "taskId": "ms-explain-dynamic-rules",
+      "kind": "explain",
+      "strategy": "kirograph",
+      "tokens": 2468,
+      "chars": 7402,
+      "toolCalls": 1,
+      "durationMs": 48,
+      "recall": {
+        "fileRecall": 0.3333333333333333,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "crates/milli/src/dynamic_search_rules/condition.rs",
+          "crates/milli/src/dynamic_search_rules/action.rs"
+        ],
+        "symbolsMissed": [
+          "resolve_actions",
+          "active_rules_for_query",
+          "apply_time_conditions",
+          "find_actions"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "dynamic search rules pin documents time query filter conditions",
+          "chars": 7402,
+          "tokens": 2468
+        }
+      ]
+    },
+    {
+      "taskId": "ms-explain-dynamic-rules",
+      "kind": "explain",
+      "strategy": "codegraph",
+      "tokens": 8249,
+      "chars": 24745,
+      "toolCalls": 1,
+      "durationMs": 176,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "crates/milli/src/dynamic_search_rules/mod.rs",
+          "crates/milli/src/dynamic_search_rules/condition.rs",
+          "crates/milli/src/dynamic_search_rules/action.rs"
+        ],
+        "symbolsMissed": [
+          "resolve_actions",
+          "active_rules_for_query",
+          "apply_time_conditions",
+          "find_actions"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "dynamic search rules pin documents time query filter conditions",
+          "chars": 24745,
+          "tokens": 8249
+        }
+      ]
+    },
+    {
+      "taskId": "ms-explain-bucket-sort",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 27555,
+      "chars": 82661,
+      "toolCalls": 4,
+      "durationMs": 270,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "buckets",
+          "chars": 6598,
+          "tokens": 2200
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/milli/src/update/new/extract/cache.rs",
+          "chars": 24183,
+          "tokens": 8061
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/milli/src/update/new/extract/searchable/extract_word_docids.rs",
+          "chars": 36816,
+          "tokens": 12272
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/milli/src/search/new/bucket_sort.rs",
+          "chars": 15064,
+          "tokens": 5022
+        }
+      ]
+    },
+    {
+      "taskId": "ms-explain-bucket-sort",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 6176,
+      "chars": 18525,
+      "toolCalls": 3,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.75,
+        "defRecall": 0.25,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "maybe_add_to_results"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "buckets",
+          "chars": 6598,
+          "tokens": 2200
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/milli/src/search/new/bucket_sort.rs:1-72",
+          "chars": 2532,
+          "tokens": 844
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/milli/src/update/new/extract/cache.rs:30-293",
+          "chars": 9395,
+          "tokens": 3132
+        }
+      ]
+    },
+    {
+      "taskId": "ms-explain-bucket-sort",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 1334,
+      "chars": 4002,
+      "toolCalls": 1,
+      "durationMs": 28,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 1,
+        "defRecall": 0.75,
+        "filesMissed": [
+          "crates/milli/src/search/new/ranking_rules.rs"
+        ],
+        "symbolsMissed": [],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"ranking rules buckets candidates sort results\"",
+          "chars": 4002,
+          "tokens": 1334
+        }
+      ]
+    },
+    {
+      "taskId": "ms-explain-bucket-sort",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 860,
+      "chars": 2577,
+      "toolCalls": 3,
+      "durationMs": 21,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 1,
+        "defRecall": 0.75,
+        "filesMissed": [
+          "crates/milli/src/search/new/ranking_rules.rs"
+        ],
+        "symbolsMissed": [],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"ranking rules buckets candidates sort results\"",
+          "chars": 2068,
+          "tokens": 690
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#5s6",
+          "chars": 237,
+          "tokens": 79
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#5s5",
+          "chars": 272,
+          "tokens": 91
+        }
+      ]
+    },
+    {
+      "taskId": "ms-explain-bucket-sort",
+      "kind": "explain",
+      "strategy": "kirograph",
+      "tokens": 1335,
+      "chars": 4004,
+      "toolCalls": 1,
+      "durationMs": 40,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "crates/milli/src/search/new/bucket_sort.rs",
+          "crates/milli/src/search/new/ranking_rules.rs"
+        ],
+        "symbolsMissed": [
+          "bucket_sort",
+          "maybe_add_to_results",
+          "RankingRule",
+          "next_bucket"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "ranking rules buckets candidates sort results",
+          "chars": 4004,
+          "tokens": 1335
+        }
+      ]
+    },
+    {
+      "taskId": "ms-explain-bucket-sort",
+      "kind": "explain",
+      "strategy": "codegraph",
+      "tokens": 8298,
+      "chars": 24892,
+      "toolCalls": 1,
+      "durationMs": 109,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0.75,
+        "defRecall": 0.5,
+        "filesMissed": [
+          "crates/milli/src/search/new/bucket_sort.rs"
+        ],
+        "symbolsMissed": [
+          "maybe_add_to_results"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "ranking rules buckets candidates sort results",
+          "chars": 24892,
+          "tokens": 8298
+        }
+      ]
+    },
+    {
+      "taskId": "ms-usage-is-exact",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 29215,
+      "chars": 87642,
+      "toolCalls": 4,
+      "durationMs": 111,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.75,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "DisabledTyposTerms|is_exact",
+          "chars": 4744,
+          "tokens": 1582
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/milli/src/update/new/extract/searchable/extract_word_docids.rs",
+          "chars": 36816,
+          "tokens": 12272
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/milli/src/update/new/indexer/mod.rs",
+          "chars": 44787,
+          "tokens": 14929
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/milli/src/disabled_typos_terms.rs",
+          "chars": 1295,
+          "tokens": 432
+        }
+      ]
+    },
+    {
+      "taskId": "ms-usage-is-exact",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 5146,
+      "chars": 15434,
+      "toolCalls": 4,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0.25,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "extract_document_change",
+          "extract_document_from_settings_change"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "DisabledTyposTerms|is_exact",
+          "chars": 4744,
+          "tokens": 1582
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/milli/src/disabled_typos_terms.rs:1-43",
+          "chars": 1295,
+          "tokens": 432
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/milli/src/update/new/indexer/mod.rs:1-90",
+          "chars": 3416,
+          "tokens": 1139
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/milli/src/update/new/indexer/mod.rs:560-747",
+          "chars": 5979,
+          "tokens": 1993
+        }
+      ]
+    },
+    {
+      "taskId": "ms-usage-is-exact",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 947,
+      "chars": 2841,
+      "toolCalls": 1,
+      "durationMs": 12,
+      "recall": {
+        "fileRecall": 0.3333333333333333,
+        "symbolRecall": 0.25,
+        "defRecall": 0,
+        "filesMissed": [
+          "crates/milli/src/update/index_documents/extract/extract_word_docids.rs",
+          "crates/milli/src/update/new/extract/searchable/extract_word_docids.rs"
+        ],
+        "symbolsMissed": [
+          "extract_word_docids",
+          "extract_document_change",
+          "extract_document_from_settings_change"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"DisabledTyposTerms is_exact\"",
+          "chars": 2841,
+          "tokens": 947
+        }
+      ]
+    },
+    {
+      "taskId": "ms-usage-is-exact",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 592,
+      "chars": 1774,
+      "toolCalls": 3,
+      "durationMs": 10,
+      "recall": {
+        "fileRecall": 0.3333333333333333,
+        "symbolRecall": 0.25,
+        "defRecall": 0,
+        "filesMissed": [
+          "crates/milli/src/update/index_documents/extract/extract_word_docids.rs",
+          "crates/milli/src/update/new/extract/searchable/extract_word_docids.rs"
+        ],
+        "symbolsMissed": [
+          "extract_word_docids",
+          "extract_document_change",
+          "extract_document_from_settings_change"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"DisabledTyposTerms is_exact\"",
+          "chars": 1344,
+          "tokens": 448
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#8ai",
+          "chars": 311,
+          "tokens": 104
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#8ae",
+          "chars": 119,
+          "tokens": 40
+        }
+      ]
+    },
+    {
+      "taskId": "ms-usage-is-exact",
+      "kind": "usage",
+      "strategy": "kirograph",
+      "tokens": 533,
+      "chars": 1597,
+      "toolCalls": 1,
+      "durationMs": 33,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "crates/milli/src/update/index_documents/extract/extract_word_docids.rs",
+          "crates/milli/src/update/new/extract/searchable/extract_word_docids.rs",
+          "crates/milli/src/update/new/indexer/mod.rs"
+        ],
+        "symbolsMissed": [
+          "extract_word_docids",
+          "extract_document_change",
+          "extract_document_from_settings_change",
+          "extract_numbers_from_words_fst"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "DisabledTyposTerms is_exact",
+          "chars": 1597,
+          "tokens": 533
+        }
+      ]
+    },
+    {
+      "taskId": "ms-usage-is-exact",
+      "kind": "usage",
+      "strategy": "codegraph",
+      "tokens": 8326,
+      "chars": 24977,
+      "toolCalls": 1,
+      "durationMs": 66,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "DisabledTyposTerms is_exact",
+          "chars": 24977,
+          "tokens": 8326
+        }
+      ]
+    },
+    {
+      "taskId": "ms-usage-close-for-resize",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 15580,
+      "chars": 46738,
+      "toolCalls": 3,
+      "durationMs": 108,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "close_for_resize",
+          "chars": 461,
+          "tokens": 154
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/index-scheduler/src/index_mapper/mod.rs",
+          "chars": 30050,
+          "tokens": 10017
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/index-scheduler/src/index_mapper/index_map.rs",
+          "chars": 16227,
+          "tokens": 5409
+        }
+      ]
+    },
+    {
+      "taskId": "ms-usage-close-for-resize",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 4767,
+      "chars": 14295,
+      "toolCalls": 4,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "close_for_resize",
+          "chars": 461,
+          "tokens": 154
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/index-scheduler/src/index_mapper/index_map.rs:166-286",
+          "chars": 4297,
+          "tokens": 1433
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/index-scheduler/src/index_mapper/mod.rs:320-440",
+          "chars": 4504,
+          "tokens": 1502
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/index-scheduler/src/index_mapper/mod.rs:486-606",
+          "chars": 5033,
+          "tokens": 1678
+        }
+      ]
+    },
+    {
+      "taskId": "ms-usage-close-for-resize",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 1323,
+      "chars": 3969,
+      "toolCalls": 1,
+      "durationMs": 21,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"IndexMap close_for_resize\"",
+          "chars": 3969,
+          "tokens": 1323
+        }
+      ]
+    },
+    {
+      "taskId": "ms-usage-close-for-resize",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 971,
+      "chars": 2909,
+      "toolCalls": 3,
+      "durationMs": 20,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "rollback_index"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"IndexMap close_for_resize\"",
+          "chars": 1099,
+          "tokens": 367
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#alv",
+          "chars": 379,
+          "tokens": 127
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#al8",
+          "chars": 1431,
+          "tokens": 477
+        }
+      ]
+    },
+    {
+      "taskId": "ms-usage-close-for-resize",
+      "kind": "usage",
+      "strategy": "kirograph",
+      "tokens": 1176,
+      "chars": 3526,
+      "toolCalls": 1,
+      "durationMs": 42,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "resize_index",
+          "close_index",
+          "rollback_index"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "IndexMap close_for_resize",
+          "chars": 3526,
+          "tokens": 1176
+        }
+      ]
+    },
+    {
+      "taskId": "ms-usage-close-for-resize",
+      "kind": "usage",
+      "strategy": "codegraph",
+      "tokens": 8283,
+      "chars": 24848,
+      "toolCalls": 1,
+      "durationMs": 58,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "IndexMap close_for_resize",
+          "chars": 24848,
+          "tokens": 8283
+        }
+      ]
+    },
+    {
+      "taskId": "ms-usage-facet-bounds",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 22871,
+      "chars": 68613,
+      "toolCalls": 4,
+      "durationMs": 59,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "find_docids_of_facet_within_bounds",
+          "chars": 2616,
+          "tokens": 872
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/milli/src/search/facet/facet_range_search_test.rs",
+          "chars": 11529,
+          "tokens": 3843
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/milli/src/dynamic_search_rules/condition.rs",
+          "chars": 16170,
+          "tokens": 5390
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/milli/src/search/facet/filter/index_filter.rs",
+          "chars": 38298,
+          "tokens": 12766
+        }
+      ]
+    },
+    {
+      "taskId": "ms-usage-facet-bounds",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 6010,
+      "chars": 18028,
+      "toolCalls": 4,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.6,
+        "defRecall": 0.6,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "evaluate_operator",
+          "explore_facet_levels"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "find_docids_of_facet_within_bounds",
+          "chars": 2616,
+          "tokens": 872
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/milli/src/dynamic_search_rules/condition.rs:1-72",
+          "chars": 2892,
+          "tokens": 964
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/milli/src/dynamic_search_rules/condition.rs:154-381",
+          "chars": 9715,
+          "tokens": 3239
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/milli/src/search/facet/filter/index_filter.rs:1-82",
+          "chars": 2805,
+          "tokens": 935
+        }
+      ]
+    },
+    {
+      "taskId": "ms-usage-facet-bounds",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 1260,
+      "chars": 3780,
+      "toolCalls": 1,
+      "durationMs": 14,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.6,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "evaluate_operator",
+          "explore_facet_levels"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"find_docids_of_facet_within_bounds\"",
+          "chars": 3780,
+          "tokens": 1260
+        }
+      ]
+    },
+    {
+      "taskId": "ms-usage-facet-bounds",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 1153,
+      "chars": 3455,
+      "toolCalls": 3,
+      "durationMs": 13,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "crates/milli/src/dynamic_search_rules/condition.rs",
+          "crates/milli/src/search/facet/filter/index_filter.rs"
+        ],
+        "symbolsMissed": [
+          "apply_time_conditions",
+          "apply_filter_conditions",
+          "resolve_constraints",
+          "evaluate_operator",
+          "explore_facet_levels"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"find_docids_of_facet_within_bounds\"",
+          "chars": 904,
+          "tokens": 302
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#8iz",
+          "chars": 2176,
+          "tokens": 726
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#coa",
+          "chars": 375,
+          "tokens": 125
+        }
+      ]
+    },
+    {
+      "taskId": "ms-usage-facet-bounds",
+      "kind": "usage",
+      "strategy": "kirograph",
+      "tokens": 1068,
+      "chars": 3203,
+      "toolCalls": 1,
+      "durationMs": 46,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "crates/milli/src/dynamic_search_rules/condition.rs"
+        ],
+        "symbolsMissed": [
+          "apply_time_conditions",
+          "apply_filter_conditions",
+          "resolve_constraints",
+          "evaluate_operator",
+          "explore_facet_levels"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "find_docids_of_facet_within_bounds",
+          "chars": 3203,
+          "tokens": 1068
+        }
+      ]
+    },
+    {
+      "taskId": "ms-usage-facet-bounds",
+      "kind": "usage",
+      "strategy": "codegraph",
+      "tokens": 8333,
+      "chars": 24997,
+      "toolCalls": 1,
+      "durationMs": 62,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.6,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "evaluate_operator",
+          "explore_facet_levels"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "find_docids_of_facet_within_bounds",
+          "chars": 24997,
+          "tokens": 8333
+        }
+      ]
+    },
+    {
+      "taskId": "ms-impact-bucket-sort",
+      "kind": "impact",
+      "strategy": "native-naive",
+      "tokens": 43839,
+      "chars": 131510,
+      "toolCalls": 4,
+      "durationMs": 104,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "bucket_sort",
+          "chars": 1105,
+          "tokens": 369
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/milli/src/search/new/mod.rs",
+          "chars": 35963,
+          "tokens": 11988
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/milli/src/search/new/bucket_sort.rs",
+          "chars": 15064,
+          "tokens": 5022
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/meilisearch/src/search/federated/perform.rs",
+          "chars": 79378,
+          "tokens": 26460
+        }
+      ]
+    },
+    {
+      "taskId": "ms-impact-bucket-sort",
+      "kind": "impact",
+      "strategy": "native-ranged",
+      "tokens": 3917,
+      "chars": 11746,
+      "toolCalls": 4,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "bucket_sort",
+          "chars": 1105,
+          "tokens": 369
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/milli/src/search/new/bucket_sort.rs:1-82",
+          "chars": 2850,
+          "tokens": 950
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/milli/src/search/new/mod.rs:1-61",
+          "chars": 1907,
+          "tokens": 636
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/milli/src/search/new/mod.rs:723-908",
+          "chars": 5884,
+          "tokens": 1962
+        }
+      ]
+    },
+    {
+      "taskId": "ms-impact-bucket-sort",
+      "kind": "impact",
+      "strategy": "kopt-pack",
+      "tokens": 1183,
+      "chars": 3547,
+      "toolCalls": 1,
+      "durationMs": 11,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"bucket_sort scores\"",
+          "chars": 3547,
+          "tokens": 1183
+        }
+      ]
+    },
+    {
+      "taskId": "ms-impact-bucket-sort",
+      "kind": "impact",
+      "strategy": "kopt-hits+read",
+      "tokens": 4107,
+      "chars": 12317,
+      "toolCalls": 3,
+      "durationMs": 10,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "execute_vector_search"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"bucket_sort scores\"",
+          "chars": 881,
+          "tokens": 294
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#5oq",
+          "chars": 11221,
+          "tokens": 3741
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#5ol",
+          "chars": 215,
+          "tokens": 72
+        }
+      ]
+    },
+    {
+      "taskId": "ms-impact-bucket-sort",
+      "kind": "impact",
+      "strategy": "kirograph",
+      "tokens": 848,
+      "chars": 2542,
+      "toolCalls": 1,
+      "durationMs": 50,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0.3333333333333333,
+        "defRecall": 0,
+        "filesMissed": [
+          "crates/milli/src/search/new/mod.rs"
+        ],
+        "symbolsMissed": [
+          "execute_vector_search",
+          "execute_search"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "bucket_sort scores",
+          "chars": 2542,
+          "tokens": 848
+        }
+      ]
+    },
+    {
+      "taskId": "ms-impact-bucket-sort",
+      "kind": "impact",
+      "strategy": "codegraph",
+      "tokens": 8327,
+      "chars": 24981,
+      "toolCalls": 1,
+      "durationMs": 53,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "bucket_sort scores",
+          "chars": 24981,
+          "tokens": 8327
+        }
+      ]
+    },
+    {
+      "taskId": "ms-impact-search-rules",
+      "kind": "impact",
+      "strategy": "native-naive",
+      "tokens": 35584,
+      "chars": 106750,
+      "toolCalls": 4,
+      "durationMs": 342,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.6,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "get_index_search_rules",
+          "chars": 1377,
+          "tokens": 459
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/meilisearch-auth/src/lib.rs",
+          "chars": 13881,
+          "tokens": 4627
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/meilisearch/src/routes/chats/chat_completions.rs",
+          "chars": 41346,
+          "tokens": 13782
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/meilisearch/src/routes/indexes/search.rs",
+          "chars": 50146,
+          "tokens": 16716
+        }
+      ]
+    },
+    {
+      "taskId": "ms-impact-search-rules",
+      "kind": "impact",
+      "strategy": "native-ranged",
+      "tokens": 6264,
+      "chars": 18789,
+      "toolCalls": 4,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.8,
+        "defRecall": 0.4,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "legacy_search_with_post"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "get_index_search_rules",
+          "chars": 1377,
+          "tokens": 459
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/meilisearch-auth/src/lib.rs:231-351",
+          "chars": 4352,
+          "tokens": 1451
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/meilisearch/src/routes/chats/chat_completions.rs:196-434",
+          "chars": 8940,
+          "tokens": 2980
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/meilisearch/src/routes/indexes/search.rs:590-710",
+          "chars": 4120,
+          "tokens": 1374
+        }
+      ]
+    },
+    {
+      "taskId": "ms-impact-search-rules",
+      "kind": "impact",
+      "strategy": "kopt-pack",
+      "tokens": 1287,
+      "chars": 3859,
+      "toolCalls": 1,
+      "durationMs": 27,
+      "recall": {
+        "fileRecall": 0.25,
+        "symbolRecall": 0.2,
+        "defRecall": 0.2,
+        "filesMissed": [
+          "crates/meilisearch/src/routes/indexes/search.rs",
+          "crates/meilisearch/src/routes/indexes/facet_search.rs",
+          "crates/meilisearch/src/routes/indexes/similar.rs"
+        ],
+        "symbolsMissed": [
+          "legacy_search_with_url_query",
+          "legacy_search_with_post",
+          "search",
+          "similar"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"AuthFilter get_index_search_rules tenant token filter search routes\"",
+          "chars": 3859,
+          "tokens": 1287
+        }
+      ]
+    },
+    {
+      "taskId": "ms-impact-search-rules",
+      "kind": "impact",
+      "strategy": "kopt-hits+read",
+      "tokens": 517,
+      "chars": 1548,
+      "toolCalls": 3,
+      "durationMs": 28,
+      "recall": {
+        "fileRecall": 0.25,
+        "symbolRecall": 0.2,
+        "defRecall": 0.2,
+        "filesMissed": [
+          "crates/meilisearch/src/routes/indexes/search.rs",
+          "crates/meilisearch/src/routes/indexes/facet_search.rs",
+          "crates/meilisearch/src/routes/indexes/similar.rs"
+        ],
+        "symbolsMissed": [
+          "legacy_search_with_url_query",
+          "legacy_search_with_post",
+          "search",
+          "similar"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"AuthFilter get_index_search_rules tenant token filter search routes\"",
+          "chars": 999,
+          "tokens": 333
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#as5",
+          "chars": 364,
+          "tokens": 122
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#arr",
+          "chars": 185,
+          "tokens": 62
+        }
+      ]
+    },
+    {
+      "taskId": "ms-impact-search-rules",
+      "kind": "impact",
+      "strategy": "kirograph",
+      "tokens": 2770,
+      "chars": 8309,
+      "toolCalls": 1,
+      "durationMs": 45,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.4,
+        "defRecall": 0,
+        "filesMissed": [
+          "crates/meilisearch-auth/src/lib.rs",
+          "crates/meilisearch/src/routes/indexes/search.rs",
+          "crates/meilisearch/src/routes/indexes/facet_search.rs",
+          "crates/meilisearch/src/routes/indexes/similar.rs"
+        ],
+        "symbolsMissed": [
+          "legacy_search_with_url_query",
+          "legacy_search_with_post",
+          "similar"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "AuthFilter get_index_search_rules tenant token filter search routes",
+          "chars": 8309,
+          "tokens": 2770
+        }
+      ]
+    },
+    {
+      "taskId": "ms-impact-search-rules",
+      "kind": "impact",
+      "strategy": "codegraph",
+      "tokens": 8327,
+      "chars": 24980,
+      "toolCalls": 1,
+      "durationMs": 148,
+      "recall": {
+        "fileRecall": 0.75,
+        "symbolRecall": 0.6,
+        "defRecall": 0.4,
+        "filesMissed": [
+          "crates/meilisearch/src/routes/indexes/similar.rs"
+        ],
+        "symbolsMissed": [
+          "legacy_search_with_url_query",
+          "legacy_search_with_post"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "AuthFilter get_index_search_rules tenant token filter search routes",
+          "chars": 24980,
+          "tokens": 8327
+        }
+      ]
+    }
+  ],
+  "aggregates": [
+    {
+      "strategy": "native-naive",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 28385,
+      "meanTokens": 31261,
+      "p90Tokens": 49448,
+      "totalTokens": 375137,
+      "totalChars": 1125375,
+      "meanToolCalls": 3.8333333333333335,
+      "meanFileRecall": 0.6666666666666666,
+      "meanSymbolRecall": 0.7083333333333334,
+      "meanDefRecall": 0.4875,
+      "found": 7,
+      "foundRate": 0.5833333333333334,
+      "tokensPerFound": 53591
+    },
+    {
+      "strategy": "native-ranged",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 6194,
+      "meanTokens": 6448,
+      "p90Tokens": 7821,
+      "totalTokens": 77372,
+      "totalChars": 232075,
+      "meanToolCalls": 3.9166666666666665,
+      "meanFileRecall": 0.6666666666666666,
+      "meanSymbolRecall": 0.5333333333333333,
+      "meanDefRecall": 0.34722222222222227,
+      "found": 3,
+      "foundRate": 0.25,
+      "tokensPerFound": 25791
+    },
+    {
+      "strategy": "kopt-pack",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 1325,
+      "meanTokens": 1286,
+      "p90Tokens": 1391,
+      "totalTokens": 15429,
+      "totalChars": 46272,
+      "meanToolCalls": 1,
+      "meanFileRecall": 0.7847222222222222,
+      "meanSymbolRecall": 0.7749999999999999,
+      "meanDefRecall": 0.4055555555555555,
+      "found": 7,
+      "foundRate": 0.5833333333333334,
+      "tokensPerFound": 2204
+    },
+    {
+      "strategy": "kopt-hits+read",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 832,
+      "meanTokens": 1113,
+      "p90Tokens": 1157,
+      "totalTokens": 13356,
+      "totalChars": 40024,
+      "meanToolCalls": 3,
+      "meanFileRecall": 0.7013888888888888,
+      "meanSymbolRecall": 0.6486111111111111,
+      "meanDefRecall": 0.37083333333333335,
+      "found": 4,
+      "foundRate": 0.3333333333333333,
+      "tokensPerFound": 3339
+    },
+    {
+      "strategy": "kirograph",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 1057.5,
+      "meanTokens": 1447,
+      "p90Tokens": 2770,
+      "totalTokens": 17364,
+      "totalChars": 52075,
+      "meanToolCalls": 1,
+      "meanFileRecall": 0.36111111111111116,
+      "meanSymbolRecall": 0.08888888888888889,
+      "meanDefRecall": 0,
+      "found": 0,
+      "foundRate": 0,
+      "tokensPerFound": null
+    },
+    {
+      "strategy": "codegraph",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 8317.5,
+      "meanTokens": 8057,
+      "p90Tokens": 8327,
+      "totalTokens": 96685,
+      "totalChars": 290041,
+      "meanToolCalls": 1,
+      "meanFileRecall": 0.6875,
+      "meanSymbolRecall": 0.6833333333333332,
+      "meanDefRecall": 0.31805555555555554,
+      "found": 5,
+      "foundRate": 0.4166666666666667,
+      "tokensPerFound": 19337
+    }
+  ],
+  "paired": [
+    {
+      "a": "native-naive",
+      "b": "kopt-pack",
+      "nRun": 12,
+      "nBoth": 3,
+      "onlyA": 4,
+      "onlyB": 4,
+      "medianRatio": 0.07674319727891156,
+      "geoMeanRatio": 0.05602546396671554,
+      "bCheaper": 3
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-pack",
+      "nRun": 12,
+      "nBoth": 3,
+      "onlyA": 0,
+      "onlyB": 4,
+      "medianRatio": 0.2775330396475771,
+      "geoMeanRatio": 0.26908771480291355,
+      "bCheaper": 3
+    },
+    {
+      "a": "native-naive",
+      "b": "kopt-hits+read",
+      "nRun": 12,
+      "nBoth": 1,
+      "onlyA": 6,
+      "onlyB": 3,
+      "medianRatio": 0.06085246598639456,
+      "geoMeanRatio": 0.060852465986394565,
+      "bCheaper": 1
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-hits+read",
+      "nRun": 12,
+      "nBoth": 1,
+      "onlyA": 2,
+      "onlyB": 3,
+      "medianRatio": 0.18432066967160335,
+      "geoMeanRatio": 0.18432066967160335,
+      "bCheaper": 1
+    },
+    {
+      "a": "kirograph",
+      "b": "kopt-pack",
+      "nRun": 12,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 7,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "codegraph",
+      "b": "kopt-pack",
+      "nRun": 12,
+      "nBoth": 4,
+      "onlyA": 1,
+      "onlyB": 3,
+      "medianRatio": 0.15962913956536964,
+      "geoMeanRatio": 0.15575162624412403,
+      "bCheaper": 4
+    },
+    {
+      "a": "kirograph",
+      "b": "kopt-hits+read",
+      "nRun": 12,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 4,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "codegraph",
+      "b": "kopt-hits+read",
+      "nRun": 12,
+      "nBoth": 2,
+      "onlyA": 3,
+      "onlyB": 2,
+      "medianRatio": 0.09095315397163775,
+      "geoMeanRatio": 0.09077334368467208,
+      "bCheaper": 2
+    },
+    {
+      "a": "native-ranged",
+      "b": "kirograph",
+      "nRun": 12,
+      "nBoth": 0,
+      "onlyA": 3,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-ranged",
+      "b": "codegraph",
+      "nRun": 12,
+      "nBoth": 2,
+      "onlyA": 1,
+      "onlyB": 3,
+      "medianRatio": 1.9317162140211785,
+      "geoMeanRatio": 1.9219352459002428,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-naive",
+      "b": "native-ranged",
+      "nRun": 12,
+      "nBoth": 3,
+      "onlyA": 4,
+      "onlyB": 0,
+      "medianRatio": 0.3059691912708601,
+      "geoMeanRatio": 0.20820520924840433,
+      "bCheaper": 3
+    }
+  ],
+  "byKind": [
+    {
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tasks": 4,
+      "found": 1,
+      "medianTokens": 31264
+    },
+    {
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tasks": 4,
+      "found": 1,
+      "medianTokens": 6458.5
+    },
+    {
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tasks": 4,
+      "found": 4,
+      "medianTokens": 1339.5
+    },
+    {
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tasks": 4,
+      "found": 4,
+      "medianTokens": 756.5
+    },
+    {
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tasks": 4,
+      "found": 0,
+      "medianTokens": 954.5
+    },
+    {
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tasks": 4,
+      "found": 2,
+      "medianTokens": 8312
+    },
+    {
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tasks": 3,
+      "found": 1,
+      "medianTokens": 27555
+    },
+    {
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tasks": 3,
+      "found": 0,
+      "medianTokens": 7106
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tasks": 3,
+      "found": 1,
+      "medianTokens": 1334
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tasks": 3,
+      "found": 0,
+      "medianTokens": 860
+    },
+    {
+      "kind": "explain",
+      "strategy": "kirograph",
+      "tasks": 3,
+      "found": 0,
+      "medianTokens": 1335
+    },
+    {
+      "kind": "explain",
+      "strategy": "codegraph",
+      "tasks": 3,
+      "found": 0,
+      "medianTokens": 8298
+    },
+    {
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tasks": 3,
+      "found": 3,
+      "medianTokens": 22871
+    },
+    {
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tasks": 3,
+      "found": 1,
+      "medianTokens": 5146
+    },
+    {
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tasks": 3,
+      "found": 1,
+      "medianTokens": 1260
+    },
+    {
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tasks": 3,
+      "found": 0,
+      "medianTokens": 971
+    },
+    {
+      "kind": "usage",
+      "strategy": "kirograph",
+      "tasks": 3,
+      "found": 0,
+      "medianTokens": 1068
+    },
+    {
+      "kind": "usage",
+      "strategy": "codegraph",
+      "tasks": 3,
+      "found": 2,
+      "medianTokens": 8326
+    },
+    {
+      "kind": "impact",
+      "strategy": "native-naive",
+      "tasks": 2,
+      "found": 2,
+      "medianTokens": 39711.5
+    },
+    {
+      "kind": "impact",
+      "strategy": "native-ranged",
+      "tasks": 2,
+      "found": 1,
+      "medianTokens": 5090.5
+    },
+    {
+      "kind": "impact",
+      "strategy": "kopt-pack",
+      "tasks": 2,
+      "found": 1,
+      "medianTokens": 1235
+    },
+    {
+      "kind": "impact",
+      "strategy": "kopt-hits+read",
+      "tasks": 2,
+      "found": 0,
+      "medianTokens": 2312
+    },
+    {
+      "kind": "impact",
+      "strategy": "kirograph",
+      "tasks": 2,
+      "found": 0,
+      "medianTokens": 1809
+    },
+    {
+      "kind": "impact",
+      "strategy": "codegraph",
+      "tasks": 2,
+      "found": 1,
+      "medianTokens": 8327
+    }
+  ]
+}

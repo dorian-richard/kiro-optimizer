@@ -1,0 +1,101 @@
+{
+  "label": "codegraph",
+  "tool": "codegraph",
+  "package": "@colbymchenry/codegraph",
+  "version": "1.6.2",
+  "mode": "default",
+  "repo": {
+    "name": "meilisearch",
+    "url": "https://github.com/meilisearch/meilisearch.git",
+    "tag": "v1.54.3",
+    "commit": "7ebd97e38c36882b0c78d79e433b9115b4f003b3",
+    "language": "rust",
+    "path": "bench/repos/meilisearch"
+  },
+  "headCommit": "7ebd97e38c36882b0c78d79e433b9115b4f003b3",
+  "commitMatchesTasks": true,
+  "date": "2026-10-09T13:50:36.951Z",
+  "image": "kopt-bench/codegraph:1.6.2",
+  "imageId": "sha256:db8f2e822e3863b14f3c037bc692fb20915bf2e48a3083248d72d3938a716f5a",
+  "engine": "docker",
+  "limits": "memory=6g cpus=8",
+  "cgroupMemory": {
+    "maxBytes": 6442450944,
+    "peakBytes": 1852788736,
+    "oomKills": 0
+  },
+  "container": {
+    "node": "v22.23.3",
+    "arch": "arm64",
+    "platform": "linux",
+    "cpus": 10,
+    "memBytes": 8214851584,
+    "network": "none"
+  },
+  "primaryTool": "codegraph_explore",
+  "toolArgsExample": {
+    "query": "<input>"
+  },
+  "serverCommand": {
+    "command": "codegraph",
+    "args": [
+      "serve",
+      "--mcp"
+    ]
+  },
+  "oneSessionPerTask": true,
+  "indexOk": true,
+  "indexMs": 8067,
+  "indexSteps": [
+    {
+      "command": "codegraph init --yes /work/meilisearch",
+      "ms": 8067,
+      "exit": 0,
+      "signal": null,
+      "oomKills": 0
+    }
+  ],
+  "copyMs": 2271,
+  "indexDirs": [
+    "<repo>/.codegraph"
+  ],
+  "indexSizeBytes": 78508261,
+  "modelBytes": 0,
+  "indexStatus": "CodeGraph Status\n\nProject: /work/meilisearch\n\nIndex Statistics:\n  Files:     738\n  Nodes:     19,552\n  Edges:     63,552\n  DB Size:   74.87 MB\n  Backend:   node:sqlite — built-in (full WAL)\n  Journal:   wal\n\nNodes by Kind:\n  import          5,997\n  method          4,862\n  function        2,652\n  enum_member     2,320\n  struct          1,466\n  file            718\n  variable        521\n  enum            515\n  type_alias      436\n  trait           59\n  route           6\n\nFiles by Language:\n  rust            718\n  yaml            20\n\n✓ Index is up to date",
+  "surface": {
+    "serverInfo": {
+      "name": "codegraph",
+      "version": "1.6.2"
+    },
+    "toolCount": 1,
+    "toolNames": [
+      "codegraph_explore"
+    ],
+    "toolsChars": 1725,
+    "toolsEstTokens": 575,
+    "instructionsChars": 6718,
+    "instructionsEstTokens": 2240,
+    "primaryToolListed": true,
+    "file": "codegraph.surface.json"
+  },
+  "inputs": {
+    "search": {
+      "file": "codegraph-meilisearch.jsonl",
+      "tasks": 12,
+      "failures": 0,
+      "queryMsMedian": 122,
+      "queryMsP90": 254,
+      "startupMsMedian": 128
+    },
+    "question": {
+      "file": "codegraph-meilisearch-question.jsonl",
+      "tasks": 12,
+      "failures": 0,
+      "queryMsMedian": 223,
+      "queryMsP90": 350,
+      "startupMsMedian": 152
+    }
+  },
+  "charsPerToken": 3,
+  "errors": []
+}

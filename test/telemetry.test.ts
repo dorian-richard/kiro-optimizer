@@ -1,9 +1,10 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, utimesSync, writeFileSync, appendFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { homedir, tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { defaultConfig, type KoptConfig } from '../src/core/config.js';
 import { collectKiroCredits, dayFileName, pruneTelemetry, record, RETAIN_DAYS, stats } from '../src/telemetry/index.js';
+import { kiroHome, kiroHomes } from '../src/telemetry/credits.js';
 
 let tmp: string;
 let prevKiroHome: string | undefined;
@@ -125,6 +126,29 @@ describe('collectKiroCredits', () => {
       expect(more.map((e) => e.credits).sort()).toEqual([1.25, 2]);
     } finally {
       process.env.KOPT_KIRO_HOME = join(tmp, 'empty-kiro-home');
+    }
+  });
+
+  it("honours Kiro's KIRO_HOME (Kiro CLI sessions) and still reads ~/.kiro (Kiro IDE ignores KIRO_HOME)", () => {
+    const def = join(homedir(), '.kiro');
+    expect(kiroHomes({ KIRO_HOME: '/k' })).toEqual(['/k', def]);
+    expect(kiroHomes({})).toEqual([def]);
+    expect(kiroHomes({ KOPT_KIRO_HOME: '/t', KIRO_HOME: '/k' })).toEqual(['/t']);
+    expect(kiroHome({ KIRO_HOME: '/k' })).toBe('/k');
+    const home = kiroHomeCopy('home-kiro-home');
+    const saved = { KOPT_KIRO_HOME: process.env.KOPT_KIRO_HOME, KIRO_HOME: process.env.KIRO_HOME, HOME: process.env.HOME, USERPROFILE: process.env.USERPROFILE };
+    delete process.env.KOPT_KIRO_HOME;
+    process.env.KIRO_HOME = home;
+    // never read the developer's real ~/.kiro: an empty fake home
+    process.env.HOME = process.env.USERPROFILE = join(tmp, 'fake-user-home');
+    try {
+      const evs = collectKiroCredits(makeConfig('collect-kiro-home'));
+      expect(evs.filter((e) => e.meta?.source === 'kiro-cli').map((e) => e.credits)).toEqual([0.103, 0.5]);
+    } finally {
+      for (const [k, v] of Object.entries(saved)) {
+        if (v === undefined) delete process.env[k];
+        else process.env[k] = v;
+      }
     }
   });
 

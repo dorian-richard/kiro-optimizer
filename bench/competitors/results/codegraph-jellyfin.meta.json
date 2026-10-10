@@ -1,0 +1,101 @@
+{
+  "label": "codegraph",
+  "tool": "codegraph",
+  "package": "@colbymchenry/codegraph",
+  "version": "1.6.2",
+  "mode": "default",
+  "repo": {
+    "name": "jellyfin",
+    "url": "https://github.com/jellyfin/jellyfin.git",
+    "tag": "v10.11.11",
+    "commit": "1fbd8739292cce610231be93daf43368733edf63",
+    "language": "c_sharp",
+    "path": "bench/repos/jellyfin"
+  },
+  "headCommit": "1fbd8739292cce610231be93daf43368733edf63",
+  "commitMatchesTasks": true,
+  "date": "2026-10-09T13:51:22.884Z",
+  "image": "kopt-bench/codegraph:1.6.2",
+  "imageId": "sha256:db8f2e822e3863b14f3c037bc692fb20915bf2e48a3083248d72d3938a716f5a",
+  "engine": "docker",
+  "limits": "memory=6g cpus=8",
+  "cgroupMemory": {
+    "maxBytes": 6442450944,
+    "peakBytes": 2061787136,
+    "oomKills": 0
+  },
+  "container": {
+    "node": "v22.23.3",
+    "arch": "arm64",
+    "platform": "linux",
+    "cpus": 10,
+    "memBytes": 8214851584,
+    "network": "none"
+  },
+  "primaryTool": "codegraph_explore",
+  "toolArgsExample": {
+    "query": "<input>"
+  },
+  "serverCommand": {
+    "command": "codegraph",
+    "args": [
+      "serve",
+      "--mcp"
+    ]
+  },
+  "oneSessionPerTask": true,
+  "indexOk": true,
+  "indexMs": 6048,
+  "indexSteps": [
+    {
+      "command": "codegraph init --yes /work/jellyfin",
+      "ms": 6048,
+      "exit": 0,
+      "signal": null,
+      "oomKills": 0
+    }
+  ],
+  "copyMs": 2877,
+  "indexDirs": [
+    "<repo>/.codegraph"
+  ],
+  "indexSizeBytes": 109158629,
+  "modelBytes": 0,
+  "indexStatus": "CodeGraph Status\n\nProject: /work/jellyfin\n\nIndex Statistics:\n  Files:     1,975\n  Nodes:     33,601\n  Edges:     70,455\n  DB Size:   104.10 MB\n  Backend:   node:sqlite — built-in (full WAL)\n  Journal:   wal\n\nNodes by Kind:\n  import          11,317\n  method          7,343\n  property        5,346\n  file            1,963\n  namespace       1,944\n  field           1,823\n  class           1,692\n  enum_member     1,008\n  constant        424\n  route           405\n  interface       196\n  enum            132\n  struct          8\n\nFiles by Language:\n  csharp          1,960\n  yaml            12\n  xml             3\n\n✓ Index is up to date",
+  "surface": {
+    "serverInfo": {
+      "name": "codegraph",
+      "version": "1.6.2"
+    },
+    "toolCount": 1,
+    "toolNames": [
+      "codegraph_explore"
+    ],
+    "toolsChars": 1725,
+    "toolsEstTokens": 575,
+    "instructionsChars": 6718,
+    "instructionsEstTokens": 2240,
+    "primaryToolListed": true,
+    "file": "codegraph.surface.json"
+  },
+  "inputs": {
+    "search": {
+      "file": "codegraph-jellyfin.jsonl",
+      "tasks": 12,
+      "failures": 0,
+      "queryMsMedian": 122,
+      "queryMsP90": 294,
+      "startupMsMedian": 147
+    },
+    "question": {
+      "file": "codegraph-jellyfin-question.jsonl",
+      "tasks": 12,
+      "failures": 0,
+      "queryMsMedian": 257,
+      "queryMsP90": 418,
+      "startupMsMedian": 150
+    }
+  },
+  "charsPerToken": 3,
+  "errors": []
+}

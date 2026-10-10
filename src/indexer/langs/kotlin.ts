@@ -1,6 +1,6 @@
 // Kotlin (fwcd grammar): no field names, so children are found by node type.
 import type { Node } from 'web-tree-sitter';
-import { baseTypeName, Ex, isConstName, isUpperStart, type Scope } from '../extract.js';
+import { baseTypeName, declaredType, Ex, isConstName, isUpperStart, type Scope } from '../extract.js';
 import type { SymbolKind } from '../../core/types.js';
 
 const TYPE_NODES = ['type_identifier'];
@@ -25,7 +25,7 @@ function visible(mods: string): boolean {
 /** `user_type` / `nullable_type` -> simple name of the outermost type. */
 function typeOf(node: Node | null | undefined): string | undefined {
   if (!node) return undefined;
-  return baseTypeName(node.text.replace(/\?$/, ''));
+  return declaredType(node.text.replace(/\?$/, ''));
 }
 
 function annotations(ex: Ex, node: Node, scope: Scope): void {
@@ -161,8 +161,12 @@ function property(ex: Ex, node: Node, scope: Scope): void {
   const n = vd ? child(vd, 'simple_identifier') : null;
   const ty = vd?.namedChildren.find((c) => c && (c.type === 'user_type' || c.type === 'nullable_type')) ?? null;
   if (scope.local || !n) {
-    if (n) scope.vars.set(n.text, typeOf(ty) ?? ctorCall(node));
+    // value first: `val x = repo.find(id)` types x from the callee's declared result
     for (const c of node.namedChildren) if (c && c !== vd) ex.visit(ex, c, scope);
+    if (n) {
+      const value = node.namedChildren.find((c) => c && c !== vd && c.type !== 'modifiers' && c.type !== 'binding_pattern_kind');
+      scope.vars.set(n.text, typeOf(ty) ?? ctorCall(node) ?? (ty ? undefined : ex.valueHint(value)));
+    }
     return;
   }
   const mods = modifiersText(node);
@@ -181,18 +185,47 @@ function callExpr(ex: Ex, node: Node, scope: Scope): void {
   if (!callee) return;
   if (callee.type === 'simple_identifier') {
     const name = ex.dealias(callee.text);
-    ex.addRef(scope, name, isUpperStart(name) ? 'new' : 'call', callee);
+    ex.noteCall(node, ex.addRef(scope, name, isUpperStart(name) ? 'new' : 'call', callee));
   } else if (callee.type === 'navigation_expression') {
     const suffix = callee.namedChildren[callee.namedChildCount - 1];
     const recv = callee.namedChildren[0];
     const n = suffix?.type === 'navigation_suffix' ? child(suffix, 'simple_identifier') : null;
+    let ref;
     if (n && recv) {
       const q = recv.type === 'this_expression' ? 'this' : recv.type === 'super_expression' ? 'super' : recv.text;
-      ex.addRef(scope, n.text, isUpperStart(n.text) && q !== 'this' ? 'new' : 'call', n, q, ex.receiverHint(q, scope));
+      ref = ex.addRef(scope, n.text, isUpperStart(n.text) && q !== 'this' ? 'new' : 'call', n, q, ex.receiverHint(q, scope));
+      ex.noteCall(node, ref);
     }
-    if (recv) ex.visit(ex, recv, scope);
+    if (recv) {
+      ex.visit(ex, recv, scope);
+      ex.chainHint(ref, recv);
+    }
   } else ex.visit(ex, callee, scope);
   for (const c of node.namedChildren) if (c && c !== callee) ex.visit(ex, c, scope);
+}
+
+/**
+ * Assignment target `this.a.b = v` (flat: receiver, then one navigation_suffix per member): a write of the last
+ * member, reads of the members before it, each qualified by the text that precedes it.
+ */
+function assignTarget(ex: Ex, node: Node, scope: Scope): void {
+  const kids = node.namedChildren.filter((c): c is Node => !!c);
+  const lastSuffix = kids.findLastIndex((c) => c.type === 'navigation_suffix');
+  if (lastSuffix <= 0) {
+    ex.visitChildren(node, scope);
+    return;
+  }
+  ex.visit(ex, kids[0], scope);
+  for (let i = 1; i < kids.length; i++) {
+    const c = kids[i];
+    const n = c.type === 'navigation_suffix' ? child(c, 'simple_identifier') : null;
+    if (!n) {
+      ex.visit(ex, c, scope);
+      continue;
+    }
+    const q = ex.text.slice(node.startIndex, c.startIndex).replace(/\s*(?:\?\.|\.)?\s*$/, '').trim();
+    ex.addRef(scope, n.text, i === lastSuffix ? 'write' : 'read', n, q, ex.receiverHint(q, scope));
+  }
 }
 
 export function visitKotlin(ex: Ex, node: Node, scope: Scope): void {
@@ -260,6 +293,17 @@ export function visitKotlin(ex: Ex, node: Node, scope: Scope): void {
     }
     case 'call_expression':
       callExpr(ex, node, scope);
+      return;
+    case 'navigation_expression': {
+      // `obj.prop`, `this.x`, `Color.RED` (calls record their callee in callExpr)
+      const recv = node.namedChildren[0];
+      const suffix = node.namedChildren[node.namedChildCount - 1];
+      const n = suffix?.type === 'navigation_suffix' && suffix !== recv ? child(suffix, 'simple_identifier') : null;
+      ex.memberRef(scope, node, n, recv);
+      return;
+    }
+    case 'directly_assignable_expression':
+      assignTarget(ex, node, scope);
       return;
     case 'lambda_literal':
     case 'anonymous_function':

@@ -1,0 +1,765 @@
+{
+  "meta": {
+    "label": "heldout-django-question",
+    "repo": {
+      "name": "django",
+      "url": "https://github.com/django/django.git",
+      "tag": "6.1.2",
+      "commit": "2212534bae393714e1e51db2341d4fd5545e19f6",
+      "language": "python",
+      "path": "bench/repos/django"
+    },
+    "repoRoot": "bench/repos/django",
+    "headCommit": "2212534bae393714e1e51db2341d4fd5545e19f6",
+    "date": "2026-10-09T20:18:04.035Z",
+    "input": "question",
+    "charsPerToken": 3,
+    "strategies": [
+      "native-naive",
+      "native-ranged",
+      "kopt-pack",
+      "kopt-hits+read",
+      "kirograph",
+      "codegraph"
+    ],
+    "grepLimits": {
+      "maxMatches": 100,
+      "maxChars": 10000,
+      "maxLineChars": 250
+    },
+    "readLimits": {
+      "naiveTopFiles": 3,
+      "naiveMaxLines": 2000,
+      "rangedMatches": 4,
+      "rangedContext": 60
+    },
+    "koptBudgets": {
+      "find": 700,
+      "pack": 2500,
+      "read": 3000
+    },
+    "index": {
+      "built": false,
+      "durationMs": 0,
+      "files": 2964,
+      "symbols": 51183,
+      "path": "<index-dir>/.kopt-django/index.db"
+    },
+    "notes": [
+      "kirograph: outputs loaded from bench/competitors/results/kirograph-django.jsonl",
+      "codegraph: outputs loaded from bench/competitors/results/codegraph-django.jsonl"
+    ],
+    "durationMs": 1502
+  },
+  "results": [
+    {
+      "taskId": "ho-dj-explain-bulk-batches",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 47309,
+      "chars": 141926,
+      "toolCalls": 4,
+      "durationMs": 741,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 1,
+        "defRecall": 0,
+        "filesMissed": [
+          "django/db/backends/base/operations.py"
+        ],
+        "symbolsMissed": [],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "bulk_create",
+          "chars": 8579,
+          "tokens": 2860
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/bulk_create/tests.py",
+          "chars": 37065,
+          "tokens": 12355
+        },
+        {
+          "tool": "read_file",
+          "args": "django/db/models/query.py",
+          "chars": 77277,
+          "tokens": 25759
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/topics/db/optimization.txt",
+          "chars": 19005,
+          "tokens": 6335
+        }
+      ]
+    },
+    {
+      "taskId": "ho-dj-explain-bulk-batches",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 8737,
+      "chars": 26205,
+      "toolCalls": 4,
+      "durationMs": 1,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [
+          "django/db/backends/base/operations.py"
+        ],
+        "symbolsMissed": [],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "bulk_create",
+          "chars": 8579,
+          "tokens": 2860
+        },
+        {
+          "tool": "read_file",
+          "args": "django/db/models/query.py:703-893",
+          "chars": 8239,
+          "tokens": 2747
+        },
+        {
+          "tool": "read_file",
+          "args": "django/db/models/query.py:911-1031",
+          "chars": 5294,
+          "tokens": 1765
+        },
+        {
+          "tool": "read_file",
+          "args": "django/db/models/query.py:2121-2241",
+          "chars": 4093,
+          "tokens": 1365
+        }
+      ]
+    },
+    {
+      "taskId": "ho-dj-explain-bulk-batches",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 957,
+      "chars": 2871,
+      "toolCalls": 1,
+      "durationMs": 51,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [
+          "django/db/backends/base/operations.py"
+        ],
+        "symbolsMissed": [
+          "bulk_batch_size"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"How does QuerySet.bulk_create split a large list of objects into several INSERT statements?\"",
+          "chars": 2871,
+          "tokens": 957
+        }
+      ]
+    },
+    {
+      "taskId": "ho-dj-explain-bulk-batches",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 4139,
+      "chars": 12413,
+      "toolCalls": 3,
+      "durationMs": 38,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [
+          "django/db/backends/base/operations.py"
+        ],
+        "symbolsMissed": [
+          "bulk_batch_size"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"How does QuerySet.bulk_create split a large list of objects into several INSERT statements?\"",
+          "chars": 991,
+          "tokens": 331
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#aud",
+          "chars": 4947,
+          "tokens": 1649
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#ath",
+          "chars": 6475,
+          "tokens": 2159
+        }
+      ]
+    },
+    {
+      "taskId": "ho-dj-explain-bulk-batches",
+      "kind": "explain",
+      "strategy": "kirograph",
+      "skipped": "no kirograph result line for this task",
+      "tokens": 0,
+      "chars": 0,
+      "toolCalls": 0,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "django/db/models/query.py",
+          "django/db/backends/base/operations.py"
+        ],
+        "symbolsMissed": [
+          "_batched_insert",
+          "bulk_batch_size"
+        ],
+        "found": false
+      },
+      "calls": []
+    },
+    {
+      "taskId": "ho-dj-explain-bulk-batches",
+      "kind": "explain",
+      "strategy": "codegraph",
+      "skipped": "no codegraph result line for this task",
+      "tokens": 0,
+      "chars": 0,
+      "toolCalls": 0,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "django/db/models/query.py",
+          "django/db/backends/base/operations.py"
+        ],
+        "symbolsMissed": [
+          "_batched_insert",
+          "bulk_batch_size"
+        ],
+        "found": false
+      },
+      "calls": []
+    },
+    {
+      "taskId": "ho-dj-usage-validate-password",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 32340,
+      "chars": 97017,
+      "toolCalls": 4,
+      "durationMs": 564,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.3333333333333333,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "handle",
+          "handle"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "validate_password",
+          "chars": 3279,
+          "tokens": 1093
+        },
+        {
+          "tool": "read_file",
+          "args": "django/contrib/auth/forms.py",
+          "chars": 20791,
+          "tokens": 6931
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/auth_tests/test_validators.py",
+          "chars": 16290,
+          "tokens": 5430
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/auth_tests/test_auth_backends.py",
+          "chars": 56657,
+          "tokens": 18886
+        }
+      ]
+    },
+    {
+      "taskId": "ho-dj-usage-validate-password",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 5934,
+      "chars": 17800,
+      "toolCalls": 3,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.3333333333333333,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "handle",
+          "handle"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "validate_password",
+          "chars": 3279,
+          "tokens": 1093
+        },
+        {
+          "tool": "read_file",
+          "args": "django/contrib/auth/forms.py:47-259",
+          "chars": 7390,
+          "tokens": 2464
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/topics/auth/default.txt:1607-1788",
+          "chars": 7131,
+          "tokens": 2377
+        }
+      ]
+    },
+    {
+      "taskId": "ho-dj-usage-validate-password",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 1352,
+      "chars": 4055,
+      "toolCalls": 1,
+      "durationMs": 33,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"Which code calls django.contrib.auth.password_validation.validate_password?\"",
+          "chars": 4055,
+          "tokens": 1352
+        }
+      ]
+    },
+    {
+      "taskId": "ho-dj-usage-validate-password",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 799,
+      "chars": 2393,
+      "toolCalls": 3,
+      "durationMs": 26,
+      "recall": {
+        "fileRecall": 0.3333333333333333,
+        "symbolRecall": 0.3333333333333333,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [
+          "django/contrib/auth/management/commands/changepassword.py",
+          "django/contrib/auth/management/commands/createsuperuser.py"
+        ],
+        "symbolsMissed": [
+          "handle",
+          "handle"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"Which code calls django.contrib.auth.password_validation.validate_password?\"",
+          "chars": 1427,
+          "tokens": 476
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#3sp",
+          "chars": 676,
+          "tokens": 226
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#3t9",
+          "chars": 290,
+          "tokens": 97
+        }
+      ]
+    },
+    {
+      "taskId": "ho-dj-usage-validate-password",
+      "kind": "usage",
+      "strategy": "kirograph",
+      "skipped": "no kirograph result line for this task",
+      "tokens": 0,
+      "chars": 0,
+      "toolCalls": 0,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "django/contrib/auth/forms.py",
+          "django/contrib/auth/management/commands/changepassword.py",
+          "django/contrib/auth/management/commands/createsuperuser.py"
+        ],
+        "symbolsMissed": [
+          "validate_password_for_user",
+          "handle",
+          "handle"
+        ],
+        "found": false
+      },
+      "calls": []
+    },
+    {
+      "taskId": "ho-dj-usage-validate-password",
+      "kind": "usage",
+      "strategy": "codegraph",
+      "skipped": "no codegraph result line for this task",
+      "tokens": 0,
+      "chars": 0,
+      "toolCalls": 0,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "django/contrib/auth/forms.py",
+          "django/contrib/auth/management/commands/changepassword.py",
+          "django/contrib/auth/management/commands/createsuperuser.py"
+        ],
+        "symbolsMissed": [
+          "validate_password_for_user",
+          "handle",
+          "handle"
+        ],
+        "found": false
+      },
+      "calls": []
+    }
+  ],
+  "aggregates": [
+    {
+      "strategy": "native-naive",
+      "tasks": 2,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 39824.5,
+      "meanTokens": 39825,
+      "p90Tokens": 47309,
+      "totalTokens": 79649,
+      "totalChars": 238943,
+      "meanToolCalls": 4,
+      "meanFileRecall": 0.75,
+      "meanSymbolRecall": 0.6666666666666666,
+      "meanDefRecall": 0.16666666666666666,
+      "found": 0,
+      "foundRate": 0,
+      "tokensPerFound": null
+    },
+    {
+      "strategy": "native-ranged",
+      "tasks": 2,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 7335.5,
+      "meanTokens": 7336,
+      "p90Tokens": 8737,
+      "totalTokens": 14671,
+      "totalChars": 44005,
+      "meanToolCalls": 3.5,
+      "meanFileRecall": 0.75,
+      "meanSymbolRecall": 0.6666666666666666,
+      "meanDefRecall": 0.41666666666666663,
+      "found": 0,
+      "foundRate": 0,
+      "tokensPerFound": null
+    },
+    {
+      "strategy": "kopt-pack",
+      "tasks": 2,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 1154.5,
+      "meanTokens": 1155,
+      "p90Tokens": 1352,
+      "totalTokens": 2309,
+      "totalChars": 6926,
+      "meanToolCalls": 1,
+      "meanFileRecall": 0.75,
+      "meanSymbolRecall": 0.75,
+      "meanDefRecall": 0.41666666666666663,
+      "found": 1,
+      "foundRate": 0.5,
+      "tokensPerFound": 2309
+    },
+    {
+      "strategy": "kopt-hits+read",
+      "tasks": 2,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 2469,
+      "meanTokens": 2469,
+      "p90Tokens": 4139,
+      "totalTokens": 4938,
+      "totalChars": 14806,
+      "meanToolCalls": 3,
+      "meanFileRecall": 0.41666666666666663,
+      "meanSymbolRecall": 0.41666666666666663,
+      "meanDefRecall": 0.41666666666666663,
+      "found": 0,
+      "foundRate": 0,
+      "tokensPerFound": null
+    },
+    {
+      "strategy": "kirograph",
+      "tasks": 0,
+      "skipped": 2,
+      "errors": 0,
+      "medianTokens": 0,
+      "meanTokens": 0,
+      "p90Tokens": 0,
+      "totalTokens": 0,
+      "totalChars": 0,
+      "meanToolCalls": 0,
+      "meanFileRecall": 0,
+      "meanSymbolRecall": 0,
+      "meanDefRecall": 0,
+      "found": 0,
+      "foundRate": 0,
+      "tokensPerFound": null
+    },
+    {
+      "strategy": "codegraph",
+      "tasks": 0,
+      "skipped": 2,
+      "errors": 0,
+      "medianTokens": 0,
+      "meanTokens": 0,
+      "p90Tokens": 0,
+      "totalTokens": 0,
+      "totalChars": 0,
+      "meanToolCalls": 0,
+      "meanFileRecall": 0,
+      "meanSymbolRecall": 0,
+      "meanDefRecall": 0,
+      "found": 0,
+      "foundRate": 0,
+      "tokensPerFound": null
+    }
+  ],
+  "paired": [
+    {
+      "a": "native-naive",
+      "b": "kopt-pack",
+      "nRun": 2,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 1,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-pack",
+      "nRun": 2,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 1,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-naive",
+      "b": "kopt-hits+read",
+      "nRun": 2,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-hits+read",
+      "nRun": 2,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "kirograph",
+      "b": "kopt-pack",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "codegraph",
+      "b": "kopt-pack",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "kirograph",
+      "b": "kopt-hits+read",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "codegraph",
+      "b": "kopt-hits+read",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-ranged",
+      "b": "kirograph",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-ranged",
+      "b": "codegraph",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-naive",
+      "b": "native-ranged",
+      "nRun": 2,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    }
+  ],
+  "byKind": [
+    {
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 47309
+    },
+    {
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 8737
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 957
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 4139
+    },
+    {
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 32340
+    },
+    {
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 5934
+    },
+    {
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tasks": 1,
+      "found": 1,
+      "medianTokens": 1352
+    },
+    {
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 799
+    }
+  ]
+}

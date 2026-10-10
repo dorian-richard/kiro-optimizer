@@ -4,6 +4,7 @@
 
 import { runs } from '../command.js';
 import { diagBlocks, joinWithin, layout, plural, trimStack, type Block, type Diag, type Filter, type FilterInput } from './common.js';
+import { parseDotnetRunners } from './xunit.js';
 
 const DIAG_RE = /^\s*(.+?)\((\d+)(?:,(\d+))?(?:,\d+,\d+)?\)\s*: (error|warning) ([A-Za-z]+\d+)\s*: (.*?)(?: \[[^\]]+\])?$/;
 const NOFILE_DIAG_RE = /^\s*(?:(\S[^:]*?) : )?(error|warning) ([A-Za-z]+\d+)\s*: (.*?)(?: \[[^\]]+\])?$/;
@@ -55,6 +56,12 @@ function compressDotnet(inp: FilterInput): string | undefined {
     else errors.push(d);
   }
 
+  // Microsoft.Testing.Platform / xUnit or NUnit console output (no VSTest `Failed X [12 ms]` blocks)
+  if (!tests.length) {
+    const other = parseDotnetRunners(lines);
+    tests.push(...other.blocks);
+    testLines.push(...other.head);
+  }
   if (!verdict && !testLines.length && !errors.length && !tests.length && !legacyRun) return undefined;
   const parts: string[] = [];
   if (verdict) parts.push(verdict);

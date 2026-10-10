@@ -1,0 +1,497 @@
+{"Time":"2026-10-09T10:12:00.001Z","Action":"start","Package":"github.com/acme/shop/internal/cart"}
+{"Time":"2026-10-09T10:12:00.002Z","Action":"run","Package":"github.com/acme/shop/internal/cart","Test":"TestCartCustomer0"}
+{"Time":"2026-10-09T10:12:00.003Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartCustomer0","Output":"=== RUN   TestCartCustomer0\n"}
+{"Time":"2026-10-09T10:12:00.004Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartCustomer0","Output":"--- PASS: TestCartCustomer0 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:00.005Z","Action":"pass","Package":"github.com/acme/shop/internal/cart","Test":"TestCartCustomer0","Elapsed":0}
+{"Time":"2026-10-09T10:12:00.006Z","Action":"run","Package":"github.com/acme/shop/internal/cart","Test":"TestCartCustomer1"}
+{"Time":"2026-10-09T10:12:00.007Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartCustomer1","Output":"=== RUN   TestCartCustomer1\n"}
+{"Time":"2026-10-09T10:12:00.008Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartCustomer1","Output":"--- PASS: TestCartCustomer1 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:00.009Z","Action":"pass","Package":"github.com/acme/shop/internal/cart","Test":"TestCartCustomer1","Elapsed":0}
+{"Time":"2026-10-09T10:12:00.010Z","Action":"run","Package":"github.com/acme/shop/internal/cart","Test":"TestCartDiscount2"}
+{"Time":"2026-10-09T10:12:00.011Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartDiscount2","Output":"=== RUN   TestCartDiscount2\n"}
+{"Time":"2026-10-09T10:12:00.012Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartDiscount2","Output":"--- PASS: TestCartDiscount2 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:00.013Z","Action":"pass","Package":"github.com/acme/shop/internal/cart","Test":"TestCartDiscount2","Elapsed":0}
+{"Time":"2026-10-09T10:12:00.014Z","Action":"run","Package":"github.com/acme/shop/internal/cart","Test":"TestCartInvoice3"}
+{"Time":"2026-10-09T10:12:00.015Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartInvoice3","Output":"=== RUN   TestCartInvoice3\n"}
+{"Time":"2026-10-09T10:12:00.016Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartInvoice3","Output":"--- PASS: TestCartInvoice3 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:00.017Z","Action":"pass","Package":"github.com/acme/shop/internal/cart","Test":"TestCartInvoice3","Elapsed":0}
+{"Time":"2026-10-09T10:12:00.018Z","Action":"run","Package":"github.com/acme/shop/internal/cart","Test":"TestCartRefund4"}
+{"Time":"2026-10-09T10:12:00.019Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartRefund4","Output":"=== RUN   TestCartRefund4\n"}
+{"Time":"2026-10-09T10:12:00.020Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartRefund4","Output":"--- PASS: TestCartRefund4 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:00.021Z","Action":"pass","Package":"github.com/acme/shop/internal/cart","Test":"TestCartRefund4","Elapsed":0}
+{"Time":"2026-10-09T10:12:00.022Z","Action":"run","Package":"github.com/acme/shop/internal/cart","Test":"TestCartRounding5"}
+{"Time":"2026-10-09T10:12:00.023Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartRounding5","Output":"=== RUN   TestCartRounding5\n"}
+{"Time":"2026-10-09T10:12:00.024Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartRounding5","Output":"--- PASS: TestCartRounding5 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:00.025Z","Action":"pass","Package":"github.com/acme/shop/internal/cart","Test":"TestCartRounding5","Elapsed":0}
+{"Time":"2026-10-09T10:12:00.026Z","Action":"run","Package":"github.com/acme/shop/internal/cart","Test":"TestCartTimeout6"}
+{"Time":"2026-10-09T10:12:00.027Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartTimeout6","Output":"=== RUN   TestCartTimeout6\n"}
+{"Time":"2026-10-09T10:12:00.028Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartTimeout6","Output":"--- PASS: TestCartTimeout6 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:00.029Z","Action":"pass","Package":"github.com/acme/shop/internal/cart","Test":"TestCartTimeout6","Elapsed":0}
+{"Time":"2026-10-09T10:12:00.030Z","Action":"run","Package":"github.com/acme/shop/internal/cart","Test":"TestCartOrder7"}
+{"Time":"2026-10-09T10:12:00.031Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartOrder7","Output":"=== RUN   TestCartOrder7\n"}
+{"Time":"2026-10-09T10:12:00.032Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartOrder7","Output":"--- PASS: TestCartOrder7 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:00.033Z","Action":"pass","Package":"github.com/acme/shop/internal/cart","Test":"TestCartOrder7","Elapsed":0}
+{"Time":"2026-10-09T10:12:00.034Z","Action":"run","Package":"github.com/acme/shop/internal/cart","Test":"TestCartOrder8"}
+{"Time":"2026-10-09T10:12:00.035Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartOrder8","Output":"=== RUN   TestCartOrder8\n"}
+{"Time":"2026-10-09T10:12:00.036Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartOrder8","Output":"--- PASS: TestCartOrder8 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:00.037Z","Action":"pass","Package":"github.com/acme/shop/internal/cart","Test":"TestCartOrder8","Elapsed":0}
+{"Time":"2026-10-09T10:12:00.038Z","Action":"run","Package":"github.com/acme/shop/internal/cart","Test":"TestCartRefund9"}
+{"Time":"2026-10-09T10:12:00.039Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartRefund9","Output":"=== RUN   TestCartRefund9\n"}
+{"Time":"2026-10-09T10:12:00.040Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartRefund9","Output":"--- PASS: TestCartRefund9 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:01.041Z","Action":"pass","Package":"github.com/acme/shop/internal/cart","Test":"TestCartRefund9","Elapsed":0}
+{"Time":"2026-10-09T10:12:01.042Z","Action":"run","Package":"github.com/acme/shop/internal/cart","Test":"TestCartBatch10"}
+{"Time":"2026-10-09T10:12:01.043Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartBatch10","Output":"=== RUN   TestCartBatch10\n"}
+{"Time":"2026-10-09T10:12:01.044Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartBatch10","Output":"--- PASS: TestCartBatch10 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:01.045Z","Action":"pass","Package":"github.com/acme/shop/internal/cart","Test":"TestCartBatch10","Elapsed":0}
+{"Time":"2026-10-09T10:12:01.046Z","Action":"run","Package":"github.com/acme/shop/internal/cart","Test":"TestCartAddress11"}
+{"Time":"2026-10-09T10:12:01.047Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartAddress11","Output":"=== RUN   TestCartAddress11\n"}
+{"Time":"2026-10-09T10:12:01.048Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartAddress11","Output":"--- PASS: TestCartAddress11 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:01.049Z","Action":"pass","Package":"github.com/acme/shop/internal/cart","Test":"TestCartAddress11","Elapsed":0}
+{"Time":"2026-10-09T10:12:01.050Z","Action":"run","Package":"github.com/acme/shop/internal/cart","Test":"TestCartItem12"}
+{"Time":"2026-10-09T10:12:01.051Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartItem12","Output":"=== RUN   TestCartItem12\n"}
+{"Time":"2026-10-09T10:12:01.052Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartItem12","Output":"--- PASS: TestCartItem12 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:01.053Z","Action":"pass","Package":"github.com/acme/shop/internal/cart","Test":"TestCartItem12","Elapsed":0}
+{"Time":"2026-10-09T10:12:01.054Z","Action":"run","Package":"github.com/acme/shop/internal/cart","Test":"TestCartItem13"}
+{"Time":"2026-10-09T10:12:01.055Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartItem13","Output":"=== RUN   TestCartItem13\n"}
+{"Time":"2026-10-09T10:12:01.056Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartItem13","Output":"--- PASS: TestCartItem13 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:01.057Z","Action":"pass","Package":"github.com/acme/shop/internal/cart","Test":"TestCartItem13","Elapsed":0}
+{"Time":"2026-10-09T10:12:01.058Z","Action":"run","Package":"github.com/acme/shop/internal/cart","Test":"TestCartRounding14"}
+{"Time":"2026-10-09T10:12:01.059Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartRounding14","Output":"=== RUN   TestCartRounding14\n"}
+{"Time":"2026-10-09T10:12:01.060Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartRounding14","Output":"--- PASS: TestCartRounding14 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:01.061Z","Action":"pass","Package":"github.com/acme/shop/internal/cart","Test":"TestCartRounding14","Elapsed":0}
+{"Time":"2026-10-09T10:12:01.062Z","Action":"run","Package":"github.com/acme/shop/internal/cart","Test":"TestCartCustomer15"}
+{"Time":"2026-10-09T10:12:01.063Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartCustomer15","Output":"=== RUN   TestCartCustomer15\n"}
+{"Time":"2026-10-09T10:12:01.064Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartCustomer15","Output":"--- PASS: TestCartCustomer15 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:01.065Z","Action":"pass","Package":"github.com/acme/shop/internal/cart","Test":"TestCartCustomer15","Elapsed":0}
+{"Time":"2026-10-09T10:12:01.066Z","Action":"run","Package":"github.com/acme/shop/internal/cart","Test":"TestCartAddress16"}
+{"Time":"2026-10-09T10:12:01.067Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartAddress16","Output":"=== RUN   TestCartAddress16\n"}
+{"Time":"2026-10-09T10:12:01.068Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartAddress16","Output":"--- PASS: TestCartAddress16 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:01.069Z","Action":"pass","Package":"github.com/acme/shop/internal/cart","Test":"TestCartAddress16","Elapsed":0}
+{"Time":"2026-10-09T10:12:01.070Z","Action":"run","Package":"github.com/acme/shop/internal/cart","Test":"TestCartPage17"}
+{"Time":"2026-10-09T10:12:01.071Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartPage17","Output":"=== RUN   TestCartPage17\n"}
+{"Time":"2026-10-09T10:12:01.072Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartPage17","Output":"--- PASS: TestCartPage17 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:01.073Z","Action":"pass","Package":"github.com/acme/shop/internal/cart","Test":"TestCartPage17","Elapsed":0}
+{"Time":"2026-10-09T10:12:01.074Z","Action":"run","Package":"github.com/acme/shop/internal/cart","Test":"TestCartTotal18"}
+{"Time":"2026-10-09T10:12:01.075Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartTotal18","Output":"=== RUN   TestCartTotal18\n"}
+{"Time":"2026-10-09T10:12:01.076Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartTotal18","Output":"--- PASS: TestCartTotal18 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:01.077Z","Action":"pass","Package":"github.com/acme/shop/internal/cart","Test":"TestCartTotal18","Elapsed":0}
+{"Time":"2026-10-09T10:12:01.078Z","Action":"run","Package":"github.com/acme/shop/internal/cart","Test":"TestCartInvoice19"}
+{"Time":"2026-10-09T10:12:01.079Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartInvoice19","Output":"=== RUN   TestCartInvoice19\n"}
+{"Time":"2026-10-09T10:12:01.080Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartInvoice19","Output":"--- PASS: TestCartInvoice19 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:02.081Z","Action":"pass","Package":"github.com/acme/shop/internal/cart","Test":"TestCartInvoice19","Elapsed":0}
+{"Time":"2026-10-09T10:12:02.082Z","Action":"run","Package":"github.com/acme/shop/internal/cart","Test":"TestCartPayload20"}
+{"Time":"2026-10-09T10:12:02.083Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartPayload20","Output":"=== RUN   TestCartPayload20\n"}
+{"Time":"2026-10-09T10:12:02.084Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartPayload20","Output":"--- PASS: TestCartPayload20 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:02.085Z","Action":"pass","Package":"github.com/acme/shop/internal/cart","Test":"TestCartPayload20","Elapsed":0}
+{"Time":"2026-10-09T10:12:02.086Z","Action":"run","Package":"github.com/acme/shop/internal/cart","Test":"TestCartTotal21"}
+{"Time":"2026-10-09T10:12:02.087Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartTotal21","Output":"=== RUN   TestCartTotal21\n"}
+{"Time":"2026-10-09T10:12:02.088Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartTotal21","Output":"--- PASS: TestCartTotal21 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:02.089Z","Action":"pass","Package":"github.com/acme/shop/internal/cart","Test":"TestCartTotal21","Elapsed":0}
+{"Time":"2026-10-09T10:12:02.090Z","Action":"run","Package":"github.com/acme/shop/internal/cart","Test":"TestCartInvoice22"}
+{"Time":"2026-10-09T10:12:02.091Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartInvoice22","Output":"=== RUN   TestCartInvoice22\n"}
+{"Time":"2026-10-09T10:12:02.092Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartInvoice22","Output":"--- PASS: TestCartInvoice22 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:02.093Z","Action":"pass","Package":"github.com/acme/shop/internal/cart","Test":"TestCartInvoice22","Elapsed":0}
+{"Time":"2026-10-09T10:12:02.094Z","Action":"run","Package":"github.com/acme/shop/internal/cart","Test":"TestCartDiscount23"}
+{"Time":"2026-10-09T10:12:02.095Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartDiscount23","Output":"=== RUN   TestCartDiscount23\n"}
+{"Time":"2026-10-09T10:12:02.096Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartDiscount23","Output":"--- PASS: TestCartDiscount23 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:02.097Z","Action":"pass","Package":"github.com/acme/shop/internal/cart","Test":"TestCartDiscount23","Elapsed":0}
+{"Time":"2026-10-09T10:12:02.098Z","Action":"run","Package":"github.com/acme/shop/internal/cart","Test":"TestCartPayload24"}
+{"Time":"2026-10-09T10:12:02.099Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartPayload24","Output":"=== RUN   TestCartPayload24\n"}
+{"Time":"2026-10-09T10:12:02.100Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartPayload24","Output":"--- PASS: TestCartPayload24 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:02.101Z","Action":"pass","Package":"github.com/acme/shop/internal/cart","Test":"TestCartPayload24","Elapsed":0}
+{"Time":"2026-10-09T10:12:02.102Z","Action":"run","Package":"github.com/acme/shop/internal/cart","Test":"TestCartTimeout25"}
+{"Time":"2026-10-09T10:12:02.103Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartTimeout25","Output":"=== RUN   TestCartTimeout25\n"}
+{"Time":"2026-10-09T10:12:02.104Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartTimeout25","Output":"--- PASS: TestCartTimeout25 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:02.105Z","Action":"pass","Package":"github.com/acme/shop/internal/cart","Test":"TestCartTimeout25","Elapsed":0}
+{"Time":"2026-10-09T10:12:02.106Z","Action":"run","Package":"github.com/acme/shop/internal/cart","Test":"TestCartRefund26"}
+{"Time":"2026-10-09T10:12:02.107Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartRefund26","Output":"=== RUN   TestCartRefund26\n"}
+{"Time":"2026-10-09T10:12:02.108Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartRefund26","Output":"--- PASS: TestCartRefund26 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:02.109Z","Action":"pass","Package":"github.com/acme/shop/internal/cart","Test":"TestCartRefund26","Elapsed":0}
+{"Time":"2026-10-09T10:12:02.110Z","Action":"run","Package":"github.com/acme/shop/internal/cart","Test":"TestCartRounding27"}
+{"Time":"2026-10-09T10:12:02.111Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartRounding27","Output":"=== RUN   TestCartRounding27\n"}
+{"Time":"2026-10-09T10:12:02.112Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartRounding27","Output":"--- PASS: TestCartRounding27 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:02.113Z","Action":"pass","Package":"github.com/acme/shop/internal/cart","Test":"TestCartRounding27","Elapsed":0}
+{"Time":"2026-10-09T10:12:02.114Z","Action":"run","Package":"github.com/acme/shop/internal/cart","Test":"TestCartDiscount28"}
+{"Time":"2026-10-09T10:12:02.115Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartDiscount28","Output":"=== RUN   TestCartDiscount28\n"}
+{"Time":"2026-10-09T10:12:02.116Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartDiscount28","Output":"--- PASS: TestCartDiscount28 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:02.117Z","Action":"pass","Package":"github.com/acme/shop/internal/cart","Test":"TestCartDiscount28","Elapsed":0}
+{"Time":"2026-10-09T10:12:02.118Z","Action":"run","Package":"github.com/acme/shop/internal/cart","Test":"TestCartPayload29"}
+{"Time":"2026-10-09T10:12:02.119Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartPayload29","Output":"=== RUN   TestCartPayload29\n"}
+{"Time":"2026-10-09T10:12:02.120Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Test":"TestCartPayload29","Output":"--- PASS: TestCartPayload29 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:03.121Z","Action":"pass","Package":"github.com/acme/shop/internal/cart","Test":"TestCartPayload29","Elapsed":0}
+{"Time":"2026-10-09T10:12:03.122Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Output":"PASS\n"}
+{"Time":"2026-10-09T10:12:03.123Z","Action":"output","Package":"github.com/acme/shop/internal/cart","Output":"ok  \tgithub.com/acme/shop/internal/cart\t0.041s\n"}
+{"Time":"2026-10-09T10:12:03.124Z","Action":"pass","Package":"github.com/acme/shop/internal/cart","Elapsed":0.02}
+{"Time":"2026-10-09T10:12:03.125Z","Action":"start","Package":"github.com/acme/shop/internal/catalog"}
+{"Time":"2026-10-09T10:12:03.126Z","Action":"run","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogItem0"}
+{"Time":"2026-10-09T10:12:03.127Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogItem0","Output":"=== RUN   TestCatalogItem0\n"}
+{"Time":"2026-10-09T10:12:03.128Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogItem0","Output":"--- PASS: TestCatalogItem0 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:03.129Z","Action":"pass","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogItem0","Elapsed":0}
+{"Time":"2026-10-09T10:12:03.130Z","Action":"run","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogBatch1"}
+{"Time":"2026-10-09T10:12:03.131Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogBatch1","Output":"=== RUN   TestCatalogBatch1\n"}
+{"Time":"2026-10-09T10:12:03.132Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogBatch1","Output":"--- PASS: TestCatalogBatch1 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:03.133Z","Action":"pass","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogBatch1","Elapsed":0}
+{"Time":"2026-10-09T10:12:03.134Z","Action":"run","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogCustomer2"}
+{"Time":"2026-10-09T10:12:03.135Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogCustomer2","Output":"=== RUN   TestCatalogCustomer2\n"}
+{"Time":"2026-10-09T10:12:03.136Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogCustomer2","Output":"--- PASS: TestCatalogCustomer2 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:03.137Z","Action":"pass","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogCustomer2","Elapsed":0}
+{"Time":"2026-10-09T10:12:03.138Z","Action":"run","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogTotal3"}
+{"Time":"2026-10-09T10:12:03.139Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogTotal3","Output":"=== RUN   TestCatalogTotal3\n"}
+{"Time":"2026-10-09T10:12:03.140Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogTotal3","Output":"--- PASS: TestCatalogTotal3 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:03.141Z","Action":"pass","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogTotal3","Elapsed":0}
+{"Time":"2026-10-09T10:12:03.142Z","Action":"run","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogRefund4"}
+{"Time":"2026-10-09T10:12:03.143Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogRefund4","Output":"=== RUN   TestCatalogRefund4\n"}
+{"Time":"2026-10-09T10:12:03.144Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogRefund4","Output":"--- PASS: TestCatalogRefund4 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:03.145Z","Action":"pass","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogRefund4","Elapsed":0}
+{"Time":"2026-10-09T10:12:03.146Z","Action":"run","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogBatch5"}
+{"Time":"2026-10-09T10:12:03.147Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogBatch5","Output":"=== RUN   TestCatalogBatch5\n"}
+{"Time":"2026-10-09T10:12:03.148Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogBatch5","Output":"--- PASS: TestCatalogBatch5 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:03.149Z","Action":"pass","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogBatch5","Elapsed":0}
+{"Time":"2026-10-09T10:12:03.150Z","Action":"run","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogCustomer6"}
+{"Time":"2026-10-09T10:12:03.151Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogCustomer6","Output":"=== RUN   TestCatalogCustomer6\n"}
+{"Time":"2026-10-09T10:12:03.152Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogCustomer6","Output":"--- PASS: TestCatalogCustomer6 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:03.153Z","Action":"pass","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogCustomer6","Elapsed":0}
+{"Time":"2026-10-09T10:12:03.154Z","Action":"run","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogItem7"}
+{"Time":"2026-10-09T10:12:03.155Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogItem7","Output":"=== RUN   TestCatalogItem7\n"}
+{"Time":"2026-10-09T10:12:03.156Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogItem7","Output":"--- PASS: TestCatalogItem7 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:03.157Z","Action":"pass","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogItem7","Elapsed":0}
+{"Time":"2026-10-09T10:12:03.158Z","Action":"run","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogRefund8"}
+{"Time":"2026-10-09T10:12:03.159Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogRefund8","Output":"=== RUN   TestCatalogRefund8\n"}
+{"Time":"2026-10-09T10:12:03.160Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogRefund8","Output":"--- PASS: TestCatalogRefund8 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:04.161Z","Action":"pass","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogRefund8","Elapsed":0}
+{"Time":"2026-10-09T10:12:04.162Z","Action":"run","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogCustomer9"}
+{"Time":"2026-10-09T10:12:04.163Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogCustomer9","Output":"=== RUN   TestCatalogCustomer9\n"}
+{"Time":"2026-10-09T10:12:04.164Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogCustomer9","Output":"--- PASS: TestCatalogCustomer9 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:04.165Z","Action":"pass","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogCustomer9","Elapsed":0}
+{"Time":"2026-10-09T10:12:04.166Z","Action":"run","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogCurrency10"}
+{"Time":"2026-10-09T10:12:04.167Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogCurrency10","Output":"=== RUN   TestCatalogCurrency10\n"}
+{"Time":"2026-10-09T10:12:04.168Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogCurrency10","Output":"--- PASS: TestCatalogCurrency10 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:04.169Z","Action":"pass","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogCurrency10","Elapsed":0}
+{"Time":"2026-10-09T10:12:04.170Z","Action":"run","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogTotal11"}
+{"Time":"2026-10-09T10:12:04.171Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogTotal11","Output":"=== RUN   TestCatalogTotal11\n"}
+{"Time":"2026-10-09T10:12:04.172Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogTotal11","Output":"--- PASS: TestCatalogTotal11 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:04.173Z","Action":"pass","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogTotal11","Elapsed":0}
+{"Time":"2026-10-09T10:12:04.174Z","Action":"run","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogTotal12"}
+{"Time":"2026-10-09T10:12:04.175Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogTotal12","Output":"=== RUN   TestCatalogTotal12\n"}
+{"Time":"2026-10-09T10:12:04.176Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogTotal12","Output":"--- PASS: TestCatalogTotal12 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:04.177Z","Action":"pass","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogTotal12","Elapsed":0}
+{"Time":"2026-10-09T10:12:04.178Z","Action":"run","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogCurrency13"}
+{"Time":"2026-10-09T10:12:04.179Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogCurrency13","Output":"=== RUN   TestCatalogCurrency13\n"}
+{"Time":"2026-10-09T10:12:04.180Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogCurrency13","Output":"--- PASS: TestCatalogCurrency13 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:04.181Z","Action":"pass","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogCurrency13","Elapsed":0}
+{"Time":"2026-10-09T10:12:04.182Z","Action":"run","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogPage14"}
+{"Time":"2026-10-09T10:12:04.183Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogPage14","Output":"=== RUN   TestCatalogPage14\n"}
+{"Time":"2026-10-09T10:12:04.184Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogPage14","Output":"--- PASS: TestCatalogPage14 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:04.185Z","Action":"pass","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogPage14","Elapsed":0}
+{"Time":"2026-10-09T10:12:04.186Z","Action":"run","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogBatch15"}
+{"Time":"2026-10-09T10:12:04.187Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogBatch15","Output":"=== RUN   TestCatalogBatch15\n"}
+{"Time":"2026-10-09T10:12:04.188Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogBatch15","Output":"--- PASS: TestCatalogBatch15 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:04.189Z","Action":"pass","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogBatch15","Elapsed":0}
+{"Time":"2026-10-09T10:12:04.190Z","Action":"run","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogTotal16"}
+{"Time":"2026-10-09T10:12:04.191Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogTotal16","Output":"=== RUN   TestCatalogTotal16\n"}
+{"Time":"2026-10-09T10:12:04.192Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogTotal16","Output":"--- PASS: TestCatalogTotal16 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:04.193Z","Action":"pass","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogTotal16","Elapsed":0}
+{"Time":"2026-10-09T10:12:04.194Z","Action":"run","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogDiscount17"}
+{"Time":"2026-10-09T10:12:04.195Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogDiscount17","Output":"=== RUN   TestCatalogDiscount17\n"}
+{"Time":"2026-10-09T10:12:04.196Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogDiscount17","Output":"--- PASS: TestCatalogDiscount17 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:04.197Z","Action":"pass","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogDiscount17","Elapsed":0}
+{"Time":"2026-10-09T10:12:04.198Z","Action":"run","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogOrder18"}
+{"Time":"2026-10-09T10:12:04.199Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogOrder18","Output":"=== RUN   TestCatalogOrder18\n"}
+{"Time":"2026-10-09T10:12:04.200Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogOrder18","Output":"--- PASS: TestCatalogOrder18 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:05.201Z","Action":"pass","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogOrder18","Elapsed":0}
+{"Time":"2026-10-09T10:12:05.202Z","Action":"run","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogAddress19"}
+{"Time":"2026-10-09T10:12:05.203Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogAddress19","Output":"=== RUN   TestCatalogAddress19\n"}
+{"Time":"2026-10-09T10:12:05.204Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogAddress19","Output":"--- PASS: TestCatalogAddress19 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:05.205Z","Action":"pass","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogAddress19","Elapsed":0}
+{"Time":"2026-10-09T10:12:05.206Z","Action":"run","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogInvoice20"}
+{"Time":"2026-10-09T10:12:05.207Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogInvoice20","Output":"=== RUN   TestCatalogInvoice20\n"}
+{"Time":"2026-10-09T10:12:05.208Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogInvoice20","Output":"--- PASS: TestCatalogInvoice20 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:05.209Z","Action":"pass","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogInvoice20","Elapsed":0}
+{"Time":"2026-10-09T10:12:05.210Z","Action":"run","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogAddress21"}
+{"Time":"2026-10-09T10:12:05.211Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogAddress21","Output":"=== RUN   TestCatalogAddress21\n"}
+{"Time":"2026-10-09T10:12:05.212Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogAddress21","Output":"--- PASS: TestCatalogAddress21 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:05.213Z","Action":"pass","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogAddress21","Elapsed":0}
+{"Time":"2026-10-09T10:12:05.214Z","Action":"run","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogInvoice22"}
+{"Time":"2026-10-09T10:12:05.215Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogInvoice22","Output":"=== RUN   TestCatalogInvoice22\n"}
+{"Time":"2026-10-09T10:12:05.216Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogInvoice22","Output":"--- PASS: TestCatalogInvoice22 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:05.217Z","Action":"pass","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogInvoice22","Elapsed":0}
+{"Time":"2026-10-09T10:12:05.218Z","Action":"run","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogItem23"}
+{"Time":"2026-10-09T10:12:05.219Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogItem23","Output":"=== RUN   TestCatalogItem23\n"}
+{"Time":"2026-10-09T10:12:05.220Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogItem23","Output":"--- PASS: TestCatalogItem23 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:05.221Z","Action":"pass","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogItem23","Elapsed":0}
+{"Time":"2026-10-09T10:12:05.222Z","Action":"run","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogTimeout24"}
+{"Time":"2026-10-09T10:12:05.223Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogTimeout24","Output":"=== RUN   TestCatalogTimeout24\n"}
+{"Time":"2026-10-09T10:12:05.224Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogTimeout24","Output":"--- PASS: TestCatalogTimeout24 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:05.225Z","Action":"pass","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogTimeout24","Elapsed":0}
+{"Time":"2026-10-09T10:12:05.226Z","Action":"run","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogRounding25"}
+{"Time":"2026-10-09T10:12:05.227Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogRounding25","Output":"=== RUN   TestCatalogRounding25\n"}
+{"Time":"2026-10-09T10:12:05.228Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogRounding25","Output":"--- PASS: TestCatalogRounding25 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:05.229Z","Action":"pass","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogRounding25","Elapsed":0}
+{"Time":"2026-10-09T10:12:05.230Z","Action":"run","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogPayload26"}
+{"Time":"2026-10-09T10:12:05.231Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogPayload26","Output":"=== RUN   TestCatalogPayload26\n"}
+{"Time":"2026-10-09T10:12:05.232Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogPayload26","Output":"--- PASS: TestCatalogPayload26 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:05.233Z","Action":"pass","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogPayload26","Elapsed":0}
+{"Time":"2026-10-09T10:12:05.234Z","Action":"run","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogToken27"}
+{"Time":"2026-10-09T10:12:05.235Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogToken27","Output":"=== RUN   TestCatalogToken27\n"}
+{"Time":"2026-10-09T10:12:05.236Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogToken27","Output":"--- PASS: TestCatalogToken27 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:05.237Z","Action":"pass","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogToken27","Elapsed":0}
+{"Time":"2026-10-09T10:12:05.238Z","Action":"run","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogTotal28"}
+{"Time":"2026-10-09T10:12:05.239Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogTotal28","Output":"=== RUN   TestCatalogTotal28\n"}
+{"Time":"2026-10-09T10:12:05.240Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogTotal28","Output":"--- PASS: TestCatalogTotal28 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:06.241Z","Action":"pass","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogTotal28","Elapsed":0}
+{"Time":"2026-10-09T10:12:06.242Z","Action":"run","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogInvoice29"}
+{"Time":"2026-10-09T10:12:06.243Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogInvoice29","Output":"=== RUN   TestCatalogInvoice29\n"}
+{"Time":"2026-10-09T10:12:06.244Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogInvoice29","Output":"--- PASS: TestCatalogInvoice29 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:06.245Z","Action":"pass","Package":"github.com/acme/shop/internal/catalog","Test":"TestCatalogInvoice29","Elapsed":0}
+{"Time":"2026-10-09T10:12:06.246Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Output":"PASS\n"}
+{"Time":"2026-10-09T10:12:06.247Z","Action":"output","Package":"github.com/acme/shop/internal/catalog","Output":"ok  \tgithub.com/acme/shop/internal/catalog\t0.071s\n"}
+{"Time":"2026-10-09T10:12:06.248Z","Action":"pass","Package":"github.com/acme/shop/internal/catalog","Elapsed":0.02}
+{"Time":"2026-10-09T10:12:06.249Z","Action":"start","Package":"github.com/acme/shop/internal/customer"}
+{"Time":"2026-10-09T10:12:06.250Z","Action":"run","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerInvoice0"}
+{"Time":"2026-10-09T10:12:06.251Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerInvoice0","Output":"=== RUN   TestCustomerInvoice0\n"}
+{"Time":"2026-10-09T10:12:06.252Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerInvoice0","Output":"--- PASS: TestCustomerInvoice0 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:06.253Z","Action":"pass","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerInvoice0","Elapsed":0}
+{"Time":"2026-10-09T10:12:06.254Z","Action":"run","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerPayload1"}
+{"Time":"2026-10-09T10:12:06.255Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerPayload1","Output":"=== RUN   TestCustomerPayload1\n"}
+{"Time":"2026-10-09T10:12:06.256Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerPayload1","Output":"--- PASS: TestCustomerPayload1 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:06.257Z","Action":"pass","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerPayload1","Elapsed":0}
+{"Time":"2026-10-09T10:12:06.258Z","Action":"run","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerCustomer2"}
+{"Time":"2026-10-09T10:12:06.259Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerCustomer2","Output":"=== RUN   TestCustomerCustomer2\n"}
+{"Time":"2026-10-09T10:12:06.260Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerCustomer2","Output":"--- PASS: TestCustomerCustomer2 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:06.261Z","Action":"pass","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerCustomer2","Elapsed":0}
+{"Time":"2026-10-09T10:12:06.262Z","Action":"run","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerRounding3"}
+{"Time":"2026-10-09T10:12:06.263Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerRounding3","Output":"=== RUN   TestCustomerRounding3\n"}
+{"Time":"2026-10-09T10:12:06.264Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerRounding3","Output":"--- PASS: TestCustomerRounding3 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:06.265Z","Action":"pass","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerRounding3","Elapsed":0}
+{"Time":"2026-10-09T10:12:06.266Z","Action":"run","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerBatch4"}
+{"Time":"2026-10-09T10:12:06.267Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerBatch4","Output":"=== RUN   TestCustomerBatch4\n"}
+{"Time":"2026-10-09T10:12:06.268Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerBatch4","Output":"--- PASS: TestCustomerBatch4 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:06.269Z","Action":"pass","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerBatch4","Elapsed":0}
+{"Time":"2026-10-09T10:12:06.270Z","Action":"run","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerItem5"}
+{"Time":"2026-10-09T10:12:06.271Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerItem5","Output":"=== RUN   TestCustomerItem5\n"}
+{"Time":"2026-10-09T10:12:06.272Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerItem5","Output":"--- PASS: TestCustomerItem5 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:06.273Z","Action":"pass","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerItem5","Elapsed":0}
+{"Time":"2026-10-09T10:12:06.274Z","Action":"run","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerRefund6"}
+{"Time":"2026-10-09T10:12:06.275Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerRefund6","Output":"=== RUN   TestCustomerRefund6\n"}
+{"Time":"2026-10-09T10:12:06.276Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerRefund6","Output":"--- PASS: TestCustomerRefund6 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:06.277Z","Action":"pass","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerRefund6","Elapsed":0}
+{"Time":"2026-10-09T10:12:06.278Z","Action":"run","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerToken7"}
+{"Time":"2026-10-09T10:12:06.279Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerToken7","Output":"=== RUN   TestCustomerToken7\n"}
+{"Time":"2026-10-09T10:12:06.280Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerToken7","Output":"--- PASS: TestCustomerToken7 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:07.281Z","Action":"pass","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerToken7","Elapsed":0}
+{"Time":"2026-10-09T10:12:07.282Z","Action":"run","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerCustomer8"}
+{"Time":"2026-10-09T10:12:07.283Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerCustomer8","Output":"=== RUN   TestCustomerCustomer8\n"}
+{"Time":"2026-10-09T10:12:07.284Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerCustomer8","Output":"--- PASS: TestCustomerCustomer8 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:07.285Z","Action":"pass","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerCustomer8","Elapsed":0}
+{"Time":"2026-10-09T10:12:07.286Z","Action":"run","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerTimeout9"}
+{"Time":"2026-10-09T10:12:07.287Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerTimeout9","Output":"=== RUN   TestCustomerTimeout9\n"}
+{"Time":"2026-10-09T10:12:07.288Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerTimeout9","Output":"--- PASS: TestCustomerTimeout9 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:07.289Z","Action":"pass","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerTimeout9","Elapsed":0}
+{"Time":"2026-10-09T10:12:07.290Z","Action":"run","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerPage10"}
+{"Time":"2026-10-09T10:12:07.291Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerPage10","Output":"=== RUN   TestCustomerPage10\n"}
+{"Time":"2026-10-09T10:12:07.292Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerPage10","Output":"--- PASS: TestCustomerPage10 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:07.293Z","Action":"pass","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerPage10","Elapsed":0}
+{"Time":"2026-10-09T10:12:07.294Z","Action":"run","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerPayload11"}
+{"Time":"2026-10-09T10:12:07.295Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerPayload11","Output":"=== RUN   TestCustomerPayload11\n"}
+{"Time":"2026-10-09T10:12:07.296Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerPayload11","Output":"--- PASS: TestCustomerPayload11 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:07.297Z","Action":"pass","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerPayload11","Elapsed":0}
+{"Time":"2026-10-09T10:12:07.298Z","Action":"run","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerDiscount12"}
+{"Time":"2026-10-09T10:12:07.299Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerDiscount12","Output":"=== RUN   TestCustomerDiscount12\n"}
+{"Time":"2026-10-09T10:12:07.300Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerDiscount12","Output":"--- PASS: TestCustomerDiscount12 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:07.301Z","Action":"pass","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerDiscount12","Elapsed":0}
+{"Time":"2026-10-09T10:12:07.302Z","Action":"run","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerRefund13"}
+{"Time":"2026-10-09T10:12:07.303Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerRefund13","Output":"=== RUN   TestCustomerRefund13\n"}
+{"Time":"2026-10-09T10:12:07.304Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerRefund13","Output":"--- PASS: TestCustomerRefund13 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:07.305Z","Action":"pass","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerRefund13","Elapsed":0}
+{"Time":"2026-10-09T10:12:07.306Z","Action":"run","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerInvoice14"}
+{"Time":"2026-10-09T10:12:07.307Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerInvoice14","Output":"=== RUN   TestCustomerInvoice14\n"}
+{"Time":"2026-10-09T10:12:07.308Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerInvoice14","Output":"--- PASS: TestCustomerInvoice14 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:07.309Z","Action":"pass","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerInvoice14","Elapsed":0}
+{"Time":"2026-10-09T10:12:07.310Z","Action":"run","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerToken15"}
+{"Time":"2026-10-09T10:12:07.311Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerToken15","Output":"=== RUN   TestCustomerToken15\n"}
+{"Time":"2026-10-09T10:12:07.312Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerToken15","Output":"--- PASS: TestCustomerToken15 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:07.313Z","Action":"pass","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerToken15","Elapsed":0}
+{"Time":"2026-10-09T10:12:07.314Z","Action":"run","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerTimeout16"}
+{"Time":"2026-10-09T10:12:07.315Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerTimeout16","Output":"=== RUN   TestCustomerTimeout16\n"}
+{"Time":"2026-10-09T10:12:07.316Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerTimeout16","Output":"--- PASS: TestCustomerTimeout16 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:07.317Z","Action":"pass","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerTimeout16","Elapsed":0}
+{"Time":"2026-10-09T10:12:07.318Z","Action":"run","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerTimeout17"}
+{"Time":"2026-10-09T10:12:07.319Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerTimeout17","Output":"=== RUN   TestCustomerTimeout17\n"}
+{"Time":"2026-10-09T10:12:07.320Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerTimeout17","Output":"--- PASS: TestCustomerTimeout17 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:08.321Z","Action":"pass","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerTimeout17","Elapsed":0}
+{"Time":"2026-10-09T10:12:08.322Z","Action":"run","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerItem18"}
+{"Time":"2026-10-09T10:12:08.323Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerItem18","Output":"=== RUN   TestCustomerItem18\n"}
+{"Time":"2026-10-09T10:12:08.324Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerItem18","Output":"--- PASS: TestCustomerItem18 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:08.325Z","Action":"pass","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerItem18","Elapsed":0}
+{"Time":"2026-10-09T10:12:08.326Z","Action":"run","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerInvoice19"}
+{"Time":"2026-10-09T10:12:08.327Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerInvoice19","Output":"=== RUN   TestCustomerInvoice19\n"}
+{"Time":"2026-10-09T10:12:08.328Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerInvoice19","Output":"--- PASS: TestCustomerInvoice19 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:08.329Z","Action":"pass","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerInvoice19","Elapsed":0}
+{"Time":"2026-10-09T10:12:08.330Z","Action":"run","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerPayload20"}
+{"Time":"2026-10-09T10:12:08.331Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerPayload20","Output":"=== RUN   TestCustomerPayload20\n"}
+{"Time":"2026-10-09T10:12:08.332Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerPayload20","Output":"--- PASS: TestCustomerPayload20 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:08.333Z","Action":"pass","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerPayload20","Elapsed":0}
+{"Time":"2026-10-09T10:12:08.334Z","Action":"run","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerOrder21"}
+{"Time":"2026-10-09T10:12:08.335Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerOrder21","Output":"=== RUN   TestCustomerOrder21\n"}
+{"Time":"2026-10-09T10:12:08.336Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerOrder21","Output":"--- PASS: TestCustomerOrder21 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:08.337Z","Action":"pass","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerOrder21","Elapsed":0}
+{"Time":"2026-10-09T10:12:08.338Z","Action":"run","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerInvoice22"}
+{"Time":"2026-10-09T10:12:08.339Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerInvoice22","Output":"=== RUN   TestCustomerInvoice22\n"}
+{"Time":"2026-10-09T10:12:08.340Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerInvoice22","Output":"--- PASS: TestCustomerInvoice22 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:08.341Z","Action":"pass","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerInvoice22","Elapsed":0}
+{"Time":"2026-10-09T10:12:08.342Z","Action":"run","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerItem23"}
+{"Time":"2026-10-09T10:12:08.343Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerItem23","Output":"=== RUN   TestCustomerItem23\n"}
+{"Time":"2026-10-09T10:12:08.344Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerItem23","Output":"--- PASS: TestCustomerItem23 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:08.345Z","Action":"pass","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerItem23","Elapsed":0}
+{"Time":"2026-10-09T10:12:08.346Z","Action":"run","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerOrder24"}
+{"Time":"2026-10-09T10:12:08.347Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerOrder24","Output":"=== RUN   TestCustomerOrder24\n"}
+{"Time":"2026-10-09T10:12:08.348Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerOrder24","Output":"--- PASS: TestCustomerOrder24 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:08.349Z","Action":"pass","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerOrder24","Elapsed":0}
+{"Time":"2026-10-09T10:12:08.350Z","Action":"run","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerCurrency25"}
+{"Time":"2026-10-09T10:12:08.351Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerCurrency25","Output":"=== RUN   TestCustomerCurrency25\n"}
+{"Time":"2026-10-09T10:12:08.352Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerCurrency25","Output":"--- PASS: TestCustomerCurrency25 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:08.353Z","Action":"pass","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerCurrency25","Elapsed":0}
+{"Time":"2026-10-09T10:12:08.354Z","Action":"run","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerCustomer26"}
+{"Time":"2026-10-09T10:12:08.355Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerCustomer26","Output":"=== RUN   TestCustomerCustomer26\n"}
+{"Time":"2026-10-09T10:12:08.356Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerCustomer26","Output":"--- PASS: TestCustomerCustomer26 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:08.357Z","Action":"pass","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerCustomer26","Elapsed":0}
+{"Time":"2026-10-09T10:12:08.358Z","Action":"run","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerPayload27"}
+{"Time":"2026-10-09T10:12:08.359Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerPayload27","Output":"=== RUN   TestCustomerPayload27\n"}
+{"Time":"2026-10-09T10:12:08.360Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerPayload27","Output":"--- PASS: TestCustomerPayload27 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:09.361Z","Action":"pass","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerPayload27","Elapsed":0}
+{"Time":"2026-10-09T10:12:09.362Z","Action":"run","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerOrder28"}
+{"Time":"2026-10-09T10:12:09.363Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerOrder28","Output":"=== RUN   TestCustomerOrder28\n"}
+{"Time":"2026-10-09T10:12:09.364Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerOrder28","Output":"--- PASS: TestCustomerOrder28 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:09.365Z","Action":"pass","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerOrder28","Elapsed":0}
+{"Time":"2026-10-09T10:12:09.366Z","Action":"run","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerTotal29"}
+{"Time":"2026-10-09T10:12:09.367Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerTotal29","Output":"=== RUN   TestCustomerTotal29\n"}
+{"Time":"2026-10-09T10:12:09.368Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerTotal29","Output":"--- PASS: TestCustomerTotal29 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:09.369Z","Action":"pass","Package":"github.com/acme/shop/internal/customer","Test":"TestCustomerTotal29","Elapsed":0}
+{"Time":"2026-10-09T10:12:09.370Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Output":"PASS\n"}
+{"Time":"2026-10-09T10:12:09.371Z","Action":"output","Package":"github.com/acme/shop/internal/customer","Output":"ok  \tgithub.com/acme/shop/internal/customer\t0.081s\n"}
+{"Time":"2026-10-09T10:12:09.372Z","Action":"pass","Package":"github.com/acme/shop/internal/customer","Elapsed":0.02}
+{"Time":"2026-10-09T10:12:09.373Z","Action":"start","Package":"github.com/acme/shop/internal/order"}
+{"Time":"2026-10-09T10:12:09.374Z","Action":"run","Package":"github.com/acme/shop/internal/order","Test":"TestOrderBatch0"}
+{"Time":"2026-10-09T10:12:09.375Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderBatch0","Output":"=== RUN   TestOrderBatch0\n"}
+{"Time":"2026-10-09T10:12:09.376Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderBatch0","Output":"--- PASS: TestOrderBatch0 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:09.377Z","Action":"pass","Package":"github.com/acme/shop/internal/order","Test":"TestOrderBatch0","Elapsed":0}
+{"Time":"2026-10-09T10:12:09.378Z","Action":"run","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPayload1"}
+{"Time":"2026-10-09T10:12:09.379Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPayload1","Output":"=== RUN   TestOrderPayload1\n"}
+{"Time":"2026-10-09T10:12:09.380Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPayload1","Output":"--- PASS: TestOrderPayload1 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:09.381Z","Action":"pass","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPayload1","Elapsed":0}
+{"Time":"2026-10-09T10:12:09.382Z","Action":"run","Package":"github.com/acme/shop/internal/order","Test":"TestOrderTimeout2"}
+{"Time":"2026-10-09T10:12:09.383Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderTimeout2","Output":"=== RUN   TestOrderTimeout2\n"}
+{"Time":"2026-10-09T10:12:09.384Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderTimeout2","Output":"--- PASS: TestOrderTimeout2 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:09.385Z","Action":"pass","Package":"github.com/acme/shop/internal/order","Test":"TestOrderTimeout2","Elapsed":0}
+{"Time":"2026-10-09T10:12:09.386Z","Action":"run","Package":"github.com/acme/shop/internal/order","Test":"TestOrderAddress3"}
+{"Time":"2026-10-09T10:12:09.387Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderAddress3","Output":"=== RUN   TestOrderAddress3\n"}
+{"Time":"2026-10-09T10:12:09.388Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderAddress3","Output":"--- PASS: TestOrderAddress3 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:09.389Z","Action":"pass","Package":"github.com/acme/shop/internal/order","Test":"TestOrderAddress3","Elapsed":0}
+{"Time":"2026-10-09T10:12:09.390Z","Action":"run","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPage4"}
+{"Time":"2026-10-09T10:12:09.391Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPage4","Output":"=== RUN   TestOrderPage4\n"}
+{"Time":"2026-10-09T10:12:09.392Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPage4","Output":"--- PASS: TestOrderPage4 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:09.393Z","Action":"pass","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPage4","Elapsed":0}
+{"Time":"2026-10-09T10:12:09.394Z","Action":"run","Package":"github.com/acme/shop/internal/order","Test":"TestOrderAddress5"}
+{"Time":"2026-10-09T10:12:09.395Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderAddress5","Output":"=== RUN   TestOrderAddress5\n"}
+{"Time":"2026-10-09T10:12:09.396Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderAddress5","Output":"--- PASS: TestOrderAddress5 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:09.397Z","Action":"pass","Package":"github.com/acme/shop/internal/order","Test":"TestOrderAddress5","Elapsed":0}
+{"Time":"2026-10-09T10:12:09.398Z","Action":"run","Package":"github.com/acme/shop/internal/order","Test":"TestOrderTotal6"}
+{"Time":"2026-10-09T10:12:09.399Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderTotal6","Output":"=== RUN   TestOrderTotal6\n"}
+{"Time":"2026-10-09T10:12:09.400Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderTotal6","Output":"--- PASS: TestOrderTotal6 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:10.401Z","Action":"pass","Package":"github.com/acme/shop/internal/order","Test":"TestOrderTotal6","Elapsed":0}
+{"Time":"2026-10-09T10:12:10.402Z","Action":"run","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPage7"}
+{"Time":"2026-10-09T10:12:10.403Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPage7","Output":"=== RUN   TestOrderPage7\n"}
+{"Time":"2026-10-09T10:12:10.404Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPage7","Output":"    service_test.go:42: compute total: got 60.00, want 70.00\n"}
+{"Time":"2026-10-09T10:12:10.405Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPage7","Output":"--- FAIL: TestOrderPage7 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:10.406Z","Action":"fail","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPage7","Elapsed":0}
+{"Time":"2026-10-09T10:12:10.407Z","Action":"run","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPayload8"}
+{"Time":"2026-10-09T10:12:10.408Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPayload8","Output":"=== RUN   TestOrderPayload8\n"}
+{"Time":"2026-10-09T10:12:10.409Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPayload8","Output":"--- PASS: TestOrderPayload8 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:10.410Z","Action":"pass","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPayload8","Elapsed":0}
+{"Time":"2026-10-09T10:12:10.411Z","Action":"run","Package":"github.com/acme/shop/internal/order","Test":"TestOrderCurrency9"}
+{"Time":"2026-10-09T10:12:10.412Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderCurrency9","Output":"=== RUN   TestOrderCurrency9\n"}
+{"Time":"2026-10-09T10:12:10.413Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderCurrency9","Output":"--- PASS: TestOrderCurrency9 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:10.414Z","Action":"pass","Package":"github.com/acme/shop/internal/order","Test":"TestOrderCurrency9","Elapsed":0}
+{"Time":"2026-10-09T10:12:10.415Z","Action":"run","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPayload10"}
+{"Time":"2026-10-09T10:12:10.416Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPayload10","Output":"=== RUN   TestOrderPayload10\n"}
+{"Time":"2026-10-09T10:12:10.417Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPayload10","Output":"--- PASS: TestOrderPayload10 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:10.418Z","Action":"pass","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPayload10","Elapsed":0}
+{"Time":"2026-10-09T10:12:10.419Z","Action":"run","Package":"github.com/acme/shop/internal/order","Test":"TestOrderTotal11"}
+{"Time":"2026-10-09T10:12:10.420Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderTotal11","Output":"=== RUN   TestOrderTotal11\n"}
+{"Time":"2026-10-09T10:12:10.421Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderTotal11","Output":"--- PASS: TestOrderTotal11 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:10.422Z","Action":"pass","Package":"github.com/acme/shop/internal/order","Test":"TestOrderTotal11","Elapsed":0}
+{"Time":"2026-10-09T10:12:10.423Z","Action":"run","Package":"github.com/acme/shop/internal/order","Test":"TestOrderRefund12"}
+{"Time":"2026-10-09T10:12:10.424Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderRefund12","Output":"=== RUN   TestOrderRefund12\n"}
+{"Time":"2026-10-09T10:12:10.425Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderRefund12","Output":"--- PASS: TestOrderRefund12 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:10.426Z","Action":"pass","Package":"github.com/acme/shop/internal/order","Test":"TestOrderRefund12","Elapsed":0}
+{"Time":"2026-10-09T10:12:10.427Z","Action":"run","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPage13"}
+{"Time":"2026-10-09T10:12:10.428Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPage13","Output":"=== RUN   TestOrderPage13\n"}
+{"Time":"2026-10-09T10:12:10.429Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPage13","Output":"--- PASS: TestOrderPage13 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:10.430Z","Action":"pass","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPage13","Elapsed":0}
+{"Time":"2026-10-09T10:12:10.431Z","Action":"run","Package":"github.com/acme/shop/internal/order","Test":"TestOrderInvoice14"}
+{"Time":"2026-10-09T10:12:10.432Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderInvoice14","Output":"=== RUN   TestOrderInvoice14\n"}
+{"Time":"2026-10-09T10:12:10.433Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderInvoice14","Output":"--- PASS: TestOrderInvoice14 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:10.434Z","Action":"pass","Package":"github.com/acme/shop/internal/order","Test":"TestOrderInvoice14","Elapsed":0}
+{"Time":"2026-10-09T10:12:10.435Z","Action":"run","Package":"github.com/acme/shop/internal/order","Test":"TestOrderItem15"}
+{"Time":"2026-10-09T10:12:10.436Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderItem15","Output":"=== RUN   TestOrderItem15\n"}
+{"Time":"2026-10-09T10:12:10.437Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderItem15","Output":"--- PASS: TestOrderItem15 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:10.438Z","Action":"pass","Package":"github.com/acme/shop/internal/order","Test":"TestOrderItem15","Elapsed":0}
+{"Time":"2026-10-09T10:12:10.439Z","Action":"run","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPayload16"}
+{"Time":"2026-10-09T10:12:10.440Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPayload16","Output":"=== RUN   TestOrderPayload16\n"}
+{"Time":"2026-10-09T10:12:11.441Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPayload16","Output":"--- PASS: TestOrderPayload16 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:11.442Z","Action":"pass","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPayload16","Elapsed":0}
+{"Time":"2026-10-09T10:12:11.443Z","Action":"run","Package":"github.com/acme/shop/internal/order","Test":"TestOrderTimeout17"}
+{"Time":"2026-10-09T10:12:11.444Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderTimeout17","Output":"=== RUN   TestOrderTimeout17\n"}
+{"Time":"2026-10-09T10:12:11.445Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderTimeout17","Output":"--- PASS: TestOrderTimeout17 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:11.446Z","Action":"pass","Package":"github.com/acme/shop/internal/order","Test":"TestOrderTimeout17","Elapsed":0}
+{"Time":"2026-10-09T10:12:11.447Z","Action":"run","Package":"github.com/acme/shop/internal/order","Test":"TestOrderDiscount18"}
+{"Time":"2026-10-09T10:12:11.448Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderDiscount18","Output":"=== RUN   TestOrderDiscount18\n"}
+{"Time":"2026-10-09T10:12:11.449Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderDiscount18","Output":"--- PASS: TestOrderDiscount18 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:11.450Z","Action":"pass","Package":"github.com/acme/shop/internal/order","Test":"TestOrderDiscount18","Elapsed":0}
+{"Time":"2026-10-09T10:12:11.451Z","Action":"run","Package":"github.com/acme/shop/internal/order","Test":"TestOrderCustomer19"}
+{"Time":"2026-10-09T10:12:11.452Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderCustomer19","Output":"=== RUN   TestOrderCustomer19\n"}
+{"Time":"2026-10-09T10:12:11.453Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderCustomer19","Output":"--- PASS: TestOrderCustomer19 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:11.454Z","Action":"pass","Package":"github.com/acme/shop/internal/order","Test":"TestOrderCustomer19","Elapsed":0}
+{"Time":"2026-10-09T10:12:11.455Z","Action":"run","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPayload20"}
+{"Time":"2026-10-09T10:12:11.456Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPayload20","Output":"=== RUN   TestOrderPayload20\n"}
+{"Time":"2026-10-09T10:12:11.457Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPayload20","Output":"--- PASS: TestOrderPayload20 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:11.458Z","Action":"pass","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPayload20","Elapsed":0}
+{"Time":"2026-10-09T10:12:11.459Z","Action":"run","Package":"github.com/acme/shop/internal/order","Test":"TestOrderBatch21"}
+{"Time":"2026-10-09T10:12:11.460Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderBatch21","Output":"=== RUN   TestOrderBatch21\n"}
+{"Time":"2026-10-09T10:12:11.461Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderBatch21","Output":"--- PASS: TestOrderBatch21 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:11.462Z","Action":"pass","Package":"github.com/acme/shop/internal/order","Test":"TestOrderBatch21","Elapsed":0}
+{"Time":"2026-10-09T10:12:11.463Z","Action":"run","Package":"github.com/acme/shop/internal/order","Test":"TestOrderTotal22"}
+{"Time":"2026-10-09T10:12:11.464Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderTotal22","Output":"=== RUN   TestOrderTotal22\n"}
+{"Time":"2026-10-09T10:12:11.465Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderTotal22","Output":"--- PASS: TestOrderTotal22 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:11.466Z","Action":"pass","Package":"github.com/acme/shop/internal/order","Test":"TestOrderTotal22","Elapsed":0}
+{"Time":"2026-10-09T10:12:11.467Z","Action":"run","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPage23"}
+{"Time":"2026-10-09T10:12:11.468Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPage23","Output":"=== RUN   TestOrderPage23\n"}
+{"Time":"2026-10-09T10:12:11.469Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPage23","Output":"--- PASS: TestOrderPage23 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:11.470Z","Action":"pass","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPage23","Elapsed":0}
+{"Time":"2026-10-09T10:12:11.471Z","Action":"run","Package":"github.com/acme/shop/internal/order","Test":"TestOrderToken24"}
+{"Time":"2026-10-09T10:12:11.472Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderToken24","Output":"=== RUN   TestOrderToken24\n"}
+{"Time":"2026-10-09T10:12:11.473Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderToken24","Output":"--- PASS: TestOrderToken24 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:11.474Z","Action":"pass","Package":"github.com/acme/shop/internal/order","Test":"TestOrderToken24","Elapsed":0}
+{"Time":"2026-10-09T10:12:11.475Z","Action":"run","Package":"github.com/acme/shop/internal/order","Test":"TestOrderBatch25"}
+{"Time":"2026-10-09T10:12:11.476Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderBatch25","Output":"=== RUN   TestOrderBatch25\n"}
+{"Time":"2026-10-09T10:12:11.477Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderBatch25","Output":"--- PASS: TestOrderBatch25 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:11.478Z","Action":"pass","Package":"github.com/acme/shop/internal/order","Test":"TestOrderBatch25","Elapsed":0}
+{"Time":"2026-10-09T10:12:11.479Z","Action":"run","Package":"github.com/acme/shop/internal/order","Test":"TestOrderTotal26"}
+{"Time":"2026-10-09T10:12:11.480Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderTotal26","Output":"=== RUN   TestOrderTotal26\n"}
+{"Time":"2026-10-09T10:12:12.481Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderTotal26","Output":"--- PASS: TestOrderTotal26 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:12.482Z","Action":"pass","Package":"github.com/acme/shop/internal/order","Test":"TestOrderTotal26","Elapsed":0}
+{"Time":"2026-10-09T10:12:12.483Z","Action":"run","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPage27"}
+{"Time":"2026-10-09T10:12:12.484Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPage27","Output":"=== RUN   TestOrderPage27\n"}
+{"Time":"2026-10-09T10:12:12.485Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPage27","Output":"--- PASS: TestOrderPage27 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:12.486Z","Action":"pass","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPage27","Elapsed":0}
+{"Time":"2026-10-09T10:12:12.487Z","Action":"run","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPage28"}
+{"Time":"2026-10-09T10:12:12.488Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPage28","Output":"=== RUN   TestOrderPage28\n"}
+{"Time":"2026-10-09T10:12:12.489Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPage28","Output":"--- PASS: TestOrderPage28 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:12.490Z","Action":"pass","Package":"github.com/acme/shop/internal/order","Test":"TestOrderPage28","Elapsed":0}
+{"Time":"2026-10-09T10:12:12.491Z","Action":"run","Package":"github.com/acme/shop/internal/order","Test":"TestOrderCustomer29"}
+{"Time":"2026-10-09T10:12:12.492Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderCustomer29","Output":"=== RUN   TestOrderCustomer29\n"}
+{"Time":"2026-10-09T10:12:12.493Z","Action":"output","Package":"github.com/acme/shop/internal/order","Test":"TestOrderCustomer29","Output":"--- PASS: TestOrderCustomer29 (0.00s)\n"}
+{"Time":"2026-10-09T10:12:12.494Z","Action":"pass","Package":"github.com/acme/shop/internal/order","Test":"TestOrderCustomer29","Elapsed":0}
+{"Time":"2026-10-09T10:12:12.495Z","Action":"output","Package":"github.com/acme/shop/internal/order","Output":"FAIL\n"}
+{"Time":"2026-10-09T10:12:12.496Z","Action":"output","Package":"github.com/acme/shop/internal/order","Output":"FAIL\tgithub.com/acme/shop/internal/order\t0.015s\n"}
+{"Time":"2026-10-09T10:12:12.497Z","Action":"fail","Package":"github.com/acme/shop/internal/order","Elapsed":0.015}

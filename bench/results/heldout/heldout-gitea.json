@@ -1,0 +1,753 @@
+{
+  "meta": {
+    "label": "heldout-gitea",
+    "repo": {
+      "name": "gitea",
+      "url": "https://github.com/go-gitea/gitea.git",
+      "tag": "v28.1.0",
+      "commit": "4ebd5e319b6a9e629bfd7a04292a6fe85b08dee9",
+      "language": "go",
+      "path": "bench/repos/gitea"
+    },
+    "repoRoot": "bench/repos/gitea",
+    "headCommit": "4ebd5e319b6a9e629bfd7a04292a6fe85b08dee9",
+    "date": "2026-10-09T20:18:08.120Z",
+    "input": "search",
+    "charsPerToken": 3,
+    "strategies": [
+      "native-naive",
+      "native-ranged",
+      "kopt-pack",
+      "kopt-hits+read",
+      "kirograph",
+      "codegraph"
+    ],
+    "grepLimits": {
+      "maxMatches": 100,
+      "maxChars": 10000,
+      "maxLineChars": 250
+    },
+    "readLimits": {
+      "naiveTopFiles": 3,
+      "naiveMaxLines": 2000,
+      "rangedMatches": 4,
+      "rangedContext": 60
+    },
+    "koptBudgets": {
+      "find": 700,
+      "pack": 2500,
+      "read": 3000
+    },
+    "index": {
+      "built": false,
+      "durationMs": 0,
+      "files": 3402,
+      "symbols": 32905,
+      "path": "<index-dir>/.kopt-gitea/index.db"
+    },
+    "notes": [
+      "kirograph: outputs loaded from bench/competitors/results/kirograph-gitea.jsonl",
+      "codegraph: outputs loaded from bench/competitors/results/codegraph-gitea.jsonl"
+    ],
+    "durationMs": 1034
+  },
+  "results": [
+    {
+      "taskId": "ho-gt-locate-webhook-signature",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 9774,
+      "chars": 29317,
+      "toolCalls": 4,
+      "durationMs": 716,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "addDefaultHeaders"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "hmac",
+          "chars": 5291,
+          "tokens": 1764
+        },
+        {
+          "tool": "read_file",
+          "args": "services/mailer/token/token.go",
+          "chars": 3473,
+          "tokens": 1158
+        },
+        {
+          "tool": "read_file",
+          "args": "services/oauth2_provider/jwtsigningkey.go",
+          "chars": 9763,
+          "tokens": 3255
+        },
+        {
+          "tool": "read_file",
+          "args": "services/migrations/codecommit.go",
+          "chars": 10790,
+          "tokens": 3597
+        }
+      ]
+    },
+    {
+      "taskId": "ho-gt-locate-webhook-signature",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 4653,
+      "chars": 13953,
+      "toolCalls": 4,
+      "durationMs": 1,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "addDefaultHeaders"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "hmac",
+          "chars": 5291,
+          "tokens": 1764
+        },
+        {
+          "tool": "read_file",
+          "args": "services/mailer/token/token.go:1-132",
+          "chars": 3473,
+          "tokens": 1158
+        },
+        {
+          "tool": "read_file",
+          "args": "services/oauth2_provider/jwtsigningkey.go:1-107",
+          "chars": 2149,
+          "tokens": 717
+        },
+        {
+          "tool": "read_file",
+          "args": "services/oauth2_provider/jwtsigningkey.go:232-352",
+          "chars": 3040,
+          "tokens": 1014
+        }
+      ]
+    },
+    {
+      "taskId": "ho-gt-locate-webhook-signature",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1346,
+      "chars": 4038,
+      "toolCalls": 1,
+      "durationMs": 119,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"webhook signature hmac sha256 header secret delivery\"",
+          "chars": 4038,
+          "tokens": 1346
+        }
+      ]
+    },
+    {
+      "taskId": "ho-gt-locate-webhook-signature",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 1415,
+      "chars": 4243,
+      "toolCalls": 3,
+      "durationMs": 24,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"webhook signature hmac sha256 header secret delivery\"",
+          "chars": 1920,
+          "tokens": 640
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#ni9",
+          "chars": 1939,
+          "tokens": 647
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#3mn",
+          "chars": 384,
+          "tokens": 128
+        }
+      ]
+    },
+    {
+      "taskId": "ho-gt-locate-webhook-signature",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "skipped": "no kirograph result line for this task",
+      "tokens": 0,
+      "chars": 0,
+      "toolCalls": 0,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "services/webhook/deliver.go"
+        ],
+        "symbolsMissed": [
+          "addDefaultHeaders"
+        ],
+        "found": false
+      },
+      "calls": []
+    },
+    {
+      "taskId": "ho-gt-locate-webhook-signature",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "skipped": "no codegraph result line for this task",
+      "tokens": 0,
+      "chars": 0,
+      "toolCalls": 0,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "services/webhook/deliver.go"
+        ],
+        "symbolsMissed": [
+          "addDefaultHeaders"
+        ],
+        "found": false
+      },
+      "calls": []
+    },
+    {
+      "taskId": "ho-gt-usage-default-headers",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 8481,
+      "chars": 25439,
+      "toolCalls": 4,
+      "durationMs": 90,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "addDefaultHeaders",
+          "chars": 562,
+          "tokens": 188
+        },
+        {
+          "tool": "read_file",
+          "args": "services/webhook/deliver.go",
+          "chars": 9816,
+          "tokens": 3272
+        },
+        {
+          "tool": "read_file",
+          "args": "services/webhook/matrix.go",
+          "chars": 9961,
+          "tokens": 3321
+        },
+        {
+          "tool": "read_file",
+          "args": "services/webhook/payloader.go",
+          "chars": 5100,
+          "tokens": 1700
+        }
+      ]
+    },
+    {
+      "taskId": "ho-gt-usage-default-headers",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 3650,
+      "chars": 10947,
+      "toolCalls": 4,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "addDefaultHeaders",
+          "chars": 562,
+          "tokens": 188
+        },
+        {
+          "tool": "read_file",
+          "args": "services/webhook/deliver.go:34-154",
+          "chars": 4089,
+          "tokens": 1363
+        },
+        {
+          "tool": "read_file",
+          "args": "services/webhook/matrix.go:1-120",
+          "chars": 3416,
+          "tokens": 1139
+        },
+        {
+          "tool": "read_file",
+          "args": "services/webhook/payloader.go:59-123",
+          "chars": 2880,
+          "tokens": 960
+        }
+      ]
+    },
+    {
+      "taskId": "ho-gt-usage-default-headers",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 944,
+      "chars": 2832,
+      "toolCalls": 1,
+      "durationMs": 20,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"addDefaultHeaders\"",
+          "chars": 2832,
+          "tokens": 944
+        }
+      ]
+    },
+    {
+      "taskId": "ho-gt-usage-default-headers",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 894,
+      "chars": 2677,
+      "toolCalls": 3,
+      "durationMs": 14,
+      "recall": {
+        "fileRecall": 0.3333333333333333,
+        "symbolRecall": 0.3333333333333333,
+        "defRecall": 0,
+        "filesMissed": [
+          "services/webhook/matrix.go",
+          "services/webhook/payloader.go"
+        ],
+        "symbolsMissed": [
+          "newMatrixRequest",
+          "prepareJSONRequest"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"addDefaultHeaders\"",
+          "chars": 517,
+          "tokens": 173
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#ni9",
+          "chars": 1939,
+          "tokens": 647
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#6an",
+          "chars": 221,
+          "tokens": 74
+        }
+      ]
+    },
+    {
+      "taskId": "ho-gt-usage-default-headers",
+      "kind": "usage",
+      "strategy": "kirograph",
+      "skipped": "no kirograph result line for this task",
+      "tokens": 0,
+      "chars": 0,
+      "toolCalls": 0,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "services/webhook/deliver.go",
+          "services/webhook/matrix.go",
+          "services/webhook/payloader.go"
+        ],
+        "symbolsMissed": [
+          "newDefaultRequest",
+          "newMatrixRequest",
+          "prepareJSONRequest"
+        ],
+        "found": false
+      },
+      "calls": []
+    },
+    {
+      "taskId": "ho-gt-usage-default-headers",
+      "kind": "usage",
+      "strategy": "codegraph",
+      "skipped": "no codegraph result line for this task",
+      "tokens": 0,
+      "chars": 0,
+      "toolCalls": 0,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "services/webhook/deliver.go",
+          "services/webhook/matrix.go",
+          "services/webhook/payloader.go"
+        ],
+        "symbolsMissed": [
+          "newDefaultRequest",
+          "newMatrixRequest",
+          "prepareJSONRequest"
+        ],
+        "found": false
+      },
+      "calls": []
+    }
+  ],
+  "aggregates": [
+    {
+      "strategy": "native-naive",
+      "tasks": 2,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 9127.5,
+      "meanTokens": 9128,
+      "p90Tokens": 9774,
+      "totalTokens": 18255,
+      "totalChars": 54756,
+      "meanToolCalls": 4,
+      "meanFileRecall": 1,
+      "meanSymbolRecall": 0.5,
+      "meanDefRecall": 0.5,
+      "found": 1,
+      "foundRate": 0.5,
+      "tokensPerFound": 18255
+    },
+    {
+      "strategy": "native-ranged",
+      "tasks": 2,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 4151.5,
+      "meanTokens": 4152,
+      "p90Tokens": 4653,
+      "totalTokens": 8303,
+      "totalChars": 24900,
+      "meanToolCalls": 4,
+      "meanFileRecall": 1,
+      "meanSymbolRecall": 0.5,
+      "meanDefRecall": 0.5,
+      "found": 1,
+      "foundRate": 0.5,
+      "tokensPerFound": 8303
+    },
+    {
+      "strategy": "kopt-pack",
+      "tasks": 2,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 1145,
+      "meanTokens": 1145,
+      "p90Tokens": 1346,
+      "totalTokens": 2290,
+      "totalChars": 6870,
+      "meanToolCalls": 1,
+      "meanFileRecall": 1,
+      "meanSymbolRecall": 1,
+      "meanDefRecall": 0.5,
+      "found": 2,
+      "foundRate": 1,
+      "tokensPerFound": 1145
+    },
+    {
+      "strategy": "kopt-hits+read",
+      "tasks": 2,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 1154.5,
+      "meanTokens": 1155,
+      "p90Tokens": 1415,
+      "totalTokens": 2309,
+      "totalChars": 6920,
+      "meanToolCalls": 3,
+      "meanFileRecall": 0.6666666666666666,
+      "meanSymbolRecall": 0.6666666666666666,
+      "meanDefRecall": 0.5,
+      "found": 1,
+      "foundRate": 0.5,
+      "tokensPerFound": 2309
+    },
+    {
+      "strategy": "kirograph",
+      "tasks": 0,
+      "skipped": 2,
+      "errors": 0,
+      "medianTokens": 0,
+      "meanTokens": 0,
+      "p90Tokens": 0,
+      "totalTokens": 0,
+      "totalChars": 0,
+      "meanToolCalls": 0,
+      "meanFileRecall": 0,
+      "meanSymbolRecall": 0,
+      "meanDefRecall": 0,
+      "found": 0,
+      "foundRate": 0,
+      "tokensPerFound": null
+    },
+    {
+      "strategy": "codegraph",
+      "tasks": 0,
+      "skipped": 2,
+      "errors": 0,
+      "medianTokens": 0,
+      "meanTokens": 0,
+      "p90Tokens": 0,
+      "totalTokens": 0,
+      "totalChars": 0,
+      "meanToolCalls": 0,
+      "meanFileRecall": 0,
+      "meanSymbolRecall": 0,
+      "meanDefRecall": 0,
+      "found": 0,
+      "foundRate": 0,
+      "tokensPerFound": null
+    }
+  ],
+  "paired": [
+    {
+      "a": "native-naive",
+      "b": "kopt-pack",
+      "nRun": 2,
+      "nBoth": 1,
+      "onlyA": 0,
+      "onlyB": 1,
+      "medianRatio": 0.11130762881735644,
+      "geoMeanRatio": 0.11130762881735642,
+      "bCheaper": 1
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-pack",
+      "nRun": 2,
+      "nBoth": 1,
+      "onlyA": 0,
+      "onlyB": 1,
+      "medianRatio": 0.2586301369863014,
+      "geoMeanRatio": 0.2586301369863014,
+      "bCheaper": 1
+    },
+    {
+      "a": "native-naive",
+      "b": "kopt-hits+read",
+      "nRun": 2,
+      "nBoth": 0,
+      "onlyA": 1,
+      "onlyB": 1,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-hits+read",
+      "nRun": 2,
+      "nBoth": 0,
+      "onlyA": 1,
+      "onlyB": 1,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "kirograph",
+      "b": "kopt-pack",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "codegraph",
+      "b": "kopt-pack",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "kirograph",
+      "b": "kopt-hits+read",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "codegraph",
+      "b": "kopt-hits+read",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-ranged",
+      "b": "kirograph",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-ranged",
+      "b": "codegraph",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-naive",
+      "b": "native-ranged",
+      "nRun": 2,
+      "nBoth": 1,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": 0.4303737766772786,
+      "geoMeanRatio": 0.4303737766772786,
+      "bCheaper": 1
+    }
+  ],
+  "byKind": [
+    {
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 9774
+    },
+    {
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 4653
+    },
+    {
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tasks": 1,
+      "found": 1,
+      "medianTokens": 1346
+    },
+    {
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tasks": 1,
+      "found": 1,
+      "medianTokens": 1415
+    },
+    {
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tasks": 1,
+      "found": 1,
+      "medianTokens": 8481
+    },
+    {
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tasks": 1,
+      "found": 1,
+      "medianTokens": 3650
+    },
+    {
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tasks": 1,
+      "found": 1,
+      "medianTokens": 944
+    },
+    {
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 894
+    }
+  ]
+}

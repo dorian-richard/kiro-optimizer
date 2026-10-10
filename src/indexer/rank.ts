@@ -1,4 +1,5 @@
 // Centrality priors: files.rank = PageRank over the file dependency graph, symbols.rank = log in-degree.
+// Member reads and writes are left out of both: they would turn every busy field into a "central" symbol.
 
 import type { Store } from '../store/store.js';
 
@@ -68,7 +69,7 @@ export function computeRanks(store: Store): { files: number; symbols: number } {
     .prepare(
       `SELECT r.file_id AS s, t.file_id AS d, count(*) AS c
        FROM refs r JOIN symbols t ON t.id = r.to_symbol_id
-       WHERE r.to_symbol_id IS NOT NULL AND r.kind <> 'import'
+       WHERE r.to_symbol_id IS NOT NULL AND r.kind NOT IN ('import', 'read', 'write')
        GROUP BY r.file_id, t.file_id`,
     )
     .all() as Array<{ s: number; d: number; c: number }>;
@@ -81,7 +82,7 @@ export function computeRanks(store: Store): { files: number; symbols: number } {
   const pr = pageRank(n, edges);
 
   const indeg = db
-    .prepare('SELECT to_symbol_id AS id, count(*) AS c FROM refs WHERE to_symbol_id IS NOT NULL GROUP BY to_symbol_id')
+    .prepare("SELECT to_symbol_id AS id, count(*) AS c FROM refs WHERE to_symbol_id IS NOT NULL AND kind NOT IN ('read', 'write') GROUP BY to_symbol_id")
     .all() as Array<{ id: number; c: number }>;
   let maxDeg = 0;
   for (const r of indeg) if (r.c > maxDeg) maxDeg = r.c;

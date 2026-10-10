@@ -8,11 +8,11 @@ import { homedir, tmpdir } from 'node:os';
 import { dirname, join, sep, win32 } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { cacheRoot, defaultConfig, findProjectRoot, isUnsafeRoot, loadConfig, repoCacheKey, usesProjectDataDir } from '../src/core/config.js';
-import { binPath, hookCommandLine, resolveKoptCommand, shellArg, type KoptCommand } from '../src/kiro/command.js';
+import { batchPath, binPath, commandProgram, dependsOnPath, hookCommandLine, isTransientPath, launcherPath, launcherScript, launcherShell, resolveKoptCommand, shellArg, stableNodePath, transientBinDir, type KoptCommand } from '../src/kiro/command.js';
 import { detectCli, detectIde, hookPlan } from '../src/kiro/detect.js';
 import { ensureLegacyWorkspaceHooks, legacyHookFiles, legacyHooksWanted, removeLegacyWorkspaceHooks } from '../src/kiro/legacy.js';
 import { ideCandidates, kiroCliSettingsPath, kiroHomeDir, kiroUserSettingsPath, which, type HostEnv } from '../src/kiro/paths.js';
-import { AUTO_APPROVE, defaultNpmRunner, globalInstall, setupUser } from '../src/kiro/setup.js';
+import { AUTO_APPROVE, defaultNpmRunner, globalInstall, MCP_TIMEOUTS, setupUser } from '../src/kiro/setup.js';
 import { uninstallKiro } from '../src/kiro/uninstall.js';
 import { installKiro } from '../src/kiro/index.js';
 import { childEnv, isInside, rmTree } from './helpers/fs.js';
@@ -193,64 +193,100 @@ describe('paths and surface detection per OS', () => {
 });
 
 describe('kopt command resolution', () => {
-  it('uses the bare kopt shim when it is on PATH with Node >= 22.13, else node + bin.js', () => {
-    // Real files on PATH, so the host's own platform is simulated: a Windows path (C:\...) cannot sit in a POSIX
-    // PATH, whose separator is ':'. Both branches still run everywhere through the pure `force` cases below.
-    const platform: NodeJS.Platform = process.platform === 'win32' ? 'win32' : 'linux';
+  it('writes absolute Node + bin.js for MCP and the private launcher for hooks: nothing depends on PATH', () => {
+    const platform = process.platform;
     const win = platform === 'win32';
-    const dir = join(tmp, 'shimbin');
-    const npx = join(tmp, '_npx', 'abc', 'node_modules', '.bin');
-    for (const d of [dir, npx]) {
-      mkdirSync(d, { recursive: true });
-      // what npm writes on each OS: `kopt` (sh) everywhere, plus `kopt.cmd` / `kopt.ps1` on Windows
-      for (const f of win ? ['kopt', 'kopt.cmd', 'kopt.ps1'] : ['kopt']) writeFileSync(join(d, f), '#!/bin/sh\n');
-      chmodSync(join(d, 'kopt'), 0o755);
-    }
-    const pathList = (...dirs: string[]) => dirs.join(win ? ';' : ':');
-    const h = (path: string): HostEnv => ({ platform, env: { PATH: path }, home: win ? 'C:\\Users\\u' : '/home/u' });
+    const home = join(tmp, 'resolve-home');
+    const h: HostEnv = { platform, env: { PATH: '', KOPT_HOME: join(home, '.kopt') }, home };
     const bin = win ? 'C:\\kopt\\dist\\bin.js' : '/opt/kopt/dist/bin.js';
-    const shim = resolveKoptCommand({ h: h(dir), bin, nodeVersion: 'v22.13.0' });
-    if (win) {
-      // hooks: kopt.cmd (PowerShell would pick kopt.ps1, blocked by the default execution policy);
-      // MCP: node + bin.js (a native MCP client may not resolve .cmd shims)
-      expect(shim).toMatchObject({ shell: 'kopt.cmd', mcp: { command: 'node', args: [bin, 'mcp'] }, kind: 'shim' });
-      expect(hookCommandLine(shim, 'global')).toBe('kopt.cmd hook --source global');
-    } else {
-      expect(shim).toMatchObject({ shell: 'kopt', mcp: { command: 'kopt', args: ['mcp'] }, kind: 'shim' });
-      expect(hookCommandLine(shim, 'global')).toBe('kopt hook --source global');
-    }
-    expect(shim.shimPath).toBe(join(dir, 'kopt'));
-    // the npx cache disappears after the run: never configure it
-    expect(resolveKoptCommand({ h: h(npx), bin, nodePath: '/usr/bin/node', nodeVersion: 'v22.13.0' }).kind).toBe('node');
-    // a kopt whose node is too old falls back to an explicit node
-    const spaced = win ? 'C:\\my kopt\\dist\\bin.js' : '/opt/my kopt/dist/bin.js';
-    const old = resolveKoptCommand({ h: h(dir), bin: spaced, nodePath: '/usr/bin/node', nodeVersion: 'v20.17.0' });
-    if (win) {
-      expect(old).toMatchObject({ kind: 'node', mcp: { command: 'node', args: [spaced, 'mcp'] } });
-      expect(old.shell).toBe(`node "${spaced}"`);
-    } else {
-      expect(old).toMatchObject({ kind: 'node', mcp: { command: '/usr/bin/node', args: [spaced, 'mcp'] } });
-      expect(old.shell).toBe("/usr/bin/node '/opt/my kopt/dist/bin.js'");
-    }
-    expect(which('kopt', h(pathList(npx, dir)), (d) => d.includes('_npx'))).toBe(join(dir, 'kopt'));
+    const node = win ? 'C:\\nodejs\\node.exe' : '/opt/node22/bin/node';
+    // no launcher written yet: absolute node + bin.js in hooks too
+    const direct = resolveKoptCommand({ h, bin, nodePath: node });
+    expect(direct).toMatchObject({ kind: 'node', mcp: { command: node, args: [bin, 'mcp'] }, node, bin });
+    expect(direct.shell).toBe(`${node} ${bin}`);
+    // the launcher setup writes: hooks run it by absolute path, MCP stays node + bin.js (spawned without a shell)
+    const launcher = launcherPath(h);
+    expect(launcher).toBe(join(home, '.kopt', 'bin', win ? 'kopt.cmd' : 'kopt'));
+    const viaLauncher = resolveKoptCommand({ h, bin, nodePath: node, force: 'launcher' });
+    expect(viaLauncher).toMatchObject({ kind: 'launcher', launcher, mcp: { command: node, args: [bin, 'mcp'] } });
+    expect(hookCommandLine(viaLauncher, 'global')).toBe(`${shellArg(launcher)} hook --source global`);
+    // an existing launcher is picked up by runtime callers (the MCP server writing IDE 0.x workspace hooks)
+    put(launcher, launcherScript(node, bin));
+    expect(resolveKoptCommand({ h, bin, nodePath: node }).kind).toBe('launcher');
+    // opt-outs: bare kopt (needs PATH; for teams committing kopt init files), or no launcher
+    expect(resolveKoptCommand({ h, bin, nodePath: node, force: 'shim' })).toMatchObject({ kind: 'shim', shell: win ? 'kopt.cmd' : 'kopt' });
+    expect(resolveKoptCommand({ h, bin, nodePath: node, force: 'node' }).kind).toBe('node');
+    // the npx cache is never a stable location
+    expect(isTransientPath(join(tmp, '_npx', 'abc', 'node_modules', 'kiro-optimizer', 'dist', 'bin.js'))).toBe(true);
+    expect(isTransientPath(bin)).toBe(false);
+    expect(which('kopt', { platform, env: { PATH: [join(tmp, '_npx', 'x'), '/nowhere'].join(win ? ';' : ':') }, home }, transientBinDir)).toBeUndefined();
+  });
 
-    // POSIX and Windows command lines from any host (no PATH lookup)
-    const posix = resolveKoptCommand({ h: { platform: 'linux', env: { PATH: '' }, home: '/home/u' }, bin: '/opt/my kopt/dist/bin.js', nodePath: '/usr/bin/node', force: 'node' });
-    expect(posix.shell).toBe("/usr/bin/node '/opt/my kopt/dist/bin.js'");
-    expect(resolveKoptCommand({ h: { platform: 'linux', env: { PATH: '' }, home: '/home/u' }, bin: '/opt/kopt/dist/bin.js', force: 'shim' })).toMatchObject({ shell: 'kopt', mcp: { command: 'kopt', args: ['mcp'] } });
-    // Windows: bare `node` (valid in cmd.exe and PowerShell), MCP through node + bin.js (no .cmd shim for native clients)
-    const winBin = 'C:\\Users\\u\\AppData\\Roaming\\npm\\node_modules\\kiro-optimizer\\dist\\bin.js';
-    const winNode = resolveKoptCommand({ h: { platform: 'win32', env: { PATH: '' }, home: 'C:\\Users\\u' }, bin: winBin, force: 'node' });
-    expect(winNode.shell).toBe(`node "${winBin}"`);
-    expect(winNode.mcp).toEqual({ command: 'node', args: [winBin, 'mcp'] });
-    const winShim = resolveKoptCommand({ h: { platform: 'win32', env: { PATH: '' }, home: 'C:\\' }, bin: winBin, force: 'shim' });
-    expect(winShim.mcp).toEqual({ command: 'node', args: [winBin, 'mcp'] });
-    expect(winShim.shell).toBe('kopt.cmd'); // PowerShell would pick kopt.ps1, blocked by the default execution policy
+  it('quotes for sh and cmd.exe, and keeps plain paths bare (valid in sh, cmd.exe and PowerShell alike)', () => {
+    expect(shellArg('/opt/my kopt/dist/bin.js', 'linux')).toBe("'/opt/my kopt/dist/bin.js'");
+    expect(shellArg("/opt/it's/bin.js", 'linux')).toBe("'/opt/it'\\''s/bin.js'");
+    expect(shellArg('/home/u/.kopt/bin/kopt', 'linux')).toBe('/home/u/.kopt/bin/kopt');
+    expect(shellArg('~/x', 'linux')).toBe("'~/x'");
+    expect(shellArg('C:\\Users\\u\\.kopt\\bin\\kopt.cmd', 'win32')).toBe('C:\\Users\\u\\.kopt\\bin\\kopt.cmd');
+    expect(shellArg('C:\\PROGRA~1\\nodejs\\node.exe', 'win32')).toBe('C:\\PROGRA~1\\nodejs\\node.exe');
     expect(shellArg('C:\\Program Files\\nodejs\\node.exe', 'win32')).toBe('"C:\\Program Files\\nodejs\\node.exe"');
-    // for another OS the entry is computed, not checked on disk
+    expect(launcherShell('C:\\Users\\u\\.kopt\\bin\\kopt.cmd', 'win32')).toBe('C:\\Users\\u\\.kopt\\bin\\kopt.cmd');
+    expect(commandProgram("'/opt/my kopt/node' x")).toBe('/opt/my kopt/node');
+    expect(commandProgram('"C:\\Program Files\\node.exe" x')).toBe('C:\\Program Files\\node.exe');
+    expect(dependsOnPath('kopt')).toBe(true);
+    expect(dependsOnPath('kopt.cmd')).toBe(true);
+    expect(dependsOnPath('/home/u/.kopt/bin/kopt')).toBe(false);
+  });
+
+  it('launcher scripts: absolute paths, and a hook never fails loudly (only exit 2 blocks)', () => {
+    const sh = launcherScript('/opt/node 22/bin/node', "/opt/it's/dist/bin.js", 'linux');
+    expect(sh).toMatch(/^#!\/bin\/sh\n/);
+    expect(sh).toContain("node='/opt/node 22/bin/node'");
+    expect(sh).toContain("bin='/opt/it'\\''s/dist/bin.js'");
+    const cmd = launcherScript('C:\\Program Files\\nodejs\\node.exe', 'C:\\Users\\a%b\\kopt\\dist\\bin.js', 'win32');
+    expect(cmd.split('\r\n')[0]).toBe('@echo off');
+    expect(cmd).toContain('set "KOPT_NODE=C:\\Program Files\\nodejs\\node.exe"');
+    expect(cmd).toContain('set "KOPT_BIN=C:\\Users\\a%%b\\kopt\\dist\\bin.js"'); // % doubled in a batch file
+    expect(cmd).toContain('if "%ERRORLEVEL%"=="2" exit /b 2');
+    expect(cmd).not.toMatch(/[^\r]\n/); // CRLF only
+    // cmd.exe reads batch files in the OEM code page: a non-ASCII profile path is written through its variable
+    const env = { USERPROFILE: 'C:\\Users\\Jérôme', APPDATA: 'C:\\Users\\Jérôme\\AppData\\Roaming', LOCALAPPDATA: 'C:\\Users\\Jérôme\\AppData\\Local' };
+    const fr = launcherScript('C:\\Users\\Jérôme\\AppData\\Local\\fnm\\node.exe', 'C:\\Users\\Jérôme\\AppData\\Roaming\\npm\\node_modules\\kiro-optimizer\\dist\\bin.js', 'win32', env);
+    expect(fr).toContain('set "KOPT_NODE=%LOCALAPPDATA%\\fnm\\node.exe"');
+    expect(fr).toContain('set "KOPT_BIN=%APPDATA%\\npm\\node_modules\\kiro-optimizer\\dist\\bin.js"');
+    expect(fr).not.toMatch(/[^\x00-\x7f]/);
+    expect(batchPath('C:\\Users\\u\\.kopt\\x%y', { USERPROFILE: 'C:\\Users\\u' })).toBe('%USERPROFILE%\\.kopt\\x%%y');
+  });
+
+  it.skipIf(process.platform === 'win32')('the POSIX launcher runs with PATH=/usr/bin:/bin and maps hook failures to a silent exit 0', () => {
+    const dir = join(tmp, 'launcher-run');
+    const fake = join(dir, 'fake-bin.js');
+    put(fake, "process.exit(Number(process.argv[3] ?? 0));\n");
+    const launcher = join(dir, 'kopt');
+    put(launcher, launcherScript(process.execPath, fake, process.platform));
+    chmodSync(launcher, 0o755);
+    const env = { PATH: '/usr/bin:/bin', HOME: dir };
+    const code = (args: string[], f = launcher) => spawnSync(f, args, { env, encoding: 'utf8' }).status;
+    expect(code(['hook', '0'])).toBe(0);
+    expect(code(['hook', '2'])).toBe(2);
+    expect(code(['hook', '1'])).toBe(0); // e.g. a Stop hook: exit 1 would mean "continue the agent" in Kiro IDE 1.x
+    expect(code(['other', '1'])).toBe(1); // not a hook: the real exit code
+    put(join(dir, 'gone'), launcherScript(join(dir, 'no-node'), fake, process.platform));
+    chmodSync(join(dir, 'gone'), 0o755);
+    const r = spawnSync(join(dir, 'gone'), ['hook'], { env, encoding: 'utf8' });
+    expect([r.status, r.stdout, r.stderr]).toEqual([0, '', '']); // Node removed: silent allow
+  });
+
+  it('pins the stable Homebrew alias of a Cellar Node, else the running Node', () => {
+    expect(stableNodePath('/usr/local/bin/node', 'linux')).toBe('/usr/local/bin/node');
+    expect(stableNodePath(process.execPath)).toBeTruthy();
+    // on another OS nothing is resolved on disk
+    expect(stableNodePath('/opt/homebrew/Cellar/node@22/22.13.0/bin/node', process.platform === 'win32' ? 'linux' : 'win32')).toBe('/opt/homebrew/Cellar/node@22/22.13.0/bin/node');
+  });
+
+  it('computes bin.js inside a package', () => {
     if (process.platform === 'win32') expect(binPath('/opt/kopt', 'linux')).toBe('/opt/kopt/dist/bin.js');
     else expect(binPath('C:\\x\\kiro-optimizer', 'win32')).toBe(win32.join('C:\\x\\kiro-optimizer', 'dist', 'bin.js'));
-    // on the host: dist/bin.js once built, else the dev entry dist/cli.js
     const pkg = join(tmp, 'binpkg');
     expect(binPath(pkg)).toBe(join(pkg, 'dist', 'cli.js'));
     put(join(pkg, 'dist', 'bin.js'), '#!/usr/bin/env node\n');
@@ -273,7 +309,7 @@ describe('kopt setup (user level, temp HOME)', () => {
     const mcp = json(join(b.kiro, 'settings', 'mcp.json'));
     expect(mcp.mcpServers.github).toEqual({ url: 'https://api.github.com/mcp' });
     expect(mcp.powers).toEqual({ mcpServers: {} });
-    expect(mcp.mcpServers.kopt).toEqual({ command: 'kopt', args: ['mcp'], autoApprove: AUTO_APPROVE });
+    expect(mcp.mcpServers.kopt).toEqual({ command: 'kopt', args: ['mcp'], autoApprove: AUTO_APPROVE, ...MCP_TIMEOUTS });
     expect(mcp.mcpServers.kopt.autoApprove).not.toContain('kopt_run');
 
     const hooks = json(join(b.kiro, 'hooks', 'kopt.json'));
@@ -292,10 +328,17 @@ describe('kopt setup (user level, temp HOME)', () => {
     expect(agent.resources).toBeUndefined(); // global steering is inherited by default
 
     expect(json(kiroCliSettingsPath(b.h))).toEqual({ 'chat.defaultModel': 'auto', 'chat.defaultAgent': 'kopt' });
-    expect(json(join(b.kiro, 'agents', 'kopt-explorer.json')).tools).not.toContain('@kopt/kopt_run');
+    const explorer = json(join(b.kiro, 'agents', 'kopt-explorer.json'));
+    expect(explorer.tools).not.toContain('@kopt/kopt_run');
+    // its prompt sends it to grep/glob for literal strings: on Kiro CLI 2.x they are separate tools from `read`
+    expect(explorer.tools).toEqual(expect.arrayContaining(['read', 'grep', 'glob']));
+    expect(explorer.allowedTools).toEqual(expect.arrayContaining(['read', 'grep', 'glob']));
     expect(read(join(b.kiro, 'steering', 'kopt.md'))).toMatch(/^---\ninclusion: always\n---\n/);
     expect(existsSync(join(b.kiro, 'steering', 'kopt-specs.md'))).toBe(true);
-    expect(read(join(b.kiro, 'settings', 'kiroignore'))).toMatch(/# >>> kopt \(generated\)[\s\S]*package-lock\.json[\s\S]*# <<< kopt\n$/);
+    // global ignore: build artifacts only (Kiro IDE denies reads AND writes of matched files in every project)
+    const globalIgnore = read(join(b.kiro, 'settings', 'kiroignore'));
+    expect(globalIgnore).toMatch(/# >>> kopt \(generated\)[\s\S]*\*\.min\.js[\s\S]*\*\.js\.map[\s\S]*# <<< kopt\n$/);
+    for (const p of ['package-lock.json', 'yarn.lock', 'go.sum', '__snapshots__/', '*.snap']) expect(globalIgnore).not.toContain(p);
     const vs = read(ideSettings);
     expect(vs).toContain('// mine');
     expect(vs).toContain('"kiroAgent.agentIgnoreFiles": [".kiroignore"]');
@@ -315,12 +358,104 @@ describe('kopt setup (user level, temp HOME)', () => {
     const r = await setupUser({ h: b.h, command: SHIM, runVersion: run, noInstallStep: true });
     expect(json(kiroCliSettingsPath(b.h))['chat.defaultAgent']).toBe('my-agent');
     expect(r.notes.some((n) => n.includes('"my-agent"'))).toBe(true);
-    expect(json(join(b.kiro, 'settings', 'mcp.json')).mcpServers.kopt).toEqual({ command: 'kopt', args: ['mcp'], env: { KOPT_DEBUG: '1' }, autoApprove: AUTO_APPROVE });
+    expect(json(join(b.kiro, 'settings', 'mcp.json')).mcpServers.kopt).toEqual({ command: 'kopt', args: ['mcp'], env: { KOPT_DEBUG: '1' }, autoApprove: AUTO_APPROVE, ...MCP_TIMEOUTS });
     expect(existsSync(kiroUserSettingsPath(b.h))).toBe(false); // no IDE detected: IDE settings untouched
 
+    // --force: default agent, and still the user's own fields of the kopt server (env, disabled, autoApprove)
+    const mcpPath = join(b.kiro, 'settings', 'mcp.json');
+    const edited = json(mcpPath);
+    edited.mcpServers.kopt.autoApprove = ['kopt_find'];
+    edited.mcpServers.kopt.disabledTools = ['kopt_run'];
+    writeFileSync(mcpPath, JSON.stringify(edited));
     await setupUser({ h: b.h, command: SHIM, runVersion: run, noInstallStep: true, force: true });
     expect(json(kiroCliSettingsPath(b.h))['chat.defaultAgent']).toBe('kopt');
-    expect(json(join(b.kiro, 'settings', 'mcp.json')).mcpServers.kopt).toEqual({ command: 'kopt', args: ['mcp'], autoApprove: AUTO_APPROVE });
+    expect(json(mcpPath).mcpServers.kopt).toEqual({ command: 'kopt', args: ['mcp'], env: { KOPT_DEBUG: '1' }, autoApprove: ['kopt_find'], ...MCP_TIMEOUTS, disabledTools: ['kopt_run'] });
+  });
+
+  it('by default writes the launcher, points every hook at it and the MCP server at absolute Node + bin.js', async () => {
+    const b = sandbox('setup-launcher', { ide: '1.2.56', cli: true });
+    const r = await setupUser({ h: b.h, runVersion: run, noInstallStep: true });
+    expect(r.command.kind).toBe('launcher');
+    const launcher = join(b.home, '.kopt', 'bin', process.platform === 'win32' ? 'kopt.cmd' : 'kopt');
+    expect(r.command.launcher).toBe(launcher);
+    expect(read(launcher)).toContain(r.command.bin!);
+    if (process.platform !== 'win32') expect(lstatSync(launcher).mode & 0o777).toBe(0o755);
+    const hooks = json(join(b.kiro, 'hooks', 'kopt.json'));
+    for (const x of hooks.hooks) expect(x.action.command).toBe(`${shellArg(launcher)} hook --source global`);
+    for (const list of Object.values(json(join(b.kiro, 'agents', 'kopt.json')).hooks) as any[]) expect(list[0].command).toBe(`${shellArg(launcher)} hook --source agent`);
+    const entry = json(join(b.kiro, 'settings', 'mcp.json')).mcpServers.kopt;
+    expect(entry.command).toBe(stableNodePath(process.execPath));
+    expect(entry.args).toEqual([r.command.bin, 'mcp']);
+    expect(r.notes.some((n) => /absolute paths/.test(n))).toBe(true);
+    // re-running setup is idempotent; an upgrade (new paths) rewrites the launcher and the configs
+    expect((await setupUser({ h: b.h, runVersion: run, noInstallStep: true })).written).toEqual([]);
+    const moved = join(tmp, 'moved-kopt', 'dist', 'bin.js');
+    put(moved, '// new place\n');
+    const r2 = await setupUser({ h: { ...b.h, env: { ...b.h.env, KOPT_CLI: moved } }, runVersion: run, noInstallStep: true });
+    expect(r2.written).toContain(launcher);
+    expect(read(launcher)).toContain(moved);
+    expect(json(join(b.kiro, 'settings', 'mcp.json')).mcpServers.kopt.args).toEqual([moved, 'mcp']);
+    // private state is owner-only (POSIX)
+    if (process.platform !== 'win32') {
+      expect(lstatSync(join(b.home, '.kopt')).mode & 0o077).toBe(0);
+      expect(lstatSync(join(b.home, '.kopt', 'setup-state.json')).mode & 0o077).toBe(0);
+      expect(lstatSync(join(b.home, '.kopt', 'kiro-install.json')).mode & 0o077).toBe(0);
+    }
+  });
+
+  it('never points Kiro into the npx cache: a private copy in ~/.kopt/runtime, or nothing written at all', async () => {
+    const npxCopy = join(tmp, '_npx', 'cafe', 'node_modules', 'kiro-optimizer');
+    put(join(npxCopy, 'package.json'), JSON.stringify({ name: 'kiro-optimizer', version: '0.1.0', bin: { kopt: 'dist/bin.js' }, files: ['dist', 'templates'] }));
+    put(join(npxCopy, 'dist', 'bin.js'), '#!/usr/bin/env node\n');
+    put(join(npxCopy, 'templates', 'x.json'), '{}');
+    // npm stub: `pack` makes a tarball, `install -g` fails like EACCES on a system Node, unless --prefix is given
+    const npm = (ok: boolean) => (args: string[]) => {
+      if (args[0] === 'root') return { status: 0, stdout: join(tmp, 'sys-node', 'lib', 'node_modules') + '\n', stderr: '' };
+      if (args[0] === 'pack') {
+        const out = args[args.indexOf('--pack-destination') + 1];
+        writeFileSync(join(out, 'kiro-optimizer-0.1.0.tgz'), 'tgz');
+        return { status: 0, stdout: '[]', stderr: '' };
+      }
+      if (args[0] === 'install' && args.includes('--prefix') && ok) {
+        const prefix = args[args.indexOf('--prefix') + 1];
+        const pkg = process.platform === 'win32' ? join(prefix, 'node_modules', 'kiro-optimizer') : join(prefix, 'lib', 'node_modules', 'kiro-optimizer');
+        put(join(pkg, 'dist', 'bin.js'), '// private copy\n');
+        return { status: 0, stdout: '', stderr: '' };
+      }
+      return { status: 1, stdout: '', stderr: 'npm ERR! code EACCES' };
+    };
+    const b = sandbox('setup-npx-ok', { ide: '1.2.56' });
+    const r = await setupUser({ h: b.h, runVersion: run, pkgRoot: npxCopy, npm: npm(true) });
+    expect(r.refused).toBeUndefined();
+    expect(r.command.bin).toContain(join(b.home, '.kopt', 'runtime'));
+    expect(r.install.detail).toMatch(/private copy/);
+    const mcpText = read(join(b.kiro, 'settings', 'mcp.json'));
+    expect(mcpText).not.toMatch(/_npx/);
+    expect(read(r.command.launcher!)).not.toMatch(/_npx/);
+
+    const bad = sandbox('setup-npx-fail', { ide: '1.2.56' });
+    const refused = await setupUser({ h: bad.h, runVersion: run, pkgRoot: npxCopy, npm: npm(false) });
+    expect(refused.refused).toMatch(/npx cache/);
+    expect(refused.written).toEqual([]);
+    expect(existsSync(bad.kiro)).toBe(false);
+    expect(existsSync(join(bad.home, '.kopt', 'bin'))).toBe(false);
+    // --no-global from npx: the same private copy (never the npx path)
+    const ng = sandbox('setup-npx-noglobal', { ide: '1.2.56' });
+    const r3 = await setupUser({ h: ng.h, runVersion: run, pkgRoot: npxCopy, npm: npm(true), global: false });
+    expect(r3.command.bin).toContain(join(ng.home, '.kopt', 'runtime'));
+  });
+
+  it('removes the IDE 0.x workspace prompt hooks once the IDE is 1.x', async () => {
+    const root = gitRepo('legacy-upgrade');
+    const b = sandbox('setup-legacy-upgrade', { ide: '1.2.56' });
+    const cfg = { ...loadConfig(root), userDir: join(b.home, '.kopt') };
+    ensureLegacyWorkspaceHooks(root, cfg, { cmd: SHIM });
+    const file = join(root, '.kiro', 'hooks', 'kopt-prompt.kiro.hook');
+    expect(existsSync(file)).toBe(true);
+    const r = await setupUser({ h: b.h, command: SHIM, runVersion: run, noInstallStep: true });
+    expect(r.removed).toContain(file);
+    expect(existsSync(file)).toBe(false);
+    expect(existsSync(join(b.home, '.kopt', 'legacy-hooks.json'))).toBe(false);
   });
 
   it('adds the global steering as an agent resource when the CLI does not inherit it', async () => {
@@ -348,7 +483,9 @@ describe('kopt setup (user level, temp HOME)', () => {
     expect(r.notes.some((n) => /no Kiro install detected/.test(n))).toBe(true);
   });
 
-  const chat = [join(homedir(), '.local', 'bin', 'kiro-cli-chat'), which('kiro-cli-chat') ?? ''].find((p) => p && existsSync(p));
+  // the real binary, for offline commands in a temporary HOME: only when the developer opts in with
+  // KOPT_TEST_REAL_KIRO_CLI=1 (vitest.config.ts then sets KOPT_VITEST_REAL_KIRO_CLI); never found on PATH by itself
+  const chat = [process.env.KOPT_VITEST_REAL_KIRO_CLI ?? ''].find((p) => p && existsSync(p));
   it.skipIf(!chat || process.platform === 'win32')('generates a CLI 2.x agent the real kiro-cli accepts and selects as default (temp HOME)', async () => {
     const b = sandbox('setup-realcli', { cli: true });
     await setupUser({ h: b.h, command: SHIM, runVersion: run, noInstallStep: true });
@@ -447,6 +584,55 @@ describe('kopt uninstall', () => {
     expect(existsSync(b.h.env.KOPT_CACHE_DIR!)).toBe(true);
   });
 
+  it('keeps and reports kopt files the user edited (removed with --force), and removes the launcher', async () => {
+    const b = sandbox('uninstall-edited', { ide: '1.2.56', cli: true });
+    await setupUser({ h: b.h, runVersion: run, noInstallStep: true });
+    const steering = join(b.kiro, 'steering', 'kopt.md');
+    writeFileSync(steering, read(steering) + '\n- my own team rule\n');
+    const launcher = join(b.home, '.kopt', 'bin', process.platform === 'win32' ? 'kopt.cmd' : 'kopt');
+    expect(existsSync(launcher)).toBe(true);
+    const r = await uninstallKiro({ h: b.h, scope: 'user' });
+    expect(read(steering)).toContain('my own team rule');
+    expect(r.kept).toEqual([steering]);
+    expect(r.notes.some((n) => n.includes('kept') && n.includes(steering))).toBe(true);
+    expect(existsSync(join(b.kiro, 'hooks', 'kopt.json'))).toBe(false);
+    expect(existsSync(launcher)).toBe(false);
+    const forced = await uninstallKiro({ h: b.h, scope: 'user', force: true });
+    expect(forced.removed).toContain(steering);
+  });
+
+  it('run from the home directory, never treats it as a project (~/.kopt and ~/.kiro stay)', async () => {
+    const b = sandbox('uninstall-home', { ide: '1.2.56' });
+    b.h.env.KOPT_HOME = join(b.home, '.kopt');
+    await setupUser({ h: b.h, command: SHIM, runVersion: run, noInstallStep: true });
+    put(join(b.home, '.kopt', 'config.json'), '{}');
+    put(join(b.home, '.kopt', 'telemetry', '2026-10-09.jsonl'), '{}\n');
+    const r = await uninstallKiro({ h: b.h, root: b.home, scope: 'workspace' });
+    expect(r.removed).toEqual([]);
+    expect(existsSync(join(b.home, '.kopt', 'config.json'))).toBe(true);
+    expect(existsSync(join(b.home, '.kopt', 'telemetry'))).toBe(true);
+    expect(existsSync(join(b.kiro, 'hooks', 'kopt.json'))).toBe(true);
+    // scope all from home: the user-level files go, ~/.kopt data stays (only --purge deletes it)
+    await uninstallKiro({ h: b.h, root: b.home });
+    expect(existsSync(join(b.home, '.kopt', 'config.json'))).toBe(true);
+    expect(existsSync(join(b.home, '.kopt', 'telemetry', '2026-10-09.jsonl'))).toBe(true);
+  });
+
+  it('deletes only kopt per-project folders in a shared KOPT_CACHE_DIR', async () => {
+    const b = sandbox('uninstall-cache', { ide: '1.2.56' });
+    const cache = join(tmp, 'shared-cache');
+    b.h.env.KOPT_CACHE_DIR = cache;
+    put(join(cache, 'api-1a2b3c4d', 'index.db'), '');
+    put(join(cache, 'web-0f0f0f0f', 'outputs', 'o123456.log'), 'x');
+    put(join(cache, 'other-tool', 'data.bin'), 'keep');
+    put(join(cache, 'notes.txt'), 'keep');
+    await uninstallKiro({ h: b.h, scope: 'user' });
+    expect(existsSync(join(cache, 'api-1a2b3c4d'))).toBe(false);
+    expect(existsSync(join(cache, 'web-0f0f0f0f'))).toBe(false);
+    expect(read(join(cache, 'other-tool', 'data.bin'))).toBe('keep');
+    expect(read(join(cache, 'notes.txt'))).toBe('keep');
+  });
+
   it('reverts a per-project kopt init (workspace scope)', async () => {
     const root = gitRepo('ws-uninstall');
     mkdirSync(join(root, '.kopt'));
@@ -505,18 +691,34 @@ describe('Kiro IDE 0.x legacy workspace hooks', () => {
     expect(execFileSync('git', ['status', '--porcelain'], { cwd: root, encoding: 'utf8' })).toBe('');
   });
 
+  it('notices an IDE that updated itself from 0.x to 1.x (the cached package.json is re-read)', async () => {
+    const { currentIde } = await import('../src/kiro/legacy.js');
+    const userDir = join(tmp, 'legacy-ide-update');
+    const pkg = join(userDir, 'ide', 'package.json');
+    put(pkg, JSON.stringify({ name: 'Kiro', version: '0.12.318' }));
+    writeFileSync(join(userDir, 'surfaces.json'), JSON.stringify({ ide: { version: '0.12.318', major: 0, path: pkg }, at: Date.now() }));
+    expect(currentIde(userDir)?.major).toBe(0);
+    put(pkg, JSON.stringify({ name: 'Kiro', version: '1.2.56' }));
+    expect(currentIde(userDir)).toMatchObject({ version: '1.2.56', major: 1 });
+    // a cache with no IDE is re-detected once it is a day old
+    const h: HostEnv = { platform: process.platform, env: { PATH: '', KOPT_KIRO_IDE_PATHS: pkg }, home: userDir };
+    writeFileSync(join(userDir, 'surfaces.json'), JSON.stringify({ at: Date.now() - 2 * 86400_000 }));
+    expect(currentIde(userDir, h)?.version).toBe('1.2.56');
+  });
+
   it('is on by default only when the installed IDE is 0.x', () => {
     const root = gitRepo('legacy-wanted');
     const cfg = loadConfig(root);
     const userDir = join(tmp, 'legacy-user');
     mkdirSync(userDir, { recursive: true });
     const c = { ...cfg, userDir };
-    writeFileSync(join(userDir, 'surfaces.json'), JSON.stringify({ ide: { version: '0.12.318', major: 0, path: '' } }));
+    const at = Date.now();
+    writeFileSync(join(userDir, 'surfaces.json'), JSON.stringify({ ide: { version: '0.12.318', major: 0, path: '' }, at }));
     expect(legacyHooksWanted(c)).toBe(true);
-    writeFileSync(join(userDir, 'surfaces.json'), JSON.stringify({ ide: { version: '1.2.56', major: 1, path: '' } }));
+    writeFileSync(join(userDir, 'surfaces.json'), JSON.stringify({ ide: { version: '1.2.56', major: 1, path: '' }, at }));
     expect(legacyHooksWanted(c)).toBe(false);
     expect(legacyHooksWanted({ ...c, kiro: { legacyWorkspaceHooks: 'on' } })).toBe(true);
-    writeFileSync(join(userDir, 'surfaces.json'), JSON.stringify({ ide: { version: '0.12.318', major: 0, path: '' } }));
+    writeFileSync(join(userDir, 'surfaces.json'), JSON.stringify({ ide: { version: '0.12.318', major: 0, path: '' }, at }));
     expect(legacyHooksWanted({ ...c, kiro: { legacyWorkspaceHooks: 'off' } })).toBe(false);
     process.env.KOPT_LEGACY_WORKSPACE_HOOKS = '0';
     try {

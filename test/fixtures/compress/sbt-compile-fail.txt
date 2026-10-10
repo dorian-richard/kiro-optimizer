@@ -1,0 +1,71 @@
+[info] welcome to sbt 1.9.7 (Eclipse Adoptium Java 17.0.9)
+[info] loading settings for project shop-build from plugins.sbt ...
+[info] loading project definition from /home/dev/shop/project
+[info] loading settings for project root from build.sbt ...
+[info] set current project to shop (in build file:/home/dev/shop/)
+[info] Fetched artifacts of shop-web
+[info] Fetched artifacts of shop-web
+[info] Fetched artifacts of shop-web
+[info] Fetched artifacts of shop-api
+[info] Fetched artifacts of shop-api
+[info] Fetched artifacts of shop-core
+[info] Fetched artifacts of shop-web
+[info] Fetched artifacts of shop-web
+[info] Fetched artifacts of shop-web
+[info] Fetched artifacts of shop-api
+[info] Fetched artifacts of shop-core
+[info] Fetched artifacts of shop-web
+[info] Fetched artifacts of shop-api
+[info] Fetched artifacts of shop-api
+[info] Fetched artifacts of shop-core
+[info] Fetched artifacts of shop-api
+[info] Fetched artifacts of shop-web
+[info] Fetched artifacts of shop-core
+[info] Fetched artifacts of shop-api
+[info] Fetched artifacts of shop-core
+[info] Fetched artifacts of shop-api
+[info] Fetched artifacts of shop-api
+[info] Fetched artifacts of shop-api
+[info] Fetched artifacts of shop-web
+[info] Fetched artifacts of shop-core
+[info] Fetched artifacts of shop-web
+[info] Fetched artifacts of shop-api
+[info] Fetched artifacts of shop-core
+[info] Fetched artifacts of shop-api
+[info] Fetched artifacts of shop-api
+[info] Fetched artifacts of shop-core
+[info] Fetched artifacts of shop-api
+[info] Fetched artifacts of shop-web
+[info] Fetched artifacts of shop-core
+[info] Fetched artifacts of shop-web
+[info] Fetched artifacts of shop-core
+[info] Fetched artifacts of shop-api
+[info] Fetched artifacts of shop-web
+[info] Fetched artifacts of shop-web
+[info] Fetched artifacts of shop-web
+[info] compiling 42 Scala sources to /home/dev/shop/core/target/scala-2.13/classes ...
+[error] /home/dev/shop/core/src/main/scala/com/acme/shop/cart/Cart.scala:22:20: type mismatch;
+[error]  found   : String("x")
+[error]  required: Int
+[error]     val total: Int = "x"
+[error]                    ^
+[error] /home/dev/shop/core/src/main/scala/com/acme/shop/orders/OrderService.scala:57:9: not found: value computeTotal
+[error]     computeTotal(items)
+[error]     ^
+[warn] /home/dev/shop/core/src/main/scala/com/acme/shop/Main.scala:3:8: Unused import
+[warn] import scala.util.Try
+[warn]        ^
+[warn] one warning found
+[error] two errors found
+[info] compiling 12 Scala sources to /home/dev/shop/api/target/scala-3.3.1/classes ...
+[error] -- [E007] Type Mismatch Error: /home/dev/shop/api/src/main/scala/com/acme/shop/api/Routes.scala:31:24 ----------
+[error] 31 |    val port: Int = config.getString("port")
+[error]    |                    ^^^^^^^^^^^^^^^^^^^^^^^^
+[error]    |                    Found:    String
+[error]    |                    Required: Int
+[error]    |
+[error]    | longer explanation available when compiling with `-explain`
+[error] one error found
+[error] (core / Compile / compileIncremental) Compilation failed
+[error] (api / Compile / compileIncremental) Compilation failed
+[error] Total time: 18 s, completed Oct 9, 2026, 10:14:31 AM

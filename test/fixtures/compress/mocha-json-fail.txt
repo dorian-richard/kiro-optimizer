@@ -1,0 +1,2955 @@
+{
+  "stats": {
+    "suites": 42,
+    "tests": 162,
+    "passes": 160,
+    "pending": 0,
+    "failures": 2,
+    "start": "2026-10-09T10:12:01.123Z",
+    "end": "2026-10-09T10:12:04.567Z",
+    "duration": 3444
+  },
+  "tests": [
+    {
+      "title": "creates page 0",
+      "fullTitle": "cart serializes address 0",
+      "file": "/home/dev/shop/test/cart/cart.test.js",
+      "duration": 5,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "formats rounding 1",
+      "fullTitle": "orders serializes item 1",
+      "file": "/home/dev/shop/test/orders/orders.test.js",
+      "duration": 23,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "validates payload 2",
+      "fullTitle": "refunds retries order 2",
+      "file": "/home/dev/shop/test/refunds/refunds.test.js",
+      "duration": 18,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "parses address 3",
+      "fullTitle": "payments creates rounding 3",
+      "file": "/home/dev/shop/test/payments/payments.test.js",
+      "duration": 33,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "parses batch 4",
+      "fullTitle": "invoices lists invoice 4",
+      "file": "/home/dev/shop/test/invoices/invoices.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "rejects order 5",
+      "fullTitle": "customers handles payload 5",
+      "file": "/home/dev/shop/test/customers/customers.test.js",
+      "duration": 14,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "paginates currency 6",
+      "fullTitle": "catalog deletes order 6",
+      "file": "/home/dev/shop/test/catalog/catalog.test.js",
+      "duration": 28,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "computes currency 7",
+      "fullTitle": "inventory rejects page 7",
+      "file": "/home/dev/shop/test/inventory/inventory.test.js",
+      "duration": 23,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "computes total 8",
+      "fullTitle": "shipping paginates customer 8",
+      "file": "/home/dev/shop/test/shipping/shipping.test.js",
+      "duration": 32,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "parses timeout 9",
+      "fullTitle": "auth computes rounding 9",
+      "file": "/home/dev/shop/test/auth/auth.test.js",
+      "duration": 31,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "formats total 10",
+      "fullTitle": "pricing validates token 10",
+      "file": "/home/dev/shop/test/pricing/pricing.test.js",
+      "duration": 22,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "caches token 11",
+      "fullTitle": "tax creates address 11",
+      "file": "/home/dev/shop/test/tax/tax.test.js",
+      "duration": 22,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "validates order 12",
+      "fullTitle": "discounts paginates order 12",
+      "file": "/home/dev/shop/test/discounts/discounts.test.js",
+      "duration": 39,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "formats invoice 13",
+      "fullTitle": "reports deletes payload 13",
+      "file": "/home/dev/shop/test/reports/reports.test.js",
+      "duration": 5,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "computes batch 14",
+      "fullTitle": "webhooks rejects payload 14",
+      "file": "/home/dev/shop/test/webhooks/webhooks.test.js",
+      "duration": 9,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "creates timeout 15",
+      "fullTitle": "notifications computes item 15",
+      "file": "/home/dev/shop/test/notifications/notifications.test.js",
+      "duration": 25,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "paginates rounding 16",
+      "fullTitle": "cart lists discount 16",
+      "file": "/home/dev/shop/test/cart/cart.test.js",
+      "duration": 2,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "deletes timeout 17",
+      "fullTitle": "orders serializes invoice 17",
+      "file": "/home/dev/shop/test/orders/orders.test.js",
+      "duration": 14,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "paginates order 18",
+      "fullTitle": "refunds updates total 18",
+      "file": "/home/dev/shop/test/refunds/refunds.test.js",
+      "duration": 21,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "retries total 19",
+      "fullTitle": "payments formats invoice 19",
+      "file": "/home/dev/shop/test/payments/payments.test.js",
+      "duration": 20,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "handles invoice 20",
+      "fullTitle": "invoices retries page 20",
+      "file": "/home/dev/shop/test/invoices/invoices.test.js",
+      "duration": 13,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "paginates total 21",
+      "fullTitle": "customers deletes customer 21",
+      "file": "/home/dev/shop/test/customers/customers.test.js",
+      "duration": 9,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "handles timeout 22",
+      "fullTitle": "catalog creates invoice 22",
+      "file": "/home/dev/shop/test/catalog/catalog.test.js",
+      "duration": 7,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "deletes order 23",
+      "fullTitle": "inventory updates invoice 23",
+      "file": "/home/dev/shop/test/inventory/inventory.test.js",
+      "duration": 16,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "lists payload 24",
+      "fullTitle": "shipping validates page 24",
+      "file": "/home/dev/shop/test/shipping/shipping.test.js",
+      "duration": 6,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "caches invoice 25",
+      "fullTitle": "auth parses item 25",
+      "file": "/home/dev/shop/test/auth/auth.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "parses refund 26",
+      "fullTitle": "pricing paginates customer 26",
+      "file": "/home/dev/shop/test/pricing/pricing.test.js",
+      "duration": 3,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "computes customer 27",
+      "fullTitle": "tax lists refund 27",
+      "file": "/home/dev/shop/test/tax/tax.test.js",
+      "duration": 28,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "formats token 28",
+      "fullTitle": "discounts caches customer 28",
+      "file": "/home/dev/shop/test/discounts/discounts.test.js",
+      "duration": 31,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "retries order 29",
+      "fullTitle": "reports deletes currency 29",
+      "file": "/home/dev/shop/test/reports/reports.test.js",
+      "duration": 20,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "computes customer 30",
+      "fullTitle": "webhooks serializes discount 30",
+      "file": "/home/dev/shop/test/webhooks/webhooks.test.js",
+      "duration": 20,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "rejects refund 31",
+      "fullTitle": "notifications caches address 31",
+      "file": "/home/dev/shop/test/notifications/notifications.test.js",
+      "duration": 16,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "parses page 32",
+      "fullTitle": "cart paginates batch 32",
+      "file": "/home/dev/shop/test/cart/cart.test.js",
+      "duration": 17,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "computes refund 33",
+      "fullTitle": "orders validates rounding 33",
+      "file": "/home/dev/shop/test/orders/orders.test.js",
+      "duration": 10,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "paginates invoice 34",
+      "fullTitle": "refunds rejects address 34",
+      "file": "/home/dev/shop/test/refunds/refunds.test.js",
+      "duration": 30,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "paginates customer 35",
+      "fullTitle": "payments caches item 35",
+      "file": "/home/dev/shop/test/payments/payments.test.js",
+      "duration": 36,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "deletes item 36",
+      "fullTitle": "invoices caches token 36",
+      "file": "/home/dev/shop/test/invoices/invoices.test.js",
+      "duration": 10,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "retries item 37",
+      "fullTitle": "customers caches item 37",
+      "file": "/home/dev/shop/test/customers/customers.test.js",
+      "duration": 28,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "updates batch 38",
+      "fullTitle": "catalog handles invoice 38",
+      "file": "/home/dev/shop/test/catalog/catalog.test.js",
+      "duration": 27,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "parses page 39",
+      "fullTitle": "inventory serializes customer 39",
+      "file": "/home/dev/shop/test/inventory/inventory.test.js",
+      "duration": 10,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "paginates timeout 40",
+      "fullTitle": "shipping lists refund 40",
+      "file": "/home/dev/shop/test/shipping/shipping.test.js",
+      "duration": 5,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "computes page 41",
+      "fullTitle": "auth deletes item 41",
+      "file": "/home/dev/shop/test/auth/auth.test.js",
+      "duration": 3,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "retries order 42",
+      "fullTitle": "pricing caches currency 42",
+      "file": "/home/dev/shop/test/pricing/pricing.test.js",
+      "duration": 37,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "serializes currency 43",
+      "fullTitle": "tax caches rounding 43",
+      "file": "/home/dev/shop/test/tax/tax.test.js",
+      "duration": 20,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "handles discount 44",
+      "fullTitle": "discounts parses customer 44",
+      "file": "/home/dev/shop/test/discounts/discounts.test.js",
+      "duration": 12,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "formats payload 45",
+      "fullTitle": "reports computes customer 45",
+      "file": "/home/dev/shop/test/reports/reports.test.js",
+      "duration": 9,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "formats customer 46",
+      "fullTitle": "webhooks computes discount 46",
+      "file": "/home/dev/shop/test/webhooks/webhooks.test.js",
+      "duration": 32,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "validates currency 47",
+      "fullTitle": "notifications caches page 47",
+      "file": "/home/dev/shop/test/notifications/notifications.test.js",
+      "duration": 35,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "rejects total 48",
+      "fullTitle": "cart computes total 48",
+      "file": "/home/dev/shop/test/cart/cart.test.js",
+      "duration": 8,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "parses timeout 49",
+      "fullTitle": "orders handles order 49",
+      "file": "/home/dev/shop/test/orders/orders.test.js",
+      "duration": 24,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "caches order 50",
+      "fullTitle": "refunds lists customer 50",
+      "file": "/home/dev/shop/test/refunds/refunds.test.js",
+      "duration": 9,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "retries discount 51",
+      "fullTitle": "payments handles page 51",
+      "file": "/home/dev/shop/test/payments/payments.test.js",
+      "duration": 3,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "retries currency 52",
+      "fullTitle": "invoices serializes discount 52",
+      "file": "/home/dev/shop/test/invoices/invoices.test.js",
+      "duration": 13,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "handles token 53",
+      "fullTitle": "customers lists page 53",
+      "file": "/home/dev/shop/test/customers/customers.test.js",
+      "duration": 39,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "handles customer 54",
+      "fullTitle": "catalog handles total 54",
+      "file": "/home/dev/shop/test/catalog/catalog.test.js",
+      "duration": 29,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "updates payload 55",
+      "fullTitle": "inventory parses currency 55",
+      "file": "/home/dev/shop/test/inventory/inventory.test.js",
+      "duration": 2,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "formats page 56",
+      "fullTitle": "shipping deletes rounding 56",
+      "file": "/home/dev/shop/test/shipping/shipping.test.js",
+      "duration": 28,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "paginates customer 57",
+      "fullTitle": "auth caches payload 57",
+      "file": "/home/dev/shop/test/auth/auth.test.js",
+      "duration": 5,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "serializes item 58",
+      "fullTitle": "pricing updates refund 58",
+      "file": "/home/dev/shop/test/pricing/pricing.test.js",
+      "duration": 10,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "deletes discount 59",
+      "fullTitle": "tax creates address 59",
+      "file": "/home/dev/shop/test/tax/tax.test.js",
+      "duration": 22,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "handles customer 60",
+      "fullTitle": "discounts computes timeout 60",
+      "file": "/home/dev/shop/test/discounts/discounts.test.js",
+      "duration": 11,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "handles total 61",
+      "fullTitle": "reports retries page 61",
+      "file": "/home/dev/shop/test/reports/reports.test.js",
+      "duration": 27,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "formats token 62",
+      "fullTitle": "webhooks handles discount 62",
+      "file": "/home/dev/shop/test/webhooks/webhooks.test.js",
+      "duration": 7,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "computes customer 63",
+      "fullTitle": "notifications validates rounding 63",
+      "file": "/home/dev/shop/test/notifications/notifications.test.js",
+      "duration": 39,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "parses item 64",
+      "fullTitle": "cart formats item 64",
+      "file": "/home/dev/shop/test/cart/cart.test.js",
+      "duration": 5,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "handles order 65",
+      "fullTitle": "orders handles invoice 65",
+      "file": "/home/dev/shop/test/orders/orders.test.js",
+      "duration": 12,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "deletes page 66",
+      "fullTitle": "refunds handles order 66",
+      "file": "/home/dev/shop/test/refunds/refunds.test.js",
+      "duration": 38,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "formats invoice 67",
+      "fullTitle": "payments handles discount 67",
+      "file": "/home/dev/shop/test/payments/payments.test.js",
+      "duration": 36,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "deletes total 68",
+      "fullTitle": "invoices validates refund 68",
+      "file": "/home/dev/shop/test/invoices/invoices.test.js",
+      "duration": 2,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "validates order 69",
+      "fullTitle": "customers updates discount 69",
+      "file": "/home/dev/shop/test/customers/customers.test.js",
+      "duration": 12,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "computes customer 70",
+      "fullTitle": "catalog formats total 70",
+      "file": "/home/dev/shop/test/catalog/catalog.test.js",
+      "duration": 33,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "serializes payload 71",
+      "fullTitle": "inventory rejects timeout 71",
+      "file": "/home/dev/shop/test/inventory/inventory.test.js",
+      "duration": 26,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "handles customer 72",
+      "fullTitle": "shipping deletes timeout 72",
+      "file": "/home/dev/shop/test/shipping/shipping.test.js",
+      "duration": 18,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "computes batch 73",
+      "fullTitle": "auth deletes token 73",
+      "file": "/home/dev/shop/test/auth/auth.test.js",
+      "duration": 15,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "creates invoice 74",
+      "fullTitle": "pricing validates invoice 74",
+      "file": "/home/dev/shop/test/pricing/pricing.test.js",
+      "duration": 23,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "serializes payload 75",
+      "fullTitle": "tax creates currency 75",
+      "file": "/home/dev/shop/test/tax/tax.test.js",
+      "duration": 4,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "rejects invoice 76",
+      "fullTitle": "discounts paginates address 76",
+      "file": "/home/dev/shop/test/discounts/discounts.test.js",
+      "duration": 10,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "parses item 77",
+      "fullTitle": "reports updates order 77",
+      "file": "/home/dev/shop/test/reports/reports.test.js",
+      "duration": 2,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "rejects order 78",
+      "fullTitle": "webhooks validates payload 78",
+      "file": "/home/dev/shop/test/webhooks/webhooks.test.js",
+      "duration": 4,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "rejects invoice 79",
+      "fullTitle": "notifications updates refund 79",
+      "file": "/home/dev/shop/test/notifications/notifications.test.js",
+      "duration": 17,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "creates order 80",
+      "fullTitle": "cart deletes token 80",
+      "file": "/home/dev/shop/test/cart/cart.test.js",
+      "duration": 36,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "validates address 81",
+      "fullTitle": "orders computes total 81",
+      "file": "/home/dev/shop/test/orders/orders.test.js",
+      "duration": 15,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "updates currency 82",
+      "fullTitle": "refunds parses refund 82",
+      "file": "/home/dev/shop/test/refunds/refunds.test.js",
+      "duration": 18,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "parses order 83",
+      "fullTitle": "payments caches refund 83",
+      "file": "/home/dev/shop/test/payments/payments.test.js",
+      "duration": 25,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "retries refund 84",
+      "fullTitle": "invoices handles refund 84",
+      "file": "/home/dev/shop/test/invoices/invoices.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "lists rounding 85",
+      "fullTitle": "customers updates batch 85",
+      "file": "/home/dev/shop/test/customers/customers.test.js",
+      "duration": 12,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "lists invoice 86",
+      "fullTitle": "catalog updates refund 86",
+      "file": "/home/dev/shop/test/catalog/catalog.test.js",
+      "duration": 17,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "deletes customer 87",
+      "fullTitle": "inventory handles currency 87",
+      "file": "/home/dev/shop/test/inventory/inventory.test.js",
+      "duration": 37,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "retries page 88",
+      "fullTitle": "shipping handles refund 88",
+      "file": "/home/dev/shop/test/shipping/shipping.test.js",
+      "duration": 27,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "computes order 89",
+      "fullTitle": "auth computes invoice 89",
+      "file": "/home/dev/shop/test/auth/auth.test.js",
+      "duration": 25,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "updates payload 90",
+      "fullTitle": "pricing formats invoice 90",
+      "file": "/home/dev/shop/test/pricing/pricing.test.js",
+      "duration": 18,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "deletes invoice 91",
+      "fullTitle": "tax creates invoice 91",
+      "file": "/home/dev/shop/test/tax/tax.test.js",
+      "duration": 19,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "creates address 92",
+      "fullTitle": "discounts deletes page 92",
+      "file": "/home/dev/shop/test/discounts/discounts.test.js",
+      "duration": 25,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "retries currency 93",
+      "fullTitle": "reports creates token 93",
+      "file": "/home/dev/shop/test/reports/reports.test.js",
+      "duration": 15,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "retries item 94",
+      "fullTitle": "webhooks rejects timeout 94",
+      "file": "/home/dev/shop/test/webhooks/webhooks.test.js",
+      "duration": 25,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "paginates batch 95",
+      "fullTitle": "notifications serializes discount 95",
+      "file": "/home/dev/shop/test/notifications/notifications.test.js",
+      "duration": 23,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "deletes invoice 96",
+      "fullTitle": "cart deletes item 96",
+      "file": "/home/dev/shop/test/cart/cart.test.js",
+      "duration": 8,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "caches discount 97",
+      "fullTitle": "orders handles page 97",
+      "file": "/home/dev/shop/test/orders/orders.test.js",
+      "duration": 14,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "deletes token 98",
+      "fullTitle": "refunds creates refund 98",
+      "file": "/home/dev/shop/test/refunds/refunds.test.js",
+      "duration": 16,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "caches customer 99",
+      "fullTitle": "payments creates order 99",
+      "file": "/home/dev/shop/test/payments/payments.test.js",
+      "duration": 35,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "lists timeout 100",
+      "fullTitle": "invoices rejects refund 100",
+      "file": "/home/dev/shop/test/invoices/invoices.test.js",
+      "duration": 15,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "rejects timeout 101",
+      "fullTitle": "customers retries token 101",
+      "file": "/home/dev/shop/test/customers/customers.test.js",
+      "duration": 31,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "serializes token 102",
+      "fullTitle": "catalog parses item 102",
+      "file": "/home/dev/shop/test/catalog/catalog.test.js",
+      "duration": 4,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "caches discount 103",
+      "fullTitle": "inventory paginates total 103",
+      "file": "/home/dev/shop/test/inventory/inventory.test.js",
+      "duration": 25,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "parses total 104",
+      "fullTitle": "shipping computes currency 104",
+      "file": "/home/dev/shop/test/shipping/shipping.test.js",
+      "duration": 25,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "computes total 105",
+      "fullTitle": "auth creates timeout 105",
+      "file": "/home/dev/shop/test/auth/auth.test.js",
+      "duration": 38,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "paginates page 106",
+      "fullTitle": "pricing creates page 106",
+      "file": "/home/dev/shop/test/pricing/pricing.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "updates invoice 107",
+      "fullTitle": "tax parses customer 107",
+      "file": "/home/dev/shop/test/tax/tax.test.js",
+      "duration": 17,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "serializes currency 108",
+      "fullTitle": "discounts retries page 108",
+      "file": "/home/dev/shop/test/discounts/discounts.test.js",
+      "duration": 36,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "deletes rounding 109",
+      "fullTitle": "reports retries currency 109",
+      "file": "/home/dev/shop/test/reports/reports.test.js",
+      "duration": 28,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "deletes item 110",
+      "fullTitle": "webhooks serializes order 110",
+      "file": "/home/dev/shop/test/webhooks/webhooks.test.js",
+      "duration": 27,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "serializes item 111",
+      "fullTitle": "notifications computes batch 111",
+      "file": "/home/dev/shop/test/notifications/notifications.test.js",
+      "duration": 13,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "paginates timeout 112",
+      "fullTitle": "cart updates currency 112",
+      "file": "/home/dev/shop/test/cart/cart.test.js",
+      "duration": 20,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "creates page 113",
+      "fullTitle": "orders rejects refund 113",
+      "file": "/home/dev/shop/test/orders/orders.test.js",
+      "duration": 20,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "handles payload 114",
+      "fullTitle": "refunds paginates payload 114",
+      "file": "/home/dev/shop/test/refunds/refunds.test.js",
+      "duration": 19,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "retries batch 115",
+      "fullTitle": "payments lists invoice 115",
+      "file": "/home/dev/shop/test/payments/payments.test.js",
+      "duration": 27,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "deletes item 116",
+      "fullTitle": "invoices computes page 116",
+      "file": "/home/dev/shop/test/invoices/invoices.test.js",
+      "duration": 3,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "lists invoice 117",
+      "fullTitle": "customers creates token 117",
+      "file": "/home/dev/shop/test/customers/customers.test.js",
+      "duration": 8,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "formats refund 118",
+      "fullTitle": "catalog deletes item 118",
+      "file": "/home/dev/shop/test/catalog/catalog.test.js",
+      "duration": 15,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "serializes payload 119",
+      "fullTitle": "inventory deletes invoice 119",
+      "file": "/home/dev/shop/test/inventory/inventory.test.js",
+      "duration": 20,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "creates refund 120",
+      "fullTitle": "shipping formats timeout 120",
+      "file": "/home/dev/shop/test/shipping/shipping.test.js",
+      "duration": 15,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "rejects token 121",
+      "fullTitle": "auth handles timeout 121",
+      "file": "/home/dev/shop/test/auth/auth.test.js",
+      "duration": 17,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "formats rounding 122",
+      "fullTitle": "pricing creates rounding 122",
+      "file": "/home/dev/shop/test/pricing/pricing.test.js",
+      "duration": 3,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "caches refund 123",
+      "fullTitle": "tax handles customer 123",
+      "file": "/home/dev/shop/test/tax/tax.test.js",
+      "duration": 7,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "validates discount 124",
+      "fullTitle": "discounts computes total 124",
+      "file": "/home/dev/shop/test/discounts/discounts.test.js",
+      "duration": 6,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "deletes invoice 125",
+      "fullTitle": "reports computes currency 125",
+      "file": "/home/dev/shop/test/reports/reports.test.js",
+      "duration": 5,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "lists payload 126",
+      "fullTitle": "webhooks computes total 126",
+      "file": "/home/dev/shop/test/webhooks/webhooks.test.js",
+      "duration": 6,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "rejects refund 127",
+      "fullTitle": "notifications computes rounding 127",
+      "file": "/home/dev/shop/test/notifications/notifications.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "serializes order 128",
+      "fullTitle": "cart validates customer 128",
+      "file": "/home/dev/shop/test/cart/cart.test.js",
+      "duration": 11,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "parses order 129",
+      "fullTitle": "orders validates page 129",
+      "file": "/home/dev/shop/test/orders/orders.test.js",
+      "duration": 23,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "caches payload 130",
+      "fullTitle": "refunds deletes refund 130",
+      "file": "/home/dev/shop/test/refunds/refunds.test.js",
+      "duration": 10,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "formats page 131",
+      "fullTitle": "payments rejects batch 131",
+      "file": "/home/dev/shop/test/payments/payments.test.js",
+      "duration": 13,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "updates item 132",
+      "fullTitle": "invoices deletes discount 132",
+      "file": "/home/dev/shop/test/invoices/invoices.test.js",
+      "duration": 16,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "retries order 133",
+      "fullTitle": "customers rejects customer 133",
+      "file": "/home/dev/shop/test/customers/customers.test.js",
+      "duration": 34,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "creates item 134",
+      "fullTitle": "catalog retries currency 134",
+      "file": "/home/dev/shop/test/catalog/catalog.test.js",
+      "duration": 31,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "retries discount 135",
+      "fullTitle": "inventory updates total 135",
+      "file": "/home/dev/shop/test/inventory/inventory.test.js",
+      "duration": 39,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "computes invoice 136",
+      "fullTitle": "shipping parses total 136",
+      "file": "/home/dev/shop/test/shipping/shipping.test.js",
+      "duration": 11,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "parses page 137",
+      "fullTitle": "auth parses customer 137",
+      "file": "/home/dev/shop/test/auth/auth.test.js",
+      "duration": 32,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "paginates customer 138",
+      "fullTitle": "pricing lists token 138",
+      "file": "/home/dev/shop/test/pricing/pricing.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "creates address 139",
+      "fullTitle": "tax computes order 139",
+      "file": "/home/dev/shop/test/tax/tax.test.js",
+      "duration": 17,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "validates payload 140",
+      "fullTitle": "discounts caches payload 140",
+      "file": "/home/dev/shop/test/discounts/discounts.test.js",
+      "duration": 6,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "updates payload 141",
+      "fullTitle": "reports validates invoice 141",
+      "file": "/home/dev/shop/test/reports/reports.test.js",
+      "duration": 28,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "lists invoice 142",
+      "fullTitle": "webhooks handles page 142",
+      "file": "/home/dev/shop/test/webhooks/webhooks.test.js",
+      "duration": 5,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "lists batch 143",
+      "fullTitle": "notifications formats customer 143",
+      "file": "/home/dev/shop/test/notifications/notifications.test.js",
+      "duration": 8,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "deletes customer 144",
+      "fullTitle": "cart retries refund 144",
+      "file": "/home/dev/shop/test/cart/cart.test.js",
+      "duration": 8,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "parses currency 145",
+      "fullTitle": "orders retries batch 145",
+      "file": "/home/dev/shop/test/orders/orders.test.js",
+      "duration": 14,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "creates item 146",
+      "fullTitle": "refunds parses customer 146",
+      "file": "/home/dev/shop/test/refunds/refunds.test.js",
+      "duration": 12,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "lists customer 147",
+      "fullTitle": "payments lists invoice 147",
+      "file": "/home/dev/shop/test/payments/payments.test.js",
+      "duration": 28,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "rejects timeout 148",
+      "fullTitle": "invoices updates invoice 148",
+      "file": "/home/dev/shop/test/invoices/invoices.test.js",
+      "duration": 11,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "rejects discount 149",
+      "fullTitle": "customers lists token 149",
+      "file": "/home/dev/shop/test/customers/customers.test.js",
+      "duration": 15,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "updates address 150",
+      "fullTitle": "catalog validates page 150",
+      "file": "/home/dev/shop/test/catalog/catalog.test.js",
+      "duration": 38,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "rejects currency 151",
+      "fullTitle": "inventory caches currency 151",
+      "file": "/home/dev/shop/test/inventory/inventory.test.js",
+      "duration": 28,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "validates page 152",
+      "fullTitle": "shipping parses batch 152",
+      "file": "/home/dev/shop/test/shipping/shipping.test.js",
+      "duration": 24,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "retries batch 153",
+      "fullTitle": "auth formats item 153",
+      "file": "/home/dev/shop/test/auth/auth.test.js",
+      "duration": 21,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "parses timeout 154",
+      "fullTitle": "pricing rejects batch 154",
+      "file": "/home/dev/shop/test/pricing/pricing.test.js",
+      "duration": 2,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "retries rounding 155",
+      "fullTitle": "tax paginates total 155",
+      "file": "/home/dev/shop/test/tax/tax.test.js",
+      "duration": 25,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "retries address 156",
+      "fullTitle": "discounts updates token 156",
+      "file": "/home/dev/shop/test/discounts/discounts.test.js",
+      "duration": 20,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "computes invoice 157",
+      "fullTitle": "reports computes page 157",
+      "file": "/home/dev/shop/test/reports/reports.test.js",
+      "duration": 4,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "caches rounding 158",
+      "fullTitle": "webhooks updates currency 158",
+      "file": "/home/dev/shop/test/webhooks/webhooks.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "paginates currency 159",
+      "fullTitle": "notifications updates address 159",
+      "file": "/home/dev/shop/test/notifications/notifications.test.js",
+      "duration": 23,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "computes total with discount",
+      "fullTitle": "Cart computes total with discount",
+      "file": "/home/dev/shop/test/cart/cart.test.js",
+      "duration": 3,
+      "currentRetry": 0,
+      "err": {
+        "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n100 !== 90\n\n    at Context.<anonymous> (/home/dev/shop/test/cart/cart.test.js:14:12)\n    at callFn (/home/dev/shop/node_modules/mocha/lib/runnable.js:366:21)\n    at process.processImmediate (node:internal/timers:483:21)",
+        "message": "Expected values to be strictly equal:\n\n100 !== 90\n",
+        "generatedMessage": true,
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "actual": "100",
+        "expected": "90",
+        "operator": "strictEqual"
+      }
+    },
+    {
+      "title": "rejects an empty order",
+      "fullTitle": "Orders rejects an empty order",
+      "file": "/home/dev/shop/test/orders/service.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "err": {
+        "stack": "TypeError: Cannot read properties of undefined (reading 'length')\n    at OrderService.create (/home/dev/shop/src/orders/service.js:22:31)\n    at Context.<anonymous> (/home/dev/shop/test/orders/service.test.js:33:20)\n    at callFn (/home/dev/shop/node_modules/mocha/lib/runnable.js:366:21)",
+        "message": "Cannot read properties of undefined (reading 'length')"
+      }
+    }
+  ],
+  "pending": [],
+  "failures": [
+    {
+      "title": "computes total with discount",
+      "fullTitle": "Cart computes total with discount",
+      "file": "/home/dev/shop/test/cart/cart.test.js",
+      "duration": 3,
+      "currentRetry": 0,
+      "err": {
+        "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n100 !== 90\n\n    at Context.<anonymous> (/home/dev/shop/test/cart/cart.test.js:14:12)\n    at callFn (/home/dev/shop/node_modules/mocha/lib/runnable.js:366:21)\n    at process.processImmediate (node:internal/timers:483:21)",
+        "message": "Expected values to be strictly equal:\n\n100 !== 90\n",
+        "generatedMessage": true,
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "actual": "100",
+        "expected": "90",
+        "operator": "strictEqual"
+      }
+    },
+    {
+      "title": "rejects an empty order",
+      "fullTitle": "Orders rejects an empty order",
+      "file": "/home/dev/shop/test/orders/service.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "err": {
+        "stack": "TypeError: Cannot read properties of undefined (reading 'length')\n    at OrderService.create (/home/dev/shop/src/orders/service.js:22:31)\n    at Context.<anonymous> (/home/dev/shop/test/orders/service.test.js:33:20)\n    at callFn (/home/dev/shop/node_modules/mocha/lib/runnable.js:366:21)",
+        "message": "Cannot read properties of undefined (reading 'length')"
+      }
+    }
+  ],
+  "passes": [
+    {
+      "title": "creates page 0",
+      "fullTitle": "cart serializes address 0",
+      "file": "/home/dev/shop/test/cart/cart.test.js",
+      "duration": 5,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "formats rounding 1",
+      "fullTitle": "orders serializes item 1",
+      "file": "/home/dev/shop/test/orders/orders.test.js",
+      "duration": 23,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "validates payload 2",
+      "fullTitle": "refunds retries order 2",
+      "file": "/home/dev/shop/test/refunds/refunds.test.js",
+      "duration": 18,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "parses address 3",
+      "fullTitle": "payments creates rounding 3",
+      "file": "/home/dev/shop/test/payments/payments.test.js",
+      "duration": 33,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "parses batch 4",
+      "fullTitle": "invoices lists invoice 4",
+      "file": "/home/dev/shop/test/invoices/invoices.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "rejects order 5",
+      "fullTitle": "customers handles payload 5",
+      "file": "/home/dev/shop/test/customers/customers.test.js",
+      "duration": 14,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "paginates currency 6",
+      "fullTitle": "catalog deletes order 6",
+      "file": "/home/dev/shop/test/catalog/catalog.test.js",
+      "duration": 28,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "computes currency 7",
+      "fullTitle": "inventory rejects page 7",
+      "file": "/home/dev/shop/test/inventory/inventory.test.js",
+      "duration": 23,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "computes total 8",
+      "fullTitle": "shipping paginates customer 8",
+      "file": "/home/dev/shop/test/shipping/shipping.test.js",
+      "duration": 32,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "parses timeout 9",
+      "fullTitle": "auth computes rounding 9",
+      "file": "/home/dev/shop/test/auth/auth.test.js",
+      "duration": 31,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "formats total 10",
+      "fullTitle": "pricing validates token 10",
+      "file": "/home/dev/shop/test/pricing/pricing.test.js",
+      "duration": 22,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "caches token 11",
+      "fullTitle": "tax creates address 11",
+      "file": "/home/dev/shop/test/tax/tax.test.js",
+      "duration": 22,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "validates order 12",
+      "fullTitle": "discounts paginates order 12",
+      "file": "/home/dev/shop/test/discounts/discounts.test.js",
+      "duration": 39,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "formats invoice 13",
+      "fullTitle": "reports deletes payload 13",
+      "file": "/home/dev/shop/test/reports/reports.test.js",
+      "duration": 5,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "computes batch 14",
+      "fullTitle": "webhooks rejects payload 14",
+      "file": "/home/dev/shop/test/webhooks/webhooks.test.js",
+      "duration": 9,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "creates timeout 15",
+      "fullTitle": "notifications computes item 15",
+      "file": "/home/dev/shop/test/notifications/notifications.test.js",
+      "duration": 25,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "paginates rounding 16",
+      "fullTitle": "cart lists discount 16",
+      "file": "/home/dev/shop/test/cart/cart.test.js",
+      "duration": 2,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "deletes timeout 17",
+      "fullTitle": "orders serializes invoice 17",
+      "file": "/home/dev/shop/test/orders/orders.test.js",
+      "duration": 14,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "paginates order 18",
+      "fullTitle": "refunds updates total 18",
+      "file": "/home/dev/shop/test/refunds/refunds.test.js",
+      "duration": 21,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "retries total 19",
+      "fullTitle": "payments formats invoice 19",
+      "file": "/home/dev/shop/test/payments/payments.test.js",
+      "duration": 20,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "handles invoice 20",
+      "fullTitle": "invoices retries page 20",
+      "file": "/home/dev/shop/test/invoices/invoices.test.js",
+      "duration": 13,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "paginates total 21",
+      "fullTitle": "customers deletes customer 21",
+      "file": "/home/dev/shop/test/customers/customers.test.js",
+      "duration": 9,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "handles timeout 22",
+      "fullTitle": "catalog creates invoice 22",
+      "file": "/home/dev/shop/test/catalog/catalog.test.js",
+      "duration": 7,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "deletes order 23",
+      "fullTitle": "inventory updates invoice 23",
+      "file": "/home/dev/shop/test/inventory/inventory.test.js",
+      "duration": 16,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "lists payload 24",
+      "fullTitle": "shipping validates page 24",
+      "file": "/home/dev/shop/test/shipping/shipping.test.js",
+      "duration": 6,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "caches invoice 25",
+      "fullTitle": "auth parses item 25",
+      "file": "/home/dev/shop/test/auth/auth.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "parses refund 26",
+      "fullTitle": "pricing paginates customer 26",
+      "file": "/home/dev/shop/test/pricing/pricing.test.js",
+      "duration": 3,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "computes customer 27",
+      "fullTitle": "tax lists refund 27",
+      "file": "/home/dev/shop/test/tax/tax.test.js",
+      "duration": 28,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "formats token 28",
+      "fullTitle": "discounts caches customer 28",
+      "file": "/home/dev/shop/test/discounts/discounts.test.js",
+      "duration": 31,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "retries order 29",
+      "fullTitle": "reports deletes currency 29",
+      "file": "/home/dev/shop/test/reports/reports.test.js",
+      "duration": 20,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "computes customer 30",
+      "fullTitle": "webhooks serializes discount 30",
+      "file": "/home/dev/shop/test/webhooks/webhooks.test.js",
+      "duration": 20,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "rejects refund 31",
+      "fullTitle": "notifications caches address 31",
+      "file": "/home/dev/shop/test/notifications/notifications.test.js",
+      "duration": 16,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "parses page 32",
+      "fullTitle": "cart paginates batch 32",
+      "file": "/home/dev/shop/test/cart/cart.test.js",
+      "duration": 17,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "computes refund 33",
+      "fullTitle": "orders validates rounding 33",
+      "file": "/home/dev/shop/test/orders/orders.test.js",
+      "duration": 10,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "paginates invoice 34",
+      "fullTitle": "refunds rejects address 34",
+      "file": "/home/dev/shop/test/refunds/refunds.test.js",
+      "duration": 30,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "paginates customer 35",
+      "fullTitle": "payments caches item 35",
+      "file": "/home/dev/shop/test/payments/payments.test.js",
+      "duration": 36,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "deletes item 36",
+      "fullTitle": "invoices caches token 36",
+      "file": "/home/dev/shop/test/invoices/invoices.test.js",
+      "duration": 10,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "retries item 37",
+      "fullTitle": "customers caches item 37",
+      "file": "/home/dev/shop/test/customers/customers.test.js",
+      "duration": 28,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "updates batch 38",
+      "fullTitle": "catalog handles invoice 38",
+      "file": "/home/dev/shop/test/catalog/catalog.test.js",
+      "duration": 27,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "parses page 39",
+      "fullTitle": "inventory serializes customer 39",
+      "file": "/home/dev/shop/test/inventory/inventory.test.js",
+      "duration": 10,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "paginates timeout 40",
+      "fullTitle": "shipping lists refund 40",
+      "file": "/home/dev/shop/test/shipping/shipping.test.js",
+      "duration": 5,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "computes page 41",
+      "fullTitle": "auth deletes item 41",
+      "file": "/home/dev/shop/test/auth/auth.test.js",
+      "duration": 3,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "retries order 42",
+      "fullTitle": "pricing caches currency 42",
+      "file": "/home/dev/shop/test/pricing/pricing.test.js",
+      "duration": 37,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "serializes currency 43",
+      "fullTitle": "tax caches rounding 43",
+      "file": "/home/dev/shop/test/tax/tax.test.js",
+      "duration": 20,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "handles discount 44",
+      "fullTitle": "discounts parses customer 44",
+      "file": "/home/dev/shop/test/discounts/discounts.test.js",
+      "duration": 12,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "formats payload 45",
+      "fullTitle": "reports computes customer 45",
+      "file": "/home/dev/shop/test/reports/reports.test.js",
+      "duration": 9,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "formats customer 46",
+      "fullTitle": "webhooks computes discount 46",
+      "file": "/home/dev/shop/test/webhooks/webhooks.test.js",
+      "duration": 32,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "validates currency 47",
+      "fullTitle": "notifications caches page 47",
+      "file": "/home/dev/shop/test/notifications/notifications.test.js",
+      "duration": 35,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "rejects total 48",
+      "fullTitle": "cart computes total 48",
+      "file": "/home/dev/shop/test/cart/cart.test.js",
+      "duration": 8,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "parses timeout 49",
+      "fullTitle": "orders handles order 49",
+      "file": "/home/dev/shop/test/orders/orders.test.js",
+      "duration": 24,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "caches order 50",
+      "fullTitle": "refunds lists customer 50",
+      "file": "/home/dev/shop/test/refunds/refunds.test.js",
+      "duration": 9,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "retries discount 51",
+      "fullTitle": "payments handles page 51",
+      "file": "/home/dev/shop/test/payments/payments.test.js",
+      "duration": 3,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "retries currency 52",
+      "fullTitle": "invoices serializes discount 52",
+      "file": "/home/dev/shop/test/invoices/invoices.test.js",
+      "duration": 13,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "handles token 53",
+      "fullTitle": "customers lists page 53",
+      "file": "/home/dev/shop/test/customers/customers.test.js",
+      "duration": 39,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "handles customer 54",
+      "fullTitle": "catalog handles total 54",
+      "file": "/home/dev/shop/test/catalog/catalog.test.js",
+      "duration": 29,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "updates payload 55",
+      "fullTitle": "inventory parses currency 55",
+      "file": "/home/dev/shop/test/inventory/inventory.test.js",
+      "duration": 2,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "formats page 56",
+      "fullTitle": "shipping deletes rounding 56",
+      "file": "/home/dev/shop/test/shipping/shipping.test.js",
+      "duration": 28,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "paginates customer 57",
+      "fullTitle": "auth caches payload 57",
+      "file": "/home/dev/shop/test/auth/auth.test.js",
+      "duration": 5,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "serializes item 58",
+      "fullTitle": "pricing updates refund 58",
+      "file": "/home/dev/shop/test/pricing/pricing.test.js",
+      "duration": 10,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "deletes discount 59",
+      "fullTitle": "tax creates address 59",
+      "file": "/home/dev/shop/test/tax/tax.test.js",
+      "duration": 22,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "handles customer 60",
+      "fullTitle": "discounts computes timeout 60",
+      "file": "/home/dev/shop/test/discounts/discounts.test.js",
+      "duration": 11,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "handles total 61",
+      "fullTitle": "reports retries page 61",
+      "file": "/home/dev/shop/test/reports/reports.test.js",
+      "duration": 27,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "formats token 62",
+      "fullTitle": "webhooks handles discount 62",
+      "file": "/home/dev/shop/test/webhooks/webhooks.test.js",
+      "duration": 7,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "computes customer 63",
+      "fullTitle": "notifications validates rounding 63",
+      "file": "/home/dev/shop/test/notifications/notifications.test.js",
+      "duration": 39,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "parses item 64",
+      "fullTitle": "cart formats item 64",
+      "file": "/home/dev/shop/test/cart/cart.test.js",
+      "duration": 5,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "handles order 65",
+      "fullTitle": "orders handles invoice 65",
+      "file": "/home/dev/shop/test/orders/orders.test.js",
+      "duration": 12,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "deletes page 66",
+      "fullTitle": "refunds handles order 66",
+      "file": "/home/dev/shop/test/refunds/refunds.test.js",
+      "duration": 38,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "formats invoice 67",
+      "fullTitle": "payments handles discount 67",
+      "file": "/home/dev/shop/test/payments/payments.test.js",
+      "duration": 36,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "deletes total 68",
+      "fullTitle": "invoices validates refund 68",
+      "file": "/home/dev/shop/test/invoices/invoices.test.js",
+      "duration": 2,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "validates order 69",
+      "fullTitle": "customers updates discount 69",
+      "file": "/home/dev/shop/test/customers/customers.test.js",
+      "duration": 12,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "computes customer 70",
+      "fullTitle": "catalog formats total 70",
+      "file": "/home/dev/shop/test/catalog/catalog.test.js",
+      "duration": 33,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "serializes payload 71",
+      "fullTitle": "inventory rejects timeout 71",
+      "file": "/home/dev/shop/test/inventory/inventory.test.js",
+      "duration": 26,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "handles customer 72",
+      "fullTitle": "shipping deletes timeout 72",
+      "file": "/home/dev/shop/test/shipping/shipping.test.js",
+      "duration": 18,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "computes batch 73",
+      "fullTitle": "auth deletes token 73",
+      "file": "/home/dev/shop/test/auth/auth.test.js",
+      "duration": 15,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "creates invoice 74",
+      "fullTitle": "pricing validates invoice 74",
+      "file": "/home/dev/shop/test/pricing/pricing.test.js",
+      "duration": 23,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "serializes payload 75",
+      "fullTitle": "tax creates currency 75",
+      "file": "/home/dev/shop/test/tax/tax.test.js",
+      "duration": 4,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "rejects invoice 76",
+      "fullTitle": "discounts paginates address 76",
+      "file": "/home/dev/shop/test/discounts/discounts.test.js",
+      "duration": 10,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "parses item 77",
+      "fullTitle": "reports updates order 77",
+      "file": "/home/dev/shop/test/reports/reports.test.js",
+      "duration": 2,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "rejects order 78",
+      "fullTitle": "webhooks validates payload 78",
+      "file": "/home/dev/shop/test/webhooks/webhooks.test.js",
+      "duration": 4,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "rejects invoice 79",
+      "fullTitle": "notifications updates refund 79",
+      "file": "/home/dev/shop/test/notifications/notifications.test.js",
+      "duration": 17,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "creates order 80",
+      "fullTitle": "cart deletes token 80",
+      "file": "/home/dev/shop/test/cart/cart.test.js",
+      "duration": 36,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "validates address 81",
+      "fullTitle": "orders computes total 81",
+      "file": "/home/dev/shop/test/orders/orders.test.js",
+      "duration": 15,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "updates currency 82",
+      "fullTitle": "refunds parses refund 82",
+      "file": "/home/dev/shop/test/refunds/refunds.test.js",
+      "duration": 18,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "parses order 83",
+      "fullTitle": "payments caches refund 83",
+      "file": "/home/dev/shop/test/payments/payments.test.js",
+      "duration": 25,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "retries refund 84",
+      "fullTitle": "invoices handles refund 84",
+      "file": "/home/dev/shop/test/invoices/invoices.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "lists rounding 85",
+      "fullTitle": "customers updates batch 85",
+      "file": "/home/dev/shop/test/customers/customers.test.js",
+      "duration": 12,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "lists invoice 86",
+      "fullTitle": "catalog updates refund 86",
+      "file": "/home/dev/shop/test/catalog/catalog.test.js",
+      "duration": 17,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "deletes customer 87",
+      "fullTitle": "inventory handles currency 87",
+      "file": "/home/dev/shop/test/inventory/inventory.test.js",
+      "duration": 37,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "retries page 88",
+      "fullTitle": "shipping handles refund 88",
+      "file": "/home/dev/shop/test/shipping/shipping.test.js",
+      "duration": 27,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "computes order 89",
+      "fullTitle": "auth computes invoice 89",
+      "file": "/home/dev/shop/test/auth/auth.test.js",
+      "duration": 25,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "updates payload 90",
+      "fullTitle": "pricing formats invoice 90",
+      "file": "/home/dev/shop/test/pricing/pricing.test.js",
+      "duration": 18,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "deletes invoice 91",
+      "fullTitle": "tax creates invoice 91",
+      "file": "/home/dev/shop/test/tax/tax.test.js",
+      "duration": 19,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "creates address 92",
+      "fullTitle": "discounts deletes page 92",
+      "file": "/home/dev/shop/test/discounts/discounts.test.js",
+      "duration": 25,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "retries currency 93",
+      "fullTitle": "reports creates token 93",
+      "file": "/home/dev/shop/test/reports/reports.test.js",
+      "duration": 15,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "retries item 94",
+      "fullTitle": "webhooks rejects timeout 94",
+      "file": "/home/dev/shop/test/webhooks/webhooks.test.js",
+      "duration": 25,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "paginates batch 95",
+      "fullTitle": "notifications serializes discount 95",
+      "file": "/home/dev/shop/test/notifications/notifications.test.js",
+      "duration": 23,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "deletes invoice 96",
+      "fullTitle": "cart deletes item 96",
+      "file": "/home/dev/shop/test/cart/cart.test.js",
+      "duration": 8,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "caches discount 97",
+      "fullTitle": "orders handles page 97",
+      "file": "/home/dev/shop/test/orders/orders.test.js",
+      "duration": 14,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "deletes token 98",
+      "fullTitle": "refunds creates refund 98",
+      "file": "/home/dev/shop/test/refunds/refunds.test.js",
+      "duration": 16,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "caches customer 99",
+      "fullTitle": "payments creates order 99",
+      "file": "/home/dev/shop/test/payments/payments.test.js",
+      "duration": 35,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "lists timeout 100",
+      "fullTitle": "invoices rejects refund 100",
+      "file": "/home/dev/shop/test/invoices/invoices.test.js",
+      "duration": 15,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "rejects timeout 101",
+      "fullTitle": "customers retries token 101",
+      "file": "/home/dev/shop/test/customers/customers.test.js",
+      "duration": 31,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "serializes token 102",
+      "fullTitle": "catalog parses item 102",
+      "file": "/home/dev/shop/test/catalog/catalog.test.js",
+      "duration": 4,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "caches discount 103",
+      "fullTitle": "inventory paginates total 103",
+      "file": "/home/dev/shop/test/inventory/inventory.test.js",
+      "duration": 25,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "parses total 104",
+      "fullTitle": "shipping computes currency 104",
+      "file": "/home/dev/shop/test/shipping/shipping.test.js",
+      "duration": 25,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "computes total 105",
+      "fullTitle": "auth creates timeout 105",
+      "file": "/home/dev/shop/test/auth/auth.test.js",
+      "duration": 38,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "paginates page 106",
+      "fullTitle": "pricing creates page 106",
+      "file": "/home/dev/shop/test/pricing/pricing.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "updates invoice 107",
+      "fullTitle": "tax parses customer 107",
+      "file": "/home/dev/shop/test/tax/tax.test.js",
+      "duration": 17,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "serializes currency 108",
+      "fullTitle": "discounts retries page 108",
+      "file": "/home/dev/shop/test/discounts/discounts.test.js",
+      "duration": 36,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "deletes rounding 109",
+      "fullTitle": "reports retries currency 109",
+      "file": "/home/dev/shop/test/reports/reports.test.js",
+      "duration": 28,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "deletes item 110",
+      "fullTitle": "webhooks serializes order 110",
+      "file": "/home/dev/shop/test/webhooks/webhooks.test.js",
+      "duration": 27,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "serializes item 111",
+      "fullTitle": "notifications computes batch 111",
+      "file": "/home/dev/shop/test/notifications/notifications.test.js",
+      "duration": 13,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "paginates timeout 112",
+      "fullTitle": "cart updates currency 112",
+      "file": "/home/dev/shop/test/cart/cart.test.js",
+      "duration": 20,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "creates page 113",
+      "fullTitle": "orders rejects refund 113",
+      "file": "/home/dev/shop/test/orders/orders.test.js",
+      "duration": 20,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "handles payload 114",
+      "fullTitle": "refunds paginates payload 114",
+      "file": "/home/dev/shop/test/refunds/refunds.test.js",
+      "duration": 19,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "retries batch 115",
+      "fullTitle": "payments lists invoice 115",
+      "file": "/home/dev/shop/test/payments/payments.test.js",
+      "duration": 27,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "deletes item 116",
+      "fullTitle": "invoices computes page 116",
+      "file": "/home/dev/shop/test/invoices/invoices.test.js",
+      "duration": 3,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "lists invoice 117",
+      "fullTitle": "customers creates token 117",
+      "file": "/home/dev/shop/test/customers/customers.test.js",
+      "duration": 8,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "formats refund 118",
+      "fullTitle": "catalog deletes item 118",
+      "file": "/home/dev/shop/test/catalog/catalog.test.js",
+      "duration": 15,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "serializes payload 119",
+      "fullTitle": "inventory deletes invoice 119",
+      "file": "/home/dev/shop/test/inventory/inventory.test.js",
+      "duration": 20,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "creates refund 120",
+      "fullTitle": "shipping formats timeout 120",
+      "file": "/home/dev/shop/test/shipping/shipping.test.js",
+      "duration": 15,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "rejects token 121",
+      "fullTitle": "auth handles timeout 121",
+      "file": "/home/dev/shop/test/auth/auth.test.js",
+      "duration": 17,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "formats rounding 122",
+      "fullTitle": "pricing creates rounding 122",
+      "file": "/home/dev/shop/test/pricing/pricing.test.js",
+      "duration": 3,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "caches refund 123",
+      "fullTitle": "tax handles customer 123",
+      "file": "/home/dev/shop/test/tax/tax.test.js",
+      "duration": 7,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "validates discount 124",
+      "fullTitle": "discounts computes total 124",
+      "file": "/home/dev/shop/test/discounts/discounts.test.js",
+      "duration": 6,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "deletes invoice 125",
+      "fullTitle": "reports computes currency 125",
+      "file": "/home/dev/shop/test/reports/reports.test.js",
+      "duration": 5,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "lists payload 126",
+      "fullTitle": "webhooks computes total 126",
+      "file": "/home/dev/shop/test/webhooks/webhooks.test.js",
+      "duration": 6,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "rejects refund 127",
+      "fullTitle": "notifications computes rounding 127",
+      "file": "/home/dev/shop/test/notifications/notifications.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "serializes order 128",
+      "fullTitle": "cart validates customer 128",
+      "file": "/home/dev/shop/test/cart/cart.test.js",
+      "duration": 11,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "parses order 129",
+      "fullTitle": "orders validates page 129",
+      "file": "/home/dev/shop/test/orders/orders.test.js",
+      "duration": 23,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "caches payload 130",
+      "fullTitle": "refunds deletes refund 130",
+      "file": "/home/dev/shop/test/refunds/refunds.test.js",
+      "duration": 10,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "formats page 131",
+      "fullTitle": "payments rejects batch 131",
+      "file": "/home/dev/shop/test/payments/payments.test.js",
+      "duration": 13,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "updates item 132",
+      "fullTitle": "invoices deletes discount 132",
+      "file": "/home/dev/shop/test/invoices/invoices.test.js",
+      "duration": 16,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "retries order 133",
+      "fullTitle": "customers rejects customer 133",
+      "file": "/home/dev/shop/test/customers/customers.test.js",
+      "duration": 34,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "creates item 134",
+      "fullTitle": "catalog retries currency 134",
+      "file": "/home/dev/shop/test/catalog/catalog.test.js",
+      "duration": 31,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "retries discount 135",
+      "fullTitle": "inventory updates total 135",
+      "file": "/home/dev/shop/test/inventory/inventory.test.js",
+      "duration": 39,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "computes invoice 136",
+      "fullTitle": "shipping parses total 136",
+      "file": "/home/dev/shop/test/shipping/shipping.test.js",
+      "duration": 11,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "parses page 137",
+      "fullTitle": "auth parses customer 137",
+      "file": "/home/dev/shop/test/auth/auth.test.js",
+      "duration": 32,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "paginates customer 138",
+      "fullTitle": "pricing lists token 138",
+      "file": "/home/dev/shop/test/pricing/pricing.test.js",
+      "duration": 0,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "creates address 139",
+      "fullTitle": "tax computes order 139",
+      "file": "/home/dev/shop/test/tax/tax.test.js",
+      "duration": 17,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "validates payload 140",
+      "fullTitle": "discounts caches payload 140",
+      "file": "/home/dev/shop/test/discounts/discounts.test.js",
+      "duration": 6,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "updates payload 141",
+      "fullTitle": "reports validates invoice 141",
+      "file": "/home/dev/shop/test/reports/reports.test.js",
+      "duration": 28,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "lists invoice 142",
+      "fullTitle": "webhooks handles page 142",
+      "file": "/home/dev/shop/test/webhooks/webhooks.test.js",
+      "duration": 5,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "lists batch 143",
+      "fullTitle": "notifications formats customer 143",
+      "file": "/home/dev/shop/test/notifications/notifications.test.js",
+      "duration": 8,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "deletes customer 144",
+      "fullTitle": "cart retries refund 144",
+      "file": "/home/dev/shop/test/cart/cart.test.js",
+      "duration": 8,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "parses currency 145",
+      "fullTitle": "orders retries batch 145",
+      "file": "/home/dev/shop/test/orders/orders.test.js",
+      "duration": 14,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "creates item 146",
+      "fullTitle": "refunds parses customer 146",
+      "file": "/home/dev/shop/test/refunds/refunds.test.js",
+      "duration": 12,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "lists customer 147",
+      "fullTitle": "payments lists invoice 147",
+      "file": "/home/dev/shop/test/payments/payments.test.js",
+      "duration": 28,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "rejects timeout 148",
+      "fullTitle": "invoices updates invoice 148",
+      "file": "/home/dev/shop/test/invoices/invoices.test.js",
+      "duration": 11,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "rejects discount 149",
+      "fullTitle": "customers lists token 149",
+      "file": "/home/dev/shop/test/customers/customers.test.js",
+      "duration": 15,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "updates address 150",
+      "fullTitle": "catalog validates page 150",
+      "file": "/home/dev/shop/test/catalog/catalog.test.js",
+      "duration": 38,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "rejects currency 151",
+      "fullTitle": "inventory caches currency 151",
+      "file": "/home/dev/shop/test/inventory/inventory.test.js",
+      "duration": 28,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "validates page 152",
+      "fullTitle": "shipping parses batch 152",
+      "file": "/home/dev/shop/test/shipping/shipping.test.js",
+      "duration": 24,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "retries batch 153",
+      "fullTitle": "auth formats item 153",
+      "file": "/home/dev/shop/test/auth/auth.test.js",
+      "duration": 21,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "parses timeout 154",
+      "fullTitle": "pricing rejects batch 154",
+      "file": "/home/dev/shop/test/pricing/pricing.test.js",
+      "duration": 2,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "retries rounding 155",
+      "fullTitle": "tax paginates total 155",
+      "file": "/home/dev/shop/test/tax/tax.test.js",
+      "duration": 25,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "retries address 156",
+      "fullTitle": "discounts updates token 156",
+      "file": "/home/dev/shop/test/discounts/discounts.test.js",
+      "duration": 20,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "computes invoice 157",
+      "fullTitle": "reports computes page 157",
+      "file": "/home/dev/shop/test/reports/reports.test.js",
+      "duration": 4,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "caches rounding 158",
+      "fullTitle": "webhooks updates currency 158",
+      "file": "/home/dev/shop/test/webhooks/webhooks.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
+    {
+      "title": "paginates currency 159",
+      "fullTitle": "notifications updates address 159",
+      "file": "/home/dev/shop/test/notifications/notifications.test.js",
+      "duration": 23,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    }
+  ]
+}

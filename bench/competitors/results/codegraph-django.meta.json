@@ -14,7 +14,16 @@
   },
   "headCommit": "2212534bae393714e1e51db2341d4fd5545e19f6",
   "commitMatchesTasks": true,
-  "date": "2026-10-09T11:11:26.423Z",
+  "date": "2026-10-09T13:55:18.398Z",
+  "image": "kopt-bench/codegraph:1.6.2",
+  "imageId": "sha256:db8f2e822e3863b14f3c037bc692fb20915bf2e48a3083248d72d3938a716f5a",
+  "engine": "docker",
+  "limits": "memory=6g cpus=8",
+  "cgroupMemory": {
+    "maxBytes": 6442450944,
+    "peakBytes": 4285161472,
+    "oomKills": 0
+  },
   "container": {
     "node": "v22.23.3",
     "arch": "arm64",
@@ -36,16 +45,17 @@
   },
   "oneSessionPerTask": true,
   "indexOk": true,
-  "indexMs": 53211,
+  "indexMs": 43993,
   "indexSteps": [
     {
       "command": "codegraph init --yes /work/django",
-      "ms": 53211,
+      "ms": 43993,
       "exit": 0,
-      "signal": null
+      "signal": null,
+      "oomKills": 0
     }
   ],
-  "copyMs": 625,
+  "copyMs": 18104,
   "indexDirs": [
     "<repo>/.codegraph"
   ],
@@ -73,17 +83,17 @@
       "file": "codegraph-django.jsonl",
       "tasks": 15,
       "failures": 0,
-      "queryMsMedian": 192,
-      "queryMsP90": 373,
-      "startupMsMedian": 157
+      "queryMsMedian": 205,
+      "queryMsP90": 381,
+      "startupMsMedian": 150
     },
     "question": {
       "file": "codegraph-django-question.jsonl",
       "tasks": 15,
       "failures": 0,
-      "queryMsMedian": 400,
-      "queryMsP90": 729,
-      "startupMsMedian": 161
+      "queryMsMedian": 353,
+      "queryMsP90": 675,
+      "startupMsMedian": 145
     }
   },
   "charsPerToken": 3,

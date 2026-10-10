@@ -1,0 +1,101 @@
+{
+  "label": "codegraph",
+  "tool": "codegraph",
+  "package": "@colbymchenry/codegraph",
+  "version": "1.6.2",
+  "mode": "default",
+  "repo": {
+    "name": "exposed",
+    "url": "https://github.com/JetBrains/Exposed.git",
+    "tag": "1.5.0",
+    "commit": "84361204b6639cad5696506a26595c97afac3531",
+    "language": "kotlin",
+    "path": "bench/repos/exposed"
+  },
+  "headCommit": "84361204b6639cad5696506a26595c97afac3531",
+  "commitMatchesTasks": true,
+  "date": "2026-10-09T13:53:05.750Z",
+  "image": "kopt-bench/codegraph:1.6.2",
+  "imageId": "sha256:db8f2e822e3863b14f3c037bc692fb20915bf2e48a3083248d72d3938a716f5a",
+  "engine": "docker",
+  "limits": "memory=6g cpus=8",
+  "cgroupMemory": {
+    "maxBytes": 6442450944,
+    "peakBytes": 2372739072,
+    "oomKills": 0
+  },
+  "container": {
+    "node": "v22.23.3",
+    "arch": "arm64",
+    "platform": "linux",
+    "cpus": 10,
+    "memBytes": 8214851584,
+    "network": "none"
+  },
+  "primaryTool": "codegraph_explore",
+  "toolArgsExample": {
+    "query": "<input>"
+  },
+  "serverCommand": {
+    "command": "codegraph",
+    "args": [
+      "serve",
+      "--mcp"
+    ]
+  },
+  "oneSessionPerTask": true,
+  "indexOk": true,
+  "indexMs": 28158,
+  "indexSteps": [
+    {
+      "command": "codegraph init --yes /work/exposed",
+      "ms": 28158,
+      "exit": 0,
+      "signal": null,
+      "oomKills": 0
+    }
+  ],
+  "copyMs": 16996,
+  "indexDirs": [
+    "<repo>/.codegraph"
+  ],
+  "indexSizeBytes": 100659429,
+  "modelBytes": 0,
+  "indexStatus": "CodeGraph Status\n\nProject: /work/exposed\n\nIndex Statistics:\n  Files:     930\n  Nodes:     24,055\n  Edges:     79,616\n  DB Size:   96.00 MB\n  Backend:   node:sqlite — built-in (full WAL)\n  Journal:   wal\n\nNodes by Kind:\n  import          8,847\n  method          6,457\n  class           1,809\n  function        1,725\n  constant        1,650\n  field           1,559\n  file            890\n  namespace       795\n  enum_member     163\n  interface       67\n  enum            43\n  variable        30\n  route           17\n  type_alias      3\n\nFiles by Language:\n  kotlin          860\n  xml             23\n  properties      20\n  yaml            20\n  javascript      7\n\n✓ Index is up to date",
+  "surface": {
+    "serverInfo": {
+      "name": "codegraph",
+      "version": "1.6.2"
+    },
+    "toolCount": 1,
+    "toolNames": [
+      "codegraph_explore"
+    ],
+    "toolsChars": 1725,
+    "toolsEstTokens": 575,
+    "instructionsChars": 6718,
+    "instructionsEstTokens": 2240,
+    "primaryToolListed": true,
+    "file": "codegraph.surface.json"
+  },
+  "inputs": {
+    "search": {
+      "file": "codegraph-exposed.jsonl",
+      "tasks": 12,
+      "failures": 0,
+      "queryMsMedian": 201,
+      "queryMsP90": 244,
+      "startupMsMedian": 199
+    },
+    "question": {
+      "file": "codegraph-exposed-question.jsonl",
+      "tasks": 12,
+      "failures": 0,
+      "queryMsMedian": 351,
+      "queryMsP90": 485,
+      "startupMsMedian": 201
+    }
+  },
+  "charsPerToken": 3,
+  "errors": []
+}

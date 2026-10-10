@@ -1,0 +1,3053 @@
+{
+  "meta": {
+    "label": "laravel",
+    "repo": {
+      "name": "laravel",
+      "url": "https://github.com/laravel/framework.git",
+      "tag": "v13.35.0",
+      "commit": "a413a9da94884e5e9d58f4e6612884f712827804",
+      "language": "php",
+      "path": "bench/repos/laravel"
+    },
+    "repoRoot": "bench/repos/laravel",
+    "headCommit": "a413a9da94884e5e9d58f4e6612884f712827804",
+    "date": "2026-10-09T22:38:48.345Z",
+    "input": "search",
+    "charsPerToken": 3,
+    "strategies": [
+      "native-naive",
+      "native-ranged",
+      "kopt-pack",
+      "kopt-hits+read",
+      "kirograph",
+      "codegraph"
+    ],
+    "grepLimits": {
+      "maxMatches": 100,
+      "maxChars": 10000,
+      "maxLineChars": 250
+    },
+    "readLimits": {
+      "naiveTopFiles": 3,
+      "naiveMaxLines": 2000,
+      "rangedMatches": 4,
+      "rangedContext": 60
+    },
+    "koptBudgets": {
+      "find": 700,
+      "pack": 2500,
+      "read": 3000
+    },
+    "index": {
+      "built": false,
+      "durationMs": 0,
+      "files": 3114,
+      "symbols": 40979,
+      "path": "<index-dir>/.kopt-laravel/index.db"
+    },
+    "notes": [
+      "kirograph: outputs loaded from bench/competitors/results/kirograph-laravel.jsonl",
+      "codegraph: outputs loaded from bench/competitors/results/codegraph-laravel.jsonl"
+    ],
+    "durationMs": 5866
+  },
+  "results": [
+    {
+      "taskId": "lv-locate-cache-flexible",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 22344,
+      "chars": 67028,
+      "toolCalls": 4,
+      "durationMs": 641,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "src/Illuminate/Support/functions.php"
+        ],
+        "symbolsMissed": [
+          "flexible",
+          "defer"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "stale",
+          "chars": 9972,
+          "tokens": 3324
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/View/Blade/BladeComponentTagCompilerTest.php",
+          "chars": 51919,
+          "tokens": 17307
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Cache/Console/PruneStaleTagsCommand.php",
+          "chars": 1085,
+          "tokens": 362
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Cache/RedisTagSet.php",
+          "chars": 4052,
+          "tokens": 1351
+        }
+      ]
+    },
+    {
+      "taskId": "lv-locate-cache-flexible",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 6161,
+      "chars": 18479,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "src/Illuminate/Support/functions.php"
+        ],
+        "symbolsMissed": [
+          "flexible",
+          "defer"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "stale",
+          "chars": 9972,
+          "tokens": 3324
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Cache/Console/PruneStaleTagsCommand.php:1-43",
+          "chars": 1085,
+          "tokens": 362
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Cache/FailoverStore.php:132-252",
+          "chars": 2784,
+          "tokens": 928
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Cache/RedisTagSet.php:31-151",
+          "chars": 3052,
+          "tokens": 1018
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Cache/RedisTaggedCache.php:213-280",
+          "chars": 1586,
+          "tokens": 529
+        }
+      ]
+    },
+    {
+      "taskId": "lv-locate-cache-flexible",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1314,
+      "chars": 3940,
+      "toolCalls": 1,
+      "durationMs": 58,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [
+          "src/Illuminate/Support/functions.php"
+        ],
+        "symbolsMissed": [],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"cache stale value refresh background after response lock\"",
+          "chars": 3940,
+          "tokens": 1314
+        }
+      ]
+    },
+    {
+      "taskId": "lv-locate-cache-flexible",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 1324,
+      "chars": 3969,
+      "toolCalls": 3,
+      "durationMs": 43,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [
+          "src/Illuminate/Support/functions.php"
+        ],
+        "symbolsMissed": [],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"cache stale value refresh background after response lock\"",
+          "chars": 2050,
+          "tokens": 684
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#247",
+          "chars": 338,
+          "tokens": 113
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#59x",
+          "chars": 1581,
+          "tokens": 527
+        }
+      ]
+    },
+    {
+      "taskId": "lv-locate-cache-flexible",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tokens": 1080,
+      "chars": 3239,
+      "toolCalls": 1,
+      "durationMs": 101,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "src/Illuminate/Cache/Repository.php",
+          "src/Illuminate/Support/functions.php"
+        ],
+        "symbolsMissed": [
+          "flexible",
+          "defer"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "cache stale value refresh background after response lock",
+          "chars": 3239,
+          "tokens": 1080
+        }
+      ]
+    },
+    {
+      "taskId": "lv-locate-cache-flexible",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tokens": 6131,
+      "chars": 18392,
+      "toolCalls": 1,
+      "durationMs": 994,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "src/Illuminate/Cache/Repository.php",
+          "src/Illuminate/Support/functions.php"
+        ],
+        "symbolsMissed": [
+          "flexible",
+          "defer"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "cache stale value refresh background after response lock",
+          "chars": 18392,
+          "tokens": 6131
+        }
+      ]
+    },
+    {
+      "taskId": "lv-locate-image-processing",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 52831,
+      "chars": 158488,
+      "toolCalls": 4,
+      "durationMs": 522,
+      "recall": {
+        "fileRecall": 0.3333333333333333,
+        "symbolRecall": 0.25,
+        "defRecall": 0,
+        "filesMissed": [
+          "src/Illuminate/Image/Drivers/InterventionDriver.php",
+          "src/Illuminate/Image/ImageManager.php"
+        ],
+        "symbolsMissed": [
+          "process",
+          "transformationHandlerFor",
+          "transformUsing"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "applied",
+          "chars": 7888,
+          "tokens": 2630
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/Database/DatabaseQueryBuilderTest.php",
+          "chars": 102566,
+          "tokens": 34189
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/Database/DatabaseEloquentGlobalScopesTest.php",
+          "chars": 12162,
+          "tokens": 4054
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Database/Eloquent/Factories/Factory.php",
+          "chars": 35872,
+          "tokens": 11958
+        }
+      ]
+    },
+    {
+      "taskId": "lv-locate-image-processing",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 171650,
+      "chars": 514944,
+      "toolCalls": 4,
+      "durationMs": 2,
+      "recall": {
+        "fileRecall": 0.3333333333333333,
+        "symbolRecall": 0.25,
+        "defRecall": 0,
+        "filesMissed": [
+          "src/Illuminate/Image/Drivers/InterventionDriver.php",
+          "src/Illuminate/Image/ImageManager.php"
+        ],
+        "symbolsMissed": [
+          "process",
+          "transformationHandlerFor",
+          "transformUsing"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "applied",
+          "chars": 7888,
+          "tokens": 2630
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Foundation/resources/exceptions/renderer/dist/scripts.js:96-156",
+          "chars": 495819,
+          "tokens": 165273
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Validation/Rules/Password.php:359-479",
+          "chars": 3337,
+          "tokens": 1113
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/Database/DatabaseQueryBuilderTest.php:5249-5439",
+          "chars": 7900,
+          "tokens": 2634
+        }
+      ]
+    },
+    {
+      "taskId": "lv-locate-image-processing",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1218,
+      "chars": 3653,
+      "toolCalls": 1,
+      "durationMs": 19,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"Image toBytes transformations applied driver custom transformation handler\"",
+          "chars": 3653,
+          "tokens": 1218
+        }
+      ]
+    },
+    {
+      "taskId": "lv-locate-image-processing",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 722,
+      "chars": 2162,
+      "toolCalls": 3,
+      "durationMs": 17,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"Image toBytes transformations applied driver custom transformation handler\"",
+          "chars": 1159,
+          "tokens": 387
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#4p7",
+          "chars": 676,
+          "tokens": 226
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#4t3",
+          "chars": 327,
+          "tokens": 109
+        }
+      ]
+    },
+    {
+      "taskId": "lv-locate-image-processing",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tokens": 1062,
+      "chars": 3186,
+      "toolCalls": 1,
+      "durationMs": 84,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.25,
+        "defRecall": 0,
+        "filesMissed": [
+          "src/Illuminate/Image/Image.php",
+          "src/Illuminate/Image/Drivers/InterventionDriver.php",
+          "src/Illuminate/Image/ImageManager.php"
+        ],
+        "symbolsMissed": [
+          "process",
+          "transformationHandlerFor",
+          "transformUsing"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "Image toBytes transformations applied driver custom transformation handler",
+          "chars": 3186,
+          "tokens": 1062
+        }
+      ]
+    },
+    {
+      "taskId": "lv-locate-image-processing",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tokens": 8307,
+      "chars": 24921,
+      "toolCalls": 1,
+      "durationMs": 751,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.75,
+        "defRecall": 0.75,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "transformationHandlerFor"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "Image toBytes transformations applied driver custom transformation handler",
+          "chars": 24921,
+          "tokens": 8307
+        }
+      ]
+    },
+    {
+      "taskId": "lv-locate-pwned",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 9330,
+      "chars": 27989,
+      "toolCalls": 4,
+      "durationMs": 579,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [
+          "src/Illuminate/Validation/Rules/Password.php"
+        ],
+        "symbolsMissed": [],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "breach|pwned",
+          "chars": 3021,
+          "tokens": 1007
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/Validation/ValidationNotPwnedVerifierTest.php",
+          "chars": 3617,
+          "tokens": 1206
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/Validation/ValidationPasswordRuleTest.php",
+          "chars": 18768,
+          "tokens": 6256
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Validation/NotPwnedVerifier.php",
+          "chars": 2583,
+          "tokens": 861
+        }
+      ]
+    },
+    {
+      "taskId": "lv-locate-pwned",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 4211,
+      "chars": 12631,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 1,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [
+          "src/Illuminate/Validation/Rules/Password.php"
+        ],
+        "symbolsMissed": [],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "breach|pwned",
+          "chars": 3021,
+          "tokens": 1007
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Validation/NotPwnedVerifier.php:1-69",
+          "chars": 1628,
+          "tokens": 543
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Validation/ValidationServiceProvider.php:5-79",
+          "chars": 2148,
+          "tokens": 716
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/Validation/ValidationNotPwnedVerifierTest.php:1-76",
+          "chars": 2177,
+          "tokens": 726
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/Validation/ValidationPasswordRuleTest.php:111-231",
+          "chars": 3657,
+          "tokens": 1219
+        }
+      ]
+    },
+    {
+      "taskId": "lv-locate-pwned",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1362,
+      "chars": 4086,
+      "toolCalls": 1,
+      "durationMs": 55,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"password validation data breach pwned range api hash prefix\"",
+          "chars": 4086,
+          "tokens": 1362
+        }
+      ]
+    },
+    {
+      "taskId": "lv-locate-pwned",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 1088,
+      "chars": 3262,
+      "toolCalls": 3,
+      "durationMs": 47,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "passes"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"password validation data breach pwned range api hash prefix\"",
+          "chars": 1960,
+          "tokens": 654
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#t7d",
+          "chars": 624,
+          "tokens": 208
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#fd5",
+          "chars": 678,
+          "tokens": 226
+        }
+      ]
+    },
+    {
+      "taskId": "lv-locate-pwned",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tokens": 1493,
+      "chars": 4478,
+      "toolCalls": 1,
+      "durationMs": 126,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "src/Illuminate/Validation/NotPwnedVerifier.php",
+          "src/Illuminate/Validation/Rules/Password.php"
+        ],
+        "symbolsMissed": [
+          "verify",
+          "search",
+          "passes"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "password validation data breach pwned range api hash prefix",
+          "chars": 4478,
+          "tokens": 1493
+        }
+      ]
+    },
+    {
+      "taskId": "lv-locate-pwned",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tokens": 8309,
+      "chars": 24927,
+      "toolCalls": 1,
+      "durationMs": 506,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [
+          "src/Illuminate/Validation/NotPwnedVerifier.php"
+        ],
+        "symbolsMissed": [
+          "search"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "password validation data breach pwned range api hash prefix",
+          "chars": 24927,
+          "tokens": 8309
+        }
+      ]
+    },
+    {
+      "taskId": "lv-locate-cache-failover",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 4105,
+      "chars": 12313,
+      "toolCalls": 4,
+      "durationMs": 440,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "FailoverStore|CacheFailedOver",
+          "chars": 1923,
+          "tokens": 641
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/Cache/CacheFailoverStoreTest.php",
+          "chars": 1657,
+          "tokens": 553
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/Integration/Cache/FailoverStoreTest.php",
+          "chars": 1887,
+          "tokens": 629
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Cache/FailoverStore.php",
+          "chars": 6846,
+          "tokens": 2282
+        }
+      ]
+    },
+    {
+      "taskId": "lv-locate-cache-failover",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 2529,
+      "chars": 7585,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "FailoverStore|CacheFailedOver",
+          "chars": 1923,
+          "tokens": 641
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Cache/Events/CacheFailedOver.php:1-21",
+          "chars": 414,
+          "tokens": 138
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Cache/FailoverStore.php:1-72",
+          "chars": 1704,
+          "tokens": 568
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/Cache/CacheFailoverStoreTest.php:1-60",
+          "chars": 1657,
+          "tokens": 553
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/Integration/Cache/FailoverStoreTest.php:1-64",
+          "chars": 1887,
+          "tokens": 629
+        }
+      ]
+    },
+    {
+      "taskId": "lv-locate-cache-failover",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1323,
+      "chars": 3969,
+      "toolCalls": 1,
+      "durationMs": 27,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"FailoverStore next cache store failed CacheFailedOver event\"",
+          "chars": 3969,
+          "tokens": 1323
+        }
+      ]
+    },
+    {
+      "taskId": "lv-locate-cache-failover",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 2530,
+      "chars": 7589,
+      "toolCalls": 3,
+      "durationMs": 22,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"FailoverStore next cache store failed CacheFailedOver event\"",
+          "chars": 840,
+          "tokens": 280
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#22r",
+          "chars": 6642,
+          "tokens": 2214
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#23c",
+          "chars": 107,
+          "tokens": 36
+        }
+      ]
+    },
+    {
+      "taskId": "lv-locate-cache-failover",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tokens": 1634,
+      "chars": 4902,
+      "toolCalls": 1,
+      "durationMs": 77,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0,
+        "filesMissed": [
+          "src/Illuminate/Cache/Events/CacheFailedOver.php"
+        ],
+        "symbolsMissed": [
+          "attemptOnAllStores"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "FailoverStore next cache store failed CacheFailedOver event",
+          "chars": 4902,
+          "tokens": 1634
+        }
+      ]
+    },
+    {
+      "taskId": "lv-locate-cache-failover",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tokens": 7869,
+      "chars": 23605,
+      "toolCalls": 1,
+      "durationMs": 376,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "FailoverStore next cache store failed CacheFailedOver event",
+          "chars": 23605,
+          "tokens": 7869
+        }
+      ]
+    },
+    {
+      "taskId": "lv-explain-http-batch",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 28206,
+      "chars": 84610,
+      "toolCalls": 4,
+      "durationMs": 564,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.25,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "send",
+          "hasFailures",
+          "incrementFailedRequests"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "concurrent",
+          "chars": 9154,
+          "tokens": 3052
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/Foundation/Console/DevCommandTest.php",
+          "chars": 8350,
+          "tokens": 2784
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Foundation/Console/DevCommand.php",
+          "chars": 7108,
+          "tokens": 2370
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/Database/DatabasePostgresSchemaGrammarTest.php",
+          "chars": 59998,
+          "tokens": 20000
+        }
+      ]
+    },
+    {
+      "taskId": "lv-explain-http-batch",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 171419,
+      "chars": 514251,
+      "toolCalls": 5,
+      "durationMs": 2,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "hasFailures",
+          "incrementFailedRequests"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "concurrent",
+          "chars": 9154,
+          "tokens": 3052
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Foundation/Console/DevCommand.php:88-208",
+          "chars": 4333,
+          "tokens": 1445
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Foundation/Vite.php:66-186",
+          "chars": 2486,
+          "tokens": 829
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Foundation/resources/exceptions/renderer/dist/scripts.js:96-156",
+          "chars": 495819,
+          "tokens": 165273
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Process/Factory.php:276-367",
+          "chars": 2459,
+          "tokens": 820
+        }
+      ]
+    },
+    {
+      "taskId": "lv-explain-http-batch",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 838,
+      "chars": 2513,
+      "toolCalls": 1,
+      "durationMs": 40,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.75,
+        "defRecall": 0.25,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "hasFailures"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"http client batch concurrent requests concurrency progress catch then finally\"",
+          "chars": 2513,
+          "tokens": 838
+        }
+      ]
+    },
+    {
+      "taskId": "lv-explain-http-batch",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 762,
+      "chars": 2285,
+      "toolCalls": 3,
+      "durationMs": 41,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.75,
+        "defRecall": 0.25,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "hasFailures"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"http client batch concurrent requests concurrency progress catch then finally\"",
+          "chars": 1926,
+          "tokens": 642
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#9nn",
+          "chars": 176,
+          "tokens": 59
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#9nj",
+          "chars": 183,
+          "tokens": 61
+        }
+      ]
+    },
+    {
+      "taskId": "lv-explain-http-batch",
+      "kind": "explain",
+      "strategy": "kirograph",
+      "tokens": 937,
+      "chars": 2811,
+      "toolCalls": 1,
+      "durationMs": 68,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.25,
+        "defRecall": 0.25,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "send",
+          "hasFailures",
+          "incrementFailedRequests"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "http client batch concurrent requests concurrency progress catch then finally",
+          "chars": 2811,
+          "tokens": 937
+        }
+      ]
+    },
+    {
+      "taskId": "lv-explain-http-batch",
+      "kind": "explain",
+      "strategy": "codegraph",
+      "tokens": 8319,
+      "chars": 24955,
+      "toolCalls": 1,
+      "durationMs": 403,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.75,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "http client batch concurrent requests concurrency progress catch then finally",
+          "chars": 24955,
+          "tokens": 8319
+        }
+      ]
+    },
+    {
+      "taskId": "lv-explain-concurrency",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 72119,
+      "chars": 216354,
+      "toolCalls": 4,
+      "durationMs": 558,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.75,
+        "defRecall": 0,
+        "filesMissed": [
+          "src/Illuminate/Concurrency/ProcessDriver.php",
+          "src/Illuminate/Concurrency/Console/InvokeSerializedClosureCommand.php"
+        ],
+        "symbolsMissed": [
+          "InvokeSerializedClosureCommand"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "closures",
+          "chars": 10019,
+          "tokens": 3340
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/Support/SupportReflectsClosuresTest.php",
+          "chars": 6463,
+          "tokens": 2155
+        },
+        {
+          "tool": "read_file",
+          "args": "CHANGELOG.md",
+          "chars": 191571,
+          "tokens": 63857
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/Database/DatabaseEloquentBelongsToManyWherePivotClosureTest.php",
+          "chars": 8301,
+          "tokens": 2767
+        }
+      ]
+    },
+    {
+      "taskId": "lv-explain-concurrency",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 21531,
+      "chars": 64589,
+      "toolCalls": 5,
+      "durationMs": 1,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.5,
+        "defRecall": 0,
+        "filesMissed": [
+          "src/Illuminate/Concurrency/ProcessDriver.php",
+          "src/Illuminate/Concurrency/Console/InvokeSerializedClosureCommand.php"
+        ],
+        "symbolsMissed": [
+          "defer",
+          "InvokeSerializedClosureCommand"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "closures",
+          "chars": 10019,
+          "tokens": 3340
+        },
+        {
+          "tool": "read_file",
+          "args": "CHANGELOG.md:177-297",
+          "chars": 17183,
+          "tokens": 5728
+        },
+        {
+          "tool": "read_file",
+          "args": "CHANGELOG.md:868-988",
+          "chars": 18176,
+          "tokens": 6059
+        },
+        {
+          "tool": "read_file",
+          "args": "CHANGELOG.md:1081-1201",
+          "chars": 17066,
+          "tokens": 5689
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Encryption/EncryptionServiceProvider.php:1-88",
+          "chars": 2145,
+          "tokens": 715
+        }
+      ]
+    },
+    {
+      "taskId": "lv-explain-concurrency",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 1434,
+      "chars": 4302,
+      "toolCalls": 1,
+      "durationMs": 44,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0.5,
+        "defRecall": 0.25,
+        "filesMissed": [
+          "src/Illuminate/Concurrency/Console/InvokeSerializedClosureCommand.php"
+        ],
+        "symbolsMissed": [
+          "InvokeSerializedClosureCommand",
+          "handle"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"concurrency run closures parallel child processes results\"",
+          "chars": 4302,
+          "tokens": 1434
+        }
+      ]
+    },
+    {
+      "taskId": "lv-explain-concurrency",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 2318,
+      "chars": 6951,
+      "toolCalls": 3,
+      "durationMs": 36,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [
+          "src/Illuminate/Concurrency/Console/InvokeSerializedClosureCommand.php"
+        ],
+        "symbolsMissed": [
+          "InvokeSerializedClosureCommand",
+          "handle"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"concurrency run closures parallel child processes results\"",
+          "chars": 2056,
+          "tokens": 686
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#7rj",
+          "chars": 1874,
+          "tokens": 625
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#7rh",
+          "chars": 3021,
+          "tokens": 1007
+        }
+      ]
+    },
+    {
+      "taskId": "lv-explain-concurrency",
+      "kind": "explain",
+      "strategy": "kirograph",
+      "tokens": 234,
+      "chars": 701,
+      "toolCalls": 1,
+      "durationMs": 44,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.25,
+        "defRecall": 0,
+        "filesMissed": [
+          "src/Illuminate/Concurrency/ProcessDriver.php",
+          "src/Illuminate/Concurrency/Console/InvokeSerializedClosureCommand.php"
+        ],
+        "symbolsMissed": [
+          "defer",
+          "InvokeSerializedClosureCommand",
+          "handle"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "concurrency run closures parallel child processes results",
+          "chars": 701,
+          "tokens": 234
+        }
+      ]
+    },
+    {
+      "taskId": "lv-explain-concurrency",
+      "kind": "explain",
+      "strategy": "codegraph",
+      "tokens": 8305,
+      "chars": 24914,
+      "toolCalls": 1,
+      "durationMs": 317,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [
+          "src/Illuminate/Concurrency/Console/InvokeSerializedClosureCommand.php"
+        ],
+        "symbolsMissed": [
+          "InvokeSerializedClosureCommand",
+          "handle"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "concurrency run closures parallel child processes results",
+          "chars": 24914,
+          "tokens": 8305
+        }
+      ]
+    },
+    {
+      "taskId": "lv-explain-throttles-exceptions",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 71442,
+      "chars": 214324,
+      "toolCalls": 4,
+      "durationMs": 832,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.25,
+        "defRecall": 0.25,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "shouldDelete",
+          "shouldFail",
+          "getTimeUntilNextRetryAfterException"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "ThrottlesExceptions",
+          "chars": 2972,
+          "tokens": 991
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/Integration/Queue/ThrottlesExceptionsTest.php",
+          "chars": 13589,
+          "tokens": 4530
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/Integration/Queue/ThrottlesExceptionsWithRedisTest.php",
+          "chars": 6192,
+          "tokens": 2064
+        },
+        {
+          "tool": "read_file",
+          "args": "CHANGELOG.md",
+          "chars": 191571,
+          "tokens": 63857
+        }
+      ]
+    },
+    {
+      "taskId": "lv-explain-throttles-exceptions",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 4083,
+      "chars": 12245,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.25,
+        "defRecall": 0.25,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "shouldDelete",
+          "shouldFail",
+          "getTimeUntilNextRetryAfterException"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "ThrottlesExceptions",
+          "chars": 2972,
+          "tokens": 991
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Queue/Middleware/ThrottlesExceptions.php:1-70",
+          "chars": 1442,
+          "tokens": 481
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Queue/Middleware/ThrottlesExceptionsWithRedis.php:1-72",
+          "chars": 1839,
+          "tokens": 613
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/Integration/Queue/ThrottlesExceptionsTest.php:1-79",
+          "chars": 2610,
+          "tokens": 870
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/Integration/Queue/ThrottlesExceptionsTest.php:259-379",
+          "chars": 3382,
+          "tokens": 1128
+        }
+      ]
+    },
+    {
+      "taskId": "lv-explain-throttles-exceptions",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 1269,
+      "chars": 3805,
+      "toolCalls": 1,
+      "durationMs": 29,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"ThrottlesExceptions job middleware release delete fail retry delay\"",
+          "chars": 3805,
+          "tokens": 1269
+        }
+      ]
+    },
+    {
+      "taskId": "lv-explain-throttles-exceptions",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 3200,
+      "chars": 9596,
+      "toolCalls": 3,
+      "durationMs": 25,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"ThrottlesExceptions job middleware release delete fail retry delay\"",
+          "chars": 1720,
+          "tokens": 574
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#4iv",
+          "chars": 7752,
+          "tokens": 2584
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#4jc",
+          "chars": 124,
+          "tokens": 42
+        }
+      ]
+    },
+    {
+      "taskId": "lv-explain-throttles-exceptions",
+      "kind": "explain",
+      "strategy": "kirograph",
+      "tokens": 1831,
+      "chars": 5491,
+      "toolCalls": 1,
+      "durationMs": 72,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "src/Illuminate/Queue/Middleware/ThrottlesExceptions.php"
+        ],
+        "symbolsMissed": [
+          "handle",
+          "shouldDelete",
+          "shouldFail",
+          "getTimeUntilNextRetryAfterException"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "ThrottlesExceptions job middleware release delete fail retry delay",
+          "chars": 5491,
+          "tokens": 1831
+        }
+      ]
+    },
+    {
+      "taskId": "lv-explain-throttles-exceptions",
+      "kind": "explain",
+      "strategy": "codegraph",
+      "tokens": 6331,
+      "chars": 18993,
+      "toolCalls": 1,
+      "durationMs": 421,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "shouldDelete",
+          "getTimeUntilNextRetryAfterException"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "ThrottlesExceptions job middleware release delete fail retry delay",
+          "chars": 18993,
+          "tokens": 6331
+        }
+      ]
+    },
+    {
+      "taskId": "lv-usage-image-driver",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 12310,
+      "chars": 36930,
+      "toolCalls": 3,
+      "durationMs": 146,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "resolveDriver",
+          "chars": 705,
+          "tokens": 235
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Image/Image.php",
+          "chars": 16677,
+          "tokens": 5559
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Foundation/Console/BroadcastingInstallCommand.php",
+          "chars": 19548,
+          "tokens": 6516
+        }
+      ]
+    },
+    {
+      "taskId": "lv-usage-image-driver",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 3832,
+      "chars": 11493,
+      "toolCalls": 3,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "resolveDriver",
+          "chars": 705,
+          "tokens": 235
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Foundation/Console/BroadcastingInstallCommand.php:482-602",
+          "chars": 3626,
+          "tokens": 1209
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Image/Image.php:357-630",
+          "chars": 7162,
+          "tokens": 2388
+        }
+      ]
+    },
+    {
+      "taskId": "lv-usage-image-driver",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 777,
+      "chars": 2329,
+      "toolCalls": 1,
+      "durationMs": 14,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"Image resolveDriver\"",
+          "chars": 2329,
+          "tokens": 777
+        }
+      ]
+    },
+    {
+      "taskId": "lv-usage-image-driver",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 580,
+      "chars": 1736,
+      "toolCalls": 3,
+      "durationMs": 13,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"Image resolveDriver\"",
+          "chars": 835,
+          "tokens": 279
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#4pj",
+          "chars": 272,
+          "tokens": 91
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#3f7",
+          "chars": 629,
+          "tokens": 210
+        }
+      ]
+    },
+    {
+      "taskId": "lv-usage-image-driver",
+      "kind": "usage",
+      "strategy": "kirograph",
+      "tokens": 1528,
+      "chars": 4583,
+      "toolCalls": 1,
+      "durationMs": 61,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "src/Illuminate/Image/Image.php"
+        ],
+        "symbolsMissed": [
+          "toBytes",
+          "dimensions",
+          "dominantColor"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "Image resolveDriver",
+          "chars": 4583,
+          "tokens": 1528
+        }
+      ]
+    },
+    {
+      "taskId": "lv-usage-image-driver",
+      "kind": "usage",
+      "strategy": "codegraph",
+      "tokens": 8332,
+      "chars": 24996,
+      "toolCalls": 1,
+      "durationMs": 247,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "Image resolveDriver",
+          "chars": 24996,
+          "tokens": 8332
+        }
+      ]
+    },
+    {
+      "taskId": "lv-usage-fail-job",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 23720,
+      "chars": 71160,
+      "toolCalls": 4,
+      "durationMs": 196,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "failJob",
+          "chars": 1488,
+          "tokens": 496
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Queue/Worker.php",
+          "chars": 38511,
+          "tokens": 12837
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/Integration/Queue/UniqueJobTest.php",
+          "chars": 15033,
+          "tokens": 5011
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/Integration/Queue/DebouncedJobTest.php",
+          "chars": 16128,
+          "tokens": 5376
+        }
+      ]
+    },
+    {
+      "taskId": "lv-usage-fail-job",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 4814,
+      "chars": 14439,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.6,
+        "defRecall": 0.6,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "markJobAsFailedIfAlreadyExceedsMaxAttempts",
+          "markJobAsFailedIfWillExceedMaxAttempts"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "failJob",
+          "chars": 1488,
+          "tokens": 496
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Queue/Worker.php:797-917",
+          "chars": 3764,
+          "tokens": 1255
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/Integration/Queue/DebouncedJobTest.php:345-465",
+          "chars": 2759,
+          "tokens": 920
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/Integration/Queue/ThrottlesExceptionsTest.php:1-109",
+          "chars": 3434,
+          "tokens": 1145
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/Integration/Queue/UniqueJobTest.php:335-455",
+          "chars": 2994,
+          "tokens": 998
+        }
+      ]
+    },
+    {
+      "taskId": "lv-usage-fail-job",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 1281,
+      "chars": 3842,
+      "toolCalls": 1,
+      "durationMs": 19,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"Queue Worker failJob\"",
+          "chars": 3842,
+          "tokens": 1281
+        }
+      ]
+    },
+    {
+      "taskId": "lv-usage-fail-job",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 701,
+      "chars": 2100,
+      "toolCalls": 3,
+      "durationMs": 18,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"Queue Worker failJob\"",
+          "chars": 1670,
+          "tokens": 557
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#4wv",
+          "chars": 131,
+          "tokens": 44
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#4wu",
+          "chars": 299,
+          "tokens": 100
+        }
+      ]
+    },
+    {
+      "taskId": "lv-usage-fail-job",
+      "kind": "usage",
+      "strategy": "kirograph",
+      "tokens": 1806,
+      "chars": 5416,
+      "toolCalls": 1,
+      "durationMs": 68,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "src/Illuminate/Queue/Worker.php"
+        ],
+        "symbolsMissed": [
+          "markJobAsFailedIfAlreadyExceedsMaxAttempts",
+          "markJobAsFailedIfWillExceedMaxAttempts",
+          "markJobAsFailedIfWillExceedMaxExceptions",
+          "markJobAsFailedIfItShouldntBeRetried",
+          "markJobAsFailedIfItShouldFailOnTimeout"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "Queue Worker failJob",
+          "chars": 5416,
+          "tokens": 1806
+        }
+      ]
+    },
+    {
+      "taskId": "lv-usage-fail-job",
+      "kind": "usage",
+      "strategy": "codegraph",
+      "tokens": 8246,
+      "chars": 24736,
+      "toolCalls": 1,
+      "durationMs": 170,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.8,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "Queue Worker failJob",
+          "chars": 24736,
+          "tokens": 8246
+        }
+      ]
+    },
+    {
+      "taskId": "lv-usage-batch-record",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 18874,
+      "chars": 56622,
+      "toolCalls": 4,
+      "durationMs": 198,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "recordSuccessfulJob|recordFailedJob",
+          "chars": 1974,
+          "tokens": 658
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/Bus/BusBatchTest.php",
+          "chars": 26982,
+          "tokens": 8994
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Queue/CallQueuedHandler.php",
+          "chars": 14331,
+          "tokens": 4777
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Bus/Batch.php",
+          "chars": 13335,
+          "tokens": 4445
+        }
+      ]
+    },
+    {
+      "taskId": "lv-usage-batch-record",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 4757,
+      "chars": 14268,
+      "toolCalls": 4,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.3333333333333333,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "ensureSuccessfulBatchJobIsRecordedForMissingModel",
+          "ensureFailedBatchJobIsRecorded"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "recordSuccessfulJob|recordFailedJob",
+          "chars": 1974,
+          "tokens": 658
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Bus/Batch.php:177-410",
+          "chars": 6316,
+          "tokens": 2106
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Queue/CallQueuedHandler.php:167-287",
+          "chars": 3296,
+          "tokens": 1099
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Support/Testing/Fakes/BatchFake.php:43-163",
+          "chars": 2682,
+          "tokens": 894
+        }
+      ]
+    },
+    {
+      "taskId": "lv-usage-batch-record",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 1530,
+      "chars": 4590,
+      "toolCalls": 1,
+      "durationMs": 19,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"recordSuccessfulJob recordFailedJob batch\"",
+          "chars": 4590,
+          "tokens": 1530
+        }
+      ]
+    },
+    {
+      "taskId": "lv-usage-batch-record",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 1290,
+      "chars": 3867,
+      "toolCalls": 3,
+      "durationMs": 18,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"recordSuccessfulJob recordFailedJob batch\"",
+          "chars": 1613,
+          "tokens": 538
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#7js",
+          "chars": 1106,
+          "tokens": 369
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#7jk",
+          "chars": 1148,
+          "tokens": 383
+        }
+      ]
+    },
+    {
+      "taskId": "lv-usage-batch-record",
+      "kind": "usage",
+      "strategy": "kirograph",
+      "tokens": 916,
+      "chars": 2746,
+      "toolCalls": 1,
+      "durationMs": 61,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "src/Illuminate/Queue/CallQueuedHandler.php"
+        ],
+        "symbolsMissed": [
+          "ensureSuccessfulBatchJobIsRecorded",
+          "ensureSuccessfulBatchJobIsRecordedForMissingModel",
+          "ensureFailedBatchJobIsRecorded"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "recordSuccessfulJob recordFailedJob batch",
+          "chars": 2746,
+          "tokens": 916
+        }
+      ]
+    },
+    {
+      "taskId": "lv-usage-batch-record",
+      "kind": "usage",
+      "strategy": "codegraph",
+      "tokens": 8313,
+      "chars": 24939,
+      "toolCalls": 1,
+      "durationMs": 230,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.3333333333333333,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "ensureSuccessfulBatchJobIsRecorded",
+          "ensureSuccessfulBatchJobIsRecordedForMissingModel"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "recordSuccessfulJob recordFailedJob batch",
+          "chars": 24939,
+          "tokens": 8313
+        }
+      ]
+    },
+    {
+      "taskId": "lv-impact-max-exceptions",
+      "kind": "impact",
+      "strategy": "native-naive",
+      "tokens": 12975,
+      "chars": 38925,
+      "toolCalls": 2,
+      "durationMs": 150,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "markJobAsFailedIfWillExceedMaxExceptions",
+          "chars": 414,
+          "tokens": 138
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Queue/Worker.php",
+          "chars": 38511,
+          "tokens": 12837
+        }
+      ]
+    },
+    {
+      "taskId": "lv-impact-max-exceptions",
+      "kind": "impact",
+      "strategy": "native-ranged",
+      "tokens": 4337,
+      "chars": 13008,
+      "toolCalls": 4,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "markJobAsFailedIfWillExceedMaxExceptions",
+          "chars": 414,
+          "tokens": 138
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Queue/Worker.php:276-396",
+          "chars": 4346,
+          "tokens": 1449
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Queue/Worker.php:619-739",
+          "chars": 4329,
+          "tokens": 1443
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Queue/Worker.php:742-862",
+          "chars": 3919,
+          "tokens": 1307
+        }
+      ]
+    },
+    {
+      "taskId": "lv-impact-max-exceptions",
+      "kind": "impact",
+      "strategy": "kopt-pack",
+      "tokens": 1363,
+      "chars": 4087,
+      "toolCalls": 1,
+      "durationMs": 30,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"Worker markJobAsFailedIfWillExceedMaxExceptions\"",
+          "chars": 4087,
+          "tokens": 1363
+        }
+      ]
+    },
+    {
+      "taskId": "lv-impact-max-exceptions",
+      "kind": "impact",
+      "strategy": "kopt-hits+read",
+      "tokens": 925,
+      "chars": 2771,
+      "toolCalls": 3,
+      "durationMs": 32,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.75,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "registerTimeoutHandler"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"Worker markJobAsFailedIfWillExceedMaxExceptions\"",
+          "chars": 1336,
+          "tokens": 446
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#4ws",
+          "chars": 659,
+          "tokens": 220
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#4wq",
+          "chars": 776,
+          "tokens": 259
+        }
+      ]
+    },
+    {
+      "taskId": "lv-impact-max-exceptions",
+      "kind": "impact",
+      "strategy": "kirograph",
+      "tokens": 1312,
+      "chars": 3935,
+      "toolCalls": 1,
+      "durationMs": 60,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.25,
+        "defRecall": 0,
+        "filesMissed": [
+          "src/Illuminate/Queue/Worker.php"
+        ],
+        "symbolsMissed": [
+          "registerTimeoutHandler",
+          "handleJobException",
+          "markJobAsFailedIfAlreadyExceedsMaxExceptions"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "Worker markJobAsFailedIfWillExceedMaxExceptions",
+          "chars": 3935,
+          "tokens": 1312
+        }
+      ]
+    },
+    {
+      "taskId": "lv-impact-max-exceptions",
+      "kind": "impact",
+      "strategy": "codegraph",
+      "tokens": 8315,
+      "chars": 24945,
+      "toolCalls": 1,
+      "durationMs": 197,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "Worker markJobAsFailedIfWillExceedMaxExceptions",
+          "chars": 24945,
+          "tokens": 8315
+        }
+      ]
+    },
+    {
+      "taskId": "lv-impact-flexible-prefix",
+      "kind": "impact",
+      "strategy": "native-naive",
+      "tokens": 22310,
+      "chars": 66926,
+      "toolCalls": 4,
+      "durationMs": 227,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "FLEXIBLE_CREATED_KEY_PREFIX",
+          "chars": 4997,
+          "tokens": 1666
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/Integration/Cache/RepositoryTest.php",
+          "chars": 16558,
+          "tokens": 5520
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Cache/Repository.php",
+          "chars": 29385,
+          "tokens": 9795
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Cache/DatabaseStore.php",
+          "chars": 15986,
+          "tokens": 5329
+        }
+      ]
+    },
+    {
+      "taskId": "lv-impact-flexible-prefix",
+      "kind": "impact",
+      "strategy": "native-ranged",
+      "tokens": 8741,
+      "chars": 26217,
+      "toolCalls": 5,
+      "durationMs": 1,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "FLEXIBLE_CREATED_KEY_PREFIX",
+          "chars": 4997,
+          "tokens": 1666
+        },
+        {
+          "tool": "read_file",
+          "args": "CHANGELOG.md:657-777",
+          "chars": 11374,
+          "tokens": 3792
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Cache/DatabaseStore.php:354-474",
+          "chars": 2984,
+          "tokens": 995
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Cache/Repository.php:1-115",
+          "chars": 3054,
+          "tokens": 1018
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Cache/Repository.php:598-718",
+          "chars": 3808,
+          "tokens": 1270
+        }
+      ]
+    },
+    {
+      "taskId": "lv-impact-flexible-prefix",
+      "kind": "impact",
+      "strategy": "kopt-pack",
+      "tokens": 1107,
+      "chars": 3320,
+      "toolCalls": 1,
+      "durationMs": 25,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.4,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"FLEXIBLE_CREATED_KEY_PREFIX cache flexible\"",
+          "chars": 3320,
+          "tokens": 1107
+        }
+      ]
+    },
+    {
+      "taskId": "lv-impact-flexible-prefix",
+      "kind": "impact",
+      "strategy": "kopt-hits+read",
+      "tokens": 794,
+      "chars": 2378,
+      "toolCalls": 3,
+      "durationMs": 25,
+      "recall": {
+        "fileRecall": 0.3333333333333333,
+        "symbolRecall": 0.4,
+        "defRecall": 0.4,
+        "filesMissed": [
+          "src/Illuminate/Cache/DatabaseStore.php",
+          "src/Illuminate/Cache/FileStore.php"
+        ],
+        "symbolsMissed": [
+          "forgetMany",
+          "forgetManyIfExpired",
+          "forget"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"FLEXIBLE_CREATED_KEY_PREFIX cache flexible\"",
+          "chars": 673,
+          "tokens": 225
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#591",
+          "chars": 124,
+          "tokens": 42
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#59x",
+          "chars": 1581,
+          "tokens": 527
+        }
+      ]
+    },
+    {
+      "taskId": "lv-impact-flexible-prefix",
+      "kind": "impact",
+      "strategy": "kirograph",
+      "tokens": 1452,
+      "chars": 4356,
+      "toolCalls": 1,
+      "durationMs": 86,
+      "recall": {
+        "fileRecall": 0.3333333333333333,
+        "symbolRecall": 0.4,
+        "defRecall": 0.2,
+        "filesMissed": [
+          "src/Illuminate/Cache/DatabaseStore.php",
+          "src/Illuminate/Cache/FileStore.php"
+        ],
+        "symbolsMissed": [
+          "forgetMany",
+          "forgetManyIfExpired",
+          "forget"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "FLEXIBLE_CREATED_KEY_PREFIX cache flexible",
+          "chars": 4356,
+          "tokens": 1452
+        }
+      ]
+    },
+    {
+      "taskId": "lv-impact-flexible-prefix",
+      "kind": "impact",
+      "strategy": "codegraph",
+      "tokens": 8309,
+      "chars": 24926,
+      "toolCalls": 1,
+      "durationMs": 220,
+      "recall": {
+        "fileRecall": 0.3333333333333333,
+        "symbolRecall": 0.6,
+        "defRecall": 0.6,
+        "filesMissed": [
+          "src/Illuminate/Cache/DatabaseStore.php",
+          "src/Illuminate/Cache/FileStore.php"
+        ],
+        "symbolsMissed": [
+          "forgetMany",
+          "forgetManyIfExpired"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "FLEXIBLE_CREATED_KEY_PREFIX cache flexible",
+          "chars": 24926,
+          "tokens": 8309
+        }
+      ]
+    }
+  ],
+  "aggregates": [
+    {
+      "strategy": "native-naive",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 22327,
+      "meanTokens": 29214,
+      "p90Tokens": 71442,
+      "totalTokens": 350566,
+      "totalChars": 1051669,
+      "meanToolCalls": 3.75,
+      "meanFileRecall": 0.7777777777777777,
+      "meanSymbolRecall": 0.7083333333333334,
+      "meanDefRecall": 0.6041666666666666,
+      "found": 6,
+      "foundRate": 0.5,
+      "tokensPerFound": 58428
+    },
+    {
+      "strategy": "native-ranged",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 4785.5,
+      "meanTokens": 34005,
+      "p90Tokens": 171419,
+      "totalTokens": 408065,
+      "totalChars": 1224149,
+      "meanToolCalls": 4.583333333333333,
+      "meanFileRecall": 0.7777777777777777,
+      "meanSymbolRecall": 0.6194444444444444,
+      "meanDefRecall": 0.43194444444444446,
+      "found": 4,
+      "foundRate": 0.3333333333333333,
+      "tokensPerFound": 102016
+    },
+    {
+      "strategy": "kopt-pack",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 1297.5,
+      "meanTokens": 1235,
+      "p90Tokens": 1434,
+      "totalTokens": 14816,
+      "totalChars": 44436,
+      "meanToolCalls": 1,
+      "meanFileRecall": 0.9166666666666666,
+      "meanSymbolRecall": 0.9375,
+      "meanDefRecall": 0.6166666666666667,
+      "found": 9,
+      "foundRate": 0.75,
+      "tokensPerFound": 1646
+    },
+    {
+      "strategy": "kopt-hits+read",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 1006.5,
+      "meanTokens": 1353,
+      "p90Tokens": 2530,
+      "totalTokens": 16234,
+      "totalChars": 48666,
+      "meanToolCalls": 3,
+      "meanFileRecall": 0.8611111111111112,
+      "meanSymbolRecall": 0.8388888888888889,
+      "meanDefRecall": 0.6097222222222222,
+      "found": 6,
+      "foundRate": 0.5,
+      "tokensPerFound": 2706
+    },
+    {
+      "strategy": "kirograph",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 1382,
+      "meanTokens": 1274,
+      "p90Tokens": 1806,
+      "totalTokens": 15285,
+      "totalChars": 45844,
+      "meanToolCalls": 1,
+      "meanFileRecall": 0.15277777777777776,
+      "meanSymbolRecall": 0.1722222222222222,
+      "meanDefRecall": 0.0375,
+      "found": 0,
+      "foundRate": 0,
+      "tokensPerFound": null
+    },
+    {
+      "strategy": "codegraph",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 8308,
+      "meanTokens": 7924,
+      "p90Tokens": 8319,
+      "totalTokens": 95086,
+      "totalChars": 285249,
+      "meanToolCalls": 1,
+      "meanFileRecall": 0.7777777777777778,
+      "meanSymbolRecall": 0.6958333333333333,
+      "meanDefRecall": 0.49166666666666664,
+      "found": 5,
+      "foundRate": 0.4166666666666667,
+      "tokensPerFound": 19017
+    }
+  ],
+  "paired": [
+    {
+      "a": "native-naive",
+      "b": "kopt-pack",
+      "nRun": 12,
+      "nBoth": 6,
+      "onlyA": 0,
+      "onlyB": 3,
+      "medianRatio": 0.07209165626734804,
+      "geoMeanRatio": 0.08799365396181072,
+      "bCheaper": 6
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-pack",
+      "nRun": 12,
+      "nBoth": 4,
+      "onlyA": 0,
+      "onlyB": 5,
+      "medianRatio": 0.25851935908093826,
+      "geoMeanRatio": 0.2549029531044347,
+      "bCheaper": 4
+    },
+    {
+      "a": "native-naive",
+      "b": "kopt-hits+read",
+      "nRun": 12,
+      "nBoth": 4,
+      "onlyA": 2,
+      "onlyB": 2,
+      "medianRatio": 0.05773207883276045,
+      "geoMeanRatio": 0.087513811332341,
+      "bCheaper": 4
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-hits+read",
+      "nRun": 12,
+      "nBoth": 2,
+      "onlyA": 2,
+      "onlyB": 4,
+      "medianRatio": 0.5758762034718765,
+      "geoMeanRatio": 0.38912317110552197,
+      "bCheaper": 1
+    },
+    {
+      "a": "kirograph",
+      "b": "kopt-pack",
+      "nRun": 12,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 9,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "codegraph",
+      "b": "kopt-pack",
+      "nRun": 12,
+      "nBoth": 4,
+      "onlyA": 1,
+      "onlyB": 5,
+      "medianRatio": 0.15963433645701358,
+      "geoMeanRatio": 0.1413555499211501,
+      "bCheaper": 4
+    },
+    {
+      "a": "kirograph",
+      "b": "kopt-hits+read",
+      "nRun": 12,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 6,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "codegraph",
+      "b": "kopt-hits+read",
+      "nRun": 12,
+      "nBoth": 3,
+      "onlyA": 2,
+      "onlyB": 3,
+      "medianRatio": 0.08501091438273102,
+      "geoMeanRatio": 0.1239133595833039,
+      "bCheaper": 3
+    },
+    {
+      "a": "native-ranged",
+      "b": "kirograph",
+      "nRun": 12,
+      "nBoth": 0,
+      "onlyA": 4,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-ranged",
+      "b": "codegraph",
+      "nRun": 12,
+      "nBoth": 3,
+      "onlyA": 1,
+      "onlyB": 2,
+      "medianRatio": 2.174321503131524,
+      "geoMeanRatio": 2.3495738649492997,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-naive",
+      "b": "native-ranged",
+      "nRun": 12,
+      "nBoth": 4,
+      "onlyA": 2,
+      "onlyB": 0,
+      "medianRatio": 0.36302779454680023,
+      "geoMeanRatio": 0.39809496083773865,
+      "bCheaper": 4
+    }
+  ],
+  "byKind": [
+    {
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tasks": 4,
+      "found": 1,
+      "medianTokens": 15837
+    },
+    {
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tasks": 4,
+      "found": 1,
+      "medianTokens": 5186
+    },
+    {
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tasks": 4,
+      "found": 3,
+      "medianTokens": 1318.5
+    },
+    {
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tasks": 4,
+      "found": 2,
+      "medianTokens": 1206
+    },
+    {
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tasks": 4,
+      "found": 0,
+      "medianTokens": 1286.5
+    },
+    {
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tasks": 4,
+      "found": 1,
+      "medianTokens": 8088
+    },
+    {
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tasks": 3,
+      "found": 0,
+      "medianTokens": 71442
+    },
+    {
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tasks": 3,
+      "found": 0,
+      "medianTokens": 21531
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tasks": 3,
+      "found": 1,
+      "medianTokens": 1269
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tasks": 3,
+      "found": 1,
+      "medianTokens": 2318
+    },
+    {
+      "kind": "explain",
+      "strategy": "kirograph",
+      "tasks": 3,
+      "found": 0,
+      "medianTokens": 937
+    },
+    {
+      "kind": "explain",
+      "strategy": "codegraph",
+      "tasks": 3,
+      "found": 1,
+      "medianTokens": 8305
+    },
+    {
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tasks": 3,
+      "found": 3,
+      "medianTokens": 18874
+    },
+    {
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tasks": 3,
+      "found": 1,
+      "medianTokens": 4757
+    },
+    {
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tasks": 3,
+      "found": 3,
+      "medianTokens": 1281
+    },
+    {
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tasks": 3,
+      "found": 3,
+      "medianTokens": 701
+    },
+    {
+      "kind": "usage",
+      "strategy": "kirograph",
+      "tasks": 3,
+      "found": 0,
+      "medianTokens": 1528
+    },
+    {
+      "kind": "usage",
+      "strategy": "codegraph",
+      "tasks": 3,
+      "found": 2,
+      "medianTokens": 8313
+    },
+    {
+      "kind": "impact",
+      "strategy": "native-naive",
+      "tasks": 2,
+      "found": 2,
+      "medianTokens": 17642.5
+    },
+    {
+      "kind": "impact",
+      "strategy": "native-ranged",
+      "tasks": 2,
+      "found": 2,
+      "medianTokens": 6539
+    },
+    {
+      "kind": "impact",
+      "strategy": "kopt-pack",
+      "tasks": 2,
+      "found": 2,
+      "medianTokens": 1235
+    },
+    {
+      "kind": "impact",
+      "strategy": "kopt-hits+read",
+      "tasks": 2,
+      "found": 0,
+      "medianTokens": 859.5
+    },
+    {
+      "kind": "impact",
+      "strategy": "kirograph",
+      "tasks": 2,
+      "found": 0,
+      "medianTokens": 1382
+    },
+    {
+      "kind": "impact",
+      "strategy": "codegraph",
+      "tasks": 2,
+      "found": 1,
+      "medianTokens": 8312
+    }
+  ]
+}

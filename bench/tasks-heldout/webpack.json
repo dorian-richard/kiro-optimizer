@@ -1,0 +1,61 @@
+{
+  "repo": {
+    "name": "webpack",
+    "url": "https://github.com/webpack/webpack.git",
+    "tag": "v5.111.1",
+    "commit": "5a106753839fd7e1b86138c3a5f6b348341147a7",
+    "language": "javascript",
+    "path": "bench/repos/webpack"
+  },
+  "notes": "Held-out tasks (round 2), written after v0.2's tuning and before any kopt measurement on them; not derived from bench/results/failures.md. Gold read in the code with git grep and sed only. Re-check with `kopt bench bench/tasks-heldout/webpack.json --verify`.",
+  "tasks": [
+    {
+      "id": "ho-wp-locate-ignore-plugin",
+      "kind": "locate",
+      "lang": "en",
+      "question": "Where does webpack decide that a module request is ignored when both resourceRegExp and contextRegExp are configured?",
+      "search": "ignore plugin resourceRegExp contextRegExp request ignored",
+      "gold": {
+        "files": [
+          "lib/IgnorePlugin.js"
+        ],
+        "symbols": [
+          {
+            "name": "checkIgnore",
+            "file": "lib/IgnorePlugin.js",
+            "line": 40,
+            "kind": "method"
+          }
+        ]
+      },
+      "verifiedBy": "Read lib/IgnorePlugin.js: checkIgnore tests resourceRegExp against the request and, when given, contextRegExp against the context; both must match."
+    },
+    {
+      "id": "ho-wp-explain-banner",
+      "kind": "explain",
+      "lang": "en",
+      "question": "How does the BannerPlugin turn the banner text into a comment at the top of the emitted files?",
+      "search": "banner plugin comment top of emitted files",
+      "gold": {
+        "files": [
+          "lib/BannerPlugin.js"
+        ],
+        "symbols": [
+          {
+            "name": "BannerPlugin",
+            "file": "lib/BannerPlugin.js",
+            "line": 50,
+            "kind": "class"
+          },
+          {
+            "name": "wrapComment",
+            "file": "lib/BannerPlugin.js",
+            "line": 32,
+            "kind": "function"
+          }
+        ]
+      },
+      "verifiedBy": "Read lib/BannerPlugin.js: the constructor turns the banner option into a function that wraps the text with wrapComment unless options.raw; apply() then adds it to the matching assets."
+    }
+  ]
+}

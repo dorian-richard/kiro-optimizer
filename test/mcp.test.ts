@@ -1,4 +1,4 @@
-import { mkdtempSync, rmSync, utimesSync, writeFileSync, mkdirSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync, utimesSync, writeFileSync, mkdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
@@ -11,7 +11,7 @@ import type { TelemetryEvent, ToolResult } from '../src/core/types.js';
 import { META } from '../src/store/schema.js';
 import { Store, symbolHandle } from '../src/store/store.js';
 import { createServer, type RepoHandle } from '../src/mcp/server.js';
-import { createAutoServer, fileUriToPath, LocalRepo, NO_PROJECT_MESSAGE } from '../src/mcp/local.js';
+import { createAutoServer, fileUriToPath, LocalRepo, NO_PROJECT_MESSAGE, retryDelayMs } from '../src/mcp/local.js';
 import { ListRootsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 import { execFileSync } from 'node:child_process';
 import { realpathSync } from 'node:fs';
@@ -20,7 +20,7 @@ import { pathToFileURL } from 'node:url';
 // Indexes of temp repos go to a temp cache, never the developer's real one.
 process.env.KOPT_CACHE_DIR = mkdtempSync(join(tmpdir(), 'kopt-mcp-cache-'));
 import { toolDefinitions, serverInstructions } from '../src/mcp/tools.js';
-import type { IndexerModule, IndexStats, Modules, RetrievalModule } from '../src/mcp/modules.js';
+import type { IndexerModule, IndexPhase, IndexStats, Modules, RetrievalModule } from '../src/mcp/modules.js';
 
 const REFUND_TS = `export interface Refund { id: string; amount: number }
 
@@ -101,31 +101,34 @@ afterAll(() => {
 });
 
 describe('tools/list', () => {
-  it('exposes exactly the 6 tools with short descriptions and tiny instructions', async () => {
+  it('lists 4 tools with one-line descriptions, the parameters of the common calls and no instructions', async () => {
     const client = await connect(createServer({ config, repo: staticRepo('r', config, store) }));
     const { tools } = await client.listTools();
-    expect(tools.map((t) => t.name)).toEqual(['kopt_find', 'kopt_read', 'kopt_outline', 'kopt_refs', 'kopt_run', 'kopt_expand']);
+    expect(tools.map((t) => t.name)).toEqual(['kopt_find', 'kopt_read', 'kopt_refs', 'kopt_run']);
     for (const t of tools) {
-      expect(t.description!.length).toBeLessThan(350);
-      expect(JSON.stringify(t.inputSchema)).not.toContain('$schema');
+      expect(t.description!.length).toBeLessThan(90);
+      expect(JSON.stringify(t.inputSchema)).not.toMatch(/\$schema|additionalProperties|required/);
       expect(t).not.toHaveProperty('title');
     }
+    expect(tools.map((t) => Object.keys((t.inputSchema as any).properties))).toEqual([['query', 'mode'], ['target', 'mode'], ['target'], ['command']]);
     expect(tools.find((t) => t.name === 'kopt_find')!.annotations).toEqual({ readOnlyHint: true });
     expect(tools.find((t) => t.name === 'kopt_run')!.annotations).toBeUndefined();
-    const instructions = client.getInstructions()!;
-    expect(instructions).toBe(serverInstructions());
-    expect(instructions.length).toBeLessThan(600);
-    expect(instructions).toContain('kopt_run');
-
-    const listJson = JSON.stringify({ tools });
-    expect(listJson).toBe(JSON.stringify({ tools: toolDefinitions() }));
-    // Re-billed on every model turn: keep an eye on it.
-    process.stderr.write(
-      `[size] tools/list: ${listJson.length} chars ~${estimateTokens(listJson)} tok; ` +
-        `instructions: ${instructions.length} chars ~${estimateTokens(instructions)} tok\n`,
-    );
-    expect(estimateTokens(listJson)).toBeLessThan(1100);
+    expect(client.getInstructions()).toBeUndefined();
+    expect(serverInstructions()).toBe('');
+    expect(JSON.stringify({ tools })).toBe(JSON.stringify({ tools: toolDefinitions() }));
     await client.close();
+  });
+
+  it("keeps kopt's fixed prompt (tool specs as Kiro sends them + always-on steering) within 350 tokens", () => {
+    // What every model request carries because kopt is installed: each listed tool as a model tool spec, under the
+    // name Kiro IDE gives MCP tools (mcp_<server>_<tool>; longer than Kiro CLI's), the server instructions and the
+    // always-on steering body (front matter is metadata). Tokens = chars / 3, the estimate kopt uses everywhere.
+    const specs = toolDefinitions().map((d) => JSON.stringify({ name: `mcp_kopt_${d.name}`, description: d.description, input_schema: d.inputSchema }));
+    const steering = readFileSync(join(__dirname, '..', 'templates', 'steering', 'kopt.md'), 'utf8').replace(/^---\n[\s\S]*?\n---\n/, '');
+    const chars = specs.join('').length + serverInstructions().length + steering.length;
+    process.stderr.write(`[size] fixed prompt: tools ${specs.join('').length} + instructions ${serverInstructions().length} + steering ${steering.length} = ${chars} chars ~${Math.ceil(chars / 3)} tok\n`);
+    expect(Math.ceil(chars / 3)).toBeLessThanOrEqual(350);
+    expect(steering.trim().split(/\s+/).length).toBeLessThanOrEqual(80);
   });
 });
 
@@ -192,6 +195,53 @@ describe('tools/call', () => {
     await client.close();
   });
 
+  it('passes the request cancellation signal to kopt_run', async () => {
+    let seen: AbortSignal | undefined;
+    const compress = {
+      runCommand: (_p: unknown, _ctx: ToolContext, opts?: { signal?: AbortSignal }) =>
+        new Promise<ToolResult>((res) => {
+          seen = opts?.signal;
+          opts?.signal?.addEventListener('abort', () => res({ text: 'exit 130 · cancelled', tokens: 5 }), { once: true });
+        }),
+      expand: () => ({ text: '', tokens: 0 }),
+    };
+    const client = await connect(createServer({ config, repo: staticRepo('r', config, store), modules: { compress: async () => compress }, emit: () => {} }));
+    const ac = new AbortController();
+    const call = client.callTool({ name: 'kopt_run', arguments: { command: 'mvn test' } }, undefined, { signal: ac.signal }).catch((e: Error) => e);
+    for (let i = 0; i < 50 && !seen; i++) await new Promise((r) => setTimeout(r, 10));
+    expect(seen).toBeInstanceOf(AbortSignal);
+    expect(seen!.aborted).toBe(false);
+    ac.abort();
+    expect(await call).toBeInstanceOf(Error);
+    for (let i = 0; i < 50 && !seen!.aborted; i++) await new Promise((r) => setTimeout(r, 10));
+    expect(seen!.aborted).toBe(true);
+    await client.close();
+  });
+
+  it('appends the source context of a failing kopt_run when the index is ready, not of a passing or cached one', async () => {
+    const results: ToolResult[] = [
+      { text: 'exit 1 · raw ~900 tok\nFAIL a > b\n  ❯ test/a.test.ts:12:3', tokens: 12, meta: { exitCode: 1 } },
+      { text: 'exit 0\nok', tokens: 3, meta: { exitCode: 0 } },
+      { text: 'exit 1 · same as run o1', tokens: 6, meta: { exitCode: 1, cached: true } },
+    ];
+    const compress = { runCommand: async () => results.shift()!, expand: () => ({ text: '', tokens: 0 }) };
+    const seen: string[] = [];
+    const retrieval = { ...fakeRetrieval(), failureContext: (_s: Store, out: string, max: number) => (seen.push(out), max >= 100 ? 'source (kopt index):\n  at src/a.ts:3 in #1 a (def L1)' : undefined) };
+    const repo: RepoHandle = { ...staticRepo('r', config, store), peek: () => store };
+    const client = await connect(createServer({ config, repo, modules: { compress: async () => compress, retrieval: async () => retrieval }, emit: () => {} }));
+    const call = async () => ((await client.callTool({ name: 'kopt_run', arguments: { command: 'npm test' } })).content as Array<{ text: string }>)[0].text;
+    expect(await call()).toBe('exit 1 · raw ~900 tok\nFAIL a > b\n  ❯ test/a.test.ts:12:3\nsource (kopt index):\n  at src/a.ts:3 in #1 a (def L1)');
+    expect(await call()).toBe('exit 0\nok');
+    expect(await call()).toBe('exit 1 · same as run o1');
+    expect(seen).toHaveLength(1);
+    // without a ready index (peek undefined) the run answers alone
+    results.push({ text: 'exit 1\nboom', tokens: 3, meta: { exitCode: 1 } });
+    const bare = await connect(createServer({ config, repo: staticRepo('r', config, store), modules: { compress: async () => compress, retrieval: async () => retrieval }, emit: () => {} }));
+    expect(((await bare.callTool({ name: 'kopt_run', arguments: { command: 'npm test' } })).content as Array<{ text: string }>)[0].text).toBe('exit 1\nboom');
+    await client.close();
+    await bare.close();
+  });
+
   it('gives each session its own ToolContext (per-session dedup ledger)', async () => {
     const calls = { ctx: [] as ToolContext[] };
     const retrieval = fakeRetrieval(calls);
@@ -235,7 +285,7 @@ describe('LocalRepo lifecycle', () => {
     const cfg = defaultConfig(root);
     const counts = { build: 0, refresh: 0 };
     const repo = new LocalRepo(cfg, { modules: { indexer: fakeIndexer({ buildMs: 300, counts }) } as Partial<Modules>, buildWaitMs: 50, log: () => {} });
-    expect(await repo.acquire()).toBe('index building: 3/10 files – retry shortly');
+    expect(await repo.acquire()).toBe('index building: 3/10 files parsed – use built-in search/read tools until then');
     await new Promise((r) => setTimeout(r, 400));
     const s = await repo.acquire();
     expect(s).toBeInstanceOf(Store);
@@ -275,15 +325,103 @@ describe('LocalRepo lifecycle', () => {
     rmSync(root, { recursive: true, force: true });
   });
 
-  it('reports a failed build in one line', async () => {
+  it('reports a failed build in one line, records it for kopt doctor, and does not retry on every call', async () => {
     const root = mkdtempSync(join(tmpdir(), 'kopt-local-'));
     const cfg = defaultConfig(root);
+    let attempts = 0;
     const repo = new LocalRepo(cfg, {
-      modules: { indexer: async () => ({ indexRepo: async () => { throw new Error('parser exploded'); }, refreshIndex: async () => { throw new Error('x'); } }) } as Partial<Modules>,
+      modules: { indexer: async () => ({ indexRepo: async () => { attempts++; throw new Error('parser exploded'); }, refreshIndex: async () => { throw new Error('x'); } }) } as Partial<Modules>,
       log: () => {},
     });
     const msg = await repo.acquire();
     expect(msg).toMatch(/^index unavailable: parser exploded – run 'kopt index'/);
+    expect(await repo.acquire()).toBe(msg);
+    expect(attempts).toBe(1);
+    expect(JSON.parse(readFileSync(join(cfg.dataDir, 'last-error.json'), 'utf8'))).toMatchObject({ message: 'parser exploded', attempts: 1 });
+    expect([1, 2, 3, 6, 9].map(retryDelayMs)).toEqual([60_000, 120_000, 240_000, 1_800_000, 1_800_000]);
+    repo.close();
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  /** An indexer whose build goes through `phases`, each held `stepMs`, reporting through onPhase. */
+  function phasedIndexer(phases: IndexPhase[], stepMs: number): () => Promise<IndexerModule> {
+    const stats: IndexStats = { filesSeen: 1, filesIndexed: 1, filesUnchanged: 0, filesDeleted: 0, symbols: 2, refs: 0, durationMs: 1 };
+    return async () => ({
+      async indexRepo(s, opts) {
+        for (const p of phases) {
+          opts.onPhase?.(p);
+          await new Promise((r) => setTimeout(r, stepMs));
+        }
+        s.setMeta(META.indexedAt, String(Date.now()));
+        return stats;
+      },
+      async refreshIndex() {
+        return stats;
+      },
+    });
+  }
+
+  it('serves search, read and outline once symbols are written, before references are resolved', async () => {
+    const root = mkdtempSync(join(tmpdir(), 'kopt-local-'));
+    const cfg = defaultConfig(root);
+    const repo = new LocalRepo(cfg, {
+      modules: { indexer: phasedIndexer([{ phase: 'parse', done: 10, total: 10 }, { phase: 'resolve', done: 0, total: 1000 }, { phase: 'resolve', done: 400, total: 1000 }], 300) } as Partial<Modules>,
+      buildWaitMs: 100,
+      log: () => {},
+    });
+    repo.start();
+    await new Promise((r) => setTimeout(r, 400));
+    const t0 = Date.now();
+    expect(await repo.acquire('kopt_find')).toBeInstanceOf(Store);
+    expect(await repo.acquire('kopt_outline')).toBeInstanceOf(Store);
+    expect(Date.now() - t0).toBeLessThan(200);
+    const refs = await repo.acquire('kopt_refs');
+    expect(refs).toMatch(/^kopt_refs: references are being resolved \(\d+\/1000.*\) – kopt_find and kopt_read already answer$/);
+    await new Promise((r) => setTimeout(r, 700));
+    expect(await repo.acquire('kopt_refs')).toBeInstanceOf(Store);
+    repo.close();
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  it('answers at once with an estimate when the build will take longer than a call may wait', async () => {
+    const root = mkdtempSync(join(tmpdir(), 'kopt-local-'));
+    const cfg = defaultConfig(root);
+    const repo = new LocalRepo(cfg, {
+      modules: { indexer: phasedIndexer([{ phase: 'parse', done: 1, total: 20_000 }, { phase: 'parse', done: 10, total: 20_000 }, { phase: 'parse', done: 20, total: 20_000 }], 1_200) } as Partial<Modules>,
+      log: () => {},
+    });
+    const t0 = Date.now();
+    const msg = await repo.acquire('kopt_find');
+    // two 1.2 s progress steps, far from the 15 s buildWaitMs; Windows runners add seconds to the first store open
+    expect(Date.now() - t0).toBeLessThan(process.platform === 'win32' ? 7_500 : 2_600);
+    expect(msg).toMatch(/^index building: \d+\/20000 files parsed, ~\d+ min left – use built-in search\/read tools until then$/);
+    repo.close();
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  it('runs the full freshness check only when git state moved (or every fullRefreshIntervalMs)', async () => {
+    const root = realpathSync(mkdtempSync(join(tmpdir(), 'kopt-local-git-')));
+    execFileSync('git', ['init', '-q'], { cwd: root });
+    execFileSync('git', ['-c', 'user.email=t@t', '-c', 'user.name=t', 'commit', '-q', '--allow-empty', '-m', 'one'], { cwd: root });
+    const cfg = defaultConfig(root);
+    seedStore(indexPath(cfg));
+    const counts = { build: 0, refresh: 0, paths: [] as (string[] | undefined)[] };
+    const repo = new LocalRepo(cfg, {
+      modules: { indexer: fakeIndexer({ counts }) } as Partial<Modules>,
+      refreshIntervalMs: 50,
+      fullRefreshIntervalMs: 60_000,
+      log: () => {},
+    });
+    await repo.acquire(); // start-up catch-up: full
+    expect(counts.paths).toEqual([undefined]);
+    await new Promise((r) => setTimeout(r, 120));
+    await repo.acquire(); // interval due, git state unchanged: nothing
+    expect(counts.refresh).toBe(1);
+    execFileSync('git', ['-c', 'user.email=t@t', '-c', 'user.name=t', 'commit', '-q', '--allow-empty', '-m', 'two'], { cwd: root });
+    await new Promise((r) => setTimeout(r, 120));
+    await repo.acquire(); // HEAD moved: full check
+    await new Promise((r) => setTimeout(r, 20));
+    expect(counts.paths).toEqual([undefined, undefined]);
     repo.close();
     rmSync(root, { recursive: true, force: true });
   });

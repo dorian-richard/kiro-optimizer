@@ -6,6 +6,32 @@ import { dedent, isFrameLine, isLibraryFrame, layout, trimStack, type Block, typ
 
 const MAX_MESSAGE_LINES = 18;
 
+/** `AssertionError: [custom message: ]expected '…' to be '…' // Object.is equality`: values cut by the runner. */
+const CUT_ASSERTION_RE = /^(\w*(?:Error|Exception)): (?:(.+?): )?expected .*….* (?:to|not to) .*$/;
+/** The full values follow: `Expected: …` / `Received: …`, or a `- Expected` / `+ Received` diff. */
+const FULL_VALUES_RE = /^(?:Expected|Received|- Expected|\+ Received|- Snapshot|\+ Received)\b/;
+
+/**
+ * Drops what the failure says twice: the assertion line whose values the runner cut (`expected { handle: 'o1…',
+ * …(12) } to match object { … }`) when the full values or a diff follow, keeping a custom message (`.env:`), and
+ * vitest's `(10 matching properties omitted from actual)`.
+ */
+function compactMessage(msg: string[]): string[] {
+  const full = msg.some((l) => FULL_VALUES_RE.test(l.trim()));
+  const out: string[] = [];
+  for (const l of msg) {
+    const t = l.trim();
+    if (/^\(\d+ matching propert(?:y|ies) omitted from (?:actual|expected)\)$/.test(t)) continue;
+    const cut = full ? CUT_ASSERTION_RE.exec(t) : null;
+    if (cut) {
+      if (cut[2]) out.push(`${cut[1]}: ${cut[2]}`);
+      continue;
+    }
+    out.push(l);
+  }
+  return out.length ? out : msg;
+}
+
 /** Message lines + `> failing line` + trimmed frames from a jest/vitest failure body. */
 function digestBody(body: string[], frameRe?: RegExp): { lines: string[]; key: string } {
   const lines = dedent(body);
@@ -37,7 +63,8 @@ function digestBody(body: string[], frameRe?: RegExp): { lines: string[]; key: s
     }
     msg.push(l);
   }
-  const keptMsg = msg.length > MAX_MESSAGE_LINES ? [...msg.slice(0, MAX_MESSAGE_LINES), `… ${msg.length - MAX_MESSAGE_LINES} more lines`] : msg;
+  const compact = compactMessage(msg);
+  const keptMsg = compact.length > MAX_MESSAGE_LINES ? [...compact.slice(0, MAX_MESSAGE_LINES), `… ${compact.length - MAX_MESSAGE_LINES} more lines`] : compact;
   let keptFrames: string[];
   if (frameRe) {
     const repo = frames.filter((f) => !/node_modules|node:|\(internal\//.test(f));

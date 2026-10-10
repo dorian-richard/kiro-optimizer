@@ -34,7 +34,7 @@ const LANGS: Record<Lang, LangDef> = {
 };
 
 /** Parsing budget per file: pathological inputs must not stall a whole indexing run. */
-const PARSE_TIMEOUT_MS = 5000;
+export const PARSE_TIMEOUT_MS = 5000;
 
 export function countLines(text: string): number {
   if (!text) return 0;
@@ -46,29 +46,44 @@ export function countLines(text: string): number {
 /** Extraction from an already-parsed tree (exposed for tests/tools that keep their own trees). */
 export function extractTree(path: string, lang: Lang, text: string, root: Node, options?: ExtractOptions): IxFile {
   const def = LANGS[lang];
-  const ex = new Ex(path, lang, text, options);
-  ex.visit = def.visit;
+  const ex = new Ex(path, lang, text, options, def.visit);
   const scope: Scope = { q: '', local: false, exported: true, vars: new Vars() };
   def.init?.(ex, scope, root);
   ex.visitChildren(root, scope);
+  ex.drain();
   def.post?.(ex);
   return ex.finish(countLines(text));
 }
 
 export async function extractFile(path: string, text: string, options?: ExtractOptions): Promise<IxFile | undefined> {
+  const r = await extractFileWithin(path, text, PARSE_TIMEOUT_MS, options);
+  return r === 'timeout' ? undefined : r;
+}
+
+/**
+ * extractFile with an explicit parsing budget; 'timeout' when the parser gave up (the deadline is wall-clock
+ * time, so a machine under heavy load can hit it on an ordinary file: the indexer retries those).
+ */
+export async function extractFileWithin(path: string, text: string, timeoutMs: number, options?: ExtractOptions): Promise<IxFile | undefined | 'timeout'> {
   const lang = languageForPath(path);
   if (!lang) return undefined;
   const parser = await parserFor(lang);
-  const deadline = performance.now() + PARSE_TIMEOUT_MS;
+  const deadline = performance.now() + timeoutMs;
+  let timedOut = false;
   let tree: Tree | null = null;
   try {
-    tree = parser.parse(text, null, { progressCallback: () => performance.now() > deadline });
+    tree = parser.parse(text, null, {
+      progressCallback: () => {
+        if (performance.now() > deadline) timedOut = true;
+        return timedOut;
+      },
+    });
   } catch {
     tree = null;
   }
   if (!tree) {
     parser.reset();
-    return undefined;
+    return timedOut ? 'timeout' : undefined;
   }
   try {
     return extractTree(path, lang, text, tree.rootNode, options);

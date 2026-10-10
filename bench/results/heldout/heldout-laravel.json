@@ -1,0 +1,765 @@
+{
+  "meta": {
+    "label": "heldout-laravel",
+    "repo": {
+      "name": "laravel",
+      "url": "https://github.com/laravel/framework.git",
+      "tag": "v13.35.0",
+      "commit": "a413a9da94884e5e9d58f4e6612884f712827804",
+      "language": "php",
+      "path": "bench/repos/laravel"
+    },
+    "repoRoot": "bench/repos/laravel",
+    "headCommit": "a413a9da94884e5e9d58f4e6612884f712827804",
+    "date": "2026-10-09T20:18:12.198Z",
+    "input": "search",
+    "charsPerToken": 3,
+    "strategies": [
+      "native-naive",
+      "native-ranged",
+      "kopt-pack",
+      "kopt-hits+read",
+      "kirograph",
+      "codegraph"
+    ],
+    "grepLimits": {
+      "maxMatches": 100,
+      "maxChars": 10000,
+      "maxLineChars": 250
+    },
+    "readLimits": {
+      "naiveTopFiles": 3,
+      "naiveMaxLines": 2000,
+      "rangedMatches": 4,
+      "rangedContext": 60
+    },
+    "koptBudgets": {
+      "find": 700,
+      "pack": 2500,
+      "read": 3000
+    },
+    "index": {
+      "built": false,
+      "durationMs": 0,
+      "files": 3114,
+      "symbols": 40979,
+      "path": "<index-dir>/.kopt-laravel/index.db"
+    },
+    "notes": [
+      "kirograph: outputs loaded from bench/competitors/results/kirograph-laravel.jsonl",
+      "codegraph: outputs loaded from bench/competitors/results/codegraph-laravel.jsonl"
+    ],
+    "durationMs": 1001
+  },
+  "results": [
+    {
+      "taskId": "ho-lv-explain-job-backoff",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 26048,
+      "chars": 78142,
+      "toolCalls": 4,
+      "durationMs": 471,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "backoff",
+          "chars": 9953,
+          "tokens": 3318
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Redis/Connectors/PhpRedisConnector.php",
+          "chars": 12785,
+          "tokens": 4262
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Queue/Queue.php",
+          "chars": 16893,
+          "tokens": 5631
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Queue/Worker.php",
+          "chars": 38511,
+          "tokens": 12837
+        }
+      ]
+    },
+    {
+      "taskId": "ho-lv-explain-job-backoff",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 7376,
+      "chars": 22124,
+      "toolCalls": 5,
+      "durationMs": 1,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "handleJobException"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "backoff",
+          "chars": 9953,
+          "tokens": 3318
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Mail/SendQueuedMailable.php:37-155",
+          "chars": 3053,
+          "tokens": 1018
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Queue/Queue.php:193-313",
+          "chars": 3170,
+          "tokens": 1057
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Queue/Worker.php:809-929",
+          "chars": 3674,
+          "tokens": 1225
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Redis/Connectors/PhpRedisConnector.php:304-381",
+          "chars": 2274,
+          "tokens": 758
+        }
+      ]
+    },
+    {
+      "taskId": "ho-lv-explain-job-backoff",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 1224,
+      "chars": 3670,
+      "toolCalls": 1,
+      "durationMs": 125,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "handleJobException"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"queued job failed released delay next attempt backoff worker\"",
+          "chars": 3670,
+          "tokens": 1224
+        }
+      ]
+    },
+    {
+      "taskId": "ho-lv-explain-job-backoff",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 791,
+      "chars": 2372,
+      "toolCalls": 3,
+      "durationMs": 38,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "handleJobException"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"queued job failed released delay next attempt backoff worker\"",
+          "chars": 2055,
+          "tokens": 685
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#9zc",
+          "chars": 186,
+          "tokens": 62
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#a89",
+          "chars": 131,
+          "tokens": 44
+        }
+      ]
+    },
+    {
+      "taskId": "ho-lv-explain-job-backoff",
+      "kind": "explain",
+      "strategy": "kirograph",
+      "skipped": "no kirograph result line for this task",
+      "tokens": 0,
+      "chars": 0,
+      "toolCalls": 0,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "src/Illuminate/Queue/Worker.php"
+        ],
+        "symbolsMissed": [
+          "calculateBackoff",
+          "handleJobException"
+        ],
+        "found": false
+      },
+      "calls": []
+    },
+    {
+      "taskId": "ho-lv-explain-job-backoff",
+      "kind": "explain",
+      "strategy": "codegraph",
+      "skipped": "no codegraph result line for this task",
+      "tokens": 0,
+      "chars": 0,
+      "toolCalls": 0,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "src/Illuminate/Queue/Worker.php"
+        ],
+        "symbolsMissed": [
+          "calculateBackoff",
+          "handleJobException"
+        ],
+        "found": false
+      },
+      "calls": []
+    },
+    {
+      "taskId": "ho-lv-locate-signed-url",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 14602,
+      "chars": 43803,
+      "toolCalls": 4,
+      "durationMs": 251,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "src/Illuminate/Routing/UrlGenerator.php"
+        ],
+        "symbolsMissed": [
+          "hasValidSignature",
+          "hasCorrectSignature",
+          "signatureHasNotExpired"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "verify",
+          "chars": 10016,
+          "tokens": 3339
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/Redis/PhpRedisConnectorTest.php",
+          "chars": 24566,
+          "tokens": 8189
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Auth/Notifications/VerifyEmail.php",
+          "chars": 3330,
+          "tokens": 1110
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Hashing/ArgonHasher.php",
+          "chars": 5891,
+          "tokens": 1964
+        }
+      ]
+    },
+    {
+      "taskId": "ho-lv-locate-signed-url",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 6298,
+      "chars": 18891,
+      "toolCalls": 4,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "src/Illuminate/Routing/UrlGenerator.php"
+        ],
+        "symbolsMissed": [
+          "hasValidSignature",
+          "hasCorrectSignature",
+          "signatureHasNotExpired"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "verify",
+          "chars": 10016,
+          "tokens": 3339
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Auth/Notifications/VerifyEmail.php:1-72",
+          "chars": 2094,
+          "tokens": 698
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Hashing/ArgonHasher.php:1-190",
+          "chars": 4641,
+          "tokens": 1547
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Illuminate/Hashing/BcryptHasher.php:1-84",
+          "chars": 2140,
+          "tokens": 714
+        }
+      ]
+    },
+    {
+      "taskId": "ho-lv-locate-signed-url",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1322,
+      "chars": 3965,
+      "toolCalls": 1,
+      "durationMs": 35,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"signed url signature verify expiration\"",
+          "chars": 3965,
+          "tokens": 1322
+        }
+      ]
+    },
+    {
+      "taskId": "ho-lv-locate-signed-url",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 1032,
+      "chars": 3092,
+      "toolCalls": 3,
+      "durationMs": 26,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"signed url signature verify expiration\"",
+          "chars": 2041,
+          "tokens": 681
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#dv8",
+          "chars": 747,
+          "tokens": 249
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#dvb",
+          "chars": 304,
+          "tokens": 102
+        }
+      ]
+    },
+    {
+      "taskId": "ho-lv-locate-signed-url",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "skipped": "no kirograph result line for this task",
+      "tokens": 0,
+      "chars": 0,
+      "toolCalls": 0,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "src/Illuminate/Routing/UrlGenerator.php"
+        ],
+        "symbolsMissed": [
+          "hasValidSignature",
+          "hasCorrectSignature",
+          "signatureHasNotExpired"
+        ],
+        "found": false
+      },
+      "calls": []
+    },
+    {
+      "taskId": "ho-lv-locate-signed-url",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "skipped": "no codegraph result line for this task",
+      "tokens": 0,
+      "chars": 0,
+      "toolCalls": 0,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "src/Illuminate/Routing/UrlGenerator.php"
+        ],
+        "symbolsMissed": [
+          "hasValidSignature",
+          "hasCorrectSignature",
+          "signatureHasNotExpired"
+        ],
+        "found": false
+      },
+      "calls": []
+    }
+  ],
+  "aggregates": [
+    {
+      "strategy": "native-naive",
+      "tasks": 2,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 20325,
+      "meanTokens": 20325,
+      "p90Tokens": 26048,
+      "totalTokens": 40650,
+      "totalChars": 121945,
+      "meanToolCalls": 4,
+      "meanFileRecall": 0.5,
+      "meanSymbolRecall": 0.5,
+      "meanDefRecall": 0.5,
+      "found": 1,
+      "foundRate": 0.5,
+      "tokensPerFound": 40650
+    },
+    {
+      "strategy": "native-ranged",
+      "tasks": 2,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 6837,
+      "meanTokens": 6837,
+      "p90Tokens": 7376,
+      "totalTokens": 13674,
+      "totalChars": 41015,
+      "meanToolCalls": 4.5,
+      "meanFileRecall": 0.5,
+      "meanSymbolRecall": 0.25,
+      "meanDefRecall": 0.25,
+      "found": 0,
+      "foundRate": 0,
+      "tokensPerFound": null
+    },
+    {
+      "strategy": "kopt-pack",
+      "tasks": 2,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 1273,
+      "meanTokens": 1273,
+      "p90Tokens": 1322,
+      "totalTokens": 2546,
+      "totalChars": 7635,
+      "meanToolCalls": 1,
+      "meanFileRecall": 1,
+      "meanSymbolRecall": 0.75,
+      "meanDefRecall": 0.5,
+      "found": 1,
+      "foundRate": 0.5,
+      "tokensPerFound": 2546
+    },
+    {
+      "strategy": "kopt-hits+read",
+      "tasks": 2,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 911.5,
+      "meanTokens": 912,
+      "p90Tokens": 1032,
+      "totalTokens": 1823,
+      "totalChars": 5464,
+      "meanToolCalls": 3,
+      "meanFileRecall": 1,
+      "meanSymbolRecall": 0.75,
+      "meanDefRecall": 0.3333333333333333,
+      "found": 1,
+      "foundRate": 0.5,
+      "tokensPerFound": 1823
+    },
+    {
+      "strategy": "kirograph",
+      "tasks": 0,
+      "skipped": 2,
+      "errors": 0,
+      "medianTokens": 0,
+      "meanTokens": 0,
+      "p90Tokens": 0,
+      "totalTokens": 0,
+      "totalChars": 0,
+      "meanToolCalls": 0,
+      "meanFileRecall": 0,
+      "meanSymbolRecall": 0,
+      "meanDefRecall": 0,
+      "found": 0,
+      "foundRate": 0,
+      "tokensPerFound": null
+    },
+    {
+      "strategy": "codegraph",
+      "tasks": 0,
+      "skipped": 2,
+      "errors": 0,
+      "medianTokens": 0,
+      "meanTokens": 0,
+      "p90Tokens": 0,
+      "totalTokens": 0,
+      "totalChars": 0,
+      "meanToolCalls": 0,
+      "meanFileRecall": 0,
+      "meanSymbolRecall": 0,
+      "meanDefRecall": 0,
+      "found": 0,
+      "foundRate": 0,
+      "tokensPerFound": null
+    }
+  ],
+  "paired": [
+    {
+      "a": "native-naive",
+      "b": "kopt-pack",
+      "nRun": 2,
+      "nBoth": 0,
+      "onlyA": 1,
+      "onlyB": 1,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-pack",
+      "nRun": 2,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 1,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-naive",
+      "b": "kopt-hits+read",
+      "nRun": 2,
+      "nBoth": 0,
+      "onlyA": 1,
+      "onlyB": 1,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-hits+read",
+      "nRun": 2,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 1,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "kirograph",
+      "b": "kopt-pack",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "codegraph",
+      "b": "kopt-pack",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "kirograph",
+      "b": "kopt-hits+read",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "codegraph",
+      "b": "kopt-hits+read",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-ranged",
+      "b": "kirograph",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-ranged",
+      "b": "codegraph",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-naive",
+      "b": "native-ranged",
+      "nRun": 2,
+      "nBoth": 0,
+      "onlyA": 1,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    }
+  ],
+  "byKind": [
+    {
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 14602
+    },
+    {
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 6298
+    },
+    {
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tasks": 1,
+      "found": 1,
+      "medianTokens": 1322
+    },
+    {
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tasks": 1,
+      "found": 1,
+      "medianTokens": 1032
+    },
+    {
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tasks": 1,
+      "found": 1,
+      "medianTokens": 26048
+    },
+    {
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 7376
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 1224
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 791
+    }
+  ]
+}

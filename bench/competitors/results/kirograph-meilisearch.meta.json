@@ -1,0 +1,118 @@
+{
+  "label": "kirograph",
+  "tool": "kirograph",
+  "package": "kirograph",
+  "version": "1.4.0",
+  "mode": "default",
+  "repo": {
+    "name": "meilisearch",
+    "url": "https://github.com/meilisearch/meilisearch.git",
+    "tag": "v1.54.3",
+    "commit": "7ebd97e38c36882b0c78d79e433b9115b4f003b3",
+    "language": "rust",
+    "path": "bench/repos/meilisearch"
+  },
+  "headCommit": "7ebd97e38c36882b0c78d79e433b9115b4f003b3",
+  "commitMatchesTasks": true,
+  "date": "2026-10-09T14:08:17.741Z",
+  "image": "kopt-bench/kirograph:1.4.0",
+  "imageId": "sha256:bc769b34b739a6d6b3ed1f2954ed9df3e387e6c6dcfc597528ca16d232dac57e",
+  "engine": "docker",
+  "limits": "memory=3g cpus=8",
+  "cgroupMemory": {
+    "maxBytes": 3221225472,
+    "peakBytes": 908435456,
+    "oomKills": 0
+  },
+  "container": {
+    "node": "v22.23.3",
+    "arch": "arm64",
+    "platform": "linux",
+    "cpus": 10,
+    "memBytes": 8214851584,
+    "network": "none"
+  },
+  "primaryTool": "kirograph_context",
+  "toolArgsExample": {
+    "task": "<input>"
+  },
+  "serverCommand": {
+    "command": "kirograph",
+    "args": [
+      "serve",
+      "--mcp",
+      "--path",
+      "/work/<repo>"
+    ]
+  },
+  "oneSessionPerTask": true,
+  "indexOk": true,
+  "indexMs": 93877,
+  "indexSteps": [
+    {
+      "command": "kirograph init /work/meilisearch",
+      "ms": 441,
+      "exit": 0,
+      "signal": null,
+      "oomKills": 0
+    },
+    {
+      "command": "kirograph index /work/meilisearch",
+      "ms": 93436,
+      "exit": 0,
+      "signal": null,
+      "oomKills": 0
+    }
+  ],
+  "copyMs": 3064,
+  "indexDirs": [
+    "<repo>/.kirograph"
+  ],
+  "indexSizeBytes": 67129176,
+  "modelBytes": 0,
+  "indexStatus": "Graph\n  Files      731\n  Symbols    34751\n  Edges      88684\n  Frameworks express, rust\n\n  By kind\n  ┌────────────┬──────────────────┐\n  │ variable   │ 16609            │\n  ├────────────┼──────────────────┤\n  │ function   │ 7382             │\n  ├────────────┼──────────────────┤\n  │ import     │ 6444             │\n  ├────────────┼──────────────────┤\n  │ struct     │ 1466             │\n  ├────────────┼──────────────────┤\n  │ class      │ 1341             │\n  ├────────────┼──────────────────┤\n  │ enum       │ 515              │\n  ├────────────┼──────────────────┤\n  │ constant   │ 490              │\n  ├────────────┼──────────────────┤\n  │ type_alias │ 445              │\n  ├────────────┼──────────────────┤\n  │ trait      │ 59               │\n  └────────────┴──────────────────┘\n\n  By language\n  ┌──────┬──────────────────┐\n  │ rust │ 718              │\n  ├──────┼──────────────────┤\n  │ yaml │ 13               │\n  └──────┴──────────────────┘\n\n  Sync\n  Status     idle\n  Pending    10 files pending\n  ⚠ Index may be stale. Run `kirograph sync` to update.\n\n  Semantic Search\n  Status     disabled",
+  "surface": {
+    "serverInfo": {
+      "name": "kirograph",
+      "version": "0.1.0"
+    },
+    "toolCount": 7,
+    "toolNames": [
+      "kirograph_search",
+      "kirograph_context",
+      "kirograph_node",
+      "kirograph_gain",
+      "kirograph_read",
+      "kirograph_retrieve",
+      "kirograph_budget"
+    ],
+    "toolsChars": 4418,
+    "toolsEstTokens": 1473,
+    "instructionsChars": 0,
+    "instructionsEstTokens": 0,
+    "primaryToolListed": true,
+    "file": "kirograph.surface.json"
+  },
+  "inputs": {
+    "search": {
+      "file": "kirograph-meilisearch.jsonl",
+      "tasks": 12,
+      "failures": 0,
+      "queryMsMedian": 44,
+      "queryMsP90": 48,
+      "startupMsMedian": 160
+    },
+    "question": {
+      "file": "kirograph-meilisearch-question.jsonl",
+      "tasks": 12,
+      "failures": 6,
+      "queryMsMedian": 31,
+      "queryMsP90": 57,
+      "startupMsMedian": 171
+    }
+  },
+  "charsPerToken": 3,
+  "errors": [
+    "6/12 question queries failed or returned isError"
+  ]
+}

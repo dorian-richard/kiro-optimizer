@@ -1,0 +1,21 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  Shop.Domain -> /home/dev/shop/src/Shop.Domain/bin/Debug/net8.0/Shop.Domain.dll
+  Shop.Infrastructure -> /home/dev/shop/src/Shop.Infrastructure/bin/Debug/net8.0/Shop.Infrastructure.dll
+  Shop.Api -> /home/dev/shop/src/Shop.Api/bin/Debug/net8.0/Shop.Api.dll
+  Shop.Tests -> /home/dev/shop/src/Shop.Tests/bin/Debug/net8.0/Shop.Tests.dll
+Running tests from /home/dev/shop/tests/Shop.Tests/bin/Debug/net8.0/Shop.Tests.dll (net8.0|x64)
+failed Shop.Tests.CartTests.Total_WithDiscount (12ms)
+  Assert.Equal() Failure: Values differ
+  Expected: 90
+  Actual:   100
+    at Shop.Tests.CartTests.Total_WithDiscount() in /home/dev/shop/tests/Shop.Tests/CartTests.cs:28
+    at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+/home/dev/shop/tests/Shop.Tests/bin/Debug/net8.0/Shop.Tests.dll (net8.0|x64) failed with 1 error(s) (3s 481ms)
+
+Test run summary: Failed! - /home/dev/shop/tests/Shop.Tests/bin/Debug/net8.0/Shop.Tests.dll (net8.0|x64)
+  total: 412
+  failed: 1
+  succeeded: 410
+  skipped: 1
+  duration: 3s 481ms

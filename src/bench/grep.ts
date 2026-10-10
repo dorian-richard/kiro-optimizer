@@ -106,8 +106,8 @@ interface RawMatch {
 }
 
 /**
- * Case-insensitive search for any of `keywords` (text files only, .gitignore respected). With `onlyMatching`
- * each occurrence is returned (text = the matched keyword) instead of the whole line.
+ * Case-insensitive search for any of `keywords` (text files only, .gitignore respected), whole matching lines.
+ * With `onlyMatching` each occurrence is returned instead (text = the matched keyword).
  */
 function search(root: string, keywords: string[], onlyMatching: boolean, paths: string[] = []): RawMatch[] {
   const pats = keywords.flatMap((k) => ['-e', escapeRegex(k)]);
@@ -130,6 +130,28 @@ function search(root: string, keywords: string[], onlyMatching: boolean, paths: 
 }
 
 /**
+ * Matching lines per file for ONE keyword (case-insensitive, text files only, .gitignore respected): what an agent
+ * grepping that keyword alone would get. `git grep -c` / `rg -c` only print counts, which keeps the pass cheap on
+ * large repos where generic words match millions of times.
+ */
+function countLines(root: string, keywords: string[], paths: string[] = []): Map<string, number> {
+  const pats = keywords.flatMap((k) => ['-e', escapeRegex(k)]);
+  const git = existsSync(join(root, '.git'));
+  const stdout = git
+    ? run('git', ['-c', 'core.quotePath=false', 'grep', '-c', '-z', '-I', '-i', '-E', ...pats, '--', ...paths], root)
+    : run('rg', ['-c', '-i', '--null', '--no-messages', ...pats, '--', ...(paths.length ? paths : ['.'])], root);
+  const out = new Map<string, number>();
+  for (const raw of stdout.split('\n')) {
+    const a = raw.indexOf('\0');
+    if (a <= 0) continue;
+    // git: "path\0count"; rg --null: "path\0count"
+    const n = Number(raw.slice(a + 1).replace(/^:/, ''));
+    if (n > 0) out.set(raw.slice(0, a).replace(/^\.\//, ''), n);
+  }
+  return out;
+}
+
+/**
  * One emulated grep_search call for the given search keywords, capped like Kiro.
  * Never throws on "no match"; throws when neither git nor rg can search `root`.
  */
@@ -140,17 +162,10 @@ export function nativeGrep(root: string, keywords: string[], limits: GrepLimits 
   });
   if (!kws.length) return none([]);
 
-  // One pass over the repo: matching lines per keyword per file.
-  const lower = kws.map((k) => k.toLowerCase());
-  const perKw = lower.map(() => new Map<string, Set<number>>());
-  for (const m of search(root, kws, true)) {
-    const i = lower.indexOf(m.text.toLowerCase());
-    if (i < 0) continue;
-    let lines = perKw[i].get(m.path);
-    if (!lines) perKw[i].set(m.path, (lines = new Set()));
-    lines.add(m.line);
-  }
-  const candidates = kws.map((keyword, i) => ({ keyword, matches: [...perKw[i].values()].reduce((n, s) => n + s.size, 0) }));
+  // Matching lines per keyword per file (one counting pass per keyword: overlapping keywords such as
+  // `permanent` / `permanentFailure` are each counted on every line that contains them, like separate greps).
+  const perKw = kws.map((k) => countLines(root, [k]));
+  const candidates = kws.map((keyword, i) => ({ keyword, matches: [...perKw[i].values()].reduce((n, c) => n + c, 0) }));
 
   // Most selective keywords first, broadened while the output stays within the cap.
   const order = candidates.map((c, i) => ({ ...c, i })).filter((c) => c.matches > 0).sort((a, b) => a.matches - b.matches || a.i - b.i);
@@ -165,19 +180,21 @@ export function nativeGrep(root: string, keywords: string[], limits: GrepLimits 
   chosen.sort((a, b) => a - b);
   const keywordsUsed = chosen.map((i) => kws[i]);
 
-  const stats = new Map<string, GrepFileStat & { lines: Set<number> }>();
+  // Matching lines (any chosen keyword) per file: the union, counted by one grep with the chosen pattern over the
+  // files that matched (multi-pattern case-insensitive git grep is slow on a whole large repo).
+  const matchedPaths = [...new Set(chosen.flatMap((i) => [...perKw[i].keys()]))].sort();
+  const union = chosen.length === 1 ? perKw[chosen[0]] : countLines(root, keywordsUsed, matchedPaths);
+  const stats = new Map<string, GrepFileStat>();
   for (const i of chosen) {
-    for (const [path, lines] of perKw[i]) {
-      const s = stats.get(path) ?? { path, distinct: 0, count: 0, lines: new Set<number>() };
+    for (const path of perKw[i].keys()) {
+      const s = stats.get(path) ?? { path, distinct: 0, count: union.get(path) ?? 0 };
       s.distinct++;
-      for (const l of lines) s.lines.add(l);
-      s.count = s.lines.size;
       stats.set(path, s);
     }
   }
-  const files = [...stats.values()]
-    .sort((x, y) => y.distinct - x.distinct || Number(isTestPath(x.path)) - Number(isTestPath(y.path)) || y.count - x.count || (x.path < y.path ? -1 : 1))
-    .map(({ path, distinct, count }) => ({ path, distinct, count }));
+  const files = [...stats.values()].sort(
+    (x, y) => y.distinct - x.distinct || Number(isTestPath(x.path)) - Number(isTestPath(y.path)) || y.count - x.count || (x.path < y.path ? -1 : 1),
+  );
 
   // Fetch full lines only for the files that can still be displayed.
   const wanted: string[] = [];

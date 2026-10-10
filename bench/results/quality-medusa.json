@@ -1,0 +1,373 @@
+{
+  "repo": "medusa",
+  "language": "typescript",
+  "repoRoot": "bench/repos/medusa",
+  "headCommit": "020565398e436a2bc65777a3b1ad347b4735d6df",
+  "date": "2026-10-09T22:21:54.139Z",
+  "index": {
+    "built": true,
+    "durationMs": 12764,
+    "files": 11970,
+    "symbols": 40269,
+    "refs": 253019,
+    "path": "<index-dir>/.kopt-medusa/index.db"
+  },
+  "files": {
+    "indexed": 11970,
+    "skipped": 9,
+    "skippedByReason": {
+      "large": 4,
+      "minified": 5
+    },
+    "indexedByLang": {
+      "javascript": 707,
+      "tsx": 3263,
+      "typescript": 8000
+    }
+  },
+  "langs": [
+    {
+      "lang": "typescript",
+      "files": 8000,
+      "lines": 931714,
+      "symbols": 32469,
+      "symbolsPerKloc": 34.85,
+      "byKind": {
+        "property": {
+          "count": 10427,
+          "perKloc": 11.19
+        },
+        "method": {
+          "count": 5249,
+          "perKloc": 5.63
+        },
+        "function": {
+          "count": 4895,
+          "perKloc": 5.25
+        },
+        "constant": {
+          "count": 3707,
+          "perKloc": 3.98
+        },
+        "type": {
+          "count": 2992,
+          "perKloc": 3.21
+        },
+        "interface": {
+          "count": 2402,
+          "perKloc": 2.58
+        },
+        "field": {
+          "count": 1504,
+          "perKloc": 1.61
+        },
+        "class": {
+          "count": 739,
+          "perKloc": 0.79
+        },
+        "constructor": {
+          "count": 359,
+          "perKloc": 0.39
+        },
+        "enum": {
+          "count": 147,
+          "perKloc": 0.16
+        },
+        "namespace": {
+          "count": 48,
+          "perKloc": 0.05
+        }
+      },
+      "refs": 168465,
+      "refsResolved": 41806,
+      "resolvedRate": 0.2482,
+      "refsWithCandidate": 116924,
+      "resolvedOfCandidates": 0.3565,
+      "refsByKind": {
+        "call": {
+          "total": 61523,
+          "resolved": 10877
+        },
+        "import": {
+          "total": 33429,
+          "resolved": 11222
+        },
+        "read": {
+          "total": 33241,
+          "resolved": 5516
+        },
+        "type_ref": {
+          "total": 32910,
+          "resolved": 11656
+        },
+        "new": {
+          "total": 3611,
+          "resolved": 485
+        },
+        "write": {
+          "total": 2428,
+          "resolved": 1237
+        },
+        "inherit": {
+          "total": 1220,
+          "resolved": 793
+        },
+        "implement": {
+          "total": 103,
+          "resolved": 20
+        }
+      },
+      "parse": {
+        "sampledFiles": 1000,
+        "sampledLines": 137450,
+        "filesWithErrors": 1,
+        "errorNodes": 1,
+        "missingNodes": 0,
+        "errorFileRate": 0.001,
+        "errorsPerKloc": 0.007,
+        "parseFailures": 0,
+        "worst": [
+          {
+            "path": "packages/core/types/src/modules-sdk/remote-query.ts",
+            "errors": 1,
+            "firstErrorLine": 1
+          }
+        ]
+      },
+      "precision": {
+        "sampled": 30,
+        "nameOk": 30,
+        "startOk": 30,
+        "endOk": 30,
+        "signatureOk": 30,
+        "allOk": 30,
+        "rate": 1,
+        "failures": []
+      }
+    },
+    {
+      "lang": "tsx",
+      "files": 3263,
+      "lines": 275063,
+      "symbols": 7037,
+      "symbolsPerKloc": 25.58,
+      "byKind": {
+        "function": {
+          "count": 3928,
+          "perKloc": 14.28
+        },
+        "type": {
+          "count": 1249,
+          "perKloc": 4.54
+        },
+        "constant": {
+          "count": 784,
+          "perKloc": 2.85
+        },
+        "property": {
+          "count": 771,
+          "perKloc": 2.8
+        },
+        "interface": {
+          "count": 246,
+          "perKloc": 0.89
+        },
+        "method": {
+          "count": 25,
+          "perKloc": 0.09
+        },
+        "enum": {
+          "count": 18,
+          "perKloc": 0.07
+        },
+        "field": {
+          "count": 12,
+          "perKloc": 0.04
+        },
+        "class": {
+          "count": 3,
+          "perKloc": 0.01
+        },
+        "constructor": {
+          "count": 1,
+          "perKloc": 0
+        }
+      },
+      "refs": 79441,
+      "refsResolved": 17908,
+      "resolvedRate": 0.2254,
+      "refsWithCandidate": 49336,
+      "resolvedOfCandidates": 0.363,
+      "refsByKind": {
+        "call": {
+          "total": 38439,
+          "resolved": 7104
+        },
+        "import": {
+          "total": 21365,
+          "resolved": 7853
+        },
+        "read": {
+          "total": 10487,
+          "resolved": 442
+        },
+        "type_ref": {
+          "total": 7828,
+          "resolved": 2456
+        },
+        "write": {
+          "total": 900,
+          "resolved": 11
+        },
+        "new": {
+          "total": 303,
+          "resolved": 16
+        },
+        "inherit": {
+          "total": 119,
+          "resolved": 26
+        }
+      },
+      "parse": {
+        "sampledFiles": 1000,
+        "sampledLines": 83646,
+        "filesWithErrors": 5,
+        "errorNodes": 15,
+        "missingNodes": 0,
+        "errorFileRate": 0.005,
+        "errorsPerKloc": 0.179,
+        "parseFailures": 0,
+        "worst": [
+          {
+            "path": "packages/admin/dashboard/src/routes/orders/order-receive-return/components/order-receive-return-form/dismissed-quantity.tsx",
+            "errors": 5,
+            "firstErrorLine": 152
+          },
+          {
+            "path": "packages/admin/dashboard/src/routes/orders/order-receive-return/components/order-receive-return-form/order-receive-return-form.tsx",
+            "errors": 5,
+            "firstErrorLine": 296
+          },
+          {
+            "path": "packages/plugins/draft-order/src/admin/components/draft-orders/summary-section.tsx",
+            "errors": 2,
+            "firstErrorLine": 125
+          },
+          {
+            "path": "packages/plugins/loyalty/src/admin/components/sortable-list.tsx",
+            "errors": 2,
+            "firstErrorLine": 130
+          },
+          {
+            "path": "www/apps/ui/specs/examples/date-picker-form.tsx",
+            "errors": 1,
+            "firstErrorLine": 32
+          }
+        ]
+      },
+      "precision": {
+        "sampled": 30,
+        "nameOk": 30,
+        "startOk": 30,
+        "endOk": 30,
+        "signatureOk": 30,
+        "allOk": 30,
+        "rate": 1,
+        "failures": []
+      }
+    },
+    {
+      "lang": "javascript",
+      "files": 707,
+      "lines": 87867,
+      "symbols": 763,
+      "symbolsPerKloc": 8.68,
+      "byKind": {
+        "constant": {
+          "count": 604,
+          "perKloc": 6.87
+        },
+        "function": {
+          "count": 114,
+          "perKloc": 1.3
+        },
+        "method": {
+          "count": 33,
+          "perKloc": 0.38
+        },
+        "class": {
+          "count": 5,
+          "perKloc": 0.06
+        },
+        "constructor": {
+          "count": 5,
+          "perKloc": 0.06
+        },
+        "field": {
+          "count": 2,
+          "perKloc": 0.02
+        }
+      },
+      "refs": 5113,
+      "refsResolved": 480,
+      "resolvedRate": 0.0939,
+      "refsWithCandidate": 3679,
+      "resolvedOfCandidates": 0.1305,
+      "refsByKind": {
+        "call": {
+          "total": 2465,
+          "resolved": 381
+        },
+        "read": {
+          "total": 1176,
+          "resolved": 9
+        },
+        "import": {
+          "total": 924,
+          "resolved": 81
+        },
+        "new": {
+          "total": 503,
+          "resolved": 7
+        },
+        "write": {
+          "total": 45,
+          "resolved": 2
+        }
+      },
+      "parse": {
+        "sampledFiles": 707,
+        "sampledLines": 88126,
+        "filesWithErrors": 1,
+        "errorNodes": 1,
+        "missingNodes": 0,
+        "errorFileRate": 0.0014,
+        "errorsPerKloc": 0.011,
+        "parseFailures": 0,
+        "worst": [
+          {
+            "path": "www/apps/api-reference/specs/admin/code_samples/JavaScript/admin_uploads_presigned-urls/post.js",
+            "errors": 1,
+            "firstErrorLine": 15
+          }
+        ]
+      },
+      "precision": {
+        "sampled": 30,
+        "nameOk": 30,
+        "startOk": 30,
+        "endOk": 30,
+        "signatureOk": 30,
+        "allOk": 30,
+        "rate": 1,
+        "failures": []
+      }
+    }
+  ],
+  "settings": {
+    "parseSamplePerLang": 1000,
+    "precisionSamplePerLang": 30,
+    "seed": "medusa"
+  },
+  "durationMs": 3043
+}

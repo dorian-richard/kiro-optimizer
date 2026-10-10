@@ -1,0 +1,73 @@
+{
+  "repo": {
+    "name": "laravel",
+    "url": "https://github.com/laravel/framework.git",
+    "tag": "v13.35.0",
+    "commit": "a413a9da94884e5e9d58f4e6612884f712827804",
+    "language": "php",
+    "path": "bench/repos/laravel"
+  },
+  "notes": "Held-out tasks (round 2), written after v0.2's tuning and before any kopt measurement on them; not derived from bench/results/failures.md. Gold read in the code with git grep and sed only. Re-check with `kopt bench bench/tasks-heldout/laravel.json --verify`.",
+  "tasks": [
+    {
+      "id": "ho-lv-explain-job-backoff",
+      "kind": "explain",
+      "lang": "en",
+      "question": "When a queued job fails and is released back onto the queue, how does the worker choose the delay before the next attempt?",
+      "search": "queued job failed released delay next attempt backoff worker",
+      "gold": {
+        "files": [
+          "src/Illuminate/Queue/Worker.php"
+        ],
+        "symbols": [
+          {
+            "name": "calculateBackoff",
+            "file": "src/Illuminate/Queue/Worker.php",
+            "line": 869,
+            "kind": "method"
+          },
+          {
+            "name": "handleJobException",
+            "file": "src/Illuminate/Queue/Worker.php",
+            "line": 668,
+            "kind": "method"
+          }
+        ]
+      },
+      "verifiedBy": "Read Queue\\Worker: handleJobException releases the job with calculateBackoff($job, $options), which takes the job's backoff() (or the worker option), split on commas and indexed by attempts."
+    },
+    {
+      "id": "ho-lv-locate-signed-url",
+      "kind": "locate",
+      "lang": "en",
+      "question": "Where does Laravel verify a signed URL's signature and its expiration?",
+      "search": "signed url signature verify expiration",
+      "gold": {
+        "files": [
+          "src/Illuminate/Routing/UrlGenerator.php"
+        ],
+        "symbols": [
+          {
+            "name": "hasValidSignature",
+            "file": "src/Illuminate/Routing/UrlGenerator.php",
+            "line": 434,
+            "kind": "method"
+          },
+          {
+            "name": "hasCorrectSignature",
+            "file": "src/Illuminate/Routing/UrlGenerator.php",
+            "line": 460,
+            "kind": "method"
+          },
+          {
+            "name": "signatureHasNotExpired",
+            "file": "src/Illuminate/Routing/UrlGenerator.php",
+            "line": 506,
+            "kind": "method"
+          }
+        ]
+      },
+      "verifiedBy": "Read Routing\\UrlGenerator: hasValidSignature = hasCorrectSignature (HMAC of the URL without the signature query) && signatureHasNotExpired (expires query vs now)."
+    }
+  ]
+}

@@ -1,0 +1,198 @@
+{
+  "repo": "jellyfin",
+  "language": "c_sharp",
+  "repoRoot": "bench/repos/jellyfin",
+  "headCommit": "1fbd8739292cce610231be93daf43368733edf63",
+  "date": "2026-10-09T22:37:52.904Z",
+  "index": {
+    "built": true,
+    "durationMs": 2144,
+    "files": 1922,
+    "symbols": 17980,
+    "refs": 87194,
+    "path": "<index-dir>/.kopt-jellyfin/index.db"
+  },
+  "files": {
+    "indexed": 1922,
+    "skipped": 0,
+    "skippedByReason": {},
+    "indexedByLang": {
+      "c_sharp": 1922
+    }
+  },
+  "langs": [
+    {
+      "lang": "c_sharp",
+      "files": 1922,
+      "lines": 231865,
+      "symbols": 17980,
+      "symbolsPerKloc": 77.55,
+      "byKind": {
+        "method": {
+          "count": 6376,
+          "perKloc": 27.5
+        },
+        "property": {
+          "count": 5347,
+          "perKloc": 23.06
+        },
+        "field": {
+          "count": 1905,
+          "perKloc": 8.22
+        },
+        "class": {
+          "count": 1647,
+          "perKloc": 7.1
+        },
+        "constant": {
+          "count": 1432,
+          "perKloc": 6.18
+        },
+        "constructor": {
+          "count": 929,
+          "perKloc": 4.01
+        },
+        "interface": {
+          "count": 196,
+          "perKloc": 0.85
+        },
+        "enum": {
+          "count": 132,
+          "perKloc": 0.57
+        },
+        "record": {
+          "count": 10,
+          "perKloc": 0.04
+        },
+        "struct": {
+          "count": 5,
+          "perKloc": 0.02
+        },
+        "type": {
+          "count": 1,
+          "perKloc": 0
+        }
+      },
+      "refs": 87194,
+      "refsResolved": 42568,
+      "resolvedRate": 0.4882,
+      "refsWithCandidate": 58617,
+      "resolvedOfCandidates": 0.7262,
+      "refsByKind": {
+        "call": {
+          "total": 27577,
+          "resolved": 9821
+        },
+        "read": {
+          "total": 24918,
+          "resolved": 12820
+        },
+        "type_ref": {
+          "total": 22524,
+          "resolved": 10792
+        },
+        "write": {
+          "total": 7266,
+          "resolved": 6219
+        },
+        "new": {
+          "total": 3757,
+          "resolved": 2019
+        },
+        "implement": {
+          "total": 638,
+          "resolved": 510
+        },
+        "inherit": {
+          "total": 514,
+          "resolved": 387
+        }
+      },
+      "parse": {
+        "sampledFiles": 1000,
+        "sampledLines": 119157,
+        "filesWithErrors": 7,
+        "errorNodes": 11,
+        "missingNodes": 2,
+        "errorFileRate": 0.007,
+        "errorsPerKloc": 0.109,
+        "parseFailures": 0,
+        "worst": [
+          {
+            "path": "Jellyfin.Server/Migrations/Routines/MigrateLibraryUserData.cs",
+            "errors": 3,
+            "firstErrorLine": 77
+          },
+          {
+            "path": "src/Jellyfin.Database/Jellyfin.Database.Providers.Sqlite/SqliteDatabaseProvider.cs",
+            "errors": 3,
+            "firstErrorLine": 200
+          },
+          {
+            "path": "Jellyfin.Server/Migrations/Routines/ReseedFolderFlag.cs",
+            "errors": 2,
+            "firstErrorLine": 61
+          },
+          {
+            "path": "src/Jellyfin.Database/Jellyfin.Database.Providers.Sqlite/Migrations/20250913211637_AddProperParentChildRelationBaseItemWithCascade.cs",
+            "errors": 2,
+            "firstErrorLine": 13
+          },
+          {
+            "path": "Jellyfin.Server.Implementations/Item/BaseItemRepository.cs",
+            "errors": 1,
+            "firstErrorLine": 108
+          },
+          {
+            "path": "Jellyfin.Server.Implementations/Item/PeopleRepository.cs",
+            "errors": 1,
+            "firstErrorLine": 28
+          },
+          {
+            "path": "Jellyfin.Server/Migrations/Stages/CodeMigration.cs",
+            "errors": 1,
+            "firstErrorLine": 12
+          }
+        ]
+      },
+      "precision": {
+        "sampled": 30,
+        "nameOk": 30,
+        "startOk": 29,
+        "endOk": 29,
+        "signatureOk": 30,
+        "allOk": 29,
+        "rate": 0.9667,
+        "failures": [
+          {
+            "id": 15822,
+            "path": "src/Jellyfin.Database/Jellyfin.Database.Providers.Sqlite/Migrations/20241111131257_AddedCustomDataKey.cs",
+            "name": "Up",
+            "kind": "method",
+            "startLine": 11,
+            "endLine": 18,
+            "checks": {
+              "name": true,
+              "start": false,
+              "end": false,
+              "signature": true
+            },
+            "ok": false,
+            "reasons": [
+              "byte range maps to lines 11-20, stored lines are 11-18"
+            ],
+            "firstLine": "protected override void Up(MigrationBuilder migrationBuilder)",
+            "lastLine": "}",
+            "signature": "protected override void Up(MigrationBuilder migrationBuilder)"
+          }
+        ]
+      }
+    }
+  ],
+  "settings": {
+    "parseSamplePerLang": 1000,
+    "precisionSamplePerLang": 30,
+    "seed": "jellyfin"
+  },
+  "durationMs": 870
+}

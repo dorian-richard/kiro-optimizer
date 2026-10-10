@@ -1,0 +1,224 @@
+{
+  "repo": {
+    "name": "playframework",
+    "url": "https://github.com/playframework/playframework.git",
+    "tag": "3.0.12",
+    "commit": "316f494b2d1292c250c19685f21189ab077d7229",
+    "language": "scala",
+    "path": "bench/repos/playframework"
+  },
+  "notes": "Gold = main sources only (*/src/main/scala and */src/main/java), tests, sbt-test fixtures and documentation snippets excluded. Mostly Scala internals (filters, evolutions, server backends, body parsers, cache, routes compiler); one impact task crosses into the Java API (Scala method called from a Java action). Scala-specific constructs in the gold: methods of anonymous classes (findAssetPath), private[play] classes nested in companion objects (JWTFormatter), vals (Evolution.hash, cachingWithEternity) and traits. Generic method names (apply, parse, handleResult) are avoided as gold names when a class name identifies the unit better. `search` is the phrase an agent would derive from the question (English, no identifier the developer did not give). Re-check with `kopt bench playframework --verify`.",
+  "tasks": [
+    {
+      "id": "pf-locate-evolution-conflict",
+      "kind": "locate",
+      "lang": "en",
+      "question": "When an evolution script that was already applied to the database is edited, where does Play detect the change and decide to run its Downs and then its Ups again?",
+      "search": "evolution script modified already applied hash conflict downs ups",
+      "gold": {
+        "files": [
+          "persistence/play-jdbc-evolutions/src/main/scala/play/api/db/evolutions/EvolutionsApi.scala",
+          "persistence/play-jdbc-evolutions/src/main/scala/play/api/db/evolutions/Evolutions.scala"
+        ],
+        "symbols": [
+          { "name": "scripts", "file": "persistence/play-jdbc-evolutions/src/main/scala/play/api/db/evolutions/EvolutionsApi.scala", "line": 311, "kind": "method" },
+          { "name": "conflictings", "file": "persistence/play-jdbc-evolutions/src/main/scala/play/api/db/evolutions/Evolutions.scala", "line": 205, "kind": "method" },
+          { "name": "hash", "file": "persistence/play-jdbc-evolutions/src/main/scala/play/api/db/evolutions/Evolutions.scala", "line": 41, "kind": "field" }
+        ]
+      },
+      "verifiedBy": "Read @3.0.12: DatabaseEvolutions.scripts(evolutions) (EvolutionsApi.scala:311) splits database and application evolutions into non-conflicting downs/ups and the overlapping rest, then calls Evolutions.conflictings (Evolutions.scala:205), which zips the overlapping pairs, reverses them and drops pairs whose Evolution.hash (Evolutions.scala:41, sha1 of trimmed downs + ups) is equal, so every revision from the first edited one is reverted (DownScript) then re-applied (UpScript)."
+    },
+    {
+      "id": "pf-locate-csrf-body-token",
+      "kind": "locate",
+      "lang": "en",
+      "question": "When the CSRF filter has to find the token in a POSTed url-encoded or multipart form body, where is the body buffered and the token extracted and compared before the action is allowed to run?",
+      "search": "csrf token form body multipart extract buffer before action",
+      "gold": {
+        "files": ["web/play-filters-helpers/src/main/scala/play/filters/csrf/CSRFActions.scala"],
+        "symbols": [
+          { "name": "checkBody", "file": "web/play-filters-helpers/src/main/scala/play/filters/csrf/CSRFActions.scala", "line": 159, "kind": "method" },
+          { "name": "extractTokenFromFormBody", "file": "web/play-filters-helpers/src/main/scala/play/filters/csrf/CSRFActions.scala", "line": 207, "kind": "method" },
+          { "name": "extractTokenFromMultipartFormDataBody", "file": "web/play-filters-helpers/src/main/scala/play/filters/csrf/CSRFActions.scala", "line": 227, "kind": "method" },
+          { "name": "BodyHandler", "file": "web/play-filters-helpers/src/main/scala/play/filters/csrf/CSRFActions.scala", "line": 321, "kind": "class" }
+        ]
+      },
+      "verifiedBy": "Read CSRFActions.scala@3.0.12: CSRFAction.apply dispatches form-urlencoded bodies to checkFormBody and multipart bodies to checkMultipartBody, both built on checkBody (159), which pipes the body through a BodyHandler graph stage (321, buffers up to postBodyBuffer, then validates and fails the stage with NoTokenInBody on a missing or wrong token) whose callback extracts the token with extractTokenFromFormBody (207) or extractTokenFromMultipartFormDataBody (227) and compares it with tokenProvider.compareTokens; the action only runs on the validated body source."
+    },
+    {
+      "id": "pf-locate-jwt-session",
+      "kind": "locate",
+      "lang": "en",
+      "question": "Where does Play reject a session cookie whose JWT is expired, not yet valid (with clock skew) or signed with another algorithm, and where does it still accept old URL-encoded signed session cookies?",
+      "search": "session cookie jwt expired clock skew signature algorithm legacy signed cookie",
+      "gold": {
+        "files": ["core/play/src/main/scala/play/api/mvc/Cookie.scala"],
+        "symbols": [
+          { "name": "JWTCookieDataCodec", "file": "core/play/src/main/scala/play/api/mvc/Cookie.scala", "line": 629, "kind": "trait" },
+          { "name": "JWTFormatter", "file": "core/play/src/main/scala/play/api/mvc/Cookie.scala", "line": 718, "kind": "class" },
+          { "name": "parse", "file": "core/play/src/main/scala/play/api/mvc/Cookie.scala", "line": 752, "kind": "method" },
+          { "name": "FallbackCookieDataCodec", "file": "core/play/src/main/scala/play/api/mvc/Cookie.scala", "line": 843, "kind": "trait" }
+        ]
+      },
+      "verifiedBy": "Read Cookie.scala@3.0.12: JWTCookieDataCodec (629) decode() calls the formatter and maps PrematureJwtException, ExpiredJwtException, SignatureException and algorithm mismatches to an empty session; JWTCookieDataCodec.JWTFormatter (718) builds the jjwt parser with the clock and setAllowedClockSkewSeconds; JWTFormatter.parse (752) throws IllegalStateException when the header algorithm differs from the configured one; FallbackCookieDataCodec (843) decodes values containing '=' with the legacy URL-encoded signed codec and values containing '.' as JWT."
+    },
+    {
+      "id": "pf-locate-routes-validation",
+      "kind": "locate",
+      "lang": "en",
+      "question": "Where does the routes compiler report an error when routes point to overloaded controller methods, or when a dynamic path part has no matching parameter in the call definition?",
+      "search": "routes file overloaded controller methods missing parameter compilation error",
+      "gold": {
+        "files": ["dev-mode/play-routes-compiler/src/main/scala/play/routes/compiler/RoutesFileParser.scala"],
+        "symbols": [
+          { "name": "validate", "file": "dev-mode/play-routes-compiler/src/main/scala/play/routes/compiler/RoutesFileParser.scala", "line": 53, "kind": "method" },
+          { "name": "parseContent", "file": "dev-mode/play-routes-compiler/src/main/scala/play/routes/compiler/RoutesFileParser.scala", "line": 36, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read RoutesFileParser.scala@3.0.12: object RoutesFileParser.parseContent (36) parses with the combinator parser and passes the routes to the private validate (53), which emits RoutesCompilationError for a missing controller, fixed/default values on Java request parameters, path parts with no matching call parameter ('Missing parameter in call definition'), invalid regexes and handler methods used with different parameter counts ('Using different overloaded methods is not allowed')."
+    },
+    {
+      "id": "pf-explain-gzip",
+      "kind": "explain",
+      "lang": "en",
+      "question": "How does the gzip filter decide whether to compress a response, and when does it buffer the whole body versus stream it chunked (including the HTTP/1.0 case)?",
+      "search": "gzip filter compress response threshold chunked accept encoding",
+      "gold": {
+        "files": ["web/play-filters-helpers/src/main/scala/play/filters/gzip/GzipFilter.scala"],
+        "symbols": [
+          { "name": "handleResult", "file": "web/play-filters-helpers/src/main/scala/play/filters/gzip/GzipFilter.scala", "line": 77, "kind": "method" },
+          { "name": "shouldCompress", "file": "web/play-filters-helpers/src/main/scala/play/filters/gzip/GzipFilter.scala", "line": 170, "kind": "method" },
+          { "name": "mayCompress", "file": "web/play-filters-helpers/src/main/scala/play/filters/gzip/GzipFilter.scala", "line": 152, "kind": "method" },
+          { "name": "gzipIsAcceptedAndPreferredBy", "file": "web/play-filters-helpers/src/main/scala/play/filters/gzip/GzipFilter.scala", "line": 155, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read GzipFilter.scala@3.0.12: apply only wraps requests for which mayCompress (152: not HEAD) and gzipIsAcceptedAndPreferredBy (155: gzip q-value > 0 and >= identity) hold; handleResult (77) compresses when shouldCompress (170: not 204/304, no Content-Encoding, not known empty, length > threshold) and config.shouldGzip: strict bodies and streamed bodies with a known length <= chunkedThreshold are buffered and compressed whole, larger streams become close-delimited for HTTP/1.0 or chunked otherwise, and chunked bodies go through a gzip flow that keeps the last chunk."
+    },
+    {
+      "id": "pf-explain-forwarded",
+      "kind": "explain",
+      "lang": "en",
+      "question": "Behind proxies that send X-Forwarded-For or RFC 7239 Forwarded headers, how does Play work out the client's real IP address and whether the request was secure, and which proxies does it trust?",
+      "search": "forwarded headers x-forwarded-for trusted proxies remote address secure",
+      "gold": {
+        "files": ["transport/server/play-server/src/main/scala/play/core/server/common/ForwardedHeaderHandler.scala"],
+        "symbols": [
+          { "name": "forwardedConnection", "file": "transport/server/play-server/src/main/scala/play/core/server/common/ForwardedHeaderHandler.scala", "line": 67, "kind": "method" },
+          { "name": "forwardedHeaders", "file": "transport/server/play-server/src/main/scala/play/core/server/common/ForwardedHeaderHandler.scala", "line": 167, "kind": "method" },
+          { "name": "parseEntry", "file": "transport/server/play-server/src/main/scala/play/core/server/common/ForwardedHeaderHandler.scala", "line": 217, "kind": "method" },
+          { "name": "isTrustedProxy", "file": "transport/server/play-server/src/main/scala/play/core/server/common/ForwardedHeaderHandler.scala", "line": 240, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read ForwardedHeaderHandler.scala@3.0.12: forwardedConnection (67) returns a RemoteConnection whose lazily computed value scans the entries of ForwardedHeaderHandlerConfig.forwardedHeaders (167: x-forwarded or rfc7239 version) from the nearest proxy backwards; while the previous hop isTrustedProxy (240: matches play.http.forwarded.trustedProxies subnets) it moves to the next entry parsed by parseEntry (217: address plus proto=https -> secure), otherwise it stops and keeps the previous connection."
+    },
+    {
+      "id": "pf-explain-cached",
+      "kind": "explain",
+      "lang": "en",
+      "question": "How does the `Cached` action helper of play-cache answer 304 Not Modified, serve a cached result, or run the action and store its result together with ETag and Expires headers?",
+      "search": "Cached action result cache etag expires not modified",
+      "gold": {
+        "files": ["cache/play-cache/src/main/scala/play/api/cache/Cached.scala"],
+        "symbols": [
+          { "name": "CachedBuilder", "file": "cache/play-cache/src/main/scala/play/api/cache/Cached.scala", "line": 132, "kind": "class" },
+          { "name": "build", "file": "cache/play-cache/src/main/scala/play/api/cache/Cached.scala", "line": 146, "kind": "method" },
+          { "name": "handleResult", "file": "cache/play-cache/src/main/scala/play/api/cache/Cached.scala", "line": 209, "kind": "method" },
+          { "name": "cachingWithEternity", "file": "cache/play-cache/src/main/scala/play/api/cache/Cached.scala", "line": 199, "kind": "field" }
+        ]
+      },
+      "verifiedBy": "Read Cached.scala@3.0.12: CachedBuilder.build (146) computes resultKey and resultKey-etag, returns NotModified when If-None-Match is * or contains the cached ETag, else serves the cached SerializableResult, else runs the action and maps it through handleResult (209), which (only for headers matched by the caching partial function, wrapped by cachingWithEternity (199) so that a zero duration means one year) sets Expires and an ETag = quoted sha1 of the expiration date, and stores both the ETag and the result in the AsyncCacheApi."
+    },
+    {
+      "id": "pf-usage-prepare-cookies",
+      "kind": "usage",
+      "lang": "en",
+      "question": "Where do the Netty and Pekko HTTP server backends call `ServerResultUtils.prepareCookies` to bake the session and flash cookies into an action's result?",
+      "search": "ServerResultUtils prepareCookies server backend",
+      "gold": {
+        "files": [
+          "transport/server/play-netty-server/src/main/scala/play/core/server/netty/PlayRequestHandler.scala",
+          "transport/server/play-pekko-http-server/src/main/scala/play/core/server/PekkoHttpServer.scala"
+        ],
+        "symbols": [
+          { "name": "handleAction", "file": "transport/server/play-netty-server/src/main/scala/play/core/server/netty/PlayRequestHandler.scala", "line": 292, "kind": "method" },
+          { "name": "runAction", "file": "transport/server/play-pekko-http-server/src/main/scala/play/core/server/PekkoHttpServer.scala", "line": 440, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "git grep 'prepareCookies(' (tests and docs excluded) @3.0.12: defined in ServerResultUtils.scala:298 (bakeCookies with the session and flash bakers, clearing the flash only if the request had one); called at PlayRequestHandler.scala:339 inside the private handleAction (292, Netty; followed by validateResult and convertResult) and at PekkoHttpServer.scala:497 inside the private runAction (440, Pekko HTTP)."
+    },
+    {
+      "id": "pf-usage-enforce-max-length",
+      "kind": "usage",
+      "lang": "en",
+      "question": "Which body parsers of `PlayBodyParsers` go through `enforceMaxLength` to reject request bodies larger than their maximum length?",
+      "search": "PlayBodyParsers enforceMaxLength body parser max length",
+      "gold": {
+        "files": ["core/play/src/main/scala/play/api/mvc/BodyParsers.scala"],
+        "symbols": [
+          { "name": "raw", "file": "core/play/src/main/scala/play/api/mvc/BodyParsers.scala", "line": 630, "kind": "method" },
+          { "name": "file", "file": "core/play/src/main/scala/play/api/mvc/BodyParsers.scala", "line": 833, "kind": "method" },
+          { "name": "multipartFormData", "file": "core/play/src/main/scala/play/api/mvc/BodyParsers.scala", "line": 1050, "kind": "method" },
+          { "name": "tolerantBodyParser", "file": "core/play/src/main/scala/play/api/mvc/BodyParsers.scala", "line": 1095, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "git grep enforceMaxLength (tests excluded) @3.0.12: defined BodyParsers.scala:1069 (private[play], rejects on Content-Length then counts bytes with BodyParsers.TakeUpTo); called at 633 in raw (630), 837 in file(to, maxLength) (833), 1058 in multipartFormData(filePartHandler, maxLength, allowEmptyFiles) (1050) and 1124 in tolerantBodyParser (1095, the non-strict branch shared by text, json, xml, form-url-encoded and byteString parsers)."
+    },
+    {
+      "id": "pf-usage-assets-digest",
+      "kind": "usage",
+      "lang": "en",
+      "question": "In the assets controller, which code calls `digest` to look up the fingerprint of an asset?",
+      "search": "assets controller digest fingerprint",
+      "gold": {
+        "files": ["core/play/src/main/scala/play/api/controllers/Assets.scala"],
+        "symbols": [
+          { "name": "findAssetPath", "file": "core/play/src/main/scala/play/api/controllers/Assets.scala", "line": 424, "kind": "method" },
+          { "name": "assetInfoFromResource", "file": "core/play/src/main/scala/play/api/controllers/Assets.scala", "line": 484, "kind": "method" },
+          { "name": "versioned", "file": "core/play/src/main/scala/play/api/controllers/Assets.scala", "line": 794, "kind": "method" },
+          { "name": "StaticAssetsMetadata", "file": "core/play/src/main/scala/play/api/controllers/Assets.scala", "line": 303, "kind": "object" }
+        ]
+      },
+      "verifiedBy": "Read Assets.scala@3.0.12 and git grep 'digest(': DefaultAssetsMetadata.digest (444) reads <path>.<digestAlgorithm> and caches it; callers: findAssetPath (424, method of the anonymous AssetsFinder of DefaultAssetsMetadata, prefixes the file name with the digest for reverse routing), assetInfoFromResource (484, stores the digest in AssetInfo for the ETag), AssetsBuilder.versioned(path, file) (794, compares the requested fingerprint with digest(bareFullPath) to enable aggressive caching) and StaticAssetsMetadata (303) whose digest override forwards to its delegate."
+    },
+    {
+      "id": "pf-impact-requires-csrf-check",
+      "kind": "impact",
+      "lang": "en",
+      "question": "If `CSRFActionHelper.requiresCsrfCheck` changed its rules (for example the CORS trusted-origin bypass), which CSRF actions, in Scala and Java, would behave differently?",
+      "search": "CSRFActionHelper requiresCsrfCheck",
+      "gold": {
+        "files": [
+          "web/play-filters-helpers/src/main/scala/play/filters/csrf/CSRFActions.scala",
+          "web/play-filters-helpers/src/main/java/play/filters/csrf/RequireCSRFCheckAction.java"
+        ],
+        "symbols": [
+          { "name": "requiresCsrfCheck", "file": "web/play-filters-helpers/src/main/scala/play/filters/csrf/CSRFActions.scala", "line": 490, "kind": "method" },
+          { "name": "CSRFAction", "file": "web/play-filters-helpers/src/main/scala/play/filters/csrf/CSRFActions.scala", "line": 45, "kind": "class" },
+          { "name": "CSRFCheckAction", "file": "web/play-filters-helpers/src/main/scala/play/filters/csrf/CSRFActions.scala", "line": 604, "kind": "class" },
+          { "name": "RequireCSRFCheckAction", "file": "web/play-filters-helpers/src/main/java/play/filters/csrf/RequireCSRFCheckAction.java", "line": 22, "kind": "class" }
+        ]
+      },
+      "verifiedBy": "git grep requiresCsrfCheck (tests excluded) @3.0.12: defined CSRFActions.scala:490 (false when bypassCorsTrustedOrigins and the CORSFilter Origin attribute is present, else csrfConfig.shouldProtect); called at CSRFActions.scala:72 in CSRFAction.apply (filter action, class at 45), :617 in CSRFCheckAction.apply (the Scala CSRFCheck wrapper, class at 604) and RequireCSRFCheckAction.java:80 in call() (Java @RequireCSRFCheck action, class at 22)."
+    },
+    {
+      "id": "pf-impact-get-handler-for",
+      "kind": "impact",
+      "lang": "en",
+      "question": "If `Server.getHandlerFor` changed what it returns, which request-handling code in the Netty and Pekko HTTP backends would have to change?",
+      "search": "Server getHandlerFor netty pekko request handling",
+      "gold": {
+        "files": [
+          "transport/server/play-server/src/main/scala/play/core/server/Server.scala",
+          "transport/server/play-netty-server/src/main/scala/play/core/server/netty/PlayRequestHandler.scala",
+          "transport/server/play-pekko-http-server/src/main/scala/play/core/server/PekkoHttpServer.scala"
+        ],
+        "symbols": [
+          { "name": "getHandlerFor", "file": "transport/server/play-server/src/main/scala/play/core/server/Server.scala", "line": 104, "kind": "method" },
+          { "name": "handle", "file": "transport/server/play-netty-server/src/main/scala/play/core/server/netty/PlayRequestHandler.scala", "line": 94, "kind": "method" },
+          { "name": "handleRequest", "file": "transport/server/play-pekko-http-server/src/main/scala/play/core/server/PekkoHttpServer.scala", "line": 317, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "git grep getHandlerFor (tests and docs excluded) @3.0.12: defined in object Server (Server.scala:104, private[server], returns the (RequestHeader, Handler) pair from the application's RequestFactory and requestHandler.handlerForRequest, or an error action built from onServerError when the app failed to load or threw); called at PlayRequestHandler.scala:141 inside PlayRequestHandler.handle (94, Netty) and at PekkoHttpServer.scala:358 inside the private handleRequest (317, Pekko HTTP). No other production caller."
+    }
+  ]
+}

@@ -1,10 +1,11 @@
 ---
 inclusion: auto
 name: kopt-specs
-description: Token-efficient execution of spec tasks. Use when implementing or verifying tasks from a spec tasks.md.
+description: Token-efficient code changes. Use when implementing, fixing or editing code, running tests, or executing tasks from a spec tasks.md.
 ---
-# Spec task execution
-- One task at a time; don't start the next task unless asked.
-- Reuse verification already done this session; no full-suite rerun when nothing changed since it passed.
-- Verify with `kopt_run` on the affected tests only.
-- Keep task notes and status updates terse: one line per task.
+# Code changes
+- Be concise: don't restate code or the plan back; no summary of what you did unless asked.
+- Edit with the smallest exact replacement; never rewrite whole files. Don't re-read files you just wrote.
+- Run tests and builds with `kopt_run`, only the affected tests; no full-suite rerun when nothing changed since it passed.
+- Spec tasks: one at a time, don't start the next unless asked; one-line status notes.
+- Stop when the acceptance criteria are met.

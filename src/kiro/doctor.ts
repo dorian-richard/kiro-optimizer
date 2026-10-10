@@ -1,18 +1,22 @@
-// `kopt doctor`: one line per check (ok / warn / fail + fix hint). Runs the configured hook command the way Kiro
-// does (shell: true, JSON on stdin) and the configured MCP server the way Kiro does (MCP SDK stdio transport with the
-// SDK's default environment), in a scratch directory with a scratch KOPT_HOME, so nothing of the user's is touched.
+// `kopt doctor`: one line per check (ok / warn / fail + fix hint). Runs the configured hook commands the way Kiro
+// does (shell: true, JSON on stdin) and the configured MCP server the way Kiro does (MCP SDK stdio transport), in a
+// scratch directory with a scratch KOPT_HOME, so nothing of the user's is touched. Both run with a MINIMAL
+// environment (PATH=/usr/bin:/bin on POSIX, the Windows system folders on Windows): Kiro IDE started from the Dock or
+// the Start menu does not get the PATH of the user's shell profile (nvm, volta, fnm, Homebrew), so a command that
+// starts here starts there.
 
-import { spawn } from 'node:child_process';
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { execFileSync, spawn } from 'node:child_process';
+import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { findProjectRoot, indexPath, isUnsafeRoot, loadConfig, userDirFor } from '../core/config.js';
-import { hookCommandLine, nodeVersionOk, pathNodeVersion, resolveKoptCommand } from './command.js';
+import { commandProgram, dependsOnPath, hookCommandLine, isTransientPath, nodeVersionOk, pathNodeVersion, resolveKoptCommand } from './command.js';
 import { detectSurfaces, hookPlan, writeSurfacesCache, type Surfaces, type VersionRunner } from './detect.js';
 import { parseJsonc } from './jsonc.js';
 import { KIROIGNORE_BEGIN } from './kiroignore.js';
 import { hostEnv, isNpxCachePath, kiroCliSettingsPath, kiroHomeDir, kiroUserSettingsPath, which, type HostEnv } from './paths.js';
 import { readText } from './plan.js';
+import { LISTED_TOOLS } from '../mcp/tools.js';
 import { DEFAULT_AGENT_SETTING, IGNORE_SETTING } from './setup.js';
 
 export type Status = 'ok' | 'warn' | 'fail';
@@ -52,6 +56,32 @@ export interface ProcResult {
   error?: string;
 }
 
+const pick = (env: NodeJS.ProcessEnv, keys: string[]): Record<string, string> => {
+  const out: Record<string, string> = {};
+  for (const k of keys) {
+    const v = env[k];
+    if (typeof v === 'string' && v && !v.startsWith('()')) out[k] = v;
+  }
+  return out;
+};
+
+/**
+ * The environment of a GUI-started Kiro, with no shell profile: system folders only on PATH. Doctor runs every
+ * configured command with it, so a command that needs nvm / volta / Homebrew on PATH fails here, not in Kiro.
+ */
+export function minimalEnv(h: HostEnv): Record<string, string> {
+  if (h.platform === 'win32') {
+    const env = pick(h.env, ['SystemRoot', 'SYSTEMROOT', 'windir', 'ComSpec', 'PATHEXT', 'SystemDrive', 'USERPROFILE', 'USERNAME', 'APPDATA',
+      'LOCALAPPDATA', 'TEMP', 'TMP', 'HOMEDRIVE', 'HOMEPATH', 'ProgramData', 'ProgramFiles', 'ProgramFiles(x86)', 'PUBLIC', 'OS',
+      'PROCESSOR_ARCHITECTURE', 'NUMBER_OF_PROCESSORS']);
+    const sys = env.SystemRoot || env.SYSTEMROOT || env.windir || 'C:\\Windows';
+    env.PATH = [`${sys}\\System32`, sys, `${sys}\\System32\\Wbem`, `${sys}\\System32\\WindowsPowerShell\\v1.0`].join(';');
+    if (!env.USERPROFILE) env.USERPROFILE = h.home;
+    return env;
+  }
+  return { ...pick(h.env, ['USER', 'LOGNAME', 'LANG', 'LC_ALL', 'TMPDIR']), HOME: h.home, PATH: '/usr/bin:/bin', SHELL: '/bin/sh' };
+}
+
 /** Run a hook command like Kiro: through the platform shell, event JSON on stdin, stdin then closed. */
 export function runHookCommand(command: string, event: unknown, o: { cwd: string; env: NodeJS.ProcessEnv; timeoutMs?: number }): Promise<ProcResult> {
   return new Promise((resolveRun) => {
@@ -84,25 +114,89 @@ export function runHookCommand(command: string, event: unknown, o: { cwd: string
   });
 }
 
-function configuredHookCommand(h: HostEnv): { command: string; from: string } | undefined {
+interface ConfiguredHooks {
+  /** PreToolUse command (the governor), and the Stop command, of one hook file. */
+  pre: string;
+  stop?: string;
+  from: string;
+}
+
+/** kopt's configured hook commands: the v1 file (IDE 1.x, CLI V3) and the CLI 2.x agent. */
+function configuredHooks(h: HostEnv): ConfiguredHooks[] {
   const kh = kiroHomeDir(h);
+  const out: ConfiguredHooks[] = [];
   const v1 = join(kh, 'hooks', 'kopt.json');
   try {
     const doc = JSON.parse(readText(v1) ?? '');
-    const pre = (doc.hooks as any[]).find((x) => x?.trigger === 'PreToolUse');
-    if (typeof pre?.action?.command === 'string') return { command: pre.action.command, from: v1 };
+    const find = (t: string) => (doc.hooks as any[]).find((x) => x?.trigger === t)?.action?.command;
+    const pre = find('PreToolUse');
+    if (typeof pre === 'string') out.push({ pre, stop: typeof find('Stop') === 'string' ? find('Stop') : undefined, from: v1 });
   } catch {
-    // fall through
+    // missing or invalid: reported by the hooks check
   }
   const agent = join(kh, 'agents', 'kopt.json');
   try {
     const doc = JSON.parse(readText(agent) ?? '');
-    const cmd = doc?.hooks?.preToolUse?.[0]?.command;
-    if (typeof cmd === 'string') return { command: cmd, from: agent };
+    const pre = doc?.hooks?.preToolUse?.[0]?.command;
+    const stop = doc?.hooks?.stop?.[0]?.command;
+    if (typeof pre === 'string') out.push({ pre, stop: typeof stop === 'string' ? stop : undefined, from: agent });
   } catch {
     // none
   }
+  return out;
+}
+
+/** Problems of a configured program path: needs PATH, lives in the npx cache, or is gone. */
+function programProblem(program: string, platform: NodeJS.Platform): string | undefined {
+  if (!program) return 'empty command';
+  if (dependsOnPath(program)) return `"${program}" is looked up on PATH, which Kiro started from the ${platform === 'darwin' ? 'Dock' : platform === 'win32' ? 'Start menu' : 'desktop'} may not have`;
+  if (isTransientPath(program)) return `${program} is in the npx cache, which npm deletes`;
+  if (!existsSync(program)) return `${program} does not exist`;
   return undefined;
+}
+
+/** `<node> --version`, or undefined. */
+function nodeVersionOf(node: string): string | undefined {
+  try {
+    return execFileSync(node, ['--version'], { encoding: 'utf8', timeout: 10_000, stdio: ['ignore', 'pipe', 'ignore'], windowsHide: true }).trim();
+  } catch {
+    return undefined;
+  }
+}
+
+/** Static checks of the commands Kiro will run: absolute, present, not in the npx cache, Node >= 22.13. */
+function commandChecks(h: HostEnv, entry: Record<string, any> | undefined, hooks: ConfiguredHooks[]): Check[] {
+  const checks: Check[] = [];
+  if (entry && typeof entry.command === 'string') {
+    const args = Array.isArray(entry.args) ? entry.args.map(String) : [];
+    const problems: string[] = [];
+    const p = programProblem(entry.command, h.platform);
+    if (p) problems.push(p);
+    // kopt's entry is the argument before `mcp` (`node [flags] <bin.js> mcp`)
+    const at = args.indexOf('mcp');
+    const bin = at > 0 && !/^[a-z]+:\/\//i.test(args[at - 1]) ? args[at - 1] : undefined;
+    if (bin && isTransientPath(bin)) problems.push(`${bin} is in the npx cache, which npm deletes`);
+    else if (bin && !existsSync(bin)) problems.push(`${bin} does not exist`);
+    let version: string | undefined;
+    if (!p && !dependsOnPath(entry.command) && /node(\.exe)?$/i.test(entry.command)) {
+      version = nodeVersionOf(entry.command);
+      if (!nodeVersionOk(version)) problems.push(`${entry.command} is Node ${version ?? '(does not run)'}, kopt needs 22.13 or later`);
+    }
+    checks.push(problems.length
+      ? { id: 'mcp-command', status: 'fail', message: `MCP command: ${problems.join('; ')}`, fix: 're-run kopt setup with Node 22.13+ (it writes absolute paths)' }
+      : { id: 'mcp-command', status: 'ok', message: `MCP command: absolute paths${version ? ` (Node ${version})` : ''}` });
+  }
+  const seen = new Set<string>();
+  for (const c of hooks) {
+    for (const line of [c.pre, c.stop]) {
+      if (!line || seen.has(line)) continue;
+      seen.add(line);
+      const problem = programProblem(commandProgram(line), h.platform);
+      if (problem) checks.push({ id: 'hook-command', status: 'fail', message: `hook command in ${c.from}: ${problem}`, fix: 're-run kopt setup (it writes absolute paths)' });
+    }
+  }
+  if (hooks.length && !checks.some((c) => c.id === 'hook-command')) checks.push({ id: 'hook-command', status: 'ok', message: `hook commands: absolute paths (${commandProgram(hooks[0].pre)})` });
+  return checks;
 }
 
 function mcpEntry(h: HostEnv): { entry?: Record<string, any>; path: string; error?: string } {
@@ -160,7 +254,32 @@ async function indexStatus(cwd: string): Promise<Check> {
       const symbols = (store.prepare('SELECT count(*) AS n FROM symbols').get() as { n: number }).n;
       const at = Number(store.getMeta('indexed_at') ?? 0);
       const when = at ? `, updated ${age(Date.now() - at)} ago` : ', first build not finished';
-      return { id: 'index', status: at ? 'ok' : 'warn', message: `index: ${files} files, ${symbols} symbols${when} (${db})` };
+      // each checkout of a big repository has its own index (about 1 GB for 30k Java files)
+      const { statSync, readFileSync } = await import('node:fs');
+      let bytes = 0;
+      for (const f of [db, `${db}-wal`]) {
+        try {
+          bytes += statSync(f).size;
+        } catch {
+          // no WAL
+        }
+      }
+      const size = bytes >= 1e9 ? `${(bytes / 1e9).toFixed(1)} GB` : `${Math.max(1, Math.round(bytes / 1e6))} MB`;
+      let failed: { at: number; message: string } | undefined;
+      try {
+        failed = JSON.parse(readFileSync(join(cfg.dataDir, 'last-error.json'), 'utf8'));
+      } catch {
+        // no failure recorded
+      }
+      if (failed && typeof failed.message === 'string' && Number(failed.at) > at) {
+        return {
+          id: 'index',
+          status: 'fail',
+          message: `index: the last build failed ${age(Date.now() - Number(failed.at))} ago: ${failed.message} (${db})`,
+          fix: `run kopt index in ${root} to see it again; kopt retries by itself after 1, 2, 4... minutes`,
+        };
+      }
+      return { id: 'index', status: at ? 'ok' : 'warn', message: `index: ${files} files, ${symbols} symbols${when}, ${size} on disk (${db})` };
     } finally {
       store.close();
     }
@@ -169,15 +288,18 @@ async function indexStatus(cwd: string): Promise<Check> {
   }
 }
 
-async function mcpCheck(entry: Record<string, any>, scratch: string, hostVars: NodeJS.ProcessEnv, envExtra: Record<string, string>, timeoutMs: number): Promise<Check> {
+async function mcpCheck(entry: Record<string, any>, scratch: string, hostVars: NodeJS.ProcessEnv, envExtra: Record<string, string>, timeoutMs: number, pathNote = ''): Promise<Check> {
   const [{ Client }, { StdioClientTransport, DEFAULT_INHERITED_ENV_VARS }] = await Promise.all([
     import('@modelcontextprotocol/sdk/client/index.js'),
     import('@modelcontextprotocol/sdk/client/stdio.js'),
   ]);
-  // Kiro starts MCP servers with the SDK's default environment (only these variables) plus the entry's env.
+  // Kiro starts MCP servers with the SDK's default environment (only these variables) plus the entry's env; the
+  // caller passes the minimal environment of a GUI-started Kiro.
   const inherited: Record<string, string> = {};
+  // Windows names are case-insensitive (SYSTEMROOT = SystemRoot); a plain object is not
+  const lookup = (k: string) => hostVars[k] ?? Object.entries(hostVars).find(([n]) => n.toUpperCase() === k.toUpperCase())?.[1];
   for (const k of DEFAULT_INHERITED_ENV_VARS) {
-    const v = hostVars[k];
+    const v = lookup(k);
     if (v !== undefined && !v.startsWith('()')) inherited[k] = v;
   }
   const transport = new StdioClientTransport({
@@ -201,15 +323,16 @@ async function mcpCheck(entry: Record<string, any>, scratch: string, hostVars: N
     const { tools } = await Promise.race([run, timeout]);
     const names = tools.map((t) => t.name);
     const ms = Date.now() - t0;
-    if (names.length !== 6) return { id: 'mcp', status: 'fail', message: `MCP server: ${names.length} tools (${names.join(', ')}), expected 6`, fix: 'reinstall kopt' };
-    return { id: 'mcp', status: 'ok', message: `MCP server: starts and lists 6 tools (${ms} ms): ${[entry.command, ...(entry.args ?? [])].join(' ')}` };
+    const want = LISTED_TOOLS.length;
+    if (names.length !== want) return { id: 'mcp', status: 'fail', message: `MCP server: ${names.length} tools (${names.join(', ')}), expected ${want}`, fix: 'reinstall kopt' };
+    return { id: 'mcp', status: 'ok', message: `MCP server: starts and lists ${want} tools (${ms} ms${pathNote ? `, ${pathNote}` : ''}): ${[entry.command, ...(entry.args ?? [])].join(' ')}` };
   } catch (err) {
     const detail = stderr.trim().split('\n').slice(-2).join(' | ');
     return {
       id: 'mcp',
       status: 'fail',
-      message: `MCP server: ${(err as Error).message}${detail ? ` (${detail})` : ''}`,
-      fix: `check that "${entry.command}" runs from a terminal with Kiro's PATH; re-run kopt setup`,
+      message: `MCP server${pathNote ? ` (${pathNote})` : ''}: ${(err as Error).message}${detail ? ` (${detail})` : ''}`,
+      fix: 're-run kopt setup with Node 22.13+ (it writes absolute paths), then kopt doctor',
     };
   } finally {
     if (timer) clearTimeout(timer);
@@ -227,7 +350,7 @@ export async function runDoctor(o: DoctorOptions = {}): Promise<DoctorReport> {
   const nodeOk = nodeVersionOk(process.version);
   add({ id: 'node', status: nodeOk ? 'ok' : 'fail', message: `node ${process.version} (needs >= 22.13)`, fix: nodeOk ? undefined : 'install Node.js 22.13 or later' });
 
-  // kopt on PATH
+  // kopt on the terminal PATH: only for typing `kopt ...` (Kiro runs it by absolute path)
   const shim = which('kopt', h, (d) => isNpxCachePath(d + '/') || /[\\/]node_modules[\\/]\.bin$/.test(d));
   const pathNode = shim ? pathNodeVersion(h) : undefined;
   if (shim) {
@@ -236,10 +359,10 @@ export async function runDoctor(o: DoctorOptions = {}): Promise<DoctorReport> {
       id: 'path',
       status: ok ? 'ok' : 'warn',
       message: `kopt on PATH: ${shim}${pathNode ? ` (node ${pathNode})` : ''}`,
-      fix: ok ? undefined : 'the `node` on PATH is older than 22.13: kopt setup then configures an explicit Node path',
+      fix: ok ? undefined : 'the `node` on your PATH is older than 22.13: `kopt` fails in this terminal (Kiro is not affected)',
     });
   } else {
-    add({ id: 'path', status: 'warn', message: 'kopt is not on PATH (Kiro runs it through an explicit node path)', fix: 'add `npm prefix -g` (its bin folder on Linux/macOS) to PATH, then re-run kopt setup' });
+    add({ id: 'path', status: 'warn', message: 'kopt is not on your terminal PATH (Kiro does not need it: it runs kopt by absolute path)', fix: 'to type kopt commands, add `npm prefix -g` (its bin folder on Linux/macOS) or ~/.kopt/bin to PATH' });
   }
 
   // Surfaces
@@ -318,6 +441,8 @@ export async function runDoctor(o: DoctorOptions = {}): Promise<DoctorReport> {
     });
   }
 
+  for (const c of commandChecks(h, mcp.entry, configuredHooks(h))) add(c);
+
   const steering = readText(join(kh, 'steering', 'kopt.md'));
   add({ id: 'steering', status: steering ? 'ok' : 'warn', message: `${join(kh, 'steering', 'kopt.md')}: ${steering ? 'present' : 'missing'}`, fix: steering ? undefined : 'run kopt setup' });
   const ki = readText(join(kh, 'settings', 'kiroignore'));
@@ -334,28 +459,32 @@ export async function runDoctor(o: DoctorOptions = {}): Promise<DoctorReport> {
     add({ id: 'ide-settings', status: has ? 'ok' : 'warn', message: `${sp}: ${IGNORE_SETTING} ${has ? 'includes' : 'lacks'} .kiroignore`, fix: has ? undefined : 'run kopt setup' });
   }
 
-  // Processes, like Kiro runs them
+  // Processes, like Kiro runs them, with the minimal environment of a GUI-started Kiro
   if (!o.skipProcesses) {
     const scratch = mkdtempSync(join(tmpdir(), 'kopt-doctor-'));
     try {
       const env: Record<string, string> = { KOPT_HOME: join(scratch, 'home'), KOPT_CACHE_DIR: join(scratch, 'cache'), KOPT_TELEMETRY: '0', KOPT_INDEX_ON_START: '0', KOPT_LEGACY_WORKSPACE_HOOKS: '0' };
-      const configured = configuredHookCommand(h);
+      const base = minimalEnv(h);
+      const configured = configuredHooks(h);
       const fallback = hookCommandLine(resolveKoptCommand({ h }), 'global');
-      const command = configured?.command ?? fallback;
-      const runEnv = { ...h.env, ...env };
+      const command = configured[0]?.pre ?? fallback;
+      const runEnv = { ...base, ...env };
+      const pathNote = h.platform === 'win32' ? 'system PATH only' : 'PATH=/usr/bin:/bin';
       const session = `kopt-doctor-${process.pid}`;
-      const allow = await runHookCommand(command, { hook_event_name: 'PreToolUse', session_id: session, cwd: scratch, tool_name: 'grep_search', tool_input: { query: 'kopt' } }, { cwd: scratch, env: runEnv, timeoutMs });
+      const allowEvent = { hook_event_name: 'PreToolUse', session_id: session, cwd: scratch, tool_name: 'grep_search', tool_input: { query: 'kopt' } };
+      const allow = await runHookCommand(command, allowEvent, { cwd: scratch, env: runEnv, timeoutMs });
       const silent = allow.code === 0 && !allow.stdout && !allow.stderr;
       add({
         id: 'hook-allow',
         status: silent ? 'ok' : 'fail',
         message: silent
-          ? `hook allow path: exit 0, no output (${allow.ms} ms): ${command}`
-          : `hook allow path: exit ${allow.code ?? allow.error}, stdout ${JSON.stringify(allow.stdout.slice(0, 120))}, stderr ${JSON.stringify(allow.stderr.slice(0, 160))}: ${command}`,
-        fix: silent ? undefined : 'any output on the allow path intercepts tool calls in Kiro: check the command runs in a terminal, then re-run kopt setup',
+          ? `hook allow path: exit 0, no output (${allow.ms} ms, ${pathNote}): ${command}`
+          : `hook allow path (${pathNote}): exit ${allow.code ?? allow.error}, stdout ${JSON.stringify(allow.stdout.slice(0, 120))}, stderr ${JSON.stringify(allow.stderr.slice(0, 160))}: ${command}`,
+        fix: silent ? undefined : 'any output on the allow path intercepts tool calls in Kiro: re-run kopt setup (absolute paths), then kopt doctor',
       });
+      // big enough in tokens for the big-read rule whatever the config (~60 KB)
       const big = join(scratch, 'big.txt');
-      writeFileSync(big, Array.from({ length: 1200 }, (_, i) => `line ${i}`).join('\n') + '\n');
+      writeFileSync(big, Array.from({ length: 1500 }, (_, i) => `line ${i}: lorem ipsum dolor sit amet, consectetur adipiscing`).join('\n') + '\n');
       const blocked = await runHookCommand(command, { hook_event_name: 'PreToolUse', session_id: session, cwd: scratch, tool_name: 'read_file', tool_input: { path: 'big.txt' } }, { cwd: scratch, env: runEnv, timeoutMs });
       const blockOk = blocked.code === 2 && /kopt/.test(blocked.stderr) && !blocked.stdout;
       add({
@@ -364,9 +493,36 @@ export async function runDoctor(o: DoctorOptions = {}): Promise<DoctorReport> {
         message: blockOk ? `hook block path: exit 2 with a one-line reason (${blocked.ms} ms)` : `hook block path: exit ${blocked.code ?? blocked.error}, expected 2 (stderr ${JSON.stringify(blocked.stderr.slice(0, 160))})`,
         fix: blockOk ? undefined : 're-run kopt setup',
       });
+      // Stop: in Kiro IDE 1.x a Stop hook that exits 1 means "continue the agent" (with no limit)
+      const stops = configured.filter((c) => c.stop).map((c) => ({ cmd: c.stop!, label: c.from.endsWith(join('agents', 'kopt.json')) ? 'CLI agent' : 'global' }));
+      const seenStop = new Set<string>();
+      for (const { cmd: stopCmd, label } of stops.length ? stops : [{ cmd: command, label: 'global' }]) {
+        if (seenStop.has(stopCmd)) continue;
+        seenStop.add(stopCmd);
+        const stop = await runHookCommand(stopCmd, { hook_event_name: 'Stop', session_id: session, cwd: scratch }, { cwd: scratch, env: runEnv, timeoutMs });
+        const stopOk = stop.code === 0 && !stop.stdout;
+        add({
+          id: 'hook-stop',
+          status: stopOk ? 'ok' : 'fail',
+          message: stopOk ? `hook stop path (${label}): exit 0 (${stop.ms} ms)` : `hook stop path (${label}): exit ${stop.code ?? stop.error}, expected 0 (a non-zero Stop hook makes Kiro IDE continue the agent): ${stopCmd}`,
+          fix: stopOk ? undefined : 're-run kopt setup',
+        });
+      }
+      // the CLI 2.x agent's governor command, when it differs from the global one
+      for (const c of configured.slice(1)) {
+        if (c.pre === command) continue;
+        const r = await runHookCommand(c.pre, allowEvent, { cwd: scratch, env: runEnv, timeoutMs });
+        const ok = r.code === 0 && !r.stdout && !r.stderr;
+        add({
+          id: 'hook-agent',
+          status: ok ? 'ok' : 'fail',
+          message: ok ? `CLI agent hook: exit 0, no output (${r.ms} ms)` : `CLI agent hook (${pathNote}): exit ${r.code ?? r.error}, stderr ${JSON.stringify(r.stderr.slice(0, 160))}: ${c.pre}`,
+          fix: ok ? undefined : 're-run kopt setup',
+        });
+      }
       if (mcp.entry) {
         mkdirSync(join(scratch, 'home'), { recursive: true });
-        add(await mcpCheck(mcp.entry, scratch, h.env, env, timeoutMs));
+        add(await mcpCheck(mcp.entry, scratch, base, env, timeoutMs, pathNote));
       }
     } finally {
       // Windows: the MCP server child may still be exiting (its cwd and files are in `scratch`); a leftover temp dir

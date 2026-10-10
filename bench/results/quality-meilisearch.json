@@ -1,0 +1,138 @@
+{
+  "repo": "meilisearch",
+  "language": "rust",
+  "repoRoot": "bench/repos/meilisearch",
+  "headCommit": "7ebd97e38c36882b0c78d79e433b9115b4f003b3",
+  "date": "2026-10-09T22:38:32.674Z",
+  "index": {
+    "built": true,
+    "durationMs": 2210,
+    "files": 715,
+    "symbols": 18280,
+    "refs": 99034,
+    "path": "<index-dir>/.kopt-meilisearch/index.db"
+  },
+  "files": {
+    "indexed": 715,
+    "skipped": 0,
+    "skippedByReason": {},
+    "indexedByLang": {
+      "rust": 715
+    }
+  },
+  "langs": [
+    {
+      "lang": "rust",
+      "files": 715,
+      "lines": 268053,
+      "symbols": 18280,
+      "symbolsPerKloc": 68.2,
+      "byKind": {
+        "method": {
+          "count": 4842,
+          "perKloc": 18.06
+        },
+        "field": {
+          "count": 4783,
+          "perKloc": 17.84
+        },
+        "constant": {
+          "count": 2831,
+          "perKloc": 10.56
+        },
+        "function": {
+          "count": 2624,
+          "perKloc": 9.79
+        },
+        "struct": {
+          "count": 1443,
+          "perKloc": 5.38
+        },
+        "module": {
+          "count": 753,
+          "perKloc": 2.81
+        },
+        "enum": {
+          "count": 509,
+          "perKloc": 1.9
+        },
+        "type": {
+          "count": 436,
+          "perKloc": 1.63
+        },
+        "trait": {
+          "count": 59,
+          "perKloc": 0.22
+        }
+      },
+      "refs": 99034,
+      "refsResolved": 38539,
+      "resolvedRate": 0.3891,
+      "refsWithCandidate": 73700,
+      "resolvedOfCandidates": 0.5229,
+      "refsByKind": {
+        "call": {
+          "total": 50369,
+          "resolved": 12632
+        },
+        "type_ref": {
+          "total": 15246,
+          "resolved": 7093
+        },
+        "read": {
+          "total": 13697,
+          "resolved": 8820
+        },
+        "import": {
+          "total": 10594,
+          "resolved": 4722
+        },
+        "write": {
+          "total": 6401,
+          "resolved": 3988
+        },
+        "new": {
+          "total": 1924,
+          "resolved": 1104
+        },
+        "implement": {
+          "total": 803,
+          "resolved": 180
+        }
+      },
+      "parse": {
+        "sampledFiles": 715,
+        "sampledLines": 268768,
+        "filesWithErrors": 1,
+        "errorNodes": 3,
+        "missingNodes": 0,
+        "errorFileRate": 0.0014,
+        "errorsPerKloc": 0.011,
+        "parseFailures": 0,
+        "worst": [
+          {
+            "path": "crates/index-scheduler/src/lib.rs",
+            "errors": 3,
+            "firstErrorLine": 315
+          }
+        ]
+      },
+      "precision": {
+        "sampled": 30,
+        "nameOk": 30,
+        "startOk": 30,
+        "endOk": 30,
+        "signatureOk": 30,
+        "allOk": 30,
+        "rate": 1,
+        "failures": []
+      }
+    }
+  ],
+  "settings": {
+    "parseSamplePerLang": 1000,
+    "precisionSamplePerLang": 30,
+    "seed": "meilisearch"
+  },
+  "durationMs": 1724
+}

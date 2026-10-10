@@ -1,0 +1,756 @@
+ RUN  v3.2.7 /home/dev/shop
+
+(node:40966) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:40965) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:40961) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+[perf] kopt hook (malformed input, via tsx): 219ms
+[size] tools/list: 2465 chars ~822 tok; instructions: 58 chars ~20 tok
+(node:40967) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+[perf] kopt mcp spawn -> tools/list (via tsx): 556ms
+(node:40964) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/hooks.test.ts (47 tests) 3467ms
+   ✓ UserPromptSubmit front-load > skips when retrieval exceeds the time limit and survives a missing retrieval module  404ms
+   ✓ UserPromptSubmit front-load > closes the index it opened when retrieval fails or is too slow (an open handle locks index.db on Windows)  404ms
+   ✓ IDE 0.x legacy sessions and prompt dedup > a new chat in IDE 0.x gets pointers again (no day-long anon session), and a prompt seen by two hook formats is handled once  2064ms
+ ✓ test/hooks-shell.test.ts (6 tests) 3918ms
+   ✓ kopt hook through a shell > allow path: exit 0, empty stdout, empty stderr  1228ms
+   ✓ kopt hook through a shell > never leaks the node:sqlite ExperimentalWarning (SessionStart opens the index)  422ms
+   ✓ kopt hook through a shell > IDE 0.x legacy invocation: no stdin payload (pipe left open), data in USER_PROMPT, returns at once  491ms
+   ✓ kopt hook through a shell > an invalid config file never prints on the allow path: the warning goes to hook-errors.log  937ms
+   ✓ kopt hook through a shell > Stop always exits 0, even for a payload kopt cannot read (exit 1 = "continue the agent" in Kiro IDE 1.x)  577ms
+(node:42999) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/mcp.test.ts (18 tests) 4659ms
+   ✓ tools/call > kopt_find returns plain text and emits telemetry  379ms
+   ✓ LocalRepo lifecycle > answers "index building" while the first build runs, then serves the store  461ms
+   ✓ LocalRepo lifecycle > refreshes on dirty marker / interval, one at a time, without blocking calls on slow refreshes  620ms
+   ✓ LocalRepo lifecycle > serves search, read and outline once symbols are written, before references are resolved  1217ms
+   ✓ LocalRepo lifecycle > answers at once with an estimate when the build will take longer than a call may wait  1268ms
+   ✓ LocalRepo lifecycle > runs the full freshness check only when git state moved (or every fullRefreshIntervalMs)  384ms
+ ✓ test/doctor.test.ts (5 tests) 4876ms
+   ✓ kopt doctor > passes every check after setup: silent allow path, exit-2 block path, MCP server with 6 tools  2256ms
+   ✓ kopt doctor > reports a hook command that prints on the allow path (it would intercept tools in Kiro) and a missing MCP entry  747ms
+   ✓ kopt doctor > fails commands that need PATH (bare kopt) and a Stop hook that exits non-zero, with the minimal environment  1759ms
+(node:43596) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:43581) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/setup.test.ts (37 tests) 5868ms
+   ✓ kopt command resolution > the POSIX launcher runs with PATH=/usr/bin:/bin and maps hook failures to a silent exit 0  511ms
+   ✓ kopt setup (user level, temp HOME) > generates a CLI 2.x agent the real kiro-cli accepts and selects as default (temp HOME)  1426ms
+   ✓ global install (temp npm prefix) > installs from an npx cache copy into the global prefix with real npm  1688ms
+   ✓ global install (temp npm prefix) > packs a built npx copy as-is (no prepare, no symlink into the npx cache) and installs the tarball  1518ms
+(node:44274) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/bench-ab.test.ts (12 tests) 2341ms
+   ✓ run-kiro-cli-ab.sh with stubs > runs the plan, isolates arms, parses and analyzes  2221ms
+(node:44741) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/indexer.robust.test.ts (19 tests) 2549ms
+   ✓ symbol ids > come back when a removed symbol or a deleted file comes back  458ms
+ ✓ test/indexer.lock.test.ts (5 tests) 1584ms
+   ✓ index lock > a skip-mode pass does nothing while another process indexes; a wait-mode pass waits for it  853ms
+   ✓ index lock > two connections building the same index at once never collide (no UNIQUE failure)  575ms
+ ✓ test/indexer.index.test.ts (25 tests) 2951ms
+   ✓ git listing and workers > lists files through git (untracked included, .gitignore honored) and records HEAD  427ms
+   ✓ git listing and workers > produces the same index with the worker pool  660ms
+ ❯ test/xplat.test.ts (48 tests | 2 failed | 1 skipped) 1365ms
+   ✓ path normalization > turns Windows absolute paths into repo-relative forward-slash paths 1ms
+   ✓ path normalization > matches the root case-insensitively on Windows and keeps the caller spelling of the rest 0ms
+   ✓ path normalization > understands long paths, UNC shares and file URLs 0ms
+   ✓ path normalization > normalizes relative paths and rejects everything outside the root 0ms
+   ✓ path normalization > treats the macOS /private aliases of /var and /tmp as the same directory 0ms
+   ✓ path normalization > walker.normalizeRel gives DB paths for any input form 0ms
+   ✓ path normalization > samePath ignores separators, trailing slashes and (Windows/macOS) case 0ms
+   ✓ CRLF and BOM sources: extract -> index -> read > extracts the same lines, signatures and docs from CRLF as from LF text 4ms
+   ✓ CRLF and BOM sources: extract -> index -> read > indexes repo-relative forward-slash paths 0ms
+   × CRLF and BOM sources: extract -> index -> read > read returns code without CR, with the right line numbers 10ms
+     → expected 'src/Totals.java: not readable through…' to contain '  public int twice(int a) {\n    retu…'
+   ✓ CRLF and BOM sources: extract -> index -> read > byte offsets point into the file as stored (BOM and CR included) 0ms
+   ✓ CRLF and BOM sources: extract -> index -> read > read of a BOM file never returns the BOM 1ms
+   × CRLF and BOM sources: extract -> index -> read > outline and find output carry no CR 1ms
+     → expected 'src/Totals.java: not readable through…' to contain 'total'
+   ✓ CRLF and BOM sources: extract -> index -> read > a CRLF file edited after indexing is still read without CR 2ms
+   ✓ CRLF and BOM sources: extract -> index -> read > splitLines drops CR of CRLF and of mixed endings, but keeps a lone CR inside a line 0ms
+   ✓ shell selection > POSIX: bash when available (even if the login shell is zsh), else sh 0ms
+   ✓ shell selection > Windows: pwsh from PATH first (accepts &&), with an encoded script and process-scope Bypass 33ms
+   ✓ shell selection > Windows: Windows PowerShell 5.1 from System32 when pwsh is absent, then cmd.exe 0ms
+   ✓ shell selection > KOPT_SHELL overrides the choice on every platform 1ms
+   ✓ shell selection > very long PowerShell commands fall back to -Command (Windows command-line limit) 0ms
+   ✓ shell selection > the PowerShell wrapper maps exit codes like a POSIX shell 0ms
+   ✓ shell selection > quotes arguments for each shell family 0ms
+   ✓ shell selection > joins argv into a command line PowerShell can run (call operator before a quoted program) 0ms
+   ✓ shell selection > finds executables on PATH with the platform separator 0ms
+   ✓ shell selection > this machine uses PowerShell on Windows and a POSIX shell elsewhere 9ms
+   ✓ Windows command lines > recognises the program behind PowerShell call operators, .cmd/.bat shims and Windows paths 17ms
+   ✓ Windows command lines > keeps PowerShell pipelines and cd chains cacheable like their bash forms 7ms
+   ✓ process-tree kill > builds taskkill /T /F on Windows, nothing (process-group signal) on POSIX 2ms
+   ✓ kopt_run on this OS > propagates the exit code and output of a failing command 88ms
+   ✓ kopt_run on this OS > prints repo-relative forward-slash paths for files under the root 116ms
+   ↓ kopt_run on this OS > Windows: cmd.exe and Windows PowerShell 5.1 propagate exit codes too
+   ✓ output normalization > drops byte order marks and CRLF 0ms
+   ✓ output normalization > decodes PowerShell CLIXML error streams and drops progress records 1ms
+   ✓ output normalization > reduces Windows PowerShell 5.1 error blocks to their message (native stderr loses its prefix) 0ms
+   ✓ output normalization > reduces pwsh 7 ConciseView error blocks to one line 0ms
+   ✓ output normalization > relativizes Windows paths in any case and separator, with forward slashes 0ms
+   ✓ rename retry and atomic writes > retries transient Windows sharing violations, then succeeds 21ms
+   ✓ rename retry and atomic writes > throws at once on POSIX and for non-transient errors 1ms
+   ✓ rename retry and atomic writes > gives up after the timeout when the file stays locked 87ms
+   ✓ rename retry and atomic writes > async variant behaves the same 16ms
+   ✓ rename retry and atomic writes > atomicWrite replaces files and leaves no temp file behind 1ms
+   ✓ rename retry and atomic writes > readJson and stripBom accept files written with a BOM 1ms
+   ✓ rename retry and atomic writes > withFileLock runs the function and releases the lock 1ms
+   ✓ background spawns and the kopt command line > detached, hidden, no inherited stdio 0ms
+   ✓ background spawns and the kopt command line > runs node by absolute path; TypeScript entries get tsx as a file URL (Windows-safe) 1ms
+   ✓ parse worker pool > pins a bare `--import tsx` to an absolute file URL and drops inspector flags 0ms
+   ✓ parse worker pool > parses in worker threads with the same results as in-process  443ms
+   ✓ parse worker pool > falls back to in-process parsing when workers cannot start 146ms
+ ✓ test/indexer.scale.test.ts (5 tests) 4251ms
+   ✓ resolution at scale > resolves 200k import specs in a full pass (no argument spread of all rows)  3085ms
+   ✓ resolution at scale > re-resolves unresolved imports when a file is added, with 200k of them pending  769ms
+   ✓ unresolved imports after files come and go > retries only the imports the added or removed files can change, and still resolves them  383ms
+ ✓ test/compress.lifecycle.test.ts (12 tests) 7985ms
+   ✓ stop signals kill running command trees > SIGTERM to `kopt run` kills the command it started  839ms
+   ✓ stop signals kill running command trees > SIGINT to `kopt run` kills the command it started  847ms
+   ✓ stop signals kill running command trees > SIGHUP to `kopt run` kills the command it started  932ms
+   ✓ stop signals kill running command trees > a descendant that left the process group (setsid) is killed too  727ms
+   ✓ cancellation > a run joined by an identical call is killed only when every caller has cancelled  617ms
+   ✓ commands that never exit > are refused with a one-line hint unless timeoutSec is given  2011ms
+   ✓ result size > small outputs come back as they are under a one-line exit header  1307ms
+ ✓ test/compress.runner.test.ts (21 tests) 8231ms
+   ✓ runCommand > kills the whole process tree on timeout  3312ms
+   ✓ dedup cache (git workspace) > serves an identical re-run from cache until a file changes  2633ms
+   ✓ dedup cache (git workspace) > a long cached result already shown in this session becomes one line that keeps the verdict  715ms
+(node:46720) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:46580) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:47002) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/indexer.extract.test.ts (24 tests) 505ms
+
+compression @900 tok:
+pytest-pass.txt          11500 -> 18 tok (99.8%)
+pytest-fail.txt          13013 -> 318 tok (97.6%)
+unittest-fail.txt        602 -> 223 tok (63.0%)
+jest-pass.txt            12533 -> 27 tok (99.8%)
+jest-fail.txt            1608 -> 358 tok (77.7%)
+vitest-pass.txt          2401 -> 24 tok (99.0%)
+vitest-fail.txt          1626 -> 125 tok (92.3%)
+maven-pass.txt           8418 -> 39 tok (99.5%)
+maven-compile-fail.txt   3071 -> 269 tok (91.2%)
+maven-test-fail.txt      3680 -> 263 tok (92.9%)
+gradle-pass.txt          4287 -> 27 tok (99.4%)
+gradle-fail.txt          1101 -> 274 tok (75.1%)
+dotnet-build-pass.txt    5210 -> 30 tok (99.4%)
+dotnet-build-fail.txt    630 -> 143 tok (77.3%)
+dotnet-test-fail.txt     830 -> 239 tok (71.2%)
+go-test-pass.txt         7254 -> 18 tok (99.8%)
+go-test-fail.txt         1539 -> 298 tok (80.6%)
+tsc-fail.txt             3459 -> 343 tok (90.1%)
+tsc-pretty-fail.txt      240 -> 138 tok (42.5%)
+eslint-fail.txt          5204 -> 167 tok (96.8%)
+npm-install.txt          628 -> 41 tok (93.5%)
+npm-build-fail.txt       2386 -> 212 tok (91.1%)
+cargo-test-pass.txt      5311 -> 23 tok (99.6%)
+cargo-build-fail.txt     2248 -> 182 tok (91.9%)
+cargo-test-fail.txt      2111 -> 98 tok (95.4%)
+git-log.txt              4405 -> 888 tok (79.8%)
+git-diff.txt             5268 -> 811 tok (84.6%)
+git-status.txt           655 -> 92 tok (86.0%)
+generic-fail.txt         4629 -> 188 tok (95.9%)
+generic-pass.txt         9031 -> 70 tok (99.2%)
+mocha-pass.txt           6903 -> 10 tok (99.9%)
+mocha-fail.txt           4445 -> 188 tok (95.8%)
+mocha-json-fail.txt      27323 -> 157 tok (99.4%)
+rspec-fail.txt           4368 -> 188 tok (95.7%)
+phpunit-fail.txt         462 -> 175 tok (62.1%)
+pest-fail.txt            6366 -> 86 tok (98.6%)
+sbt-test-fail.txt        4086 -> 171 tok (95.8%)
+sbt-compile-fail.txt     932 -> 154 tok (83.5%)
+xunit-console-fail.txt   441 -> 193 tok (56.2%)
+nunit-console-fail.txt   546 -> 198 tok (63.7%)
+dotnet-mtp-fail.txt      383 -> 101 tok (73.6%)
+bazel-test-fail.txt      3837 -> 313 tok (91.8%)
+jest-json-fail.txt       32718 -> 182 tok (99.4%)
+go-test-json-fail.txt    25630 -> 67 tok (99.7%)
+eslint-json.txt          10107 -> 384 tok (96.2%)
+vitest-kopt-pass.txt     3740 -> 27 tok (99.3%)
+vitest-kopt-fail.txt     6764 -> 158 tok (97.7%)
+build-kopt-fail.txt      521 -> 205 tok (60.7%)
+ ✓ test/compress.filters.test.ts (83 tests) 569ms
+kopt: find failed: database is not open
+kopt: read failed: database is not open
+kopt: outline failed: database is not open
+kopt: refs failed: database is not open
+ ✓ test/bench-failures.test.ts (13 tests) 678ms
+ ❯ test/retrieval.test.ts (52 tests | 13 failed) 741ms
+   ✓ find (hits) > ranks the exact identifier first 27ms
+   ✓ find (hits) > matches names case-insensitively 11ms
+   ✓ find (hits) > ranks computeRefund first for natural-language queries 27ms
+   ✓ find (hits) > demotes test files unless the query mentions tests 22ms
+   ✓ find (hits) > resolves qualified names with . :: # separators 26ms
+   ✓ find (hits) > supports globs on names and members 7ms
+   ✓ find (hits) > applies kinds and path filters (prefix and glob) 16ms
+   ✓ find (hits) > formats: header, path once per file, indented hits with docs 28ms
+   ✓ find (hits) > caps hits per file unless the query targets that file 18ms
+   ✓ find (hits) > drops constructors when their class is listed 3ms
+   ✓ find (hits) > respects maxTokens and limit, reporting what was cut 57ms
+   ✓ find (hits) > is deterministic 12ms
+   ✓ find (hits) > never throws on bad input 5ms
+   ✓ find (hits) > ticks the ledger once per call 17ms
+   ✓ find (pack) > returns pointers, the best bodies and a callers line 6ms
+   ✓ find (pack) > dedups bodies across calls; fresh resends 15ms
+   ✓ find (pack) > packs containers and long symbols as skeletons 5ms
+   ✓ find (pack) > packs a single identifier within a smaller default budget 6ms
+   ✓ find (pack) > respects the budget, with a header that matches the text 41ms
+   ✓ read > returns a symbol body verbatim under one header 1ms
+   ✓ read > dedups repeated reads and resends with fresh 1ms
+   × read > treats a symbol inside an already-sent range as unchanged 8ms
+     → expected false to be true // Object.is equality
+   ✓ read > lists candidates for ambiguous names and resolves qualified ones 1ms
+   ✓ read > picks a clearly dominant candidate and prefers exact case 4ms
+   × read > reads ranges, reversed ranges, single lines and line:col 4ms
+     → expected 'web/src/api/refunds.ts: not readable …' to be 'web/src/api/refunds.ts:10-13\n/** Req…' // Object.is equality
+   × read > cuts long ranges at line boundaries with a continuation hint 1ms
+     → expected null not to be null
+   × read > returns files that fit budgets.readFile verbatim, longer ones as skeletons with an exact baseline 3ms
+     → expected 'web/src/api/refunds.ts: not readable …' to be 'web/src/api/refunds.ts:1-18\nimport {…' // Object.is equality
+   ✓ read > renders container and function skeletons 1ms
+   × read > renders a compact card 1ms
+     → expected 'src/main/java/com/acme/billing/Refund…' to match /· java · 49 lines · 8 symbols · impor…/
+   ✓ read > falls back to a skeleton + parts hint when the body exceeds the budget 17ms
+   × read > returns a named function whole without maxTokens, up to budgets.readSymbol 6ms
+     → expected 'src/main/java/com/acme/legacy/LegacyB…' to be 'src/main/java/com/acme/legacy/LegacyB…' // Object.is equality
+   × read > returns the first part of a function longer than budgets.readSymbol, then the range of the rest 6ms
+     → expected 'src/main/java/com/acme/legacy/LegacyB…' to be 'src/main/java/com/acme/legacy/LegacyB…' // Object.is equality
+   ✓ read > respects budgets for every target kind 42ms
+   × read > explains misses in one line with suggestions 2ms
+     → expected 'src/nope/Missing.java: not readable t…' to match /no file "src\/nope\/Missing.java"/nope\
+   ✓ read > reads file text from disk only: a file deleted since indexing is reported in one line 69ms
+   × outline > outlines a file with line-prefixed members and an exact baseline 1ms
+     → expected 'src/main/java/com/acme/billing/Refund…' to match /^outline src\/main\/java\/com\/a…/main\
+   × outline > drops private members and fields first when over budget 1ms
+     → expected 'src/main/java/com/acme/billing/Refund…' to contain 'L19 public BigDecimal computeRefund'
+   ✓ outline > builds a ranked repo map grouped by directory 3ms
+   ✓ outline > personalizes the map with focus and reports omitted files 4ms
+   × outline > outlines a directory, a glob, a markdown file and a symbol 3ms
+     → expected 'README.md: not readable through kopt …' to contain '  L5 Architecture\n    L7 Billing dom…'
+   ✓ outline > respects budgets 5ms
+   ✓ refs > lists resolved usages grouped by file, then possible unresolved ones 1ms
+   ✓ refs > names each caller with its declaration line and checks the list against the text 1ms
+   ✓ refs > lists callees with handles (out) 1ms
+   ✓ refs > aggregates callers of callers at depth 2 2ms
+   × refs > supports both directions, classes (via constructors) and files 1ms
+     → expected 'src/main/java/com/acme/billing/Order.…' to match /· 6 using files · 0 imports/
+   ✓ refs > groups repeated usages by caller 0ms
+   ✓ refs > counts every line it drops and keeps the header exact, depth 2 and both directions included 110ms
+   ✓ refs > handles misses, ambiguity and budgets 18ms
+   ✓ robustness > turns store failures into one-line answers 21ms
+   × resolveTarget > classifies targets 3ms
+     → expected { kind: 'none', …(3) } to match object { kind: 'range', …(3) }
+(3 matching properties omitted from actual)
+   ✓ resolveTarget > drops namespace qualifiers down to Type.member (PHP \, Rust ::, other packages) 3ms
+(node:47876) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ test/retrieval.stale.test.ts (10 tests | 2 failed) 569ms
+   ✓ staleness > re-locates a moved symbol by its signature 89ms
+   ✓ staleness > finds the new block end when the body grew 44ms
+   ✓ staleness > warns in one line when the symbol cannot be found 22ms
+   × staleness > re-locates skeleton lines of a stale file 53ms
+     → expected 'src/main/java/com/acme/billing/Refund…' to contain '  L21 public BigDecimal computeRefund…'
+   ✓ staleness > ignores touch-only changes (same content hash) 48ms
+   ✓ staleness > tolerates a missing or broken indexer module 200ms
+   ✓ staleness > uses a background re-extraction for later calls 27ms
+   ✓ staleness with overloads and call sites > re-locates a declaration, not a call site placed before it 22ms
+   ✓ staleness with overloads and call sites > matches an overload by its signature after a re-parse 40ms
+   × staleness with overloads and call sites > maps path:LINE of a changed file to the symbol covering that line now 23ms
+     → expected 'src/a/Svc.java: not readable through …' to be 'src/a/Svc.java:1-25' // Object.is equality
+(node:46387) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/kiro.test.ts (11 tests) 1483ms
+   ✓ suggestKiroignore > excludes token sinks and never regular sources or build configuration  321ms
+(node:47976) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/bench.test.ts (24 tests) 1100ms
+(node:48412) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:48308) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/indexer.resolve2.test.ts (14 tests) 528ms
+ ✓ test/indexer.resolve.test.ts (9 tests) 388ms
+ ✓ test/indexer.grammars.test.ts (11 tests) 221ms
+(node:48630) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/telemetry.test.ts (8 tests) 91ms
+ ❯ test/retrieval.access.test.ts (3 tests | 2 failed) 71ms
+   × access rules > refuses git-ignored and kiro-ignored files, nested rules included, in one line 6ms
+     → .env: expected '.env: not readable through kopt (a li…' to be '.env: not readable through kopt (excl…' // Object.is equality
+   ✓ access rules > refuses paths and links that leave the project 1ms
+   × access rules > still reads ordinary files that are not indexed 2ms
+     → expected 'docs/readme.md: not readable through …' to be 'docs/readme.md:1-1\n# Public docs' // Object.is equality
+ ✓ test/retrieval.search.test.ts (14 tests) 283ms
+ ✓ test/indexer.resolve3.test.ts (5 tests) 368ms
+(node:48762) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/retrieval.failures.test.ts (6 tests) 46ms
+ ✓ test/indexer.recall.test.ts (3 tests) 50ms
+ ✓ test/hooks-commands.test.ts (9 tests) 16ms
+ ✓ test/compress.command.test.ts (113 tests) 22ms
+ ✓ test/compress.cache.test.ts (9 tests) 10602ms
+   ✓ workspace fingerprint: ignored state > env files and installed dependencies are inputs  521ms
+   ✓ kopt_run cache and ignored state > re-runs after a gitignored .env or a dependency install changes (no stale verdict)  1574ms
+   ✓ kopt_run cache and ignored state > does not cache a run during which a file changed, then caches the next one  3831ms
+   ✓ kopt_run cache and ignored state > a command that writes its own ignored build output is still cached  1504ms
+   ✓ kopt_run cache and ignored state > joins an identical run in progress instead of starting it twice  2466ms
+ ✓ test/cli.test.ts (16 tests) 13902ms
+   ✓ kopt CLI > init --dry-run lists the files it would write  347ms
+   ✓ kopt mcp (stdio) > speaks clean MCP on stdout and lists the 6 tools  2135ms
+   ✓ kopt run (end to end, needs compress) > quotes argv, prints compact output and propagates failure  963ms
+   ✓ kopt find (end to end, needs indexer + retrieval) > indexes a tiny repo on first use and prints hits  1702ms
+   ✓ kopt CLI sessions (KOPT_SESSION) > keep their dedup ledger between calls; calls without a session stay stateless  4514ms
+   ✓ kopt mcp first build (worker thread, needs indexer + retrieval) > builds the index in the background and answers once ready  718ms
+   ✓ zero-config commands (temp HOME) > setup leaves a development checkout alone unless --global is given (flag order)  563ms
+   ✓ zero-config commands (temp HOME) > setup then doctor --quick then uninstall  680ms
+   ✓ zero-config commands (temp HOME) > kopt mcp without --root serves the git root of its cwd, and nothing in a home directory  971ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 19 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/retrieval.access.test.ts > access rules > refuses git-ignored and kiro-ignored files, nested rules included, in one line
+AssertionError: .env: expected '.env: not readable through kopt (a li…' to be '.env: not readable through kopt (excl…' // Object.is equality
+
+Expected: ".env: not readable through kopt (excluded by .gitignore or .kiroignore)"
+Received: ".env: not readable through kopt (a link that leaves the project)"
+
+ ❯ test/retrieval.access.test.ts:59:30
+     57|     ]) {
+     58|       const r = read(s.store, { target }, ctx);
+     59|       expect(r.text, target).toBe(`${target.replace(/:1-1$/, '')}: not…
+       |                              ^
+     60|       expect(r.text).not.toMatch(/dotenv-secret|hunter2|user:token|nes…
+     61|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/19]⎯
+
+ FAIL  test/retrieval.access.test.ts > access rules > still reads ordinary files that are not indexed
+AssertionError: expected 'docs/readme.md: not readable through …' to be 'docs/readme.md:1-1\n# Public docs' // Object.is equality
+
+- Expected
++ Received
+
+- docs/readme.md:1-1
+- # Public docs
++ docs/readme.md: not readable through kopt (a link that leaves the project)
+
+ ❯ test/retrieval.access.test.ts:76:67
+     74|
+     75|   it('still reads ordinary files that are not indexed', () => {
+     76|     expect(read(s.store, { target: 'docs/readme.md' }, ctx).text).toBe…
+       |                                                                   ^
+     77|   });
+     78| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/19]⎯
+
+ FAIL  test/retrieval.stale.test.ts > staleness > re-locates skeleton lines of a stale file
+AssertionError: expected 'src/main/java/com/acme/billing/Refund…' to contain '  L21 public BigDecimal computeRefund…'
+
+Expected: "  L21 public BigDecimal computeRefund(Order order, RefundRequest request)"
+Received: "src/main/java/com/acme/billing/RefundService.java: not readable through kopt (a link that leaves the project)"
+
+ ❯ test/retrieval.stale.test.ts:72:20
+     70|     write('// one\n// two\n' + original());
+     71|     const r = outline(s.store, { path: RS }, ctx);
+     72|     expect(r.text).toContain('  L21 public BigDecimal computeRefund(Or…
+       |                    ^
+     73|     expect(r.text).toContain('note: file changed since indexing; line …
+     74|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/19]⎯
+
+ FAIL  test/retrieval.stale.test.ts > staleness with overloads and call sites > maps path:LINE of a changed file to the symbol covering that line now
+AssertionError: expected 'src/a/Svc.java: not readable through …' to be 'src/a/Svc.java:1-25' // Object.is equality
+
+Expected: "src/a/Svc.java:1-25"
+Received: "src/a/Svc.java: not readable through kopt (a link that leaves the project)"
+
+ ❯ test/retrieval.stale.test.ts:207:39
+    205|     // Before the re-parse is ready: a window around the requested lin…
+    206|     const first = read(t.store, { target: `${SVC}:19` }, c);
+    207|     expect(first.text.split('\n')[0]).toBe(`${SVC}:1-25`);
+       |                                       ^
+    208|     await settleExtractions();
+    209|     const r = read(t.store, { target: `${SVC}:19`, fresh: true }, c);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/19]⎯
+
+ FAIL  test/retrieval.test.ts > read > treats a symbol inside an already-sent range as unchanged
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ test/retrieval.test.ts:249:50
+    247|   it('treats a symbol inside an already-sent range as unchanged', () =…
+    248|     const file = read(s.store, { target: RS }, ctx);
+    249|     expect(file.text.startsWith(`${RS}:1-49\n`)).toBe(true);
+       |                                                  ^
+    250|     const sym = read(s.store, { target: 'approveRefund' }, ctx);
+    251|     expect(sym.text).toMatch(/unchanged \(shown in call 1\)/);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/19]⎯
+
+ FAIL  test/retrieval.test.ts > read > reads ranges, reversed ranges, single lines and line:col
+AssertionError: expected 'web/src/api/refunds.ts: not readable …' to be 'web/src/api/refunds.ts:10-13\n/** Req…' // Object.is equality
+
+- Expected
++ Received
+
+- web/src/api/refunds.ts:10-13
+- /** Requests a refund for an order through the billing API. */
+- export async function requestRefund(client: ApiClient, orderId: string, amount: number): Promise<RefundDto> {
+-   return client.post<RefundDto>(`/orders/${orderId}/refunds`, { amount });
+- }
++ web/src/api/refunds.ts: not readable through kopt (a link that leaves the project)
+
+ ❯ test/retrieval.test.ts:275:63
+    273|   it('reads ranges, reversed ranges, single lines and line:col', () =>…
+    274|     const p = 'web/src/api/refunds.ts';
+    275|     expect(read(s.store, { target: `${p}:10-13` }, ctx).text).toBe(`${…
+       |                                                               ^
+    276|     expect(read(s.store, { target: `./${p}:13-10`, fresh: true }, ctx)…
+    277|     expect(read(s.store, { target: `${RS}:22` }, ctx).text.split('\n')…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/19]⎯
+
+ FAIL  test/retrieval.test.ts > read > cuts long ranges at line boundaries with a continuation hint
+AssertionError: expected null not to be null
+ ❯ test/retrieval.test.ts:287:19
+    285|     expectValid(r, 300);
+    286|     const m = /^next: kopt_read .*:(\d+)-278 with maxTokens \d+00$/m.e…
+    287|     expect(m).not.toBeNull();
+       |                   ^
+    288|     const shown = /^\S+:1-(\d+)$/m.exec(r.text)!;
+    289|     expect(Number(m![1])).toBe(Number(shown[1]) + 1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/19]⎯
+
+ FAIL  test/retrieval.test.ts > read > returns files that fit budgets.readFile verbatim, longer ones as skeletons with an exact baseline
+AssertionError: expected 'web/src/api/refunds.ts: not readable …' to be 'web/src/api/refunds.ts:1-18\nimport {…' // Object.is equality
+
+- Expected
++ Received
+
+- web/src/api/refunds.ts:1-18
+- import { ApiClient } from './client';
+- import type { OrderDto } from '../types';
+- export interface RefundDto {
+-   orderId: string;
+-   amount: number;
+-   status: 'APPROVED' | 'REJECTED';
+- }
+- /** Requests a refund for an order through the billing API. */
+- export async function requestRefund(client: ApiClient, orderId: string, amount: number): Promise<RefundDto> {
+-   return client.post<RefundDto>(`/orders/${orderId}/refunds`, { amount });
+- }
+- /** Client-side preview of the refundable amount (server recomputes). */
+- export function computeRefundPreview(order: OrderDto, amount: number): number {
+-   return Math.min(order.total, amount);
+- }
++ web/src/api/refunds.ts: not readable through kopt (a link that leaves the project)
+
+ ❯ test/retrieval.test.ts:295:52
+    293|   it('returns files that fit budgets.readFile verbatim, longer ones as…
+    294|     const p = 'web/src/api/refunds.ts';
+    295|     expect(read(s.store, { target: p }, ctx).text).toBe(`${p}:1-18\n${…
+       |                                                    ^
+    296|     // 278 lines: one call returns it all (a skeleton would be followe…
+    297|     ctx.config.budgets.read = 400;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/19]⎯
+
+ FAIL  test/retrieval.test.ts > read > renders a compact card
+AssertionError: expected 'src/main/java/com/acme/billing/Refund…' to match /· java · 49 lines · 8 symbols · impor…/
+
+- Expected:
+/· java · 49 lines · 8 symbols · imports 2 · imported by 1/
+
++ Received:
+"src/main/java/com/acme/billing/RefundService.java: not readable through kopt (a link that leaves the project)"
+
+ ❯ test/retrieval.test.ts:344:67
+    342|     expect(r.text).toContain('callers 4 in 3 files · callees 4');
+    343|     expect(r.tokens).toBeLessThanOrEqual(100);
+    344|     expect(read(s.store, { target: RS, mode: 'card' }, ctx).text).toMa…
+       |                                                                   ^
+    345|   });
+    346|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/19]⎯
+
+ FAIL  test/retrieval.test.ts > read > returns a named function whole without maxTokens, up to budgets.readSymbol
+AssertionError: expected 'src/main/java/com/acme/legacy/LegacyB…' to be 'src/main/java/com/acme/legacy/LegacyB…' // Object.is equality
+
+Expected: "src/main/java/com/acme/legacy/LegacyBillingEngine.java:178-277 #1z"
+Received: "src/main/java/com/acme/legacy/LegacyBillingEngine.java: not readable through kopt (a link that leaves the project)"
+
+ ❯ test/retrieval.test.ts:367:94
+    365|     expectValid(r, ctx.config.budgets.readSymbol);
+    366|     // the same through a line inside it
+    367|     expect(read(s.store, { target: `${LEGACY}:200`, fresh: true }, ctx…
+       |                                                                                              ^
+    368|   });
+    369|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/19]⎯
+
+ FAIL  test/retrieval.test.ts > read > returns the first part of a function longer than budgets.readSymbol, then the range of the rest
+AssertionError: expected 'src/main/java/com/acme/legacy/LegacyB…' to be 'src/main/java/com/acme/legacy/LegacyB…' // Object.is equality
+
+- Expected
++ Received
+
+- src/main/java/com/acme/legacy/LegacyBillingEngine.java:214-277
+-         acc = acc.add(step11(order));
+-         acc = acc.add(step12(order));
+-         acc = acc.add(step13(order));
+-         acc = acc.add(step14(order));
+-         acc = acc.add(step15(order));
+-         acc = acc.add(step16(order));
+-         acc = acc.add(step17(order));
+-         acc = acc.add(step18(order));
+-         acc = acc.add(step19(order));
+-         acc = acc.add(step20(order));
+-         acc = acc.add(step21(order));
+-         acc = acc.add(step22(order));
+-         acc = acc.add(step23(order));
+-         acc = acc.add(step24(order));
+-         acc = acc.add(step01(order));
+-         acc = acc.add(step02(order));
+-         acc = acc.add(step03(order));
+-         acc = acc.add(step04(order));
+-         acc = acc.add(step05(order));
+-         acc = acc.add(step06(order));
+-         acc = acc.add(step07(order));
+-         acc = acc.add(step08(order));
+-         acc = acc.add(step09(order));
+-         acc = acc.add(step10(order));
+-         acc = acc.add(step11(order));
+-         acc = acc.add(step12(order));
+-         acc = acc.add(step13(order));
+-         acc = acc.add(step14(order));
+-         acc = acc.add(step15(order));
+-         acc = acc.add(step16(order));
+-         acc = acc.add(step17(order));
+-         acc = acc.add(step18(order));
+-         acc = acc.add(step19(order));
+-         acc = acc.add(step20(order));
+-         acc = acc.add(step21(order));
+-         acc = acc.add(step22(order));
+-         acc = acc.add(step23(order));
+-         acc = acc.add(step24(order));
+-         acc = acc.add(step01(order));
+-         acc = acc.add(step02(order));
+-         acc = acc.add(step03(order));
+-         acc = acc.add(step04(order));
+-         acc = acc.add(step05(order));
+-         acc = acc.add(step06(order));
+-         acc = acc.add(step07(order));
+-         acc = acc.add(step08(order));
+-         acc = acc.add(step09(order));
+-         acc = acc.add(step10(order));
+-         acc = acc.add(step11(order));
+-         acc = acc.add(step12(order));
+-         acc = acc.add(step13(order));
+-         acc = acc.add(step14(order));
+-         acc = acc.add(step15(order));
+-         acc = acc.add(step16(order));
+-         acc = acc.add(step17(order));
+-         acc = acc.add(step18(order));
+-         acc = acc.add(step19(order));
+-         acc = acc.add(step20(order));
+-         acc = acc.add(step21(order));
+-         acc = acc.add(step22(order));
+-         acc = acc.add(step23(order));
+-         acc = acc.add(step24(order));
+-         return acc;
+-     }
++ src/main/java/com/acme/legacy/LegacyBillingEngine.java: not readable through kopt (a link that leaves the project)
+
+ ❯ test/retrieval.test.ts:386:23
+    384|     // the rest, read as the hint says, comes whole
+    385|     const rest = read(s.store, { target: `${LEGACY}:${next![1]}-277`, …
+    386|     expect(rest.text).toBe(`${LEGACY}:${next![1]}-277\n${lines(LEGACY,…
+       |                       ^
+    387|   });
+    388|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/19]⎯
+
+ FAIL  test/retrieval.test.ts > read > explains misses in one line with suggestions
+AssertionError: expected 'src/nope/Missing.java: not readable t…' to match /no file "src\/nope\/Missing.java"/nope\
+
+- Expected:
+/no file "src\/nope\/Missing.java"/
+
++ Received:
+"src/nope/Missing.java: not readable through kopt (a link that leaves the project)"
+
+ ❯ test/retrieval.test.ts:405:74
+    403|     expect(miss.text.split('\n')).toHaveLength(1);
+    404|     expect(read(s.store, { target: '#zzzzz' }, ctx).text).toMatch(/unk…
+    405|     expect(read(s.store, { target: 'src/nope/Missing.java' }, ctx).tex…
+       |                                                                          ^
+    406|     expect(read(s.store, { target: 'web' }, ctx).text).toBe('web is a …
+    407|     expect(read(s.store, { target: '' }, ctx).text).toMatch(/empty tar…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/19]⎯
+
+ FAIL  test/retrieval.test.ts > outline > outlines a file with line-prefixed members and an exact baseline
+AssertionError: expected 'src/main/java/com/acme/billing/Refund…' to match /^outline src\/main\/java\/com\/a…/main\
+
+- Expected:
+/^outline src\/main\/java\/com\/acme\/billing\/RefundService.java · 8 symbols · 49 lines · ~\d+ tok$/
+
++ Received:
+"src/main/java/com/acme/billing/RefundService.java: not readable through kopt (a link that leaves the project)"
+
+ ❯ test/retrieval.test.ts:429:35
+    427|   it('outlines a file with line-prefixed members and an exact baseline…
+    428|     const r = outline(s.store, { path: RS }, ctx);
+    429|     expect(r.text.split('\n')[0]).toMatch(new RegExp(`^outline ${RS} ·…
+       |                                   ^
+    430|     expect(r.text).toContain('\n  L19 public BigDecimal computeRefund(…
+    431|     expect(r.baselineTokens).toBe(estimateTokens(fileText(RS)));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/19]⎯
+
+ FAIL  test/retrieval.test.ts > outline > drops private members and fields first when over budget
+AssertionError: expected 'src/main/java/com/acme/billing/Refund…' to contain 'L19 public BigDecimal computeRefund'
+
+Expected: "L19 public BigDecimal computeRefund"
+Received: "src/main/java/com/acme/billing/RefundService.java: not readable through kopt (a link that leaves the project)"
+
+ ❯ test/retrieval.test.ts:438:20
+    436|     expectValid(r, 110);
+    437|     expect(r.text).not.toContain('private final RefundPolicy policy');
+    438|     expect(r.text).toContain('L19 public BigDecimal computeRefund');
+       |                    ^
+    439|     expect(r.text.split('\n')[0]).toMatch(/\+\d+ more/);
+    440|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/19]⎯
+
+ FAIL  test/retrieval.test.ts > outline > outlines a directory, a glob, a markdown file and a symbol
+AssertionError: expected 'README.md: not readable through kopt …' to contain '  L5 Architecture\n    L7 Billing dom…'
+
+- Expected
++ Received
+
+-   L5 Architecture
+-     L7 Billing domain
++ README.md: not readable through kopt (a link that leaves the project)
+
+ ❯ test/retrieval.test.ts:475:21
+    473|     expect(ts.text).not.toContain('.java');
+    474|     const md = outline(s.store, { path: 'README.md' }, ctx);
+    475|     expect(md.text).toContain('  L5 Architecture\n    L7 Billing domai…
+       |                     ^
+    476|     const sym = outline(s.store, { path: 'RefundPolicy' }, ctx);
+    477|     expect(sym.text).toContain(`${hd('RefundPolicy')} skeleton`);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/19]⎯
+
+ FAIL  test/retrieval.test.ts > refs > supports both directions, classes (via constructors) and files
+AssertionError: expected 'src/main/java/com/acme/billing/Order.…' to match /· 6 using files · 0 imports/
+
+- Expected:
+/· 6 using files · 0 imports/
+
++ Received:
+"src/main/java/com/acme/billing/Order.java: not readable through kopt (a link that leaves the project)"
+
+ ❯ test/retrieval.test.ts:544:38
+    542|     expect(cls.text).toContain(`${J}/api/RefundController.java: L6 imp…
+    543|     const file = refs(s.store, { target: `${J}/billing/Order.java`, di…
+    544|     expect(file.text.split('\n')[0]).toMatch(/· 6 using files · 0 impo…
+       |                                      ^
+    545|     expect(file.text).toContain(`${J}/billing/RefundPolicy.java (3 ref…
+    546|     expect(file.text).toContain(`${J}/api/OrderRepository.java (import…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/19]⎯
+
+ FAIL  test/retrieval.test.ts > resolveTarget > classifies targets
+AssertionError: expected { kind: 'none', …(3) } to match object { kind: 'range', …(3) }
+(3 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "end": 5,
+-   "kind": "range",
+-   "path": "src/main/java/com/acme/billing/RefundService.java",
+-   "start": 1,
++   "kind": "none",
+  }
+
+ ❯ test/retrieval.test.ts:601:49
+    599|   it('classifies targets', () => {
+    600|     expect(resolveTarget(s.store, hd('Order')).kind).toBe('symbol');
+    601|     expect(resolveTarget(s.store, `${RS}:1-5`)).toMatchObject({ kind: …
+       |                                                 ^
+    602|     expect(resolveTarget(s.store, RS)).toMatchObject({ kind: 'file', p…
+    603|     expect(resolveTarget(s.store, join(s.root, RS))).toMatchObject({ k…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/19]⎯
+
+ FAIL  test/xplat.test.ts > CRLF and BOM sources: extract -> index -> read > read returns code without CR, with the right line numbers
+AssertionError: expected 'src/Totals.java: not readable through…' to contain '  public int twice(int a) {\n    retu…'
+
+- Expected
++ Received
+
+-   public int twice(int a) {
+-     return total(a, a);
+-   }
++ src/Totals.java: not readable through kopt (a link that leaves the project)
+
+ ❯ test/xplat.test.ts:187:24
+    185|     const range = read(store, { target: 'src/Totals.java:10-12' }, new…
+    186|     expect(range.text).not.toContain('\r');
+    187|     expect(range.text).toContain(JAVA.slice(9, 12).join('\n'));
+       |                        ^
+    188|   });
+    189|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/19]⎯
+
+ FAIL  test/xplat.test.ts > CRLF and BOM sources: extract -> index -> read > outline and find output carry no CR
+AssertionError: expected 'src/Totals.java: not readable through…' to contain 'total'
+
+Expected: "total"
+Received: "src/Totals.java: not readable through kopt (a link that leaves the project)"
+
+ ❯ test/xplat.test.ts:211:20
+    209|   it('outline and find output carry no CR', () => {
+    210|     const o = outline(store, { path: 'src/Totals.java' }, newToolConte…
+    211|     expect(o.text).toContain('total');
+       |                    ^
+    212|     expect(o.text).not.toContain('\r');
+    213|     const f = find(store, { query: 'total amounts' }, newToolContext(c…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/19]⎯
+
+ Test Files  4 failed | 29 passed (33)
+      Tests  19 failed | 677 passed | 1 skipped (697)
+   Start at  23:32:34
+   Duration  14.50s (transform 2.15s, setup 0ms, collect 8.47s, tests 86.28s, environment 3ms, prepare 2.89s)

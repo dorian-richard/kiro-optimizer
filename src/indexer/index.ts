@@ -5,17 +5,19 @@
 // `idx_dirty` set, which forces a full re-resolution next time.
 
 import { execFile } from 'node:child_process';
-import { existsSync, readFileSync, statSync } from 'node:fs';
-import { join } from 'node:path';
+import { existsSync, lstatSync, readFileSync, realpathSync, statSync } from 'node:fs';
+import { join, relative } from 'node:path';
 import type { KoptConfig } from '../core/config.js';
 import { META } from '../store/schema.js';
 import type { Store } from '../store/store.js';
 import { pythonModule } from './langs/python.js';
 import { createPreparer } from './pool.js';
 import { sha1, type PrepJob, type Prepared } from './prepare.js';
+import { acquireLock, tryLock, type HeldLock } from './lock.js';
 import { computeRanks } from './rank.js';
 import { resolveIndex, type ResolveStats } from './resolve.js';
 import { filterPaths, listFiles, normalizeRel } from './walker.js';
+import { toPosixPath } from '../telemetry/fsutil.js';
 import { dropSecondaryIndexes, INDEXER_SQL, newTracker, Writer, type DbFile, type WriteTracker } from './writer.js';
 
 export { extractFile } from './parse.js';
@@ -27,6 +29,26 @@ export interface IndexOptions {
   /** Restrict to these repo-relative paths (incremental). Default: walk the whole repo. */
   paths?: string[];
   onProgress?: (done: number, total: number) => void;
+  /** Phase changes and progress of every phase (parse progress is also reported through onProgress). */
+  onPhase?: (p: IndexPhase) => void;
+  /**
+   * Another process indexing the same project (see lock.ts): 'wait' for it to finish (default), or 'skip' this
+   * pass (stats.locked is then set and nothing was done).
+   */
+  lock?: 'wait' | 'skip';
+}
+
+/**
+ * Where a pass is. 'index': a bulk first build recreates the secondary indexes it dropped. Symbols, files and
+ * full-text search are complete (searchable) from 'resolve' on: only references (callers, callees, refs) and ranks are
+ * still being computed.
+ */
+export interface IndexPhase {
+  phase: 'wait' | 'list' | 'parse' | 'index' | 'resolve' | 'rank';
+  done?: number;
+  total?: number;
+  /** 'wait': pid of the process holding the index lock. */
+  holder?: number;
 }
 
 export interface IndexStats {
@@ -47,6 +69,8 @@ export interface IndexStats {
   refsResolved?: number;
   /** True when this pass re-resolved the whole index (first build, recovery, or large change set). */
   fullResolve?: boolean;
+  /** 'skip' lock mode: another process was indexing this project, so this pass did nothing. */
+  locked?: boolean;
 }
 
 const META_DIRTY = 'idx_dirty';
@@ -146,19 +170,49 @@ function loadDbFiles(store: Store): Map<string, DbFile> {
   return out;
 }
 
+function realpathOrUndefined(p: string): string | undefined {
+  try {
+    return realpathSync.native(p);
+  } catch {
+    return undefined;
+  }
+}
+
+/**
+ * Spelling of a hook-reported path as the filesystem stores it, relative to the real root: fixes the case on
+ * case-insensitive filesystems (a second `files` row for `src/userservice.ts` would duplicate every symbol of
+ * `src/UserService.ts`) and resolves symlinked parent directories. Undefined when the file lives outside the
+ * repository (a symlink escaping it); the input spelling when the file does not exist (deleted).
+ */
+export function canonicalRel(rootReal: string, root: string, rel: string): string | undefined {
+  const real = realpathOrUndefined(join(root, rel));
+  if (real === undefined) return rel;
+  const r = toPosixPath(relative(rootReal, real));
+  if (!r || r === '..' || r.startsWith('../') || /^[A-Za-z]:/.test(r) || r.startsWith('/')) return undefined;
+  return r;
+}
+
 /** Lists files and compares size/mtime with the index; only changed files will be read. */
 async function plan(store: Store, opts: IndexOptions, dbFiles: Map<string, DbFile>, maxFiles: number | undefined, timer: Timer): Promise<Plan> {
   const cfg = opts.config;
   const root = cfg.root;
-  const skipped = new Map<string, { size: number; mtime_ms: number }>();
-  for (const r of store.db.prepare('SELECT path, size, mtime_ms FROM idx_skipped').all() as Array<{ path: string; size: number; mtime_ms: number }>) {
+  const skipped = new Map<string, { size: number; mtime_ms: number; reason: string }>();
+  for (const r of store.db.prepare('SELECT path, size, mtime_ms, reason FROM idx_skipped').all() as Array<{ path: string; size: number; mtime_ms: number; reason: string }>) {
     skipped.set(r.path, r);
   }
   let listed: string[];
   const removed: string[] = [];
   const staleSkips: string[] = [];
+  const rootReal = realpathOrUndefined(root) ?? root;
   if (opts.paths) {
-    const { keep, dropped } = filterPaths(cfg, [...new Set(opts.paths.map((p) => normalizeRel(root, p)))]);
+    const rels = new Set<string>();
+    for (const p of opts.paths) {
+      const rel = normalizeRel(root, p);
+      const canon = canonicalRel(rootReal, root, rel);
+      if (canon !== undefined) rels.add(canon);
+      else if (dbFiles.has(rel)) removed.push(rel);
+    }
+    const { keep, dropped } = filterPaths(cfg, [...rels]);
     listed = keep;
     for (const p of dropped) if (dbFiles.has(p)) removed.push(p);
   } else {
@@ -173,7 +227,10 @@ async function plan(store: Store, opts: IndexOptions, dbFiles: Map<string, DbFil
   const candidates: Candidate[] = [];
   const preSkipped: Prepared[] = [];
   for (const rel of listed) {
-    const st = statSync(join(root, rel), { throwIfNoEntry: false });
+    // Symlinks are never followed: one pointing outside the repository would put the contents of an
+    // arbitrary file (credentials, host files) into the index and its answers, and one pointing inside only
+    // duplicates a file that is indexed under its own path. git lists symlinks as plain entries.
+    const st = lstatSync(join(root, rel), { throwIfNoEntry: false });
     if (!st || !st.isFile()) {
       if (dbFiles.has(rel)) removed.push(rel);
       continue;
@@ -185,7 +242,8 @@ async function plan(store: Store, opts: IndexOptions, dbFiles: Map<string, DbFil
       continue;
     }
     const sk = skipped.get(rel);
-    if (!row && sk && sk.size === st.size && sk.mtime_ms === mtime) continue;
+    // skip markers stand until the file changes, except parse timeouts (load-dependent): those are retried
+    if (!row && sk && sk.reason !== 'timeout' && sk.size === st.size && sk.mtime_ms === mtime) continue;
     if (st.size > cfg.maxFileBytes) {
       preSkipped.push({ kind: 'skip', rel, size: st.size, mtimeMs: st.mtimeMs, reason: 'large' });
       continue;
@@ -199,7 +257,7 @@ async function plan(store: Store, opts: IndexOptions, dbFiles: Map<string, DbFil
     const queued = new Set(candidates.map((c) => c.rel));
     for (const r of store.db.prepare("SELECT path, namespace FROM files WHERE lang = 'python'").all() as Array<{ path: string; namespace: string | null }>) {
       if (queued.has(r.path) || pythonModule(r.path, pyPackages) === r.namespace) continue;
-      const st = statSync(join(root, r.path), { throwIfNoEntry: false });
+      const st = lstatSync(join(root, r.path), { throwIfNoEntry: false });
       if (st?.isFile()) {
         candidates.push({ rel: r.path, size: st.size, mtimeMs: st.mtimeMs, force: true });
         unchanged--;
@@ -256,6 +314,7 @@ async function parseAndWrite(
     writeMs += Date.now() - t;
     done += items.length;
     opts.onProgress?.(done, total);
+    opts.onPhase?.({ phase: 'parse', done, total });
   };
   const launch = (c: Candidate) => {
     const job: PrepJob = {
@@ -282,6 +341,7 @@ async function parseAndWrite(
       });
   };
 
+  opts.onPhase?.({ phase: 'parse', done: 0, total });
   try {
     while (next < total || inflight > 0) {
       while (next < total && inflight < window) launch(candidates[next++]);
@@ -292,6 +352,7 @@ async function parseAndWrite(
   } finally {
     await preparer.close();
     if (restoreIndexes) {
+      opts.onPhase?.({ phase: 'index' });
       const t = Date.now();
       await restoreIndexes();
       if (DEBUG) process.stderr.write(`kopt index: rebuild indexes ${Date.now() - t}ms\n`);
@@ -301,12 +362,36 @@ async function parseAndWrite(
   return { sameContent };
 }
 
+function lockedStats(t0: number): IndexStats {
+  return { filesSeen: 0, filesIndexed: 0, filesUnchanged: 0, filesDeleted: 0, symbols: 0, refs: 0, durationMs: Date.now() - t0, locked: true };
+}
+
 async function runPass(store: Store, opts: IndexOptions, maxFiles?: number): Promise<IndexStats> {
   const t0 = Date.now();
-  const timer = new Timer();
   const cfg = opts.config;
   // An unreachable root would look like "every file was deleted" and wipe the index.
   if (!existsSync(cfg.root) || !statSync(cfg.root).isDirectory()) throw new Error(`kopt index: repo root not found: ${cfg.root}`);
+  let lock: HeldLock | undefined;
+  if (store.path !== ':memory:' && store.path !== '') {
+    const path = `${store.path}.lock`;
+    if (opts.lock === 'skip') {
+      lock = tryLock(path);
+      if (!lock) return lockedStats(t0);
+    } else {
+      lock = await acquireLock(path, { onBusy: (h) => opts.onPhase?.({ phase: 'wait', holder: h.pid }) });
+    }
+  }
+  try {
+    return await lockedPass(store, opts, maxFiles, t0);
+  } finally {
+    lock?.release();
+  }
+}
+
+async function lockedPass(store: Store, opts: IndexOptions, maxFiles: number | undefined, t0: number): Promise<IndexStats> {
+  const timer = new Timer();
+  const cfg = opts.config;
+  opts.onPhase?.({ phase: 'list' });
   store.db.exec(INDEXER_SQL);
   // another process (CLI vs MCP server) may hold the write lock for a batch: wait instead of failing
   const busy = (store.db.prepare('PRAGMA busy_timeout').get() as { timeout: number } | undefined)?.timeout ?? 0;
@@ -331,24 +416,30 @@ async function runPass(store: Store, opts: IndexOptions, maxFiles?: number): Pro
     writer.forgetSkipped(p.staleSkips);
     writer.writeBatch(p.preSkipped, dbFiles, tracker);
     ({ sameContent } = await parseAndWrite(store, opts, p, dbFiles, writer, tracker, timer));
+    writer.pruneRetired();
 
     // Resolution (+ ranks) only when something changed or a previous pass did not complete.
     const fileCount = dbFiles.size;
     const changedFiles = tracker.changedFileIds.size + tracker.removedFileIds.size;
     full = !completed || wasDirty || changedFiles > Math.max(500, fileCount * 0.2);
     if (full || changedFiles > 0) {
+      opts.onPhase?.({ phase: 'resolve', done: 0 });
       rs = await resolveIndex(store, {
+        onProgress: opts.onPhase ? (done, total) => opts.onPhase!({ phase: 'resolve', done, total }) : undefined,
         full,
+        root: cfg.root,
         changedFileIds: tracker.changedFileIds,
         removedSymbolIds: tracker.removedSymbolIds,
         changedNames: tracker.changedNames,
         addedFileIds: tracker.addedFileIds,
         removedFileIds: tracker.removedFileIds,
+        removedPaths: tracker.removedPaths,
       });
       timer.mark(`resolve (${rs.refsResolved}/${rs.refsConsidered} refs, full=${full})`);
       // Ranks are priors: recompute globally after big changes, let small edits accumulate otherwise.
       const stale = Number(store.getMeta(META_RANK_STALE) ?? '0') + changedFiles;
       if (full || fileCount <= 3000 || stale > fileCount * 0.05) {
+        opts.onPhase?.({ phase: 'rank' });
         computeRanks(store);
         store.setMeta(META_RANK_STALE, '0');
         timer.mark('ranks');
@@ -374,6 +465,7 @@ async function runPass(store: Store, opts: IndexOptions, maxFiles?: number): Pro
   store.setMeta(META_DIRTY, '0');
 
   const counts = store.counts();
+  store.setMeta('symbol_count', String(counts.symbols));
   const stats: IndexStats = {
     filesSeen: p.listed.length,
     filesIndexed: tracker.filesIndexed,

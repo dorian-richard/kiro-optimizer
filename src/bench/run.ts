@@ -135,6 +135,15 @@ function readSidecar(dataDir: string): Sidecar | undefined {
 }
 
 /**
+ * Index folder of one repo for `--index-dir`: the folder itself when one repo is benchmarked, `<dir>/.kopt-<repo>`
+ * when several are (so that repos never share one index). Undefined: the default `bench/repos/.kopt-<repo>`.
+ */
+export function repoIndexDir(indexDir: string | undefined, repoName: string, several: boolean): string | undefined {
+  if (!indexDir) return undefined;
+  return several ? join(resolve(indexDir), `.kopt-${repoName}`) : resolve(indexDir);
+}
+
+/**
  * Opens (and builds or refreshes when needed) the kopt index of a checkout. The index lives outside the checkout
  * (`bench/repos/.kopt-<repo>` by default). A `bench-index.json` sidecar records the build time so that a reused
  * index still reports how long it took to build.
@@ -180,13 +189,14 @@ export async function openKoptIndex(
     if (stale) {
       // checkout moved since the index was built: refresh so that kopt is not measured on stale data
       log(`index is stale (${indexed!.slice(0, 12)} != ${head!.slice(0, 12)}): refreshing`);
-      if (modules.indexer.refreshIndex) await modules.indexer.refreshIndex(store, { config });
-      else await modules.indexer.indexRepo(store, { config });
+      if (modules.indexer.refreshIndex) await modules.indexer.refreshIndex(store, { config, repoName });
+      else await modules.indexer.indexRepo(store, { config, repoName });
     } else {
       log(`indexing ${config.root} -> ${dbPath}`);
       let last = 0;
       await modules.indexer.indexRepo(store, {
         config,
+        repoName,
         onProgress: (done, total) => {
           if (Date.now() - last > 2000) {
             last = Date.now();

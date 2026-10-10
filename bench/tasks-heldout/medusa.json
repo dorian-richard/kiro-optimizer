@@ -1,0 +1,68 @@
+{
+  "repo": {
+    "name": "medusa",
+    "url": "https://github.com/medusajs/medusa.git",
+    "tag": "v2.21.2",
+    "commit": "020565398e436a2bc65777a3b1ad347b4735d6df",
+    "language": "typescript",
+    "path": "bench/repos/medusa"
+  },
+  "notes": "Held-out tasks (round 2), written after v0.2's tuning and before any kopt measurement on them; not derived from bench/results/failures.md. Gold read in the code with git grep and sed only. Re-check with `kopt bench bench/tasks-heldout/medusa.json --verify`.",
+  "tasks": [
+    {
+      "id": "ho-md-explain-tax-inclusive",
+      "kind": "explain",
+      "lang": "en",
+      "question": "When a price already includes tax, how does Medusa derive the price without tax that the store API returns?",
+      "search": "price includes tax derive price without tax rate amount",
+      "gold": {
+        "files": [
+          "packages/core/utils/src/totals/tax/index.ts"
+        ],
+        "symbols": [
+          {
+            "name": "calculateAmountsWithTax",
+            "file": "packages/core/utils/src/totals/tax/index.ts",
+            "line": 35,
+            "kind": "function"
+          },
+          {
+            "name": "calculateTaxTotal",
+            "file": "packages/core/utils/src/totals/tax/index.ts",
+            "line": 5,
+            "kind": "function"
+          }
+        ]
+      },
+      "verifiedBy": "Read totals/tax/index.ts: calculateAmountsWithTax sums the tax rates, divides a tax-inclusive amount by (1 + rate) and calls calculateTaxTotal for the tax part."
+    },
+    {
+      "id": "ho-md-usage-amounts-with-tax",
+      "kind": "usage",
+      "lang": "en",
+      "question": "Which store API code calls calculateAmountsWithTax?",
+      "search": "calculateAmountsWithTax",
+      "gold": {
+        "files": [
+          "packages/medusa/src/api/store/product-variants/helpers.ts",
+          "packages/medusa/src/api/store/products/helpers.ts"
+        ],
+        "symbols": [
+          {
+            "name": "wrapVariantsWithTaxPrices",
+            "file": "packages/medusa/src/api/store/product-variants/helpers.ts",
+            "line": 15,
+            "kind": "function"
+          },
+          {
+            "name": "wrapProductsWithTaxPrices",
+            "file": "packages/medusa/src/api/store/products/helpers.ts",
+            "line": 46,
+            "kind": "function"
+          }
+        ]
+      },
+      "verifiedBy": "git grep 'calculateAmountsWithTax(' outside tests: only the two store helpers (lines 73/85 and 97/110), inside wrapVariantsWithTaxPrices and wrapProductsWithTaxPrices."
+    }
+  ]
+}

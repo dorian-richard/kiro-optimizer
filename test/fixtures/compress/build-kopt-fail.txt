@@ -1,0 +1,14 @@
+
+> kiro-optimizer@0.1.0 build
+> tsc -p tsconfig.json
+
+src/compress/expand.ts(15,18): error TS2353: Object literal may only specify known properties, and 'tokens' does not exist in type 'ToolResult'.
+src/compress/expand.ts(78,20): error TS2353: Object literal may only specify known properties, and 'tokens' does not exist in type 'ToolResult'.
+src/compress/expand.ts(98,18): error TS2353: Object literal may only specify known properties, and 'tokens' does not exist in type 'ToolResult'.
+src/compress/index.ts(143,18): error TS2353: Object literal may only specify known properties, and 'tokens' does not exist in type 'ToolResult'.
+src/compress/index.ts(390,7): error TS2353: Object literal may only specify known properties, and 'tokens' does not exist in type 'ToolResult'.
+src/compress/index.ts(419,20): error TS2353: Object literal may only specify known properties, and 'tokens' does not exist in type 'ToolResult'.
+src/compress/index.ts(436,18): error TS2353: Object literal may only specify known properties, and 'tokens' does not exist in type 'ToolResult'.
+src/mcp/tools.ts(288,94): error TS2322: Type 'ToolResult | { text: string; tokens: number; tokenCount: number; baselineTokens?: number | undefined; meta?: Record<string, unknown> | undefined; }' is not assignable to type 'ToolResult | undefined'.
+  Object literal may only specify known properties, and 'tokens' does not exist in type 'ToolResult'.
+src/retrieval/common.ts(57,36): error TS2353: Object literal may only specify known properties, and 'tokens' does not exist in type 'ToolResult'.

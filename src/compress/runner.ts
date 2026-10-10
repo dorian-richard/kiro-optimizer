@@ -5,7 +5,7 @@
 // shell tool there (pwsh 7 when on PATH, it accepts `&&`; else Windows PowerShell 5.1), else cmd.exe.
 // KOPT_SHELL overrides (path or name: bash, sh, pwsh, powershell, cmd).
 
-import { spawn, spawnSync } from 'node:child_process';
+import { execFileSync, spawn, spawnSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import { constants as osConstants } from 'node:os';
 import { posix as posixPath, win32 as winPath } from 'node:path';
@@ -25,6 +25,8 @@ export interface ExecOptions {
   /** Extra environment on top of process.env + the noise reducers. */
   env?: Record<string, string | undefined>;
   maxCaptureChars?: number;
+  /** Cancels the command (MCP request cancelled): the process tree is killed. */
+  signal?: AbortSignal;
 }
 
 export interface ExecResult {
@@ -38,12 +40,26 @@ export interface ExecResult {
   /** Characters dropped from the middle because of the capture cap. */
   droppedChars: number;
   spawnError?: string;
+  /** Stopped through ExecOptions.signal. */
+  cancelled?: boolean;
+}
+
+/**
+ * process.env without any KOPT_* variable (names compared case-insensitively, as Windows does). They are kopt's own
+ * state (KOPT_SESSION, KOPT_ROOT, KOPT_DATA_DIR, KOPT_HOME...): a command started by kopt_run, such as a test suite
+ * that itself runs kopt, must see the developer's environment, not the agent session that launched it. The only
+ * KOPT_* variable a command gets is KOPT_RUN=1, set by quietEnv.
+ */
+export function inheritedEnv(env: NodeJS.ProcessEnv = process.env): NodeJS.ProcessEnv {
+  const out: NodeJS.ProcessEnv = {};
+  for (const [k, v] of Object.entries(env)) if (!k.toUpperCase().startsWith('KOPT_')) out[k] = v;
+  return out;
 }
 
 /** Environment that makes tools print less: no colors, no progress bars, no interactive prompts, no pagers. */
 export function quietEnv(extra?: Record<string, string | undefined>): NodeJS.ProcessEnv {
   const env: NodeJS.ProcessEnv = {
-    ...process.env,
+    ...inheritedEnv(),
     CI: '1',
     FORCE_COLOR: '0',
     NO_COLOR: '1',
@@ -288,24 +304,106 @@ class Capture {
 // ---------------------------------------------------------------------------------------------------------------
 // Process trees
 
-/** Commands still running, killed if this process exits first (no orphaned test runs). */
+/** Commands still running, killed if this process exits or is stopped first (no orphaned test runs). */
 const active = new Set<number>();
 let exitHookInstalled = false;
+/** Signals that stop kopt (Kiro stopping the MCP server, Ctrl+C on `kopt run`, a closed terminal). */
+const STOP_SIGNALS: NodeJS.Signals[] = process.platform === 'win32' ? ['SIGINT', 'SIGBREAK', 'SIGHUP'] : ['SIGTERM', 'SIGINT', 'SIGHUP'];
+const signalHandlers = new Map<NodeJS.Signals, () => void>();
 
 /** Kill every command started by execCapture that is still running (call on server/CLI shutdown). */
 export function killActiveCommands(): void {
+  // POSIX: a descendant may have left the command's process group (setsid/setpgid); list them before the
+  // group kill re-parents the tree.
+  const strays = process.platform !== 'win32' && active.size ? descendants(active) : [];
   // Synchronous on Windows: this also runs from the 'exit' handler, where nothing asynchronous completes.
   for (const pid of active) killTree(pid, 'SIGKILL', true);
+  for (const pid of strays) killOne(pid, 'SIGKILL');
   active.clear();
+  removeSignalHandlers();
+}
+
+/** POSIX: live descendants of `roots`, from one `ps` listing (empty when ps is unavailable). */
+function descendants(roots: Set<number>): number[] {
+  let listing: string;
+  try {
+    listing = execFileSync('ps', ['-A', '-o', 'pid=,ppid='], { encoding: 'utf8', timeout: 2000, stdio: ['ignore', 'pipe', 'ignore'] });
+  } catch {
+    return [];
+  }
+  const children = new Map<number, number[]>();
+  for (const line of listing.split('\n')) {
+    const m = /^\s*(\d+)\s+(\d+)/.exec(line);
+    if (!m) continue;
+    const arr = children.get(Number(m[2])) ?? [];
+    arr.push(Number(m[1]));
+    children.set(Number(m[2]), arr);
+  }
+  const out: number[] = [];
+  const queue = [...roots];
+  const seen = new Set(queue);
+  while (queue.length) {
+    for (const c of children.get(queue.shift()!) ?? []) {
+      if (seen.has(c) || c === process.pid) continue;
+      seen.add(c);
+      out.push(c);
+      queue.push(c);
+    }
+  }
+  return out;
+}
+
+/**
+ * A command runs in its own process group (POSIX), so a signal that stops kopt does not reach it, and Node's
+ * default action ends kopt without an 'exit' event: kill the trees first, then let the signal take its course.
+ * Installed only while a command runs, so kopt's own signal behavior is unchanged otherwise.
+ */
+function installSignalHandlers(): void {
+  for (const sig of STOP_SIGNALS) {
+    if (signalHandlers.has(sig)) continue;
+    const handler = () => {
+      killActiveCommands();
+      // Our listener replaced the default action; restore it unless someone else handles this signal.
+      if (process.listenerCount(sig) === 0) {
+        try {
+          process.kill(process.pid, sig);
+        } catch {
+          process.exit(128 + ((osConstants.signals as Record<string, number>)[sig] ?? 1));
+        }
+      }
+    };
+    signalHandlers.set(sig, handler);
+    try {
+      process.on(sig, handler);
+    } catch {
+      signalHandlers.delete(sig); // signal not supported on this platform
+    }
+  }
+}
+
+function removeSignalHandlers(): void {
+  for (const [sig, handler] of signalHandlers) process.removeListener(sig, handler);
+  signalHandlers.clear();
 }
 
 function track(pid: number | undefined): void {
   if (!pid) return;
   active.add(pid);
+  installSignalHandlers();
   if (!exitHookInstalled) {
     exitHookInstalled = true;
     process.once('exit', killActiveCommands);
   }
+}
+
+function untrack(pid: number | undefined): void {
+  if (pid) active.delete(pid);
+  if (!active.size) removeSignalHandlers();
+}
+
+/** Number of commands still running (tests). */
+export function activeCommandCount(): number {
+  return active.size;
 }
 
 function killTree(pid: number | undefined, signal: NodeJS.Signals, sync = false): void {
@@ -340,6 +438,7 @@ export function execCapture(o: ExecOptions): Promise<ExecResult> {
   return new Promise((resolvePromise) => {
     let settled = false;
     let timedOut = false;
+    let cancelled = false;
     let exitCode: number | null = null;
     let exitSignal: NodeJS.Signals | null = null;
     let timer: NodeJS.Timeout | undefined;
@@ -362,13 +461,15 @@ export function execCapture(o: ExecOptions): Promise<ExecResult> {
     const finish = (spawnError?: string) => {
       if (settled) return;
       settled = true;
-      if (child.pid) active.delete(child.pid);
+      untrack(child.pid);
+      o.signal?.removeEventListener('abort', onAbort);
       clearTimeout(timer);
       clearTimeout(killTimer);
       clearTimeout(closeTimer);
       flushAll();
       let code: number;
       if (timedOut) code = 124;
+      else if (cancelled) code = 130;
       else if (spawnError) code = 127;
       else if (exitCode !== null) code = exitCode;
       else if (exitSignal) code = 128 + ((osConstants.signals as Record<string, number>)[exitSignal] ?? 1);
@@ -378,6 +479,7 @@ export function execCapture(o: ExecOptions): Promise<ExecResult> {
         exitCode: code,
         signal: exitSignal ?? undefined,
         timedOut,
+        cancelled: cancelled || undefined,
         durationMs: Date.now() - started,
         totalChars: capture.totalChars,
         droppedChars: capture.droppedChars,
@@ -436,18 +538,29 @@ export function execCapture(o: ExecOptions): Promise<ExecResult> {
       finish();
     });
 
-    timer = setTimeout(() => {
-      timedOut = true;
+    // Graceful first (SIGTERM / taskkill), then SIGKILL; if pipes are still held open, give up on them.
+    const stop = () => {
       killTree(child.pid, 'SIGTERM');
       killTimer = setTimeout(() => {
         killTree(child.pid, 'SIGKILL');
-        // If pipes are still held open, give up on them.
         setTimeout(() => {
           child.stdout?.destroy();
           child.stderr?.destroy();
           finish();
         }, 1000).unref();
       }, 3000);
+    };
+    timer = setTimeout(() => {
+      timedOut = true;
+      stop();
     }, Math.max(1, o.timeoutMs));
+    function onAbort() {
+      if (settled || cancelled || timedOut) return;
+      cancelled = true;
+      clearTimeout(timer);
+      stop();
+    }
+    if (o.signal?.aborted) onAbort();
+    else o.signal?.addEventListener('abort', onAbort, { once: true });
   });
 }

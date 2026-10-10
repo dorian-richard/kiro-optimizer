@@ -1,0 +1,3086 @@
+{
+  "meta": {
+    "label": "discourse",
+    "repo": {
+      "name": "discourse",
+      "url": "https://github.com/discourse/discourse.git",
+      "tag": "v2026.9.0",
+      "commit": "343b20f97ef5f6bd70826ee0e993ba348b210fd5",
+      "language": "ruby",
+      "path": "bench/repos/discourse"
+    },
+    "repoRoot": "bench/repos/discourse",
+    "headCommit": "343b20f97ef5f6bd70826ee0e993ba348b210fd5",
+    "date": "2026-10-09T22:39:41.284Z",
+    "input": "search",
+    "charsPerToken": 3,
+    "strategies": [
+      "native-naive",
+      "native-ranged",
+      "kopt-pack",
+      "kopt-hits+read",
+      "kirograph",
+      "codegraph"
+    ],
+    "grepLimits": {
+      "maxMatches": 100,
+      "maxChars": 10000,
+      "maxLineChars": 250
+    },
+    "readLimits": {
+      "naiveTopFiles": 3,
+      "naiveMaxLines": 2000,
+      "rangedMatches": 4,
+      "rangedContext": 60
+    },
+    "koptBudgets": {
+      "find": 700,
+      "pack": 2500,
+      "read": 3000
+    },
+    "index": {
+      "built": false,
+      "durationMs": 0,
+      "files": 15517,
+      "symbols": 82698,
+      "path": "<index-dir>/.kopt-discourse/index.db"
+    },
+    "notes": [
+      "kirograph: outputs loaded from bench/competitors/results/kirograph-discourse.jsonl",
+      "codegraph: outputs loaded from bench/competitors/results/codegraph-discourse.jsonl"
+    ],
+    "durationMs": 39432
+  },
+  "results": [
+    {
+      "taskId": "ds-locate-mcp-pkce",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 14175,
+      "chars": 42521,
+      "toolCalls": 4,
+      "durationMs": 3543,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "pkce",
+          "chars": 4864,
+          "tokens": 1622
+        },
+        {
+          "tool": "read_file",
+          "args": "plugins/discourse-openid-connect/lib/openid_connect_authenticator.rb",
+          "chars": 8670,
+          "tokens": 2890
+        },
+        {
+          "tool": "read_file",
+          "args": "plugins/discourse-openid-connect/spec/lib/openid_connect_authenticator_spec.rb",
+          "chars": 13806,
+          "tokens": 4602
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/discourse_mcp/oauth.rb",
+          "chars": 15181,
+          "tokens": 5061
+        }
+      ]
+    },
+    {
+      "taskId": "ds-locate-mcp-pkce",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 6644,
+      "chars": 19922,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "pkce",
+          "chars": 4864,
+          "tokens": 1622
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/discourse_mcp/oauth.rb:202-322",
+          "chars": 4669,
+          "tokens": 1557
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/discourse_mcp/oauth.rb:332-402",
+          "chars": 2581,
+          "tokens": 861
+        },
+        {
+          "tool": "read_file",
+          "args": "plugins/discourse-openid-connect/lib/openid_connect_authenticator.rb:1-82",
+          "chars": 2548,
+          "tokens": 850
+        },
+        {
+          "tool": "read_file",
+          "args": "plugins/discourse-openid-connect/lib/openid_connect_authenticator.rb:116-236",
+          "chars": 5260,
+          "tokens": 1754
+        }
+      ]
+    },
+    {
+      "taskId": "ds-locate-mcp-pkce",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1361,
+      "chars": 4081,
+      "toolCalls": 1,
+      "durationMs": 53,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"mcp oauth authorization code exchange pkce code verifier challenge\"",
+          "chars": 4081,
+          "tokens": 1361
+        }
+      ]
+    },
+    {
+      "taskId": "ds-locate-mcp-pkce",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 1668,
+      "chars": 5001,
+      "toolCalls": 3,
+      "durationMs": 42,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"mcp oauth authorization code exchange pkce code verifier challenge\"",
+          "chars": 1543,
+          "tokens": 515
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#6cn",
+          "chars": 1022,
+          "tokens": 341
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#2e7",
+          "chars": 2436,
+          "tokens": 812
+        }
+      ]
+    },
+    {
+      "taskId": "ds-locate-mcp-pkce",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tokens": 453,
+      "chars": 1357,
+      "toolCalls": 1,
+      "durationMs": 63,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/discourse_mcp/oauth.rb"
+        ],
+        "symbolsMissed": [
+          "exchange_code!",
+          "secure_compare_challenge"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "mcp oauth authorization code exchange pkce code verifier challenge",
+          "chars": 1357,
+          "tokens": 453
+        }
+      ]
+    },
+    {
+      "taskId": "ds-locate-mcp-pkce",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tokens": 8292,
+      "chars": 24875,
+      "toolCalls": 1,
+      "durationMs": 3466,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "secure_compare_challenge"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "mcp oauth authorization code exchange pkce code verifier challenge",
+          "chars": 24875,
+          "tokens": 8292
+        }
+      ]
+    },
+    {
+      "taskId": "ds-locate-nested-hot-score",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 45865,
+      "chars": 137592,
+      "toolCalls": 4,
+      "durationMs": 4054,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "freshness",
+          "chars": 6057,
+          "tokens": 2019
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/nested_replies/hot_score_calculator.rb",
+          "chars": 12191,
+          "tokens": 4064
+        },
+        {
+          "tool": "read_file",
+          "args": "spec/lib/nested_replies/hot_score_calculator_spec.rb",
+          "chars": 5747,
+          "tokens": 1916
+        },
+        {
+          "tool": "read_file",
+          "args": "config/locales/server.ar.yml",
+          "chars": 113597,
+          "tokens": 37866
+        }
+      ]
+    },
+    {
+      "taskId": "ds-locate-nested-hot-score",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 10705,
+      "chars": 32112,
+      "toolCalls": 4,
+      "durationMs": 3,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "freshness",
+          "chars": 6057,
+          "tokens": 2019
+        },
+        {
+          "tool": "read_file",
+          "args": "config/locales/server.ar.yml:2966-3086",
+          "chars": 16092,
+          "tokens": 5364
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/nested_replies/hot_score_calculator.rb:1-178",
+          "chars": 6550,
+          "tokens": 2184
+        },
+        {
+          "tool": "read_file",
+          "args": "spec/lib/nested_replies/hot_score_calculator_spec.rb:1-81",
+          "chars": 3413,
+          "tokens": 1138
+        }
+      ]
+    },
+    {
+      "taskId": "ds-locate-nested-hot-score",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1365,
+      "chars": 4094,
+      "toolCalls": 1,
+      "durationMs": 55,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"nested replies hot score likes replies freshness bonus half life\"",
+          "chars": 4094,
+          "tokens": 1365
+        }
+      ]
+    },
+    {
+      "taskId": "ds-locate-nested-hot-score",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 958,
+      "chars": 2870,
+      "toolCalls": 3,
+      "durationMs": 42,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"nested replies hot score likes replies freshness bonus half life\"",
+          "chars": 1378,
+          "tokens": 460
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#qyf",
+          "chars": 870,
+          "tokens": 290
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#qyg",
+          "chars": 622,
+          "tokens": 208
+        }
+      ]
+    },
+    {
+      "taskId": "ds-locate-nested-hot-score",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tokens": 991,
+      "chars": 2972,
+      "toolCalls": 1,
+      "durationMs": 75,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/nested_replies/hot_score_calculator.rb"
+        ],
+        "symbolsMissed": [
+          "score_for",
+          "hot_score_sql",
+          "formula_settings"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "nested replies hot score likes replies freshness bonus half life",
+          "chars": 2972,
+          "tokens": 991
+        }
+      ]
+    },
+    {
+      "taskId": "ds-locate-nested-hot-score",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tokens": 6497,
+      "chars": 19491,
+      "toolCalls": 1,
+      "durationMs": 680,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "nested replies hot score likes replies freshness bonus half life",
+          "chars": 19491,
+          "tokens": 6497
+        }
+      ]
+    },
+    {
+      "taskId": "ds-locate-auto-silence",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 38951,
+      "chars": 116851,
+      "toolCalls": 2,
+      "durationMs": 5267,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "app/services/spam_rule/auto_silence.rb",
+          "app/models/reviewable.rb"
+        ],
+        "symbolsMissed": [
+          "should_autosilence?",
+          "user_spam_stats",
+          "spam_score_to_silence_new_user"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "automatically",
+          "chars": 9944,
+          "tokens": 3315
+        },
+        {
+          "tool": "read_file",
+          "args": "config/locales/server.en.yml",
+          "chars": 106907,
+          "tokens": 35636
+        }
+      ]
+    },
+    {
+      "taskId": "ds-locate-auto-silence",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 10506,
+      "chars": 31512,
+      "toolCalls": 5,
+      "durationMs": 1,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "app/services/spam_rule/auto_silence.rb",
+          "app/models/reviewable.rb"
+        ],
+        "symbolsMissed": [
+          "should_autosilence?",
+          "user_spam_stats",
+          "spam_score_to_silence_new_user"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "automatically",
+          "chars": 9944,
+          "tokens": 3315
+        },
+        {
+          "tool": "read_file",
+          "args": "config/locales/server.en.yml:127-247",
+          "chars": 6302,
+          "tokens": 2101
+        },
+        {
+          "tool": "read_file",
+          "args": "config/locales/server.en.yml:660-780",
+          "chars": 5951,
+          "tokens": 1984
+        },
+        {
+          "tool": "read_file",
+          "args": "config/locales/server.en.yml:1451-1571",
+          "chars": 5117,
+          "tokens": 1706
+        },
+        {
+          "tool": "read_file",
+          "args": "config/locales/server.en.yml:1715-1835",
+          "chars": 4198,
+          "tokens": 1400
+        }
+      ]
+    },
+    {
+      "taskId": "ds-locate-auto-silence",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1074,
+      "chars": 3222,
+      "toolCalls": 1,
+      "durationMs": 80,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"automatically silence new user spam flags score threshold\"",
+          "chars": 3222,
+          "tokens": 1074
+        }
+      ]
+    },
+    {
+      "taskId": "ds-locate-auto-silence",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 606,
+      "chars": 1814,
+      "toolCalls": 3,
+      "durationMs": 76,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"automatically silence new user spam flags score threshold\"",
+          "chars": 1514,
+          "tokens": 505
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#xd",
+          "chars": 160,
+          "tokens": 54
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#75h",
+          "chars": 140,
+          "tokens": 47
+        }
+      ]
+    },
+    {
+      "taskId": "ds-locate-auto-silence",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tokens": 1841,
+      "chars": 5523,
+      "toolCalls": 1,
+      "durationMs": 74,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "app/services/spam_rule/auto_silence.rb",
+          "app/models/reviewable.rb"
+        ],
+        "symbolsMissed": [
+          "should_autosilence?",
+          "user_spam_stats",
+          "spam_score_to_silence_new_user"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "automatically silence new user spam flags score threshold",
+          "chars": 5523,
+          "tokens": 1841
+        }
+      ]
+    },
+    {
+      "taskId": "ds-locate-auto-silence",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tokens": 8328,
+      "chars": 24982,
+      "toolCalls": 1,
+      "durationMs": 645,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "app/services/spam_rule/auto_silence.rb",
+          "app/models/reviewable.rb"
+        ],
+        "symbolsMissed": [
+          "should_autosilence?",
+          "user_spam_stats",
+          "spam_score_to_silence_new_user"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "automatically silence new user spam flags score threshold",
+          "chars": 24982,
+          "tokens": 8328
+        }
+      ]
+    },
+    {
+      "taskId": "ds-locate-login-code-verify",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 39666,
+      "chars": 118996,
+      "toolCalls": 4,
+      "durationMs": 4028,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "app/models/email_login_code.rb"
+        ],
+        "symbolsMissed": [
+          "verify",
+          "hash_code"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "brute",
+          "chars": 806,
+          "tokens": 269
+        },
+        {
+          "tool": "read_file",
+          "args": "plugins/discourse-ai/config/locales/client.fr.yml",
+          "chars": 82403,
+          "tokens": 27468
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/INSTALL-cloud.md",
+          "chars": 12075,
+          "tokens": 4025
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/common_passwords/10-char-common-passwords.txt",
+          "chars": 23712,
+          "tokens": 7904
+        }
+      ]
+    },
+    {
+      "taskId": "ds-locate-login-code-verify",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 6291,
+      "chars": 18866,
+      "toolCalls": 5,
+      "durationMs": 1,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "app/models/email_login_code.rb"
+        ],
+        "symbolsMissed": [
+          "verify",
+          "hash_code"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "brute",
+          "chars": 806,
+          "tokens": 269
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/INSTALL-cloud.md:132-252",
+          "chars": 3970,
+          "tokens": 1324
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/common_passwords/10-char-common-passwords.txt:602-722",
+          "chars": 1406,
+          "tokens": 469
+        },
+        {
+          "tool": "read_file",
+          "args": "plugins/discourse-ai/config/locales/client.fr.yml:64-184",
+          "chars": 6241,
+          "tokens": 2081
+        },
+        {
+          "tool": "read_file",
+          "args": "plugins/discourse-ai/config/locales/client.fr.yml:1263-1383",
+          "chars": 6443,
+          "tokens": 2148
+        }
+      ]
+    },
+    {
+      "taskId": "ds-locate-login-code-verify",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1256,
+      "chars": 3766,
+      "toolCalls": 1,
+      "durationMs": 52,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"email login code verify submitted code attempts brute force hash\"",
+          "chars": 3766,
+          "tokens": 1256
+        }
+      ]
+    },
+    {
+      "taskId": "ds-locate-login-code-verify",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 1343,
+      "chars": 4026,
+      "toolCalls": 3,
+      "durationMs": 51,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"email login code verify submitted code attempts brute force hash\"",
+          "chars": 1415,
+          "tokens": 472
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#s7",
+          "chars": 2515,
+          "tokens": 839
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#sf",
+          "chars": 96,
+          "tokens": 32
+        }
+      ]
+    },
+    {
+      "taskId": "ds-locate-login-code-verify",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tokens": 1239,
+      "chars": 3715,
+      "toolCalls": 1,
+      "durationMs": 59,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "email login code verify submitted code attempts brute force hash",
+          "chars": 3715,
+          "tokens": 1239
+        }
+      ]
+    },
+    {
+      "taskId": "ds-locate-login-code-verify",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tokens": 7101,
+      "chars": 21302,
+      "toolCalls": 1,
+      "durationMs": 848,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "email login code verify submitted code attempts brute force hash",
+          "chars": 21302,
+          "tokens": 7101
+        }
+      ]
+    },
+    {
+      "taskId": "ds-explain-mcp-refresh-rotation",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 12760,
+      "chars": 38279,
+      "toolCalls": 4,
+      "durationMs": 3842,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/discourse_mcp/oauth.rb",
+          "app/models/mcp_oauth_refresh_token.rb"
+        ],
+        "symbolsMissed": [
+          "refresh!",
+          "issue!",
+          "revoke_family!"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "rotation",
+          "chars": 5924,
+          "tokens": 1975
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/crawler_scorer.rb",
+          "chars": 12606,
+          "tokens": 4202
+        },
+        {
+          "tool": "read_file",
+          "args": "spec/lib/crawler_scorer_spec.rb",
+          "chars": 14013,
+          "tokens": 4671
+        },
+        {
+          "tool": "read_file",
+          "args": "frontend/discourse/admin/components/admin-report-chart.gjs",
+          "chars": 5736,
+          "tokens": 1912
+        }
+      ]
+    },
+    {
+      "taskId": "ds-explain-mcp-refresh-rotation",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 5325,
+      "chars": 15969,
+      "toolCalls": 4,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/discourse_mcp/oauth.rb",
+          "app/models/mcp_oauth_refresh_token.rb"
+        ],
+        "symbolsMissed": [
+          "refresh!",
+          "issue!",
+          "revoke_family!"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "rotation",
+          "chars": 5924,
+          "tokens": 1975
+        },
+        {
+          "tool": "read_file",
+          "args": "db/migrate/20260728071552_add_ip_rotation_score_to_browser_pageview_event_scores.rb:1-11",
+          "chars": 299,
+          "tokens": 100
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/crawler_scorer.rb:1-152",
+          "chars": 5050,
+          "tokens": 1684
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/crawler_scorer.rb:195-315",
+          "chars": 4696,
+          "tokens": 1566
+        }
+      ]
+    },
+    {
+      "taskId": "ds-explain-mcp-refresh-rotation",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 1256,
+      "chars": 3768,
+      "toolCalls": 1,
+      "durationMs": 49,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"mcp oauth refresh token rotation replay family revoke\"",
+          "chars": 3768,
+          "tokens": 1256
+        }
+      ]
+    },
+    {
+      "taskId": "ds-explain-mcp-refresh-rotation",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 911,
+      "chars": 2732,
+      "toolCalls": 3,
+      "durationMs": 50,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"mcp oauth refresh token rotation replay family revoke\"",
+          "chars": 1473,
+          "tokens": 491
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#6cq",
+          "chars": 1155,
+          "tokens": 385
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#6ct",
+          "chars": 104,
+          "tokens": 35
+        }
+      ]
+    },
+    {
+      "taskId": "ds-explain-mcp-refresh-rotation",
+      "kind": "explain",
+      "strategy": "kirograph",
+      "tokens": 2112,
+      "chars": 6334,
+      "toolCalls": 1,
+      "durationMs": 46,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/discourse_mcp/oauth.rb",
+          "app/models/mcp_oauth_refresh_token.rb"
+        ],
+        "symbolsMissed": [
+          "refresh!",
+          "issue!",
+          "revoke_family!"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "mcp oauth refresh token rotation replay family revoke",
+          "chars": 6334,
+          "tokens": 2112
+        }
+      ]
+    },
+    {
+      "taskId": "ds-explain-mcp-refresh-rotation",
+      "kind": "explain",
+      "strategy": "codegraph",
+      "tokens": 7402,
+      "chars": 22204,
+      "toolCalls": 1,
+      "durationMs": 474,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "mcp oauth refresh token rotation replay family revoke",
+          "chars": 22204,
+          "tokens": 7402
+        }
+      ]
+    },
+    {
+      "taskId": "ds-explain-upcoming-promotion",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 67895,
+      "chars": 203679,
+      "toolCalls": 4,
+      "durationMs": 3692,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0.8,
+        "defRecall": 0,
+        "filesMissed": [
+          "app/services/upcoming_changes/notify_promotion.rb"
+        ],
+        "symbolsMissed": [
+          "admin_has_not_manually_toggled"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "promotion",
+          "chars": 9749,
+          "tokens": 3250
+        },
+        {
+          "tool": "read_file",
+          "args": "config/locales/server.en.yml",
+          "chars": 106907,
+          "tokens": 35636
+        },
+        {
+          "tool": "read_file",
+          "args": "plugins/boards/assets/javascripts/discourse/components/boards-board-viewer.gjs",
+          "chars": 41488,
+          "tokens": 13830
+        },
+        {
+          "tool": "read_file",
+          "args": ".skills/discourse-upcoming-changes-authoring/SKILL.md",
+          "chars": 45535,
+          "tokens": 15179
+        }
+      ]
+    },
+    {
+      "taskId": "ds-explain-upcoming-promotion",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 18538,
+      "chars": 55607,
+      "toolCalls": 5,
+      "durationMs": 1,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.2,
+        "defRecall": 0,
+        "filesMissed": [
+          "app/services/upcoming_changes/notify_promotion.rb",
+          "lib/upcoming_changes.rb"
+        ],
+        "symbolsMissed": [
+          "promotion_not_already_handled",
+          "admin_has_not_manually_toggled",
+          "notify_admins?",
+          "meets_or_exceeds_status?"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "promotion",
+          "chars": 9749,
+          "tokens": 3250
+        },
+        {
+          "tool": "read_file",
+          "args": "config/locales/server.en.yml:1332-1452",
+          "chars": 7161,
+          "tokens": 2387
+        },
+        {
+          "tool": "read_file",
+          "args": "config/locales/server.en.yml:2219-2339",
+          "chars": 17686,
+          "tokens": 5896
+        },
+        {
+          "tool": "read_file",
+          "args": "config/locales/server.en.yml:2461-2581",
+          "chars": 13912,
+          "tokens": 4638
+        },
+        {
+          "tool": "read_file",
+          "args": "config/locales/server.en.yml:3833-3953",
+          "chars": 7099,
+          "tokens": 2367
+        }
+      ]
+    },
+    {
+      "taskId": "ds-explain-upcoming-promotion",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 1325,
+      "chars": 3975,
+      "toolCalls": 1,
+      "durationMs": 75,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0.8,
+        "defRecall": 0.8,
+        "filesMissed": [
+          "lib/upcoming_changes.rb"
+        ],
+        "symbolsMissed": [
+          "meets_or_exceeds_status?"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"upcoming change automatic promotion status notify admins once\"",
+          "chars": 3975,
+          "tokens": 1325
+        }
+      ]
+    },
+    {
+      "taskId": "ds-explain-upcoming-promotion",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 2155,
+      "chars": 6462,
+      "toolCalls": 3,
+      "durationMs": 80,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.8,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"upcoming change automatic promotion status notify admins once\"",
+          "chars": 2079,
+          "tokens": 693
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#aqk",
+          "chars": 4265,
+          "tokens": 1422
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#aqt",
+          "chars": 118,
+          "tokens": 40
+        }
+      ]
+    },
+    {
+      "taskId": "ds-explain-upcoming-promotion",
+      "kind": "explain",
+      "strategy": "kirograph",
+      "tokens": 2830,
+      "chars": 8488,
+      "toolCalls": 1,
+      "durationMs": 82,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "app/services/upcoming_changes/notify_promotion.rb",
+          "lib/upcoming_changes.rb"
+        ],
+        "symbolsMissed": [
+          "NotifyPromotion",
+          "promotion_not_already_handled",
+          "admin_has_not_manually_toggled",
+          "notify_admins?",
+          "meets_or_exceeds_status?"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "upcoming change automatic promotion status notify admins once",
+          "chars": 8488,
+          "tokens": 2830
+        }
+      ]
+    },
+    {
+      "taskId": "ds-explain-upcoming-promotion",
+      "kind": "explain",
+      "strategy": "codegraph",
+      "tokens": 8332,
+      "chars": 24994,
+      "toolCalls": 1,
+      "durationMs": 643,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.8,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "upcoming change automatic promotion status notify admins once",
+          "chars": 24994,
+          "tokens": 8332
+        }
+      ]
+    },
+    {
+      "taskId": "ds-explain-rate-limit-create",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 9564,
+      "chars": 28689,
+      "toolCalls": 4,
+      "durationMs": 3885,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0.25,
+        "defRecall": 0.25,
+        "filesMissed": [
+          "lib/rate_limiter.rb"
+        ],
+        "symbolsMissed": [
+          "rate_limit",
+          "default_rate_limiter",
+          "performed!"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "rollback",
+          "chars": 8631,
+          "tokens": 2877
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/topic_creator.rb",
+          "chars": 11543,
+          "tokens": 3848
+        },
+        {
+          "tool": "read_file",
+          "args": "frontend/discourse/admin/components/admin-backups-actions.gjs",
+          "chars": 3956,
+          "tokens": 1319
+        },
+        {
+          "tool": "read_file",
+          "args": "frontend/discourse/app/lib/class-prepend.js",
+          "chars": 4559,
+          "tokens": 1520
+        }
+      ]
+    },
+    {
+      "taskId": "ds-explain-rate-limit-create",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 6800,
+      "chars": 20395,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0.25,
+        "defRecall": 0.25,
+        "filesMissed": [
+          "lib/rate_limiter.rb"
+        ],
+        "symbolsMissed": [
+          "rate_limit",
+          "default_rate_limiter",
+          "performed!"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "rollback",
+          "chars": 8631,
+          "tokens": 2877
+        },
+        {
+          "tool": "read_file",
+          "args": "app/controllers/admin/backups_controller.rb:106-226",
+          "chars": 3766,
+          "tokens": 1256
+        },
+        {
+          "tool": "read_file",
+          "args": "frontend/discourse/admin/components/admin-backups-actions.gjs:39-143",
+          "chars": 2873,
+          "tokens": 958
+        },
+        {
+          "tool": "read_file",
+          "args": "frontend/discourse/app/lib/class-prepend.js:40-154",
+          "chars": 3242,
+          "tokens": 1081
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/backup_restore.rb:1-83",
+          "chars": 1883,
+          "tokens": 628
+        }
+      ]
+    },
+    {
+      "taskId": "ds-explain-rate-limit-create",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 1311,
+      "chars": 3933,
+      "toolCalls": 1,
+      "durationMs": 51,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.25,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"rate_limit model create record limiter rollback destroy\"",
+          "chars": 3933,
+          "tokens": 1311
+        }
+      ]
+    },
+    {
+      "taskId": "ds-explain-rate-limit-create",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 1522,
+      "chars": 4562,
+      "toolCalls": 3,
+      "durationMs": 43,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"rate_limit model create record limiter rollback destroy\"",
+          "chars": 1625,
+          "tokens": 542
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#sjl",
+          "chars": 932,
+          "tokens": 311
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#sjf",
+          "chars": 2005,
+          "tokens": 669
+        }
+      ]
+    },
+    {
+      "taskId": "ds-explain-rate-limit-create",
+      "kind": "explain",
+      "strategy": "kirograph",
+      "tokens": 805,
+      "chars": 2414,
+      "toolCalls": 1,
+      "durationMs": 59,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.25,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/rate_limiter/on_create_record.rb",
+          "lib/rate_limiter.rb"
+        ],
+        "symbolsMissed": [
+          "default_rate_limiter",
+          "performed!",
+          "rollback!"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "rate_limit model create record limiter rollback destroy",
+          "chars": 2414,
+          "tokens": 805
+        }
+      ]
+    },
+    {
+      "taskId": "ds-explain-rate-limit-create",
+      "kind": "explain",
+      "strategy": "codegraph",
+      "tokens": 7672,
+      "chars": 23016,
+      "toolCalls": 1,
+      "durationMs": 488,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.75,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "rate_limit model create record limiter rollback destroy",
+          "chars": 23016,
+          "tokens": 7672
+        }
+      ]
+    },
+    {
+      "taskId": "ds-usage-disable-rate-limits",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 18381,
+      "chars": 55138,
+      "toolCalls": 4,
+      "durationMs": 3497,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "save_topic"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "disable_rate_limits",
+          "chars": 390,
+          "tokens": 130
+        },
+        {
+          "tool": "read_file",
+          "args": "app/models/post_mover.rb",
+          "chars": 30547,
+          "tokens": 10183
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/post_creator.rb",
+          "chars": 22211,
+          "tokens": 7404
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/rate_limiter/on_create_record.rb",
+          "chars": 1990,
+          "tokens": 664
+        }
+      ]
+    },
+    {
+      "taskId": "ds-usage-disable-rate-limits",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 4490,
+      "chars": 13465,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "disable_rate_limits",
+          "chars": 390,
+          "tokens": 130
+        },
+        {
+          "tool": "read_file",
+          "args": "app/models/post_mover.rb:318-438",
+          "chars": 4004,
+          "tokens": 1335
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/post_creator.rb:553-673",
+          "chars": 3295,
+          "tokens": 1099
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/rate_limiter/on_create_record.rb:1-68",
+          "chars": 1990,
+          "tokens": 664
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/topic_creator.rb:229-349",
+          "chars": 3786,
+          "tokens": 1262
+        }
+      ]
+    },
+    {
+      "taskId": "ds-usage-disable-rate-limits",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 879,
+      "chars": 2635,
+      "toolCalls": 1,
+      "durationMs": 45,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"disable_rate_limits! post topic save\"",
+          "chars": 2635,
+          "tokens": 879
+        }
+      ]
+    },
+    {
+      "taskId": "ds-usage-disable-rate-limits",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 478,
+      "chars": 1431,
+      "toolCalls": 3,
+      "durationMs": 44,
+      "recall": {
+        "fileRecall": 0.6666666666666666,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [
+          "app/models/post_mover.rb"
+        ],
+        "symbolsMissed": [
+          "move"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"disable_rate_limits! post topic save\"",
+          "chars": 1236,
+          "tokens": 412
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#sjj",
+          "chars": 119,
+          "tokens": 40
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#siv",
+          "chars": 76,
+          "tokens": 26
+        }
+      ]
+    },
+    {
+      "taskId": "ds-usage-disable-rate-limits",
+      "kind": "usage",
+      "strategy": "kirograph",
+      "tokens": 12,
+      "chars": 34,
+      "toolCalls": 1,
+      "durationMs": 15,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/post_creator.rb",
+          "lib/topic_creator.rb",
+          "app/models/post_mover.rb"
+        ],
+        "symbolsMissed": [
+          "save_post",
+          "save_topic",
+          "move"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "disable_rate_limits! post topic save",
+          "chars": 34,
+          "tokens": 12
+        }
+      ]
+    },
+    {
+      "taskId": "ds-usage-disable-rate-limits",
+      "kind": "usage",
+      "strategy": "codegraph",
+      "tokens": 5892,
+      "chars": 17675,
+      "toolCalls": 1,
+      "durationMs": 578,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/post_creator.rb",
+          "lib/topic_creator.rb",
+          "app/models/post_mover.rb"
+        ],
+        "symbolsMissed": [
+          "save_post",
+          "save_topic",
+          "move"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "disable_rate_limits! post topic save",
+          "chars": 17675,
+          "tokens": 5892
+        }
+      ]
+    },
+    {
+      "taskId": "ds-usage-prevent-posting",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 9909,
+      "chars": 29725,
+      "toolCalls": 4,
+      "durationMs": 1818,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "can_create_chat_message?"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "SpamRule|AutoSilence|prevent_posting",
+          "chars": 4068,
+          "tokens": 1356
+        },
+        {
+          "tool": "read_file",
+          "args": "spec/services/auto_silence_spec.rb",
+          "chars": 8366,
+          "tokens": 2789
+        },
+        {
+          "tool": "read_file",
+          "args": "app/services/spam_rule/auto_silence.rb",
+          "chars": 1809,
+          "tokens": 603
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/guardian/post_guardian.rb",
+          "chars": 15482,
+          "tokens": 5161
+        }
+      ]
+    },
+    {
+      "taskId": "ds-usage-prevent-posting",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 4650,
+      "chars": 13946,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "SpamRule|AutoSilence|prevent_posting",
+          "chars": 4068,
+          "tokens": 1356
+        },
+        {
+          "tool": "read_file",
+          "args": "app/services/spam_rule/auto_silence.rb:1-63",
+          "chars": 1766,
+          "tokens": 589
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/guardian/post_guardian.rb:400-481",
+          "chars": 2055,
+          "tokens": 685
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/post_action_creator.rb:155-275",
+          "chars": 3653,
+          "tokens": 1218
+        },
+        {
+          "tool": "read_file",
+          "args": "plugins/chat/lib/chat/guardian_extensions.rb:1-93",
+          "chars": 2404,
+          "tokens": 802
+        }
+      ]
+    },
+    {
+      "taskId": "ds-usage-prevent-posting",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 611,
+      "chars": 1833,
+      "toolCalls": 1,
+      "durationMs": 34,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"SpamRule AutoSilence prevent_posting? guardian\"",
+          "chars": 1833,
+          "tokens": 611
+        }
+      ]
+    },
+    {
+      "taskId": "ds-usage-prevent-posting",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 769,
+      "chars": 2306,
+      "toolCalls": 3,
+      "durationMs": 37,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/guardian/post_guardian.rb",
+          "plugins/chat/lib/chat/guardian_extensions.rb"
+        ],
+        "symbolsMissed": [
+          "can_create_post_in_topic?",
+          "can_create_chat_message?"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"SpamRule AutoSilence prevent_posting? guardian\"",
+          "chars": 375,
+          "tokens": 125
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#8y5",
+          "chars": 1826,
+          "tokens": 609
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#8y8",
+          "chars": 105,
+          "tokens": 35
+        }
+      ]
+    },
+    {
+      "taskId": "ds-usage-prevent-posting",
+      "kind": "usage",
+      "strategy": "kirograph",
+      "tokens": 4374,
+      "chars": 13122,
+      "toolCalls": 1,
+      "durationMs": 59,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/guardian/post_guardian.rb",
+          "plugins/chat/lib/chat/guardian_extensions.rb"
+        ],
+        "symbolsMissed": [
+          "can_create_post_in_topic?",
+          "can_create_chat_message?"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "SpamRule AutoSilence prevent_posting? guardian",
+          "chars": 13122,
+          "tokens": 4374
+        }
+      ]
+    },
+    {
+      "taskId": "ds-usage-prevent-posting",
+      "kind": "usage",
+      "strategy": "codegraph",
+      "tokens": 8235,
+      "chars": 24705,
+      "toolCalls": 1,
+      "durationMs": 531,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/guardian/post_guardian.rb",
+          "plugins/chat/lib/chat/guardian_extensions.rb"
+        ],
+        "symbolsMissed": [
+          "can_create_post_in_topic?",
+          "can_create_chat_message?"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "SpamRule AutoSilence prevent_posting? guardian",
+          "chars": 24705,
+          "tokens": 8235
+        }
+      ]
+    },
+    {
+      "taskId": "ds-usage-hot-score-fallback",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 26935,
+      "chars": 80803,
+      "toolCalls": 4,
+      "durationMs": 2074,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "HotScoreCalculator",
+          "chars": 1566,
+          "tokens": 522
+        },
+        {
+          "tool": "read_file",
+          "args": "spec/requests/nested_topics_controller_spec.rb",
+          "chars": 72813,
+          "tokens": 24271
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/nested_replies/sort.rb",
+          "chars": 2411,
+          "tokens": 804
+        },
+        {
+          "tool": "read_file",
+          "args": "app/jobs/scheduled/recalculate_nested_hot_scores.rb",
+          "chars": 4013,
+          "tokens": 1338
+        }
+      ]
+    },
+    {
+      "taskId": "ds-usage-hot-score-fallback",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 4930,
+      "chars": 14787,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "HotScoreCalculator",
+          "chars": 1566,
+          "tokens": 522
+        },
+        {
+          "tool": "read_file",
+          "args": "app/jobs/scheduled/recalculate_nested_hot_scores.rb:1-95",
+          "chars": 3113,
+          "tokens": 1038
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/nested_replies/hot_score_calculator.rb:1-64",
+          "chars": 2039,
+          "tokens": 680
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/nested_replies/sort.rb:1-77",
+          "chars": 2411,
+          "tokens": 804
+        },
+        {
+          "tool": "read_file",
+          "args": "spec/requests/nested_topics_controller_spec.rb:164-284",
+          "chars": 5658,
+          "tokens": 1886
+        }
+      ]
+    },
+    {
+      "taskId": "ds-usage-hot-score-fallback",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 1319,
+      "chars": 3957,
+      "toolCalls": 1,
+      "durationMs": 29,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"NestedReplies Sort HotScoreCalculator fallback\"",
+          "chars": 3957,
+          "tokens": 1319
+        }
+      ]
+    },
+    {
+      "taskId": "ds-usage-hot-score-fallback",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 1011,
+      "chars": 3029,
+      "toolCalls": 3,
+      "durationMs": 20,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "hot_score_values"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"NestedReplies Sort HotScoreCalculator fallback\"",
+          "chars": 1361,
+          "tokens": 454
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#qy7",
+          "chars": 809,
+          "tokens": 270
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#qy6",
+          "chars": 859,
+          "tokens": 287
+        }
+      ]
+    },
+    {
+      "taskId": "ds-usage-hot-score-fallback",
+      "kind": "usage",
+      "strategy": "kirograph",
+      "tokens": 1049,
+      "chars": 3147,
+      "toolCalls": 1,
+      "durationMs": 50,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/nested_replies/sort.rb"
+        ],
+        "symbolsMissed": [
+          "hot_score_expression",
+          "hot_score_values"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "NestedReplies Sort HotScoreCalculator fallback",
+          "chars": 3147,
+          "tokens": 1049
+        }
+      ]
+    },
+    {
+      "taskId": "ds-usage-hot-score-fallback",
+      "kind": "usage",
+      "strategy": "codegraph",
+      "tokens": 7459,
+      "chars": 22377,
+      "toolCalls": 1,
+      "durationMs": 350,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "NestedReplies Sort HotScoreCalculator fallback",
+          "chars": 22377,
+          "tokens": 7459
+        }
+      ]
+    },
+    {
+      "taskId": "ds-impact-require-consent",
+      "kind": "impact",
+      "strategy": "native-naive",
+      "tokens": 8597,
+      "chars": 25783,
+      "toolCalls": 4,
+      "durationMs": 865,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "set_emergency_block!",
+          "require_fresh_consent_for_new_exposure!"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "McpOauthAuthorization|require_consent",
+          "chars": 4078,
+          "tokens": 1360
+        },
+        {
+          "tool": "read_file",
+          "args": "app/models/mcp_oauth_authorization.rb",
+          "chars": 3340,
+          "tokens": 1114
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/discourse_mcp/oauth.rb",
+          "chars": 15181,
+          "tokens": 5061
+        },
+        {
+          "tool": "read_file",
+          "args": "spec/jobs/clean_up_mcp_records_spec.rb",
+          "chars": 3184,
+          "tokens": 1062
+        }
+      ]
+    },
+    {
+      "taskId": "ds-impact-require-consent",
+      "kind": "impact",
+      "strategy": "native-ranged",
+      "tokens": 5685,
+      "chars": 17048,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "McpOauthAuthorization|require_consent",
+          "chars": 4078,
+          "tokens": 1360
+        },
+        {
+          "tool": "read_file",
+          "args": "app/models/mcp_oauth_authorization.rb:1-63",
+          "chars": 2238,
+          "tokens": 746
+        },
+        {
+          "tool": "read_file",
+          "args": "app/services/mcp_primitive_updater.rb:1-105",
+          "chars": 3472,
+          "tokens": 1158
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/discourse_mcp/oauth.rb:39-159",
+          "chars": 4328,
+          "tokens": 1443
+        },
+        {
+          "tool": "read_file",
+          "args": "spec/services/mcp_primitive_updater_spec.rb:2-77",
+          "chars": 2932,
+          "tokens": 978
+        }
+      ]
+    },
+    {
+      "taskId": "ds-impact-require-consent",
+      "kind": "impact",
+      "strategy": "kopt-pack",
+      "tokens": 1308,
+      "chars": 3922,
+      "toolCalls": 1,
+      "durationMs": 30,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.25,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"McpOauthAuthorization require_consent!\"",
+          "chars": 3922,
+          "tokens": 1308
+        }
+      ]
+    },
+    {
+      "taskId": "ds-impact-require-consent",
+      "kind": "impact",
+      "strategy": "kopt-hits+read",
+      "tokens": 1538,
+      "chars": 4612,
+      "toolCalls": 3,
+      "durationMs": 14,
+      "recall": {
+        "fileRecall": 0.3333333333333333,
+        "symbolRecall": 0.25,
+        "defRecall": 0.25,
+        "filesMissed": [
+          "app/services/mcp_primitive_updater.rb",
+          "lib/discourse_mcp/oauth.rb"
+        ],
+        "symbolsMissed": [
+          "set_emergency_block!",
+          "require_fresh_consent_for_new_exposure!",
+          "revoke_disallowed_clients!"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"McpOauthAuthorization require_consent!\"",
+          "chars": 1193,
+          "tokens": 398
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#2ec",
+          "chars": 983,
+          "tokens": 328
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#2e7",
+          "chars": 2436,
+          "tokens": 812
+        }
+      ]
+    },
+    {
+      "taskId": "ds-impact-require-consent",
+      "kind": "impact",
+      "strategy": "kirograph",
+      "tokens": 12,
+      "chars": 34,
+      "toolCalls": 1,
+      "durationMs": 11,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "app/models/mcp_oauth_authorization.rb",
+          "app/services/mcp_primitive_updater.rb",
+          "lib/discourse_mcp/oauth.rb"
+        ],
+        "symbolsMissed": [
+          "require_consent!",
+          "set_emergency_block!",
+          "require_fresh_consent_for_new_exposure!",
+          "revoke_disallowed_clients!"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "McpOauthAuthorization require_consent!",
+          "chars": 34,
+          "tokens": 12
+        }
+      ]
+    },
+    {
+      "taskId": "ds-impact-require-consent",
+      "kind": "impact",
+      "strategy": "codegraph",
+      "tokens": 8309,
+      "chars": 24925,
+      "toolCalls": 1,
+      "durationMs": 249,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "McpOauthAuthorization require_consent!",
+          "chars": 24925,
+          "tokens": 8309
+        }
+      ]
+    },
+    {
+      "taskId": "ds-impact-consume-login-code",
+      "kind": "impact",
+      "strategy": "native-naive",
+      "tokens": 34011,
+      "chars": 102031,
+      "toolCalls": 4,
+      "durationMs": 1675,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "consume!",
+          "consume_code",
+          "consume_code",
+          "consume_code"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "EmailLoginCode",
+          "chars": 10007,
+          "tokens": 3336
+        },
+        {
+          "tool": "read_file",
+          "args": "spec/requests/session_controller_spec.rb",
+          "chars": 75629,
+          "tokens": 25210
+        },
+        {
+          "tool": "read_file",
+          "args": "spec/services/email_login_code/request_spec.rb",
+          "chars": 6783,
+          "tokens": 2261
+        },
+        {
+          "tool": "read_file",
+          "args": "plugins/discourse-captcha/spec/requests/discourse_captcha/session_controller_spec.rb",
+          "chars": 9612,
+          "tokens": 3204
+        }
+      ]
+    },
+    {
+      "taskId": "ds-impact-consume-login-code",
+      "kind": "impact",
+      "strategy": "native-ranged",
+      "tokens": 4502,
+      "chars": 13499,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.75,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "consume!"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "EmailLoginCode",
+          "chars": 10007,
+          "tokens": 3336
+        },
+        {
+          "tool": "read_file",
+          "args": "app/jobs/regular/send_email_login_code.rb:1-22",
+          "chars": 622,
+          "tokens": 208
+        },
+        {
+          "tool": "read_file",
+          "args": "app/jobs/scheduled/clean_up_email_login_codes.rb:1-12",
+          "chars": 218,
+          "tokens": 73
+        },
+        {
+          "tool": "read_file",
+          "args": "app/services/email_login_code/redeem.rb:1-63",
+          "chars": 1817,
+          "tokens": 606
+        },
+        {
+          "tool": "read_file",
+          "args": "app/services/email_login_code/verify.rb:1-37",
+          "chars": 835,
+          "tokens": 279
+        }
+      ]
+    },
+    {
+      "taskId": "ds-impact-consume-login-code",
+      "kind": "impact",
+      "strategy": "kopt-pack",
+      "tokens": 1311,
+      "chars": 3931,
+      "toolCalls": 1,
+      "durationMs": 41,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"EmailLoginCode consume! login code redeem\"",
+          "chars": 3931,
+          "tokens": 1311
+        }
+      ]
+    },
+    {
+      "taskId": "ds-impact-consume-login-code",
+      "kind": "impact",
+      "strategy": "kopt-hits+read",
+      "tokens": 1320,
+      "chars": 3957,
+      "toolCalls": 3,
+      "durationMs": 17,
+      "recall": {
+        "fileRecall": 0.75,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [
+          "app/services/user/create_password_reset_token.rb"
+        ],
+        "symbolsMissed": [],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"EmailLoginCode consume! login code redeem\"",
+          "chars": 1346,
+          "tokens": 449
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#s7",
+          "chars": 2515,
+          "tokens": 839
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#sg",
+          "chars": 96,
+          "tokens": 32
+        }
+      ]
+    },
+    {
+      "taskId": "ds-impact-consume-login-code",
+      "kind": "impact",
+      "strategy": "kirograph",
+      "tokens": 12,
+      "chars": 34,
+      "toolCalls": 1,
+      "durationMs": 13,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "app/models/email_login_code.rb",
+          "app/services/email_login_code/redeem.rb",
+          "app/services/invite/redeem_with_email_code.rb",
+          "app/services/user/create_password_reset_token.rb"
+        ],
+        "symbolsMissed": [
+          "consume!",
+          "consume_code",
+          "consume_code",
+          "consume_code"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "EmailLoginCode consume! login code redeem",
+          "chars": 34,
+          "tokens": 12
+        }
+      ]
+    },
+    {
+      "taskId": "ds-impact-consume-login-code",
+      "kind": "impact",
+      "strategy": "codegraph",
+      "tokens": 8295,
+      "chars": 24883,
+      "toolCalls": 1,
+      "durationMs": 287,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "EmailLoginCode consume! login code redeem",
+          "chars": 24883,
+          "tokens": 8295
+        }
+      ]
+    }
+  ],
+  "aggregates": [
+    {
+      "strategy": "native-naive",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 22658,
+      "meanTokens": 27226,
+      "p90Tokens": 45865,
+      "totalTokens": 326709,
+      "totalChars": 980087,
+      "meanToolCalls": 3.8333333333333335,
+      "meanFileRecall": 0.6666666666666666,
+      "meanSymbolRecall": 0.4763888888888889,
+      "meanDefRecall": 0.40972222222222215,
+      "found": 3,
+      "foundRate": 0.25,
+      "tokensPerFound": 108903
+    },
+    {
+      "strategy": "native-ranged",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 5988,
+      "meanTokens": 7422,
+      "p90Tokens": 10705,
+      "totalTokens": 89066,
+      "totalChars": 267128,
+      "meanToolCalls": 4.833333333333333,
+      "meanFileRecall": 0.625,
+      "meanSymbolRecall": 0.6,
+      "meanDefRecall": 0.5208333333333334,
+      "found": 6,
+      "foundRate": 0.5,
+      "tokensPerFound": 14844
+    },
+    {
+      "strategy": "kopt-pack",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 1309.5,
+      "meanTokens": 1198,
+      "p90Tokens": 1361,
+      "totalTokens": 14376,
+      "totalChars": 43117,
+      "meanToolCalls": 1,
+      "meanFileRecall": 0.9583333333333334,
+      "meanSymbolRecall": 0.9833333333333334,
+      "meanDefRecall": 0.5805555555555556,
+      "found": 11,
+      "foundRate": 0.9166666666666666,
+      "tokensPerFound": 1307
+    },
+    {
+      "strategy": "kopt-hits+read",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 1165.5,
+      "meanTokens": 1190,
+      "p90Tokens": 1668,
+      "totalTokens": 14279,
+      "totalChars": 42802,
+      "meanToolCalls": 3,
+      "meanFileRecall": 0.8125000000000001,
+      "meanSymbolRecall": 0.7847222222222223,
+      "meanDefRecall": 0.6708333333333334,
+      "found": 7,
+      "foundRate": 0.5833333333333334,
+      "tokensPerFound": 2040
+    },
+    {
+      "strategy": "kirograph",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 1020,
+      "meanTokens": 1311,
+      "p90Tokens": 2830,
+      "totalTokens": 15730,
+      "totalChars": 47174,
+      "meanToolCalls": 1,
+      "meanFileRecall": 0.08333333333333333,
+      "meanSymbolRecall": 0.10416666666666667,
+      "meanDefRecall": 0.041666666666666664,
+      "found": 1,
+      "foundRate": 0.08333333333333333,
+      "tokensPerFound": 15730
+    },
+    {
+      "strategy": "codegraph",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 7953.5,
+      "meanTokens": 7651,
+      "p90Tokens": 8328,
+      "totalTokens": 91814,
+      "totalChars": 275429,
+      "meanToolCalls": 1,
+      "meanFileRecall": 0.75,
+      "meanSymbolRecall": 0.7083333333333334,
+      "meanDefRecall": 0.4763888888888889,
+      "found": 8,
+      "foundRate": 0.6666666666666666,
+      "tokensPerFound": 11477
+    }
+  ],
+  "paired": [
+    {
+      "a": "native-naive",
+      "b": "kopt-pack",
+      "nRun": 12,
+      "nBoth": 3,
+      "onlyA": 0,
+      "onlyB": 8,
+      "medianRatio": 0.04896974197141266,
+      "geoMeanRatio": 0.05191641662416897,
+      "bCheaper": 3
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-pack",
+      "nRun": 12,
+      "nBoth": 6,
+      "onlyA": 0,
+      "onlyB": 5,
+      "medianRatio": 0.2003074260950483,
+      "geoMeanRatio": 0.18596451022080832,
+      "bCheaper": 6
+    },
+    {
+      "a": "native-naive",
+      "b": "kopt-hits+read",
+      "nRun": 12,
+      "nBoth": 2,
+      "onlyA": 1,
+      "onlyB": 5,
+      "medianRatio": 0.06927967228414192,
+      "geoMeanRatio": 0.049576806136965884,
+      "bCheaper": 2
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-hits+read",
+      "nRun": 12,
+      "nBoth": 2,
+      "onlyA": 4,
+      "onlyB": 5,
+      "medianRatio": 0.17027223714295114,
+      "geoMeanRatio": 0.1498899897783904,
+      "bCheaper": 2
+    },
+    {
+      "a": "kirograph",
+      "b": "kopt-pack",
+      "nRun": 12,
+      "nBoth": 1,
+      "onlyA": 0,
+      "onlyB": 10,
+      "medianRatio": 1.0137207425343018,
+      "geoMeanRatio": 1.0137207425343018,
+      "bCheaper": 0
+    },
+    {
+      "a": "codegraph",
+      "b": "kopt-pack",
+      "nRun": 12,
+      "nBoth": 7,
+      "onlyA": 1,
+      "onlyB": 4,
+      "medianRatio": 0.17088112617309698,
+      "geoMeanRatio": 0.17354210588195473,
+      "bCheaper": 7
+    },
+    {
+      "a": "kirograph",
+      "b": "kopt-hits+read",
+      "nRun": 12,
+      "nBoth": 1,
+      "onlyA": 0,
+      "onlyB": 6,
+      "medianRatio": 1.0839386602098466,
+      "geoMeanRatio": 1.0839386602098466,
+      "bCheaper": 0
+    },
+    {
+      "a": "codegraph",
+      "b": "kopt-hits+read",
+      "nRun": 12,
+      "nBoth": 5,
+      "onlyA": 3,
+      "onlyB": 2,
+      "medianRatio": 0.18912829178988874,
+      "geoMeanRatio": 0.17748289415864316,
+      "bCheaper": 5
+    },
+    {
+      "a": "native-ranged",
+      "b": "kirograph",
+      "nRun": 12,
+      "nBoth": 0,
+      "onlyA": 6,
+      "onlyB": 1,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-ranged",
+      "b": "codegraph",
+      "nRun": 12,
+      "nBoth": 3,
+      "onlyA": 3,
+      "onlyB": 5,
+      "medianRatio": 1.461565523306948,
+      "geoMeanRatio": 1.103043714756872,
+      "bCheaper": 1
+    },
+    {
+      "a": "native-naive",
+      "b": "native-ranged",
+      "nRun": 12,
+      "nBoth": 3,
+      "onlyA": 0,
+      "onlyB": 3,
+      "medianRatio": 0.2334023765398452,
+      "geoMeanRatio": 0.2715484051592379,
+      "bCheaper": 3
+    }
+  ],
+  "byKind": [
+    {
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tasks": 4,
+      "found": 2,
+      "medianTokens": 39308.5
+    },
+    {
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tasks": 4,
+      "found": 2,
+      "medianTokens": 8575
+    },
+    {
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tasks": 4,
+      "found": 4,
+      "medianTokens": 1308.5
+    },
+    {
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tasks": 4,
+      "found": 4,
+      "medianTokens": 1150.5
+    },
+    {
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tasks": 4,
+      "found": 1,
+      "medianTokens": 1115
+    },
+    {
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tasks": 4,
+      "found": 2,
+      "medianTokens": 7696.5
+    },
+    {
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tasks": 3,
+      "found": 0,
+      "medianTokens": 12760
+    },
+    {
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tasks": 3,
+      "found": 0,
+      "medianTokens": 6800
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tasks": 3,
+      "found": 2,
+      "medianTokens": 1311
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tasks": 3,
+      "found": 3,
+      "medianTokens": 1522
+    },
+    {
+      "kind": "explain",
+      "strategy": "kirograph",
+      "tasks": 3,
+      "found": 0,
+      "medianTokens": 2112
+    },
+    {
+      "kind": "explain",
+      "strategy": "codegraph",
+      "tasks": 3,
+      "found": 3,
+      "medianTokens": 7672
+    },
+    {
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tasks": 3,
+      "found": 1,
+      "medianTokens": 18381
+    },
+    {
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tasks": 3,
+      "found": 3,
+      "medianTokens": 4650
+    },
+    {
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tasks": 3,
+      "found": 3,
+      "medianTokens": 879
+    },
+    {
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tasks": 3,
+      "found": 0,
+      "medianTokens": 769
+    },
+    {
+      "kind": "usage",
+      "strategy": "kirograph",
+      "tasks": 3,
+      "found": 0,
+      "medianTokens": 1049
+    },
+    {
+      "kind": "usage",
+      "strategy": "codegraph",
+      "tasks": 3,
+      "found": 1,
+      "medianTokens": 7459
+    },
+    {
+      "kind": "impact",
+      "strategy": "native-naive",
+      "tasks": 2,
+      "found": 0,
+      "medianTokens": 21304
+    },
+    {
+      "kind": "impact",
+      "strategy": "native-ranged",
+      "tasks": 2,
+      "found": 1,
+      "medianTokens": 5093.5
+    },
+    {
+      "kind": "impact",
+      "strategy": "kopt-pack",
+      "tasks": 2,
+      "found": 2,
+      "medianTokens": 1309.5
+    },
+    {
+      "kind": "impact",
+      "strategy": "kopt-hits+read",
+      "tasks": 2,
+      "found": 0,
+      "medianTokens": 1429
+    },
+    {
+      "kind": "impact",
+      "strategy": "kirograph",
+      "tasks": 2,
+      "found": 0,
+      "medianTokens": 12
+    },
+    {
+      "kind": "impact",
+      "strategy": "codegraph",
+      "tasks": 2,
+      "found": 2,
+      "medianTokens": 8302
+    }
+  ]
+}

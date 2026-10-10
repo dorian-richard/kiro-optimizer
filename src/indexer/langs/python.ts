@@ -4,6 +4,20 @@ import { baseTypeName, cleanDocstring, Ex, isConstName, isUpperStart, joinModule
 const TYPE_NODES = ['identifier'];
 const LEAVES = new Set(['identifier', 'string', 'integer', 'float', 'comment', 'true', 'false', 'none', 'escape_sequence']);
 
+/**
+ * Module-level calls that return a function: `gettext_lazy = lazy(gettext, str)`, `partial(...)`,
+ * `csrf_protect = decorator_from_middleware(CsrfViewMiddleware)`. Matched on the callee's last name.
+ */
+const FUNCTION_FACTORIES = new Set([
+  'lazy', 'keep_lazy', 'keep_lazy_text', 'partial', 'partialmethod', 'wraps', 'update_wrapper', 'lru_cache', 'cache',
+  'singledispatch', 'contextmanager', 'asynccontextmanager', 'method_decorator', 'decorator_from_middleware',
+  'decorator_from_middleware_with_args', 'sync_to_async', 'async_to_sync', 'staticmethod', 'classmethod',
+  'deprecated', 'njit', 'jit', 'vectorize', 'memoize', 'memoized', 'curry',
+]);
+
+/** Test modules: classes declared inside their functions are fixtures, not API worth indexing. */
+const TEST_PATH = /(?:^|\/)(?:tests?|testing)\/|(?:^|\/)(?:test_[^/]*|[^/]*_tests?|conftest)\.pyi?$/;
+
 function isPublic(name: string): boolean {
   if (!name.startsWith('_')) return true;
   return name.startsWith('__') && name.endsWith('__'); // dunders are API
@@ -82,24 +96,40 @@ function decorators(ex: Ex, node: Node, scope: Scope): void {
   }
 }
 
+/**
+ * A class declared in a function body is indexed (as a child of that function) when the function is part of
+ * the code base's API: factories such as Django's create_forward_many_to_many_manager() build their main
+ * classes that way. Test functions and test modules are left out (their local classes are fixtures).
+ */
+function indexLocalClass(ex: Ex, scope: Scope): boolean {
+  if (scope.sym === undefined) return false;
+  const fn = ex.symbols[scope.sym];
+  if (fn.kind !== 'function' && fn.kind !== 'method' && fn.kind !== 'constructor') return false;
+  if (/^test/i.test(fn.name) || TEST_PATH.test(ex.path)) return false;
+  return true;
+}
+
 function classDef(ex: Ex, node: Node, outer: Node, scope: Scope): void {
   const n = node.childForFieldName('name');
   const body = node.childForFieldName('body');
-  if (!n || scope.local) {
+  let local = false;
+  if (n && scope.local && indexLocalClass(ex, scope)) local = true;
+  else if (!n || scope.local) {
     if (body) ex.visitChildren(body, scope);
     return;
   }
-  const inClass = scope.cls !== undefined;
+  const inClass = scope.cls !== undefined && !local;
   const idx = ex.addSymbol({
     name: n.text,
     kind: 'class',
     node: outer,
     scope,
-    exported: isPublic(n.text) && (!inClass || scope.exported),
+    exported: !local && isPublic(n.text) && (!inClass || scope.exported),
     sigEnd: body ? body.startIndex : node.endIndex,
     doc: docstring(body),
   });
-  const inner = ex.enter(scope, idx, { container: true });
+  // members of a local class are symbols too; its own locals stay locals
+  const inner = { ...ex.enter(scope, idx, { container: true }), local: false };
   if (outer !== node) decorators(ex, outer, inner);
   const sup = node.childForFieldName('superclasses');
   for (const b of sup?.namedChildren ?? []) {
@@ -154,15 +184,23 @@ function assignment(ex: Ex, stmt: Node, a: Node, scope: Scope): void {
       if (attr) ex.classVars.get(scope.cls)?.set(attr.text, rtype);
     }
     if (right) ex.visit(ex, right, scope);
+    if (left?.type === 'attribute') ex.visit(ex, left, scope);
     return;
   }
   if (left?.type !== 'identifier') {
     if (right) ex.visit(ex, right, scope);
+    if (left?.type === 'attribute') ex.visit(ex, left, scope);
     return;
   }
   const name = left.text;
   const inClass = scope.cls !== undefined;
   scope.vars.set(name, rtype);
+  if (!inClass && right && !ty && !isUpperStart(name) && isFunctionAlias(ex, right)) {
+    // `gettext_lazy = lazy(gettext, str)`, `handler404 = defaults.page_not_found`: callable module API
+    const idx = ex.addSymbol({ name, kind: 'function', node: stmt, scope, exported: isPublic(name), value: right });
+    ex.visit(ex, right, ex.enter(scope, idx, { local: true }));
+    return;
+  }
   // Module level: UPPER_CASE constants, type aliases (Capitalized) and singletons built from a class
   // (`app = Flask(__name__)`, `router = APIRouter()`); other module variables are noise.
   if (inClass || isConstName(name) || isUpperStart(name) || rtype) {
@@ -180,6 +218,19 @@ function assignment(ex: Ex, stmt: Node, a: Node, scope: Scope): void {
     return;
   }
   if (right) ex.visit(ex, right, scope);
+}
+
+/** Right side of a module-level assignment that binds a function: an alias, or a known function factory call. */
+function isFunctionAlias(ex: Ex, right: Node): boolean {
+  if (right.type === 'identifier') return !isUpperStart(right.text) && !isConstName(right.text) && right.text !== 'None';
+  if (right.type === 'attribute') {
+    const a = right.childForFieldName('attribute')?.text ?? '';
+    return !!a && !isUpperStart(a);
+  }
+  if (right.type !== 'call') return false;
+  const f = right.childForFieldName('function');
+  const callee = f?.type === 'identifier' ? ex.dealias(f.text) : f?.type === 'attribute' ? f.childForFieldName('attribute')?.text : undefined;
+  return !!callee && FUNCTION_FACTORIES.has(callee);
 }
 
 /** `Foo(...)` / `mod.Foo(...)` -> `Foo` when it looks like a class instantiation. */
@@ -213,6 +264,8 @@ function importStmt(ex: Ex, node: Node, scope: Scope): void {
   if (!mod) return;
   const spec = mod.text.replace(/\s+/g, '');
   ex.addImport(spec);
+  // `from x import *` re-exports x's names: recorded as an import of `*` so barrels follow it
+  if (node.namedChildren.some((c) => c?.type === 'wildcard_import')) ex.addRef(scope, '*', 'import', mod, spec);
   for (const c of node.childrenForFieldName('name')) {
     if (!c) continue;
     let n: Node | null = c;
@@ -260,20 +313,26 @@ export function visitPython(ex: Ex, node: Node, scope: Scope): void {
       const f = node.childForFieldName('function');
       if (f?.type === 'identifier') {
         const name = ex.dealias(f.text);
-        ex.addRef(scope, name, isUpperStart(name) ? 'new' : 'call', f);
+        ex.noteCall(node, ex.addRef(scope, name, isUpperStart(name) ? 'new' : 'call', f));
       } else if (f?.type === 'attribute') {
         const a = f.childForFieldName('attribute');
         const o = f.childForFieldName('object');
-        if (a) {
-          const q = o?.text;
-          ex.addRef(scope, a.text, isUpperStart(a.text) && q && !q.startsWith('self') ? 'new' : 'call', a, q, ex.receiverHint(q, scope));
+        const q = o?.text;
+        const ref = a ? ex.addRef(scope, a.text, isUpperStart(a.text) && q && !q.startsWith('self') ? 'new' : 'call', a, q, ex.receiverHint(q, scope)) : undefined;
+        ex.noteCall(node, ref);
+        if (o) {
+          ex.visit(ex, o, scope);
+          ex.chainHint(ref, o);
         }
-        if (o) ex.visit(ex, o, scope);
       } else if (f) ex.visit(ex, f, scope);
       const args = node.childForFieldName('arguments');
       if (args) ex.visitChildren(args, scope);
       return;
     }
+    case 'attribute':
+      // `obj.field`, `self.x = v` (calls and decorators are recorded by their own visitors)
+      ex.memberRef(scope, node, node.childForFieldName('attribute'), node.childForFieldName('object'));
+      return;
     case 'lambda':
       ex.visitChildren(node, { ...scope, local: true });
       return;

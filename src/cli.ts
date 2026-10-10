@@ -110,8 +110,10 @@ async function hookMain(argv: string[]): Promise<void> {
     if (!event.hook_event_name && eventName) event.hook_event_name = eventName;
     if (!event.hook_event_name) throw new Error('hook event has no hook_event_name');
     const { loadConfig } = await import('./core/config.js');
-    cfg = loadConfig(findRoot(typeof event.cwd === 'string' && event.cwd && existsSync(event.cwd) ? event.cwd : process.cwd()));
     hooks = await (await modules()).hooks();
+    // an invalid config file is logged to hook-errors.log: any output on the allow path intercepts the tool call
+    const onWarning = (hooks as { hookWarningSink?: () => (m: string) => void }).hookWarningSink?.() ?? (() => {});
+    cfg = loadConfig(findRoot(typeof event.cwd === 'string' && event.cwd && existsSync(event.cwd) ? event.cwd : process.cwd()), { onWarning });
     const out = await hooks.handleHook(event as Parameters<typeof hooks.handleHook>[0], cfg);
     if (out && (out.exitCode === 0 || out.exitCode === 2)) outcome = out;
   } catch (err) {
@@ -125,7 +127,9 @@ async function hookMain(argv: string[]): Promise<void> {
   }
   await write(process.stdout, outcome.stdout);
   await write(process.stderr, outcome.stderr && !outcome.stderr.endsWith('\n') ? outcome.stderr + '\n' : outcome.stderr);
-  process.exit(outcome.exitCode);
+  // Stop never blocks: in Kiro IDE 1.x a non-zero Stop exit means "continue the agent"
+  const stopEvent = /^(stop|agentstop|sessionend)$/i.test(String(event?.hook_event_name ?? eventName ?? '').replace(/[^A-Za-z]/g, ''));
+  process.exit(stopEvent ? 0 : outcome.exitCode);
 }
 
 async function benchMain(argv: string[]): Promise<void> {
@@ -154,14 +158,21 @@ function progressPrinter(label: string): ((done: number, total: number) => void)
   return fn;
 }
 
+/** Exit status of a tool run: 1 on a tool error; for `kopt run`, the command's own exit code (1-255). */
+export function toolExitCode(res: { isError?: boolean; result?: { meta?: Record<string, unknown> } }): number {
+  if (res.isError) return 1;
+  const code = res.result?.meta?.exitCode;
+  if (typeof code !== 'number' || code === 0) return 0;
+  return Number.isInteger(code) && code > 0 && code < 256 ? code : 1;
+}
+
 async function tool(name: ToolName, args: Record<string, unknown>, root?: string): Promise<void> {
   const cfg = await config(root);
   const { runToolOnce } = await import('./mcp/local.js');
   const progress = progressPrinter('indexing');
   const res = await runToolOnce(cfg, name, args, { onProgress: progress });
   progress.end();
-  const exit = res.isError ? 1 : typeof res.result?.meta?.exitCode === 'number' && res.result.meta.exitCode !== 0 ? 1 : 0;
-  await finish(res.text, exit);
+  await finish(res.text, toolExitCode(res));
 }
 
 /**
@@ -197,18 +208,21 @@ function fmtStats(s: { filesSeen: number; filesIndexed: number; filesUnchanged: 
   );
 }
 
-async function cmdIndex(o: { root?: string; refresh?: boolean }): Promise<void> {
+async function cmdIndex(o: { root?: string; refresh?: boolean; ifIdle?: boolean }): Promise<void> {
   const cfg = await config(o.root);
   const [{ Store }, { indexPath }, mods] = await Promise.all([import('./store/store.js'), import('./core/config.js'), modules()]);
   const idx = await mods.indexer();
   const progress = progressPrinter('indexing');
   const store = Store.open(indexPath(cfg), { root: cfg.root });
   try {
-    const stats = o.refresh
-      ? await idx.refreshIndex(store, { config: cfg, onProgress: progress })
-      : await idx.indexRepo(store, { config: cfg, onProgress: progress });
+    const onPhase = (p: { phase: string; holder?: number }) => {
+      if (p.phase === 'wait') process.stderr.write(`kopt: another kopt process${p.holder ? ` (pid ${p.holder})` : ''} is indexing ${cfg.root}; waiting for it\n`);
+    };
+    const opts = { config: cfg, onProgress: progress, onPhase, lock: o.ifIdle ? ('skip' as const) : ('wait' as const) };
+    const stats = o.refresh ? await idx.refreshIndex(store, opts) : await idx.indexRepo(store, opts);
     progress.end();
     closeQuietly(store);
+    if ((stats as { locked?: boolean }).locked) return await finish('another kopt process is indexing this project: nothing to do');
     await finish(fmtStats(stats));
   } finally {
     closeQuietly(store);
@@ -254,6 +268,7 @@ async function cmdSetup(o: { surface?: string; global?: boolean; dryRun?: boolea
   const surface = o.surface as 'ide' | 'cli' | 'all' | undefined;
   process.stderr.write('kopt setup: configuring Kiro for every project…\n');
   const r = await kiro.setupUser({ surface, global: o.global, dryRun: o.dryRun, force: o.force, explorerModel: o.explorerModel });
+  if (r.refused) await finish(`fail  ${r.refused}`, 1);
   const lines: string[] = [];
   if (r.install.action !== 'not-needed') lines.push(`${r.install.action === 'failed' ? 'warn' : 'ok  '}  ${r.install.detail}`);
   for (const f of r.written) lines.push(`${o.dryRun ? 'would write' : 'wrote'} ${homeRel(f)}`);
@@ -289,11 +304,11 @@ async function cmdDoctor(o: { root?: string; quick?: boolean }): Promise<void> {
   await finish(kiro.formatChecks(report.checks), report.ok ? 0 : 1);
 }
 
-async function cmdUninstall(o: { keepIndex?: boolean; purge?: boolean; dryRun?: boolean; root?: string; user?: boolean; workspace?: boolean }): Promise<void> {
+async function cmdUninstall(o: { keepIndex?: boolean; purge?: boolean; dryRun?: boolean; root?: string; user?: boolean; workspace?: boolean; force?: boolean }): Promise<void> {
   const kiro = await import('./kiro/index.js');
   const scope = o.user ? 'user' : o.workspace ? 'workspace' : 'all';
   const root = o.root ? resolve(o.root) : findRoot();
-  const r = await kiro.uninstallKiro({ root, scope, keepIndex: o.keepIndex, purge: o.purge, dryRun: o.dryRun });
+  const r = await kiro.uninstallKiro({ root, scope, keepIndex: o.keepIndex, purge: o.purge, dryRun: o.dryRun, force: o.force });
   const lines = [
     ...r.notes,
     ...(r.removed ?? []).map((f) => `${o.dryRun ? 'would remove' : 'removed'} ${homeRel(f)}`),
@@ -327,6 +342,7 @@ async function main(): Promise<void> {
     .description('build or update the local index')
     .option('--root <dir>', 'repo root (default: nearest git root)')
     .option('--refresh', 'only re-index files changed since the last run')
+    .option('--if-idle', 'do nothing when another kopt process is indexing this project (default: wait for it)')
     .action(wrap(cmdIndex));
 
   program
@@ -352,7 +368,7 @@ async function main(): Promise<void> {
     .option('--pack', 'include bodies of the best symbols')
     .option('--max-tokens <n>', 'token budget', int)
     .option('--path <prefix>', 'restrict to a path prefix or glob')
-    .option('--kinds <list>', 'symbol kinds, e.g. class,function')
+    .option('--kinds <list>', 'symbol kinds, e.g. class,function (function includes methods; class includes structs and records)')
     .option('--limit <n>', 'max hits', int)
     .option('--root <dir>')
     .action(
@@ -363,16 +379,24 @@ async function main(): Promise<void> {
 
   program
     .command('read')
-    .description('read a symbol, file or range (kopt_read)')
-    .argument('<target>', '#handle, Class.method, path or path:start-end')
-    .addOption(new Option('--mode <mode>').choices(['body', 'skeleton', 'card']))
+    .description('read a symbol, file, range, directory (outline) or kopt run log (kopt_read)')
+    .argument('<target>', '#handle, Class.method, path, path:start-end, a directory, or a kopt run log handle (o3fad54[:a-b])')
+    .addOption(new Option('--mode <mode>').choices(['body', 'skeleton', 'card', 'outline']))
+    .option('--focus <words>', '(outline) rank files/symbols relevant to these words first')
+    .option('--grep <regex>', '(log) filter lines (with context)')
+    .option('--start <line>', '(log) first line', int)
+    .option('--end <line>', '(log) last line', int)
     .option('--max-tokens <n>', 'token budget', int)
     .option('--root <dir>')
-    .action(wrap(async (target: string, o: { mode?: string; maxTokens?: number; root?: string }) => tool('kopt_read', { target, mode: o.mode, maxTokens: o.maxTokens }, o.root)));
+    .action(
+      wrap(async (target: string, o: { mode?: string; focus?: string; grep?: string; start?: number; end?: number; maxTokens?: number; root?: string }) =>
+        tool('kopt_read', { target, mode: o.mode, focus: o.focus, grep: o.grep, startLine: o.start, endLine: o.end, maxTokens: o.maxTokens }, o.root),
+      ),
+    );
 
   program
     .command('outline')
-    .description('structure map of the repo, a directory or a file (kopt_outline)')
+    .description('structure map of the repo, a directory or a file (kopt_outline; also kopt read <dir>)')
     .argument('[path]')
     .option('--focus <words>', 'rank files/symbols relevant to these words first')
     .option('--max-tokens <n>', 'token budget', int)
@@ -411,7 +435,7 @@ async function main(): Promise<void> {
 
   program
     .command('expand')
-    .description('show more of a kopt_run output (kopt_expand)')
+    .description('show more of a kopt_run output (kopt_expand; also kopt read <handle> --grep)')
     .argument('<handle>')
     .option('--grep <regex>', 'filter lines (with context)')
     .option('--start <line>', 'first line', int)
@@ -428,10 +452,11 @@ async function main(): Promise<void> {
     .command('setup')
     .description('one-time setup: install kopt globally if needed and configure Kiro IDE and Kiro CLI for every project')
     .addOption(new Option('--surface <surface>', 'configure these surfaces whatever is detected').choices(['ide', 'cli', 'all']))
-    .option('--no-global', 'do not install kopt globally with npm')
+    // --global first: declared after it, --no-global would make `global` default to true (commander)
     .option('--global', 'install kopt globally with npm even from a checkout')
+    .option('--no-global', 'do not install kopt globally with npm (from npx, a private copy goes to ~/.kopt/runtime)')
     .option('--dry-run', 'show what would be written')
-    .option('--force', 'overwrite kopt files edited by hand and make kopt the Kiro CLI default agent')
+    .option('--force', 'overwrite kopt files edited by hand and make kopt the Kiro CLI default agent (your mcp.json fields are kept)')
     .option('--no-doctor', 'skip the final checks')
     .option('--explorer-model <id>', 'model for the read-only explorer agent')
     .action(wrap(cmdSetup));
@@ -450,6 +475,7 @@ async function main(): Promise<void> {
     .option('--purge', 'also delete ~/.kopt (telemetry, governor state)')
     .option('--user', 'only the user-level configuration')
     .option('--workspace', 'only the files kopt init wrote in this project')
+    .option('--force', 'also remove kopt files you edited since kopt wrote them (kept and listed otherwise)')
     .option('--dry-run', 'show what would be removed')
     .option('--root <dir>')
     .action(wrap(cmdUninstall));

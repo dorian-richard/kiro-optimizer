@@ -4,9 +4,9 @@
 // wrote itself (e.g. a stale command path) but keeps a file the user edited since, unless `force`.
 
 import { createHash } from 'node:crypto';
-import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { chmodSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { stripBom } from '../telemetry/fsutil.js';
+import { stripBom, writePrivateFile } from '../telemetry/fsutil.js';
 
 export interface InstallResult {
   written: string[];
@@ -14,6 +14,8 @@ export interface InstallResult {
   notes: string[];
   /** Files deleted (uninstall). */
   removed?: string[];
+  /** kopt files kept because the user edited them (uninstall). */
+  kept?: string[];
 }
 
 /** File text without a UTF-8 BOM (Notepad and Windows PowerShell 5 write one into JSON files), or undefined. */
@@ -41,6 +43,7 @@ export class Plan {
   skipped: string[] = [];
   notes: string[] = [];
   removed: string[] = [];
+  kept: string[] = [];
   private manifest: Record<string, string>;
   private readonly manifestPath: string;
   private manifestDirty = false;
@@ -54,11 +57,12 @@ export class Plan {
     }
   }
 
-  private write(path: string, content: string): void {
+  private write(path: string, content: string, mode?: number): void {
     this.written.push(path);
     if (this.dryRun) return;
     mkdirSync(dirname(path), { recursive: true });
-    writeFileSync(path, content);
+    writeFileSync(path, content, mode === undefined ? undefined : { mode });
+    if (mode !== undefined && process.platform !== 'win32') chmodSync(path, mode);
   }
 
   /** Was this exact content written by kopt (manifest hash match)? */
@@ -66,8 +70,13 @@ export class Plan {
     return content !== undefined && this.manifest[path] === sha1(content);
   }
 
-  /** A file kopt owns entirely (template-derived). */
-  own(path: string, content: string): void {
+  /** Is a manifest entry recorded for this path (kopt wrote some version of it)? */
+  isTracked(path: string): boolean {
+    return path in this.manifest;
+  }
+
+  /** A file kopt owns entirely (template-derived). `mode`: POSIX permissions (e.g. 0o755 for the launcher). */
+  own(path: string, content: string, mode?: number): void {
     const existing = readText(path);
     if (existing === content) {
       this.skipped.push(path);
@@ -79,7 +88,7 @@ export class Plan {
       this.notes.push(`${path} exists with local changes; kept (use --force to overwrite).`);
       return;
     }
-    this.write(path, content);
+    this.write(path, content, mode);
     this.track(path, content);
   }
 
@@ -124,15 +133,14 @@ export class Plan {
         rmSync(this.manifestPath, { force: true });
         return;
       }
-      mkdirSync(dirname(this.manifestPath), { recursive: true });
-      writeFileSync(this.manifestPath, JSON.stringify(this.manifest, null, 2));
+      writePrivateFile(this.manifestPath, JSON.stringify(this.manifest, null, 2));
     } catch {
       // the manifest is a convenience
     }
   }
 
   result(): InstallResult {
-    return { written: this.written, skipped: this.skipped, notes: this.notes, removed: this.removed };
+    return { written: this.written, skipped: this.skipped, notes: this.notes, removed: this.removed, kept: this.kept };
   }
 }
 
@@ -196,8 +204,7 @@ export function readState(userDir: string): SetupState {
 export function writeState(userDir: string, s: SetupState, dryRun = false): void {
   if (dryRun) return;
   try {
-    mkdirSync(userDir, { recursive: true });
-    writeFileSync(statePath(userDir), JSON.stringify(s, null, 2) + '\n');
+    writePrivateFile(statePath(userDir), JSON.stringify(s, null, 2) + '\n');
   } catch {
     // best effort
   }

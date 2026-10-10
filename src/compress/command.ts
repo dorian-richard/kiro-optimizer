@@ -172,3 +172,166 @@ export function subcommandOf(cmd: CommandInfo, programs: string[]): string | und
   }
   return undefined;
 }
+
+// ---------------------------------------------------------------------------------------------------------------
+// Commands that never exit by themselves (watch modes, dev servers, followers). kopt_run would wait for them until
+// its timeout, so it refuses them with a hint instead. Pure: the governor can use it before redirecting.
+
+/** `--watch`, `--watchAll`, `--watch-all`, `--hot`, `--serve` (not `--watch=false` / `--watch false`). */
+const WATCH_FLAG_RE = /^--(?:watch(?:All|-all)?|hot|serve)(?:=(.*))?$/;
+/** Programs whose `-w` means watch (elsewhere it is a workspace, worker count, word match...). */
+const DASH_W_WATCH = new Set([
+  'tsc', 'vue-tsc', 'tsgo', 'vitest', 'mocha', 'rollup', 'babel', 'sass', 'node-sass', 'tailwindcss', 'postcss',
+  'webpack', 'coffee', 'stylus', 'ava', 'tsup', 'swc', 'esbuild', 'lessc',
+]);
+/** Programs that always run until stopped. */
+const SERVER_PROGRAMS = new Set([
+  'nodemon', 'ts-node-dev', 'tsnd', 'webpack-dev-server', 'http-server', 'live-server', 'lite-server', 'json-server',
+  'serve', 'remix-serve', 'start-storybook', 'uvicorn', 'gunicorn', 'hypercorn', 'daphne', 'waitress-serve',
+  'sphinx-autobuild', 'ptw', 'pytest-watch', 'rackup', 'puma', 'unicorn', 'guard', 'air', 'reflex', 'entr',
+  'watchexec', 'watchman-make', 'fswatch', 'watch', 'azurite', 'http.server',
+]);
+/** program -> first non-option argument that starts a server / watcher (`*` = any, including none). */
+const SERVER_SUBCOMMANDS: Record<string, RegExp> = {
+  vite: /^(?:dev|serve|preview|\*)$/,
+  next: /^(?:dev|start)$/,
+  nuxt: /^(?:dev|start|preview)$/,
+  nuxi: /^(?:dev|start|preview)$/,
+  astro: /^(?:dev|preview)$/,
+  remix: /^dev$/,
+  gatsby: /^(?:develop|serve)$/,
+  docusaurus: /^(?:start|serve)$/,
+  vuepress: /^dev$/,
+  vitepress: /^(?:dev|preview)$/,
+  storybook: /^dev$/,
+  expo: /^start$/,
+  'react-native': /^start$/,
+  'react-scripts': /^start$/,
+  craco: /^start$/,
+  'vue-cli-service': /^serve$/,
+  ng: /^(?:serve|s)$/,
+  ember: /^(?:serve|server|s)$/,
+  hugo: /^(?:server|serve)$/,
+  jekyll: /^(?:serve|s|server)$/,
+  mkdocs: /^serve$/,
+  webpack: /^serve$/,
+  // bare `parcel index.html` starts the dev server too
+  parcel: /^(?!build$|help$)/,
+  tsx: /^watch$/,
+  vitest: /^(?:watch|dev)$/,
+  cargo: /^watch$/,
+  dotnet: /^watch$/,
+  flask: /^run$/,
+  fastapi: /^(?:dev|run)$/,
+  streamlit: /^run$/,
+  jupyter: /^(?:notebook|lab|server)$/,
+  rails: /^(?:server|s)$/,
+  foreman: /^start$/,
+  overmind: /^start$/,
+  symfony: /^(?:serve|server:start)$/,
+  skaffold: /^dev$/,
+  tilt: /^up$/,
+  wrangler: /^dev$/,
+  netlify: /^dev$/,
+  vercel: /^dev$/,
+  firebase: /^(?:emulators:start|serve)$/,
+  func: /^start$/,
+  serverless: /^offline$/,
+  sls: /^offline$/,
+  gulp: /^(?:watch|serve|dev)$/,
+  grunt: /^(?:watch|serve)$/,
+  ionic: /^serve$/,
+  quasar: /^dev$/,
+  umi: /^dev$/,
+  'browser-sync': /^start$/,
+  deno: /^serve$/,
+  minikube: /^tunnel$/,
+};
+/** npm-style script names that start a server or a watcher (`build:dev` is a one-shot build: not matched). */
+const SCRIPT_RE = /^(?:dev|develop|start|serve|server|watch|preview)(?:[:_-].*)?$|[:_-](?:watch|serve)$/;
+const MAVEN_SERVER_GOAL_RE = /^(?:spring-boot:run|quarkus:dev|jetty:run(?:-war)?|tomcat7?:run(?:-war)?|wildfly:run|liberty:(?:dev|run)|micronaut:run|cargo:run)$/;
+const GRADLE_SERVER_TASK_RE = /^(?::?[\w-]+:)*(?:bootRun|run|appRun|appStart|jettyRun|tomcatRun|quarkusDev|liveDev)$/;
+const PHP_ARTISAN_RE = /^(?:serve|queue:work|queue:listen|horizon|octane:start|reverb:start|schedule:work|pail)$/;
+
+function firstPositional(args: string[]): string | undefined {
+  return args.find((a) => !a.startsWith('-'));
+}
+
+function hasWatchFlag(args: string[]): string | undefined {
+  for (let i = 0; i < args.length; i++) {
+    const m = WATCH_FLAG_RE.exec(args[i]);
+    if (!m) continue;
+    const value = m[1] ?? (/^(?:true|false)$/.test(args[i + 1] ?? '') ? args[i + 1] : undefined);
+    if (value === 'false' || value === '0') continue;
+    return args[i].replace(/=.*$/, '');
+  }
+  return undefined;
+}
+
+function segmentReason(s: Segment): string | undefined {
+  const p = s.program;
+  const args = s.args;
+  // `--no-watch` / `--watch=false` / `--single-run` turn a watch mode off (a server still runs: checked below)
+  const noWatch = args.some((a) => /^--no-watch$|^--watch(?:All)?=false$|^--single-?run$/i.test(a));
+  // detached / daemon modes return at once
+  if ((p === 'symfony' || p === 'docker' || p === 'docker-compose' || p === 'podman') && args.some((a) => a === '-d' || a === '--daemon' || a === '--detach')) return undefined;
+  const flag = noWatch ? undefined : hasWatchFlag(args);
+  if (flag) return `${flag} never exits`;
+  if (!noWatch && DASH_W_WATCH.has(p) && args.includes('-w')) return '-w (watch) never exits';
+  if ((p === 'gradle' || p === 'gradlew') && args.some((a) => a === '-t' || a === '--continuous')) return 'continuous build never exits';
+  if (SERVER_PROGRAMS.has(p)) return `${p} runs until stopped`;
+  const sub = firstPositional(args);
+  const subRe = SERVER_SUBCOMMANDS[p];
+  if (subRe && (sub ? subRe.test(sub) : subRe.test('*'))) return `${p}${sub ? ` ${sub}` : ''} runs until stopped`;
+  if (p === 'ng' && sub === 'test' && !noWatch) return 'ng test watches by default (add --watch=false)';
+  if ((p === 'npm' || p === 'yarn' || p === 'pnpm' || p === 'bun') && !s.alias) {
+    let script = sub;
+    if (sub === 'run' || sub === 'run-script') script = firstPositional(args.slice(args.indexOf(sub) + 1));
+    else if (p === 'npm' && sub !== 'start') script = undefined; // `npm test`, `npm ci`...: npm commands, not scripts
+    if (script && SCRIPT_RE.test(script)) return `script "${script}" usually runs until stopped`;
+  }
+  if (/^mvn/.test(p) && args.some((a) => MAVEN_SERVER_GOAL_RE.test(a))) return 'server goal runs until stopped';
+  if ((p === 'gradle' || p === 'gradlew') && args.some((a) => GRADLE_SERVER_TASK_RE.test(a))) return 'run task runs until stopped';
+  if (p === 'sbt' && args.some((a) => a.startsWith('~'))) return '~ (continuous) never exits';
+  if (/^python[\d.]*$|^py$/.test(p) && args[0]?.endsWith('manage.py') && args[1] === 'runserver') return 'runserver runs until stopped';
+  if (p === 'manage.py' && sub === 'runserver') return 'runserver runs until stopped';
+  if (p === 'php' && (args[0] === '-S' || (args[0]?.endsWith('artisan') && PHP_ARTISAN_RE.test(args[1] ?? '')))) return 'server runs until stopped';
+  if (p === 'artisan' && PHP_ARTISAN_RE.test(sub ?? '')) return 'server runs until stopped';
+  if (p === 'mix' && sub === 'phx.server') return 'phx.server runs until stopped';
+  if ((p === 'tail' || p === 'journalctl') && args.some((a) => /^-[a-zA-Z]*[fF][a-zA-Z]*$/.test(a))) return `${p} -f never exits`;
+  if (p === 'docker' || p === 'docker-compose' || p === 'podman' || p === 'podman-compose') {
+    const words = args.filter((a) => !a.startsWith('-'));
+    const i = words[0] === 'compose' ? 1 : 0;
+    const verb = words[i];
+    if (verb === 'up' && !args.some((a) => a === '-d' || a === '--detach' || /^-[a-zA-Z]*d[a-zA-Z]*$/.test(a))) return `${p} up without -d runs until stopped`;
+    if ((verb === 'logs' || verb === 'events') && (verb === 'events' || args.some((a) => a === '-f' || a === '--follow'))) return `${p} ${verb} follows forever`;
+    if (verb === 'stats' && !args.includes('--no-stream')) return `${p} stats streams forever`;
+  }
+  if (p === 'kubectl' || p === 'oc') {
+    const verb = firstPositional(args);
+    if (verb === 'port-forward' || verb === 'proxy') return `${p} ${verb} runs until stopped`;
+    if (verb === 'logs' && args.some((a) => a === '-f' || a === '--follow')) return `${p} logs -f follows forever`;
+    if (args.includes('-w')) return `${p} -w watches forever`;
+  }
+  if (p === 'celery' && args.some((a) => /^(?:worker|beat|flower)$/.test(a))) return `celery ${args.find((a) => /^(?:worker|beat|flower)$/.test(a))} runs until stopped`;
+  if (p === 'sam' && args[0] === 'local' && /^start-/.test(args[1] ?? '')) return 'sam local runs until stopped';
+  if (p === 'pytest' && args.some((a) => a === '-f' || a === '--looponfail')) return 'pytest --looponfail never exits';
+  if (p === 'iex' && args.join(' ').includes('phx.server')) return 'phx.server runs until stopped';
+  return undefined;
+}
+
+/**
+ * Why `command` would not exit by itself (watch mode, dev server, log follower), or undefined. Commands bounded by
+ * `timeout N`, or sent to the background with a trailing `&`, are fine.
+ */
+export function longRunningReason(command: string): string | undefined {
+  const raw = command.trim();
+  // `timeout 30 npm run dev`; `npm run dev & sleep 5 && curl ...` (a job sent to the background with `&`, not
+  // PowerShell's call operator `& .\gradlew.bat`)
+  if (/(?:^|[;&|(]\s*)g?timeout\s+(?:-\S+\s+)*\d/.test(raw) || /[^\s&>|;(]\s*&(?![&>\d])/.test(raw)) return undefined;
+  for (const s of parseCommand(raw).segments) {
+    const why = segmentReason(s);
+    if (why) return why;
+  }
+  return undefined;
+}

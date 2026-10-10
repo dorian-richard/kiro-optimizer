@@ -4,12 +4,13 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import ignore from 'ignore';
-import { installKiro, suggestKiroignore, mergeKiroignore, kiroignoreBlock, AUTO_APPROVE, hookCommand } from '../src/kiro/index.js';
+import { installKiro, suggestKiroignore, mergeKiroignore, kiroignoreBlock, AUTO_APPROVE, MCP_TIMEOUTS, hookCommand } from '../src/kiro/index.js';
 import { ensureArrayValue, parseJsonc } from '../src/kiro/jsonc.js';
-import { shellArg } from '../src/kiro/command.js';
+import { shellArg, stableNodePath } from '../src/kiro/command.js';
 
-// KOPT_HOOK_COMMAND=node: the running node on POSIX; a bare `node` on Windows (valid in cmd.exe and PowerShell).
-const NODE = process.platform === 'win32' ? 'node' : process.execPath;
+// KOPT_HOOK_COMMAND=node: the absolute path of the running Node on every OS (Kiro started from the Dock or the Start
+// menu has no shell-profile PATH).
+const NODE = stableNodePath(process.execPath);
 const nodeLine = (bin: string) => `${shellArg(NODE)} ${shellArg(bin)}`;
 
 let tmp: string;
@@ -195,7 +196,7 @@ describe('installKiro', () => {
 
     const mcp = json(join(k, 'settings', 'mcp.json'));
     expect(mcp.mcpServers.github).toEqual({ url: 'https://api.github.com/mcp' });
-    expect(mcp.mcpServers.kopt).toEqual({ command: NODE, args: [cli, 'mcp', '--root', root], autoApprove: AUTO_APPROVE });
+    expect(mcp.mcpServers.kopt).toEqual({ command: NODE, args: [cli, 'mcp', '--root', root], autoApprove: AUTO_APPROVE, ...MCP_TIMEOUTS });
     expect(mcp.mcpServers.kopt.autoApprove).not.toContain('kopt_run');
 
     const hooks = json(join(k, 'hooks', 'kopt.json'));
@@ -214,7 +215,9 @@ describe('installKiro', () => {
 
     const steering = read(join(k, 'steering', 'kopt.md'));
     expect(steering.startsWith('---\ninclusion: always\n---\n')).toBe(true);
-    expect(steering.split(/\s+/).filter(Boolean).length).toBeLessThanOrEqual(140);
+    expect(steering.split(/\s+/).filter(Boolean).length).toBeLessThanOrEqual(60);
+    // "who calls X" goes to kopt_refs, not to a pack
+    expect(steering).toMatch(/Who calls\/uses X: `kopt_refs X`/);
     expect(read(join(k, 'steering', 'kopt-specs.md'))).toMatch(/^---\ninclusion: auto\nname: kopt-specs\ndescription: .+\n---\n/);
 
     const ki = read(join(root, '.kiroignore'));
@@ -277,7 +280,7 @@ describe('installKiro', () => {
     write(root, '.kiro/settings/mcp.json', JSON.stringify({ mcpServers: { kopt: { command: '/old/node', args: ['/old/cli.js', 'mcp'], env: { A: '1' }, autoApprove: ['kopt_find'], disabled: false } } }));
     await installKiro({ root, scope: 'workspace' });
     const kopt = json(join(root, '.kiro', 'settings', 'mcp.json')).mcpServers.kopt;
-    expect(kopt).toEqual({ command: NODE, args: [cli, 'mcp', '--root', root], env: { A: '1' }, autoApprove: ['kopt_find'], disabled: false });
+    expect(kopt).toEqual({ command: NODE, args: [cli, 'mcp', '--root', root], env: { A: '1' }, autoApprove: ['kopt_find'], disabled: false, ...MCP_TIMEOUTS });
 
     const bad = newRepo('badjson');
     write(bad, '.kiro/settings/mcp.json', '{ "mcpServers": { oops');
@@ -295,11 +298,12 @@ describe('installKiro', () => {
     const home = process.env.KOPT_KIRO_HOME!;
     const r = await installKiro({ root, scope: 'user' });
     const mcp = json(join(home, 'settings', 'mcp.json'));
-    expect(mcp.mcpServers.kopt).toEqual({ command: NODE, args: [cli, 'mcp'], autoApprove: AUTO_APPROVE });
+    expect(mcp.mcpServers.kopt).toEqual({ command: NODE, args: [cli, 'mcp'], autoApprove: AUTO_APPROVE, ...MCP_TIMEOUTS });
     for (const rel of ['steering/kopt.md', 'hooks/kopt.json', 'agents/kopt-explorer.json', 'agents/kopt.json']) expect(existsSync(join(home, rel)), rel).toBe(true);
     expect(json(join(home, 'hooks', 'kopt.json')).hooks[0].action.command).toBe(`${nodeLine(cli)} hook --source global`);
     const global = read(join(home, 'settings', 'kiroignore'));
-    expect(global).toContain('Cargo.lock');
+    // user-wide: build artifacts only; a lockfile may need agent writes (merge conflicts), so it is per project
+    expect(global).not.toContain('Cargo.lock');
     expect(global).toContain('*.min.js');
     expect(global).not.toContain('/data/big.csv');
     expect(json(process.env.KOPT_KIRO_USER_SETTINGS!)).toEqual({ 'kiroAgent.agentIgnoreFiles': ['.kiroignore'] });

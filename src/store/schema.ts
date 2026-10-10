@@ -67,6 +67,8 @@ CREATE INDEX IF NOT EXISTS file_imports_file   ON file_imports(file_id);
 CREATE INDEX IF NOT EXISTS file_imports_target ON file_imports(target_file_id);
 
 -- Lexical index over symbols. rowid = symbols.id. Contentless: we only need matching + bm25.
+-- No prefix index: FTS5 uses one only for prefix queries of exactly its length, and kopt's prefix queries are 4+
+-- characters (indexes built by earlier versions have prefix='3', which works the same, only bigger).
 -- Columns hold space-separated, lower-cased, code-aware terms (see indexer/terms.ts):
 --   name_terms: full name + its sub-words (camelCase/snake_case split) + qualified name parts
 --   sig_terms : identifiers from the signature (param names, types, return type)
@@ -76,8 +78,7 @@ CREATE INDEX IF NOT EXISTS file_imports_target ON file_imports(target_file_id);
 CREATE VIRTUAL TABLE IF NOT EXISTS symbols_fts USING fts5(
   name_terms, sig_terms, path_terms, doc, body_terms,
   content='', contentless_delete=1,
-  tokenize='unicode61 remove_diacritics 2 tokenchars ''_''',
-  prefix='3'
+  tokenize='unicode61 remove_diacritics 2 tokenchars ''_'''
 );
 `;
 

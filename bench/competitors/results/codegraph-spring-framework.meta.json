@@ -14,7 +14,16 @@
   },
   "headCommit": "82a6b40b9366ec181ededdad282b307ee5381a52",
   "commitMatchesTasks": true,
-  "date": "2026-10-09T11:15:12.493Z",
+  "date": "2026-10-09T14:06:30.635Z",
+  "image": "kopt-bench/codegraph:1.6.2",
+  "imageId": "sha256:db8f2e822e3863b14f3c037bc692fb20915bf2e48a3083248d72d3938a716f5a",
+  "engine": "docker",
+  "limits": "memory=6g cpus=8",
+  "cgroupMemory": {
+    "maxBytes": 6442450944,
+    "peakBytes": 6442450944,
+    "oomKills": 0
+  },
   "container": {
     "node": "v22.23.3",
     "arch": "arm64",
@@ -36,16 +45,17 @@
   },
   "oneSessionPerTask": true,
   "indexOk": true,
-  "indexMs": 138515,
+  "indexMs": 130199,
   "indexSteps": [
     {
       "command": "codegraph init --yes /work/spring-framework",
-      "ms": 138515,
+      "ms": 130199,
       "exit": 0,
-      "signal": null
+      "signal": null,
+      "oomKills": 0
     }
   ],
-  "copyMs": 741,
+  "copyMs": 23831,
   "indexDirs": [
     "<repo>/.codegraph"
   ],
@@ -73,17 +83,17 @@
       "file": "codegraph-spring-framework.jsonl",
       "tasks": 15,
       "failures": 0,
-      "queryMsMedian": 866,
-      "queryMsP90": 1469,
-      "startupMsMedian": 161
+      "queryMsMedian": 858,
+      "queryMsP90": 1733,
+      "startupMsMedian": 181
     },
     "question": {
       "file": "codegraph-spring-framework-question.jsonl",
       "tasks": 15,
       "failures": 0,
-      "queryMsMedian": 1686,
-      "queryMsP90": 3968,
-      "startupMsMedian": 179
+      "queryMsMedian": 1449,
+      "queryMsP90": 3235,
+      "startupMsMedian": 141
     }
   },
   "charsPerToken": 3,

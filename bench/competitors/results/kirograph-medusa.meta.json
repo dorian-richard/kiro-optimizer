@@ -1,0 +1,111 @@
+{
+  "label": "kirograph",
+  "tool": "kirograph",
+  "package": "kirograph",
+  "version": "1.4.0",
+  "mode": "default",
+  "repo": {
+    "name": "medusa",
+    "url": "https://github.com/medusajs/medusa.git",
+    "tag": "v2.21.2",
+    "commit": "020565398e436a2bc65777a3b1ad347b4735d6df",
+    "language": "typescript",
+    "path": "bench/repos/medusa"
+  },
+  "headCommit": "020565398e436a2bc65777a3b1ad347b4735d6df",
+  "commitMatchesTasks": true,
+  "date": "2026-10-09T12:34:33.947Z",
+  "image": "kopt-bench/kirograph:1.4.0",
+  "imageId": "sha256:bc769b34b739a6d6b3ed1f2954ed9df3e387e6c6dcfc597528ca16d232dac57e",
+  "engine": "docker",
+  "limits": "memory=3g cpus=8",
+  "container": {
+    "node": "v22.23.3",
+    "arch": "arm64",
+    "platform": "linux",
+    "cpus": 10,
+    "memBytes": 8214851584,
+    "network": "none"
+  },
+  "primaryTool": "kirograph_context",
+  "toolArgsExample": {
+    "task": "<input>"
+  },
+  "serverCommand": {
+    "command": "kirograph",
+    "args": [
+      "serve",
+      "--mcp",
+      "--path",
+      "/work/<repo>"
+    ]
+  },
+  "oneSessionPerTask": true,
+  "indexOk": true,
+  "indexMs": 959526,
+  "indexSteps": [
+    {
+      "command": "kirograph init /work/medusa",
+      "ms": 345,
+      "exit": 0,
+      "signal": null
+    },
+    {
+      "command": "kirograph index /work/medusa",
+      "ms": 959181,
+      "exit": 0,
+      "signal": null
+    }
+  ],
+  "copyMs": 58101,
+  "indexDirs": [
+    "<repo>/.kirograph"
+  ],
+  "indexSizeBytes": 161857369,
+  "modelBytes": 0,
+  "indexStatus": "Graph\n  Files      13971\n  Symbols    95042\n  Edges      145439\n  Frameworks express, react\n\n  By kind\n  ┌────────────┬──────────────────┐\n  │ constant   │ 48918            │\n  ├────────────┼──────────────────┤\n  │ import     │ 27710            │\n  ├────────────┼──────────────────┤\n  │ method     │ 4078             │\n  ├────────────┼──────────────────┤\n  │ variable   │ 3636             │\n  ├────────────┼──────────────────┤\n  │ type_alias │ 3602             │\n  ├────────────┼──────────────────┤\n  │ function   │ 3567             │\n  ├────────────┼──────────────────┤\n  │ interface  │ 2604             │\n  ├────────────┼──────────────────┤\n  │ class      │ 763              │\n  ├────────────┼──────────────────┤\n  │ enum       │ 164              │\n  └────────────┴──────────────────┘\n\n  By language\n  ┌────────────┬──────────────────┐\n  │ typescript │ 7995             │\n  ├────────────┼──────────────────┤\n  │ tsx        │ 3266             │\n  ├────────────┼──────────────────┤\n  │ yaml       │ 1481             │\n  ├────────────┼──────────────────┤\n  │ javascript │ 710              │\n  ├────────────┼──────────────────┤\n  │ bash       │ 510              │\n  ├────────────┼──────────────────┤\n  │ css        │ 8                │\n  ├────────────┼──────────────────┤\n  │ html       │ 1                │\n  └────────────┴──────────────────┘\n\n  Sync\n  Status     idle\n  Pending    212 files pending\n  ⚠ Index may be stale. Run `kirograph sync` to update.\n\n  Semantic Search\n  Status     disabled",
+  "surface": {
+    "serverInfo": {
+      "name": "kirograph",
+      "version": "0.1.0"
+    },
+    "toolCount": 7,
+    "toolNames": [
+      "kirograph_search",
+      "kirograph_context",
+      "kirograph_node",
+      "kirograph_gain",
+      "kirograph_read",
+      "kirograph_retrieve",
+      "kirograph_budget"
+    ],
+    "toolsChars": 4418,
+    "toolsEstTokens": 1473,
+    "instructionsChars": 0,
+    "instructionsEstTokens": 0,
+    "primaryToolListed": true,
+    "file": "kirograph.surface.json"
+  },
+  "inputs": {
+    "search": {
+      "file": "kirograph-medusa.jsonl",
+      "tasks": 12,
+      "failures": 0,
+      "queryMsMedian": 126,
+      "queryMsP90": 346,
+      "startupMsMedian": 248
+    },
+    "question": {
+      "file": "kirograph-medusa-question.jsonl",
+      "tasks": 12,
+      "failures": 6,
+      "queryMsMedian": 64,
+      "queryMsP90": 117,
+      "startupMsMedian": 270
+    }
+  },
+  "charsPerToken": 3,
+  "errors": [
+    "6/12 question queries failed or returned isError"
+  ]
+}

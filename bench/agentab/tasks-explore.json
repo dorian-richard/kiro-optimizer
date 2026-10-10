@@ -1,0 +1,521 @@
+[
+ {
+  "repo": "django",
+  "id": "dj-explain-migration-optimizer",
+  "kind": "explain",
+  "question": "How does Django merge a sequence of migration operations into fewer ones (e.g. CreateModel followed by AddField) when squashing? Explain the algorithm.",
+  "gold": {
+   "files": [
+    "django/db/migrations/optimizer.py",
+    "django/db/migrations/operations/base.py"
+   ],
+   "symbols": [
+    {
+     "name": "MigrationOptimizer",
+     "file": "django/db/migrations/optimizer.py",
+     "line": 1,
+     "kind": "class"
+    },
+    {
+     "name": "optimize",
+     "file": "django/db/migrations/optimizer.py",
+     "line": 12,
+     "kind": "method"
+    },
+    {
+     "name": "optimize_inner",
+     "file": "django/db/migrations/optimizer.py",
+     "line": 40,
+     "kind": "method"
+    },
+    {
+     "name": "reduce",
+     "file": "django/db/migrations/operations/base.py",
+     "line": 160,
+     "kind": "method"
+    }
+   ]
+  }
+ },
+ {
+  "repo": "django",
+  "id": "dj-usage-add-new-csrf-cookie",
+  "kind": "usage",
+  "question": "Who calls `_add_new_csrf_cookie`? I want every caller before I change what it stores in request.META.",
+  "gold": {
+   "files": [
+    "django/middleware/csrf.py"
+   ],
+   "symbols": [
+    {
+     "name": "get_token",
+     "file": "django/middleware/csrf.py",
+     "line": 96,
+     "kind": "function"
+    },
+    {
+     "name": "rotate_token",
+     "file": "django/middleware/csrf.py",
+     "line": 117,
+     "kind": "function"
+    },
+    {
+     "name": "process_request",
+     "file": "django/middleware/csrf.py",
+     "line": 401,
+     "kind": "method"
+    }
+   ]
+  }
+ },
+ {
+  "repo": "spring-framework",
+  "id": "sf-explain-concurrency-limit",
+  "kind": "explain",
+  "question": "How does @ConcurrencyLimit throttle method invocations at runtime, and is the limit tracked per method, per class or per bean instance?",
+  "gold": {
+   "files": [
+    "spring-context/src/main/java/org/springframework/resilience/annotation/ConcurrencyLimitBeanPostProcessor.java",
+    "spring-core/src/main/java/org/springframework/util/ConcurrencyThrottleSupport.java"
+   ],
+   "symbols": [
+    {
+     "name": "ConcurrencyLimitBeanPostProcessor",
+     "file": "spring-context/src/main/java/org/springframework/resilience/annotation/ConcurrencyLimitBeanPostProcessor.java",
+     "line": 54,
+     "kind": "class"
+    },
+    {
+     "name": "ConcurrencyLimitInterceptor",
+     "file": "spring-context/src/main/java/org/springframework/resilience/annotation/ConcurrencyLimitBeanPostProcessor.java",
+     "line": 77,
+     "kind": "class"
+    },
+    {
+     "name": "ConcurrencyThrottleHolder",
+     "file": "spring-context/src/main/java/org/springframework/resilience/annotation/ConcurrencyLimitBeanPostProcessor.java",
+     "line": 149,
+     "kind": "class"
+    },
+    {
+     "name": "beforeAccess",
+     "file": "spring-core/src/main/java/org/springframework/util/ConcurrencyThrottleSupport.java",
+     "line": 119,
+     "kind": "method"
+    }
+   ]
+  }
+ },
+ {
+  "repo": "spring-framework",
+  "id": "sf-usage-fail-early",
+  "kind": "usage",
+  "question": "Who calls `isFailEarlyOnGlobalRollbackOnly()` and how does it change commit and rollback processing?",
+  "gold": {
+   "files": [
+    "spring-tx/src/main/java/org/springframework/transaction/support/AbstractPlatformTransactionManager.java"
+   ],
+   "symbols": [
+    {
+     "name": "isFailEarlyOnGlobalRollbackOnly",
+     "file": "spring-tx/src/main/java/org/springframework/transaction/support/AbstractPlatformTransactionManager.java",
+     "line": 324,
+     "kind": "method"
+    },
+    {
+     "name": "processCommit",
+     "file": "spring-tx/src/main/java/org/springframework/transaction/support/AbstractPlatformTransactionManager.java",
+     "line": 766,
+     "kind": "method"
+    },
+    {
+     "name": "processRollback",
+     "file": "spring-tx/src/main/java/org/springframework/transaction/support/AbstractPlatformTransactionManager.java",
+     "line": 874,
+     "kind": "method"
+    }
+   ]
+  }
+ },
+ {
+  "repo": "medusa",
+  "id": "md-explain-compensation",
+  "kind": "explain",
+  "question": "In the workflow engine, what happens when a step fails permanently: how does the transaction switch to compensation and which steps get rolled back?",
+  "gold": {
+   "files": [
+    "packages/core/orchestration/src/transaction/transaction-orchestrator.ts"
+   ],
+   "symbols": [
+    {
+     "name": "setStepFailure",
+     "file": "packages/core/orchestration/src/transaction/transaction-orchestrator.ts",
+     "line": 756,
+     "kind": "method"
+    },
+    {
+     "name": "checkAllSteps",
+     "file": "packages/core/orchestration/src/transaction/transaction-orchestrator.ts",
+     "line": 324,
+     "kind": "method"
+    },
+    {
+     "name": "flagStepsToRevert",
+     "file": "packages/core/orchestration/src/transaction/transaction-orchestrator.ts",
+     "line": 523,
+     "kind": "method"
+    },
+    {
+     "name": "getCompensationSteps",
+     "file": "packages/core/orchestration/src/transaction/transaction-orchestrator.ts",
+     "line": 191,
+     "kind": "method"
+    }
+   ]
+  }
+ },
+ {
+  "repo": "medusa",
+  "id": "md-usage-cancel-transaction",
+  "kind": "usage",
+  "question": "Who calls `TransactionOrchestrator.cancelTransaction`? I need every caller before changing how cancellation is checkpointed.",
+  "gold": {
+   "files": [
+    "packages/core/orchestration/src/transaction/transaction-orchestrator.ts",
+    "packages/core/orchestration/src/workflow/local-workflow.ts"
+   ],
+   "symbols": [
+    {
+     "name": "handleStepSuccess",
+     "file": "packages/core/orchestration/src/transaction/transaction-orchestrator.ts",
+     "line": 1320,
+     "kind": "method"
+    },
+    {
+     "name": "handleStepFailure",
+     "file": "packages/core/orchestration/src/transaction/transaction-orchestrator.ts",
+     "line": 1360,
+     "kind": "method"
+    },
+    {
+     "name": "registerStepSuccess",
+     "file": "packages/core/orchestration/src/transaction/transaction-orchestrator.ts",
+     "line": 1966,
+     "kind": "method"
+    },
+    {
+     "name": "registerStepFailure",
+     "file": "packages/core/orchestration/src/transaction/transaction-orchestrator.ts",
+     "line": 2025,
+     "kind": "method"
+    },
+    {
+     "name": "cancel",
+     "file": "packages/core/orchestration/src/workflow/local-workflow.ts",
+     "line": 397,
+     "kind": "method"
+    }
+   ]
+  }
+ },
+ {
+  "repo": "gitea",
+  "id": "gt-explain-egress",
+  "kind": "explain",
+  "question": "How does Gitea decide whether an outgoing HTTP request (webhook, migration, OpenID) may reach a host: block list, allow list, lax versus strict mode, and protection against DNS rebinding?",
+  "gold": {
+   "files": [
+    "modules/egress/policy/policy.go"
+   ],
+   "symbols": [
+    {
+     "name": "checkAddr",
+     "file": "modules/egress/policy/policy.go",
+     "line": 109,
+     "kind": "method"
+    },
+    {
+     "name": "gate",
+     "file": "modules/egress/policy/policy.go",
+     "line": 119,
+     "kind": "method"
+    },
+    {
+     "name": "allowCheck",
+     "file": "modules/egress/policy/policy.go",
+     "line": 130,
+     "kind": "method"
+    },
+    {
+     "name": "dialContext",
+     "file": "modules/egress/policy/policy.go",
+     "line": 205,
+     "kind": "method"
+    }
+   ]
+  }
+ },
+ {
+  "repo": "gitea",
+  "id": "gt-usage-egress-transport",
+  "kind": "usage",
+  "question": "Which parts of Gitea build their HTTP transport from an egress policy with `NewHTTPTransport`?",
+  "gold": {
+   "files": [
+    "modules/auth/openid/openid.go",
+    "routers/web/auth/oauth.go",
+    "services/gitproxy/server.go",
+    "services/migrations/http_client.go",
+    "services/webhook/deliver.go"
+   ],
+   "symbols": [
+    {
+     "name": "openIDInstance",
+     "file": "modules/auth/openid/openid.go",
+     "line": 28,
+     "kind": "variable"
+    },
+    {
+     "name": "oauth2AvatarHTTPClient",
+     "file": "routers/web/auth/oauth.go",
+     "line": 302,
+     "kind": "function"
+    },
+    {
+     "name": "newServer",
+     "file": "services/gitproxy/server.go",
+     "line": 61,
+     "kind": "function"
+    },
+    {
+     "name": "NewMigrationHTTPTransport",
+     "file": "services/migrations/http_client.go",
+     "line": 24,
+     "kind": "function"
+    },
+    {
+     "name": "Init",
+     "file": "services/webhook/deliver.go",
+     "line": 274,
+     "kind": "function"
+    }
+   ]
+  }
+ },
+ {
+  "repo": "jellyfin",
+  "id": "jf-explain-quick-connect",
+  "kind": "explain",
+  "question": "Explain the Quick Connect flow: how a new device gets a code, how a signed-in user authorizes it, and how the device then obtains its session.",
+  "gold": {
+   "files": [
+    "Emby.Server.Implementations/QuickConnect/QuickConnectManager.cs"
+   ],
+   "symbols": [
+    {
+     "name": "TryConnect",
+     "file": "Emby.Server.Implementations/QuickConnect/QuickConnectManager.cs",
+     "line": 72,
+     "kind": "method"
+    },
+    {
+     "name": "CheckRequestStatus",
+     "file": "Emby.Server.Implementations/QuickConnect/QuickConnectManager.cs",
+     "line": 98,
+     "kind": "method"
+    },
+    {
+     "name": "AuthorizeRequest",
+     "file": "Emby.Server.Implementations/QuickConnect/QuickConnectManager.cs",
+     "line": 136,
+     "kind": "method"
+    },
+    {
+     "name": "GetAuthorizedRequest",
+     "file": "Emby.Server.Implementations/QuickConnect/QuickConnectManager.cs",
+     "line": 173,
+     "kind": "method"
+    }
+   ]
+  }
+ },
+ {
+  "repo": "jellyfin",
+  "id": "jf-usage-refresh-trickplay",
+  "kind": "usage",
+  "question": "Who calls `RefreshTrickplayDataAsync` on the trickplay manager?",
+  "gold": {
+   "files": [
+    "MediaBrowser.Providers/Trickplay/TrickplayImagesTask.cs",
+    "MediaBrowser.Providers/Trickplay/TrickplayProvider.cs"
+   ],
+   "symbols": [
+    {
+     "name": "ExecuteAsync",
+     "file": "MediaBrowser.Providers/Trickplay/TrickplayImagesTask.cs",
+     "line": 73,
+     "kind": "method"
+    },
+    {
+     "name": "FetchInternal",
+     "file": "MediaBrowser.Providers/Trickplay/TrickplayProvider.cs",
+     "line": 98,
+     "kind": "method"
+    }
+   ]
+  }
+ },
+ {
+  "repo": "laravel",
+  "id": "lv-locate-cache-flexible",
+  "kind": "locate",
+  "question": "Where does the cache return a stale value while refreshing it in the background after the response is sent, with a lock so that only one refresh runs (stale-while-revalidate)?",
+  "gold": {
+   "files": [
+    "src/Illuminate/Cache/Repository.php",
+    "src/Illuminate/Support/functions.php"
+   ],
+   "symbols": [
+    {
+     "name": "flexible",
+     "file": "src/Illuminate/Cache/Repository.php",
+     "line": 652,
+     "kind": "method"
+    },
+    {
+     "name": "defer",
+     "file": "src/Illuminate/Support/functions.php",
+     "line": 21,
+     "kind": "function"
+    }
+   ]
+  }
+ },
+ {
+  "repo": "laravel",
+  "id": "lv-usage-image-driver",
+  "kind": "usage",
+  "question": "Which methods of `Illuminate\\Image\\Image` call `resolveDriver()`?",
+  "gold": {
+   "files": [
+    "src/Illuminate/Image/Image.php"
+   ],
+   "symbols": [
+    {
+     "name": "toBytes",
+     "file": "src/Illuminate/Image/Image.php",
+     "line": 413,
+     "kind": "method"
+    },
+    {
+     "name": "dimensions",
+     "file": "src/Illuminate/Image/Image.php",
+     "line": 483,
+     "kind": "method"
+    },
+    {
+     "name": "dominantColor",
+     "file": "src/Illuminate/Image/Image.php",
+     "line": 526,
+     "kind": "method"
+    }
+   ]
+  }
+ },
+ {
+  "repo": "exposed",
+  "id": "ex-impact-check-cycle",
+  "kind": "impact",
+  "question": "If `TableUtils.checkCycle` always returned false, which generated DDL would change?",
+  "gold": {
+   "files": [
+    "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/SchemaUtilityApi.kt",
+    "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/Table.kt"
+   ],
+   "symbols": [
+    {
+     "name": "checkCycle",
+     "file": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/SchemaUtilityApi.kt",
+     "line": 654,
+     "kind": "method"
+    },
+    {
+     "name": "createStatement",
+     "file": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/Table.kt",
+     "line": 1886,
+     "kind": "method"
+    },
+    {
+     "name": "dropStatement",
+     "file": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/Table.kt",
+     "line": 1971,
+     "kind": "method"
+    }
+   ]
+  }
+ },
+ {
+  "repo": "meilisearch",
+  "id": "ms-explain-autobatch",
+  "kind": "explain",
+  "question": "How does the task scheduler decide which enqueued tasks of one index can be processed together in a single batch, and when does it stop adding tasks to the batch?",
+  "gold": {
+   "files": [
+    "crates/index-scheduler/src/scheduler/autobatcher.rs",
+    "crates/index-scheduler/src/scheduler/create_batch.rs"
+   ],
+   "symbols": [
+    {
+     "name": "autobatch",
+     "file": "crates/index-scheduler/src/scheduler/autobatcher.rs",
+     "line": 570,
+     "kind": "function"
+    },
+    {
+     "name": "accumulate",
+     "file": "crates/index-scheduler/src/scheduler/autobatcher.rs",
+     "line": 255,
+     "kind": "method"
+    },
+    {
+     "name": "BatchKind",
+     "file": "crates/index-scheduler/src/scheduler/autobatcher.rs",
+     "line": 90,
+     "kind": "enum"
+    },
+    {
+     "name": "create_next_batch_unprioritized",
+     "file": "crates/index-scheduler/src/scheduler/create_batch.rs",
+     "line": 708,
+     "kind": "method"
+    }
+   ]
+  }
+ },
+ {
+  "repo": "webpack",
+  "id": "wp-impact-legacy-is-circular",
+  "kind": "impact",
+  "question": "CircularModulesPlugin still sets the legacy boolean `buildInfo.isCircular`. If I stop setting it, which code generation paths change behaviour?",
+  "gold": {
+   "files": [
+    "lib/dependencies/HarmonyExportExpressionDependency.js",
+    "lib/dependencies/HarmonyExportSpecifierDependency.js"
+   ],
+   "symbols": [
+    {
+     "name": "HarmonyExportDependencyTemplate",
+     "file": "lib/dependencies/HarmonyExportExpressionDependency.js",
+     "line": 166,
+     "kind": "class"
+    },
+    {
+     "name": "HarmonyExportSpecifierDependencyTemplate",
+     "file": "lib/dependencies/HarmonyExportSpecifierDependency.js",
+     "line": 133,
+     "kind": "class"
+    }
+   ]
+  }
+ }
+]

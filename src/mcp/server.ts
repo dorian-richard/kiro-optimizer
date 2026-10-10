@@ -22,13 +22,18 @@ export interface RepoHandle {
   readonly name: string;
   /** Repo-specific config (root/dataDir); budgets & dedup settings come from here too. */
   readonly config: KoptConfig;
-  /** A store ready for queries, or a one-line status to return instead (e.g. "index building: 12/400 files – retry shortly"). */
-  acquire(): Promise<Store | string>;
+  /**
+   * A store ready for queries, or a one-line status to return instead (e.g. "index building: 12/400 files parsed").
+   * `tool`: the tool about to run (during a first build, search answers before references are resolved).
+   */
+  acquire(tool?: string): Promise<Store | string>;
   /**
    * Optional: wait until the repo is known (a user-level server learns its project root after `initialize`), then
    * resolve to a one-line message when no tool can run (e.g. no project folder open), else undefined.
    */
   prepare?(): Promise<string | undefined>;
+  /** Optional: the index when it is ready now, without waiting or refreshing (kopt_run's source context). */
+  peek?(): Store | undefined;
 }
 
 export interface ServerDeps {
@@ -72,7 +77,8 @@ export function createServer(deps: ServerDeps): Server {
   const fallbackSession = deps.sessionId ?? randomUUID();
   const repo = deps.repo;
 
-  const server = new Server({ name: SERVER_NAME, version: SERVER_VERSION }, { capabilities: { tools: {} }, instructions: serverInstructions() });
+  const instructions = serverInstructions();
+  const server = new Server({ name: SERVER_NAME, version: SERVER_VERSION }, { capabilities: { tools: {} }, ...(instructions ? { instructions } : {}) });
 
   // One ToolContext per repo for the lifetime of this session: dedup ledger keys are per-repo symbol ids (the repo
   // of a user-level server changes when Kiro opens another folder).
@@ -100,17 +106,23 @@ export function createServer(deps: ServerDeps): Server {
 
     const ctx = contextFor(extra.sessionId ?? fallbackSession);
     let store: Store | undefined;
-    if (toolNeedsStore(name)) {
+    if (toolNeedsStore(name, parsed.args)) {
       let s: Store | string;
       try {
-        s = await repo.acquire();
+        s = await repo.acquire(name);
       } catch (err) {
         return text(`${name} failed: index unavailable: ${oneLine((err as Error)?.message ?? String(err))}`, true);
       }
       if (typeof s === 'string') return text(s);
       store = s;
+    } else if (name === 'kopt_run') {
+      try {
+        store = repo.peek?.();
+      } catch {
+        store = undefined;
+      }
     }
-    const r = await executeTool(name, parsed.args, { modules, ctx, store });
+    const r = await executeTool(name, parsed.args, { modules, ctx, store, signal: extra.signal });
     return text(r.text, r.isError);
   });
 

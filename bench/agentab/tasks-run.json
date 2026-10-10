@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "notes": "Test-run diagnosis tasks for the agent A/B: one realistic bug injected into a copy of this repository (kopt's own TypeScript source, trusted code) at the commit the run is prepared from. The copies hold a single git commit (the buggy state), so git history does not reveal the change, and bench/agentab is removed from them. expectFailing = vitest test files that must fail (prepare.mjs checks it); failCount = failing tests measured when the task was written. Grading: the answer names gold.files[0] and gold.symbols[0].name (or one of alsoAccept, or the injected line +-3).",
+  "question": "The test suite is failing. Run the tests, find the failing tests and the root cause (file:line), and explain the fix. Do not edit files.",
+  "tasks": [
+    {
+      "id": "rt1",
+      "bug": "missing await",
+      "mutation": {
+        "file": "src/compress/index.ts",
+        "find": "(i.readOnly ? i.before : await fingerprintPartsAsync(cfg.root, i.exclude))",
+        "replace": "(i.readOnly ? i.before : fingerprintPartsAsync(cfg.root, i.exclude))"
+      },
+      "expectFailing": ["test/compress.cache.test.ts", "test/compress.runner.test.ts"],
+      "failCount": 5,
+      "gold": { "files": ["src/compress/index.ts"], "symbols": [{ "name": "execute", "file": "src/compress/index.ts", "kind": "function", "alsoAccept": ["fingerprintPartsAsync"] }] }
+    },
+    {
+      "id": "rt2",
+      "bug": "wrong default",
+      "mutation": {
+        "file": "src/core/config.ts",
+        "find": "bigFileTokens: 8000,",
+        "replace": "bigFileTokens: 800,"
+      },
+      "expectFailing": ["test/hooks.test.ts"],
+      "failCount": 1,
+      "gold": { "files": ["src/core/config.ts"], "symbols": [{ "name": "defaultConfig", "file": "src/core/config.ts", "kind": "function", "alsoAccept": ["bigFileTokens"] }] }
+    },
+    {
+      "id": "rt3",
+      "bug": "swapped arguments",
+      "mutation": {
+        "file": "src/retrieval/access.ts",
+        "find": "if (!staysInside(root, join(root, rel)))",
+        "replace": "if (!staysInside(join(root, rel), root))"
+      },
+      "expectFailing": ["test/mcp.read-routes.test.ts", "test/retrieval.access.test.ts", "test/retrieval.stale.test.ts", "test/retrieval.test.ts", "test/xplat.test.ts"],
+      "failCount": 17,
+      "gold": { "files": ["src/retrieval/access.ts"], "symbols": [{ "name": "denyReason", "file": "src/retrieval/access.ts", "kind": "function", "alsoAccept": [] }] }
+    },
+    {
+      "id": "rt4",
+      "bug": "off-by-one in a line range",
+      "mutation": {
+        "file": "src/compress/expand.ts",
+        "find": "const slice = lines.slice(start - 1, end).map",
+        "replace": "const slice = lines.slice(start, end).map"
+      },
+      "expectFailing": ["test/cli.test.ts", "test/compress.runner.test.ts", "test/mcp.read-routes.test.ts"],
+      "failCount": 2,
+      "gold": { "files": ["src/compress/expand.ts"], "symbols": [{ "name": "expandOutput", "file": "src/compress/expand.ts", "kind": "function", "alsoAccept": [] }] }
+    },
+    {
+      "id": "rt5",
+      "bug": "wrong regex in a filter",
+      "mutation": {
+        "file": "src/compress/filters/go.ts",
+        "find": "const RESULT_RE = /^(\\s*)--- (FAIL|PASS|SKIP): (\\S+) \\(([\\d.]+s)\\)$/;",
+        "replace": "const RESULT_RE = /^(\\s*)--- (FAIL|PASS|SKIP): (\\S+) \\((\\d+s)\\)$/;"
+      },
+      "expectFailing": ["test/compress.filters.test.ts"],
+      "failCount": 2,
+      "gold": { "files": ["src/compress/filters/go.ts"], "symbols": [{ "name": "RESULT_RE", "file": "src/compress/filters/go.ts", "kind": "constant", "alsoAccept": [] }] }
+    },
+    {
+      "id": "rt6",
+      "bug": "wrong boundary in a budget check",
+      "mutation": {
+        "file": "src/hooks/index.ts",
+        "find": "s.toolCalls - s.budgetFrom > g.maxToolCallsPerSession",
+        "replace": "s.toolCalls - s.budgetFrom >= g.maxToolCallsPerSession"
+      },
+      "expectFailing": ["test/hooks.test.ts"],
+      "failCount": 1,
+      "gold": { "files": ["src/hooks/index.ts"], "symbols": [{ "name": "preToolUse", "file": "src/hooks/index.ts", "kind": "function", "alsoAccept": [] }] }
+    }
+  ]
+}

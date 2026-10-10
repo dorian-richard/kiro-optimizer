@@ -3,7 +3,7 @@
     "name": "kirograph",
     "version": "0.1.0"
   },
-  "startupMs": 586,
+  "startupMs": 200,
   "toolCount": 7,
   "toolNames": [
     "kirograph_search",

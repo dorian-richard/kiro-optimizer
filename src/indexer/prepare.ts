@@ -4,7 +4,7 @@ import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import type { IxFile } from './extract.js';
 import { ftsRows, type FtsRow } from './fts.js';
-import { extractFile } from './parse.js';
+import { extractFileWithin, PARSE_TIMEOUT_MS } from './parse.js';
 
 export interface PrepJob {
   abs: string;
@@ -21,7 +21,7 @@ export interface PrepJob {
 export type Prepared =
   | { kind: 'file'; rel: string; hash: string; size: number; mtimeMs: number; file: IxFile; fts?: FtsRow[] }
   | { kind: 'same'; rel: string; hash: string; size: number; mtimeMs: number }
-  | { kind: 'skip'; rel: string; size: number; mtimeMs: number; reason: 'large' | 'binary' | 'minified' | 'parse' }
+  | { kind: 'skip'; rel: string; size: number; mtimeMs: number; reason: 'large' | 'binary' | 'minified' | 'parse' | 'timeout' }
   | { kind: 'gone'; rel: string };
 
 const BINARY_SNIFF = 8192;
@@ -74,12 +74,16 @@ export async function prepareFile(job: PrepJob): Promise<Prepared> {
   const bom = text.charCodeAt(0) === 0xfeff ? 3 : 0;
   if (bom) text = text.slice(1);
   if (isMinified(text)) return { kind: 'skip', ...base, reason: 'minified' };
-  let file: IxFile | undefined;
+  let file: IxFile | undefined | 'timeout';
+  const opts = job.pythonModule ? { pythonModule: job.pythonModule } : undefined;
   try {
-    file = await extractFile(job.rel, text, job.pythonModule ? { pythonModule: job.pythonModule } : undefined);
+    file = await extractFileWithin(job.rel, text, PARSE_TIMEOUT_MS, opts);
+    // a starved machine (heavy build, many agents) can blow the budget on an ordinary file: once more, longer
+    if (file === 'timeout') file = await extractFileWithin(job.rel, text, PARSE_TIMEOUT_MS * 6, opts);
   } catch {
     file = undefined;
   }
+  if (file === 'timeout') return { kind: 'skip', ...base, reason: 'timeout' };
   if (!file) return { kind: 'skip', ...base, reason: 'parse' };
   if (bom) {
     for (const sym of file.symbols) {

@@ -1,20 +1,25 @@
 // `kopt uninstall`: removes exactly what `kopt setup` / `kopt init` / the MCP server wrote, nothing else.
 // Idempotent: a second run finds nothing to remove.
 //   - JSON configs: only the `kopt` server entry (mcp.json) and chat.defaultAgent when it is still "kopt";
-//   - kopt-named files (hooks/kopt.json, agents/kopt*.json, steering/kopt*.md) when they are kopt's;
+//   - kopt-named files (hooks/kopt.json, agents/kopt*.json, steering/kopt*.md) when kopt wrote them and nobody edited
+//     them since (sha1 manifest); an edited copy is kept and reported (`--force` removes it too);
 //   - marked blocks (kiroignore) and the ".kiroignore" settings entry only when setup added it;
 //   - legacy IDE 0.x workspace hooks registered by the MCP server, with their .git/info/exclude lines;
-//   - the index caches (unless keepIndex); ~/.kopt only with purge.
+//   - the hook launcher (~/.kopt/bin) and the private copy of kopt (~/.kopt/runtime) setup may have installed;
+//   - the index caches: kopt's per-project folders only (unless keepIndex); ~/.kopt only with purge.
+// A home directory or a filesystem root is never a workspace: `kopt uninstall` run from ~ never touches ~/.kopt.
 
 import { existsSync, readdirSync, rmdirSync, statSync } from 'node:fs';
 import { join, resolve } from 'node:path';
-import { cacheRoot, userDirFor } from '../core/config.js';
+import { cacheRoot, isUnsafeRoot, userDirFor } from '../core/config.js';
+import { samePath } from '../telemetry/fsutil.js';
+import { launcherPath } from './command.js';
 import { removeArrayValue } from './jsonc.js';
 import { removeKiroignoreBlock } from './kiroignore.js';
 import { legacyWorkspaces, removeLegacyWorkspaceHooks } from './legacy.js';
 import { hostEnv, kiroCliSettingsPath, kiroHomeDir, kiroUserSettingsPath, type HostEnv } from './paths.js';
 import { isEmptyJsonResidue, parseJsonObject, Plan, readState, readText, statePath, writeState, type InstallResult } from './plan.js';
-import { DEFAULT_AGENT_SETTING, IGNORE_SETTING } from './setup.js';
+import { DEFAULT_AGENT_SETTING, IGNORE_SETTING, readTemplate } from './setup.js';
 
 export interface UninstallOptions {
   /** Project whose workspace files (`kopt init`) are removed too. */
@@ -24,6 +29,8 @@ export interface UninstallOptions {
   keepIndex?: boolean;
   /** Also delete ~/.kopt (telemetry, governor sessions). */
   purge?: boolean;
+  /** Also remove kopt's files the user edited since kopt wrote them (kept and reported otherwise). */
+  force?: boolean;
   dryRun?: boolean;
   h?: HostEnv;
 }
@@ -53,10 +60,69 @@ function removeMcpEntry(plan: Plan, path: string, deleteIfEmpty = false): void {
   else plan.merged(path, JSON.stringify(doc, null, 2) + '\n');
 }
 
-function removeOwnedFiles(plan: Plan, kiroDir: string): void {
+/** Content kopt writes for a file whatever the machine (steering), to recognise a copy written before the manifest. */
+function pristine(rel: string[]): string | undefined {
+  if (rel[0] !== 'steering') return undefined;
+  try {
+    return readTemplate(join('steering', rel[1]));
+  } catch {
+    return undefined;
+  }
+}
+
+/**
+ * Remove kopt's own files under a `.kiro` folder: those whose content is exactly what kopt wrote (manifest hash). A
+ * copy the user edited since is kept and reported, unless `force`.
+ */
+function removeOwnedFiles(plan: Plan, kiroDir: string, force: boolean): void {
   for (const rel of OWNED) {
     const path = join(kiroDir, ...rel);
-    if (looksLikeKopt(readText(path))) plan.remove(path);
+    const text = readText(path);
+    if (!looksLikeKopt(text)) continue;
+    if (force || plan.isOurs(path, text) || text === pristine(rel)) plan.remove(path);
+    else {
+      plan.kept.push(path);
+      plan.notes.push(`kept ${path}: edited since kopt wrote it (delete it yourself, or run kopt uninstall --force).`);
+    }
+  }
+}
+
+/** A per-project cache folder kopt created (`<name>-<hash8>` holding an index, command logs or nothing). */
+function isKoptCacheFolder(dir: string, name: string): boolean {
+  if (!/^.+-[0-9a-f]{8}$/.test(name)) return false;
+  try {
+    const entries = readdirSync(dir);
+    return entries.length === 0 || entries.some((e) => /^(index\.db(-wal|-shm)?|outputs|dirty|\.refresh-spawned)$/.test(e));
+  } catch {
+    return false;
+  }
+}
+
+/** Delete kopt's per-project folders in the cache root, then the root itself when nothing else is left in it. */
+function removeCaches(plan: Plan, cache: string, dryRun: boolean): void {
+  if (!existsSync(cache)) return;
+  let entries: string[] = [];
+  try {
+    entries = readdirSync(cache);
+  } catch {
+    return;
+  }
+  let left = 0;
+  for (const name of entries) {
+    const dir = join(cache, name);
+    if (isKoptCacheFolder(dir, name)) plan.removeDir(dir);
+    else left++;
+  }
+  if (left === 0) {
+    if (dryRun) plan.removed.push(cache);
+    else {
+      try {
+        rmdirSync(cache);
+        plan.removed.push(cache);
+      } catch {
+        // not empty (a build finished meanwhile): leave it
+      }
+    }
   }
 }
 
@@ -77,7 +143,7 @@ export async function uninstallKiro(o: UninstallOptions = {}): Promise<InstallRe
   if (scope !== 'workspace') {
     const kh = kiroHomeDir(h);
     removeMcpEntry(plan, join(kh, 'settings', 'mcp.json'));
-    removeOwnedFiles(plan, kh);
+    removeOwnedFiles(plan, kh, !!o.force);
     removeIgnoreBlock(plan, join(kh, 'settings', 'kiroignore'));
 
     const cliPath = kiroCliSettingsPath(h);
@@ -104,11 +170,20 @@ export async function uninstallKiro(o: UninstallOptions = {}): Promise<InstallRe
       for (const p of removeLegacyWorkspaceHooks(ws, !!o.dryRun)) plan.removed.push(p);
     }
 
-    if (!o.keepIndex) {
-      const cache = cacheRoot({ platform: h.platform, env: h.env, home: h.home });
-      if (existsSync(cache)) plan.removeDir(cache);
-    }
+    if (!o.keepIndex) removeCaches(plan, cacheRoot({ platform: h.platform, env: h.env, home: h.home }), !!o.dryRun);
+    // the hook launcher and the private copy of kopt (installed when the global npm install was not possible)
+    const launcher = launcherPath(h);
+    const launcherText = readText(launcher);
+    if (launcherText !== undefined && (o.force || plan.isOurs(launcher, launcherText) || /kopt launcher written by `kopt setup`/.test(launcherText))) plan.remove(launcher);
+    if (existsSync(join(userDir, 'runtime'))) plan.removeDir(join(userDir, 'runtime'));
     for (const f of ['surfaces.json', 'legacy-hooks.json', 'setup-state.json']) plan.remove(join(userDir, f));
+    if (!o.dryRun) {
+      try {
+        if (readdirSync(join(userDir, 'bin')).length === 0) rmdirSync(join(userDir, 'bin'));
+      } catch {
+        // missing or not empty
+      }
+    }
 
     // shared files and folders setup created: gone again once only kopt's (now empty) residue is left in them
     const created = [...(state.createdPaths ?? [])].sort((a, b) => b.length - a.length);
@@ -130,11 +205,17 @@ export async function uninstallKiro(o: UninstallOptions = {}): Promise<InstallRe
     }
   }
 
-  if (scope !== 'user' && o.root) {
-    const root = resolve(o.root);
+  // a home directory or a filesystem root is not a project: its .kiro is the user-level one and its .kopt is ~/.kopt
+  const workspaceRoot = o.root ? resolve(o.root) : undefined;
+  const isWorkspace = !!workspaceRoot && !isUnsafeRoot(workspaceRoot, h.home) && !samePath(join(workspaceRoot, '.kopt'), userDir) && !samePath(join(workspaceRoot, '.kiro'), kiroHomeDir(h));
+  if (scope !== 'user' && workspaceRoot && !isWorkspace && scope === 'workspace') {
+    plan.notes.push(`${workspaceRoot} is not a project folder (home directory or filesystem root): nothing removed there.`);
+  }
+  if (scope !== 'user' && workspaceRoot && isWorkspace) {
+    const root = workspaceRoot;
     const k = join(root, '.kiro');
     removeMcpEntry(plan, join(k, 'settings', 'mcp.json'), true);
-    removeOwnedFiles(plan, k);
+    removeOwnedFiles(plan, k, !!o.force);
     for (const p of removeLegacyWorkspaceHooks(root, !!o.dryRun)) if (!plan.removed.includes(p)) plan.removed.push(p);
     removeIgnoreBlock(plan, join(root, '.kiroignore'));
     const ws = state.workspaces?.[root];

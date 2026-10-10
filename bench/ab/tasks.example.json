@@ -1,0 +1,37 @@
+{
+  "_help": "Template for kopt bench ab. Replace these tasks with 3 to 5 questions about YOUR repository that a developer really asks, ideally ones that need several files to answer. id: letters, digits, '.', '_', '-'. prompt: the question as you would type it in Kiro. kind (optional): a label used to group results. gold (optional): the files (repo-relative paths) and symbols (function, class or method names) a correct answer must name; tasks with a gold are graded automatically (pass = at least 60% of the files and 60% of the symbols named), tasks without one are graded by you in the manual_grade column of runs.csv. Verify every gold item in the code before the first run, and do not tune the tasks after seeing results.",
+  "tasks": [
+    {
+      "id": "refund-amount",
+      "kind": "locate",
+      "prompt": "Where is the amount of a refund computed, and what caps it?",
+      "gold": {
+        "files": ["src/billing/refunds.py"],
+        "symbols": ["compute_refund", "RefundPolicy"]
+      }
+    },
+    {
+      "id": "cancel-flow",
+      "kind": "usage",
+      "prompt": "When a customer cancels an order, which functions run, in which order, until the refund is issued?",
+      "gold": {
+        "files": ["src/orders/service.py", "src/billing/refunds.py"],
+        "symbols": ["cancel_order", "compute_refund", "issue_refund"]
+      }
+    },
+    {
+      "id": "retry-policy",
+      "kind": "explain",
+      "prompt": "How do failed payment webhooks get retried, and where is the maximum number of attempts configured?",
+      "gold": {
+        "files": ["src/payments/webhooks.py", "config/settings.py"],
+        "symbols": ["handle_webhook", "WEBHOOK_MAX_RETRIES"]
+      }
+    },
+    {
+      "id": "rename-impact",
+      "kind": "impact",
+      "prompt": "If I rename the field Order.total_amount, which modules and tests would have to change?"
+    }
+  ]
+}

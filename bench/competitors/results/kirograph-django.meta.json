@@ -14,7 +14,16 @@
   },
   "headCommit": "2212534bae393714e1e51db2341d4fd5545e19f6",
   "commitMatchesTasks": true,
-  "date": "2026-10-09T11:13:26.516Z",
+  "date": "2026-10-09T12:55:42.767Z",
+  "image": "kopt-bench/kirograph:1.4.0",
+  "imageId": "sha256:bc769b34b739a6d6b3ed1f2954ed9df3e387e6c6dcfc597528ca16d232dac57e",
+  "engine": "docker",
+  "limits": "memory=3g cpus=8",
+  "cgroupMemory": {
+    "maxBytes": 3221225472,
+    "peakBytes": 1273737216,
+    "oomKills": 0
+  },
   "container": {
     "node": "v22.23.3",
     "arch": "arm64",
@@ -38,22 +47,24 @@
   },
   "oneSessionPerTask": true,
   "indexOk": true,
-  "indexMs": 1040920,
+  "indexMs": 1604078,
   "indexSteps": [
     {
       "command": "kirograph init /work/django",
-      "ms": 452,
+      "ms": 787,
       "exit": 0,
-      "signal": null
+      "signal": null,
+      "oomKills": 0
     },
     {
       "command": "kirograph index /work/django",
-      "ms": 1040468,
+      "ms": 1603291,
       "exit": 0,
-      "signal": null
+      "signal": null,
+      "oomKills": 0
     }
   ],
-  "copyMs": 914,
+  "copyMs": 19197,
   "indexDirs": [
     "<repo>/.kirograph"
   ],
@@ -85,13 +96,23 @@
   "inputs": {
     "search": {
       "file": "kirograph-django.jsonl",
-      "tasks": 2,
+      "tasks": 15,
       "failures": 0,
-      "queryMsMedian": 967,
-      "queryMsP90": 1605,
-      "startupMsMedian": 358
+      "queryMsMedian": 98,
+      "queryMsP90": 171,
+      "startupMsMedian": 213
+    },
+    "question": {
+      "file": "kirograph-django-question.jsonl",
+      "tasks": 15,
+      "failures": 7,
+      "queryMsMedian": 72,
+      "queryMsP90": 96,
+      "startupMsMedian": 190
     }
   },
   "charsPerToken": 3,
-  "errors": []
+  "errors": [
+    "7/15 question queries failed or returned isError"
+  ]
 }

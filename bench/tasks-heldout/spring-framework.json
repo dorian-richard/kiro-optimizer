@@ -1,0 +1,68 @@
+{
+  "repo": {
+    "name": "spring-framework",
+    "url": "https://github.com/spring-projects/spring-framework.git",
+    "tag": "v7.0.9",
+    "commit": "82a6b40b9366ec181ededdad282b307ee5381a52",
+    "language": "java",
+    "path": "bench/repos/spring-framework"
+  },
+  "notes": "Held-out tasks (round 2), written after v0.2's tuning and before any kopt measurement on them; not derived from bench/results/failures.md. Gold read in the code with git grep and sed only. Re-check with `kopt bench bench/tasks-heldout/spring-framework.json --verify`.",
+  "tasks": [
+    {
+      "id": "ho-sf-explain-rollback-rules",
+      "kind": "explain",
+      "lang": "en",
+      "question": "When a @Transactional method throws, how does Spring decide between rollback and commit when rollbackFor / noRollbackFor rules are declared?",
+      "search": "transaction rollback rules exception commit noRollbackFor rollbackFor decide",
+      "gold": {
+        "files": [
+          "spring-tx/src/main/java/org/springframework/transaction/interceptor/RuleBasedTransactionAttribute.java",
+          "spring-tx/src/main/java/org/springframework/transaction/interceptor/RollbackRuleAttribute.java"
+        ],
+        "symbols": [
+          {
+            "name": "rollbackOn",
+            "file": "spring-tx/src/main/java/org/springframework/transaction/interceptor/RuleBasedTransactionAttribute.java",
+            "line": 123,
+            "kind": "method"
+          },
+          {
+            "name": "getDepth",
+            "file": "spring-tx/src/main/java/org/springframework/transaction/interceptor/RollbackRuleAttribute.java",
+            "line": 165,
+            "kind": "method"
+          }
+        ]
+      },
+      "verifiedBy": "Read RuleBasedTransactionAttribute.rollbackOn: the shallowest matching RollbackRuleAttribute (getDepth) wins, NoRollbackRuleAttribute means commit, no match falls back to DefaultTransactionAttribute (RuntimeException/Error)."
+    },
+    {
+      "id": "ho-sf-locate-response-converter",
+      "kind": "locate",
+      "lang": "en",
+      "question": "Where does Spring MVC pick the HttpMessageConverter and media type used to write a @ResponseBody return value, from the Accept header and the producible types?",
+      "search": "response body message converter accept header producible media type write",
+      "gold": {
+        "files": [
+          "spring-webmvc/src/main/java/org/springframework/web/servlet/mvc/method/annotation/AbstractMessageConverterMethodProcessor.java"
+        ],
+        "symbols": [
+          {
+            "name": "writeWithMessageConverters",
+            "file": "spring-webmvc/src/main/java/org/springframework/web/servlet/mvc/method/annotation/AbstractMessageConverterMethodProcessor.java",
+            "line": 205,
+            "kind": "method"
+          },
+          {
+            "name": "getMostSpecificMediaType",
+            "file": "spring-webmvc/src/main/java/org/springframework/web/servlet/mvc/method/annotation/AbstractMessageConverterMethodProcessor.java",
+            "line": 472,
+            "kind": "method"
+          }
+        ]
+      },
+      "verifiedBy": "Read AbstractMessageConverterMethodProcessor: writeWithMessageConverters negotiates acceptable vs producible types (getMostSpecificMediaType) and loops over messageConverters calling canWrite/write."
+    }
+  ]
+}

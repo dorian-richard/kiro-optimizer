@@ -1,0 +1,3095 @@
+{
+  "meta": {
+    "label": "gitea",
+    "repo": {
+      "name": "gitea",
+      "url": "https://github.com/go-gitea/gitea.git",
+      "tag": "v28.1.0",
+      "commit": "4ebd5e319b6a9e629bfd7a04292a6fe85b08dee9",
+      "language": "go",
+      "path": "bench/repos/gitea"
+    },
+    "repoRoot": "bench/repos/gitea",
+    "headCommit": "4ebd5e319b6a9e629bfd7a04292a6fe85b08dee9",
+    "date": "2026-10-09T22:38:13.230Z",
+    "input": "search",
+    "charsPerToken": 3,
+    "strategies": [
+      "native-naive",
+      "native-ranged",
+      "kopt-pack",
+      "kopt-hits+read",
+      "kirograph",
+      "codegraph"
+    ],
+    "grepLimits": {
+      "maxMatches": 100,
+      "maxChars": 10000,
+      "maxLineChars": 250
+    },
+    "readLimits": {
+      "naiveTopFiles": 3,
+      "naiveMaxLines": 2000,
+      "rangedMatches": 4,
+      "rangedContext": 60
+    },
+    "koptBudgets": {
+      "find": 700,
+      "pack": 2500,
+      "read": 3000
+    },
+    "index": {
+      "built": false,
+      "durationMs": 0,
+      "files": 3402,
+      "symbols": 32905,
+      "path": "<index-dir>/.kopt-gitea/index.db"
+    },
+    "notes": [
+      "kirograph: outputs loaded from bench/competitors/results/kirograph-gitea.jsonl",
+      "codegraph: outputs loaded from bench/competitors/results/codegraph-gitea.jsonl"
+    ],
+    "durationMs": 9078
+  },
+  "results": [
+    {
+      "taskId": "gt-locate-git-proxy",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 1357,
+      "chars": 4067,
+      "toolCalls": 2,
+      "durationMs": 1157,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "all_proxy",
+          "chars": 289,
+          "tokens": 97
+        },
+        {
+          "tool": "read_file",
+          "args": "modules/egress/policies.go",
+          "chars": 3778,
+          "tokens": 1260
+        }
+      ]
+    },
+    {
+      "taskId": "gt-locate-git-proxy",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 1143,
+      "chars": 3425,
+      "toolCalls": 2,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "all_proxy",
+          "chars": 289,
+          "tokens": 97
+        },
+        {
+          "tool": "read_file",
+          "args": "modules/egress/policies.go:1-96",
+          "chars": 3136,
+          "tokens": 1046
+        }
+      ]
+    },
+    {
+      "taskId": "gt-locate-git-proxy",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1375,
+      "chars": 4124,
+      "toolCalls": 1,
+      "durationMs": 48,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"git proxy selection http.proxy config environment all_proxy\"",
+          "chars": 4124,
+          "tokens": 1375
+        }
+      ]
+    },
+    {
+      "taskId": "gt-locate-git-proxy",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 1095,
+      "chars": 3280,
+      "toolCalls": 3,
+      "durationMs": 31,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"git proxy selection http.proxy config environment all_proxy\"",
+          "chars": 2060,
+          "tokens": 687
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#5tp",
+          "chars": 718,
+          "tokens": 240
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#5tr",
+          "chars": 502,
+          "tokens": 168
+        }
+      ]
+    },
+    {
+      "taskId": "gt-locate-git-proxy",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tokens": 507,
+      "chars": 1520,
+      "toolCalls": 1,
+      "durationMs": 59,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "modules/egress/policies.go"
+        ],
+        "symbolsMissed": [
+          "gitProxySelector",
+          "normalizeGitProxy"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "git proxy selection http.proxy config environment all_proxy",
+          "chars": 1520,
+          "tokens": 507
+        }
+      ]
+    },
+    {
+      "taskId": "gt-locate-git-proxy",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tokens": 8318,
+      "chars": 24953,
+      "toolCalls": 1,
+      "durationMs": 1116,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "normalizeGitProxy"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "git proxy selection http.proxy config environment all_proxy",
+          "chars": 24953,
+          "tokens": 8318
+        }
+      ]
+    },
+    {
+      "taskId": "gt-locate-runner-pick",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 15959,
+      "chars": 47874,
+      "toolCalls": 4,
+      "durationMs": 909,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "models/actions/task.go",
+          "models/actions/runner.go"
+        ],
+        "symbolsMissed": [
+          "CreateTaskForRunner",
+          "claimJobForRunner",
+          "CanMatchLabels"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "pick",
+          "chars": 8987,
+          "tokens": 2996
+        },
+        {
+          "tool": "read_file",
+          "args": "services/migrations/github.go",
+          "chars": 26226,
+          "tokens": 8742
+        },
+        {
+          "tool": "read_file",
+          "args": "templates/repo/commit_page.tmpl",
+          "chars": 10068,
+          "tokens": 3356
+        },
+        {
+          "tool": "read_file",
+          "args": "routers/web/repo/editor_cherry_pick.go",
+          "chars": 2593,
+          "tokens": 865
+        }
+      ]
+    },
+    {
+      "taskId": "gt-locate-runner-pick",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 7746,
+      "chars": 23231,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "models/actions/task.go",
+          "models/actions/runner.go"
+        ],
+        "symbolsMissed": [
+          "CreateTaskForRunner",
+          "claimJobForRunner",
+          "CanMatchLabels"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "pick",
+          "chars": 8987,
+          "tokens": 2996
+        },
+        {
+          "tool": "read_file",
+          "args": "routers/web/repo/editor_cherry_pick.go:1-77",
+          "chars": 2447,
+          "tokens": 816
+        },
+        {
+          "tool": "read_file",
+          "args": "services/actions/task.go:1-87",
+          "chars": 2782,
+          "tokens": 928
+        },
+        {
+          "tool": "read_file",
+          "args": "services/migrations/github.go:85-205",
+          "chars": 3253,
+          "tokens": 1085
+        },
+        {
+          "tool": "read_file",
+          "args": "templates/repo/commit_page.tmpl:1-106",
+          "chars": 5762,
+          "tokens": 1921
+        }
+      ]
+    },
+    {
+      "taskId": "gt-locate-runner-pick",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1598,
+      "chars": 4793,
+      "toolCalls": 1,
+      "durationMs": 50,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"actions runner pick waiting job labels claim task\"",
+          "chars": 4793,
+          "tokens": 1598
+        }
+      ]
+    },
+    {
+      "taskId": "gt-locate-runner-pick",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 2131,
+      "chars": 6390,
+      "toolCalls": 3,
+      "durationMs": 33,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 1,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [
+          "models/actions/runner.go"
+        ],
+        "symbolsMissed": [],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"actions runner pick waiting job labels claim task\"",
+          "chars": 2055,
+          "tokens": 685
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#4g2",
+          "chars": 2240,
+          "tokens": 747
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#4g3",
+          "chars": 2095,
+          "tokens": 699
+        }
+      ]
+    },
+    {
+      "taskId": "gt-locate-runner-pick",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tokens": 1820,
+      "chars": 5458,
+      "toolCalls": 1,
+      "durationMs": 57,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "CreateTaskForRunner",
+          "claimJobForRunner",
+          "CanMatchLabels"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "actions runner pick waiting job labels claim task",
+          "chars": 5458,
+          "tokens": 1820
+        }
+      ]
+    },
+    {
+      "taskId": "gt-locate-runner-pick",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tokens": 8324,
+      "chars": 24971,
+      "toolCalls": 1,
+      "durationMs": 354,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "models/actions/task.go",
+          "models/actions/runner.go"
+        ],
+        "symbolsMissed": [
+          "CreateTaskForRunner",
+          "claimJobForRunner",
+          "CanMatchLabels"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "actions runner pick waiting job labels claim task",
+          "chars": 24971,
+          "tokens": 8324
+        }
+      ]
+    },
+    {
+      "taskId": "gt-locate-protected-branch",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 29246,
+      "chars": 87733,
+      "toolCalls": 4,
+      "durationMs": 755,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "ProtectedBranch",
+          "chars": 9966,
+          "tokens": 3322
+        },
+        {
+          "tool": "read_file",
+          "args": "models/git/protected_branch.go",
+          "chars": 22423,
+          "tokens": 7475
+        },
+        {
+          "tool": "read_file",
+          "args": "routers/web/repo/setting/protected_branch.go",
+          "chars": 15550,
+          "tokens": 5184
+        },
+        {
+          "tool": "read_file",
+          "args": "routers/api/v1/repo/branch.go",
+          "chars": 39794,
+          "tokens": 13265
+        }
+      ]
+    },
+    {
+      "taskId": "gt-locate-protected-branch",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 6975,
+      "chars": 20925,
+      "toolCalls": 2,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "ProtectedBranch",
+          "chars": 9966,
+          "tokens": 3322
+        },
+        {
+          "tool": "read_file",
+          "args": "models/git/protected_branch.go:1-313",
+          "chars": 10959,
+          "tokens": 3653
+        }
+      ]
+    },
+    {
+      "taskId": "gt-locate-protected-branch",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1870,
+      "chars": 5610,
+      "toolCalls": 1,
+      "durationMs": 35,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"ProtectedBranch Match branch rule glob first matched\"",
+          "chars": 5610,
+          "tokens": 1870
+        }
+      ]
+    },
+    {
+      "taskId": "gt-locate-protected-branch",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 1645,
+      "chars": 4932,
+      "toolCalls": 3,
+      "durationMs": 19,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"ProtectedBranch Match branch rule glob first matched\"",
+          "chars": 1812,
+          "tokens": 604
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#4we",
+          "chars": 2831,
+          "tokens": 944
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#4xn",
+          "chars": 289,
+          "tokens": 97
+        }
+      ]
+    },
+    {
+      "taskId": "gt-locate-protected-branch",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tokens": 572,
+      "chars": 1714,
+      "toolCalls": 1,
+      "durationMs": 42,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.3333333333333333,
+        "defRecall": 0,
+        "filesMissed": [
+          "models/git/protected_branch.go",
+          "models/git/protected_branch_list.go"
+        ],
+        "symbolsMissed": [
+          "loadGlob",
+          "GetFirstMatched"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "ProtectedBranch Match branch rule glob first matched",
+          "chars": 1714,
+          "tokens": 572
+        }
+      ]
+    },
+    {
+      "taskId": "gt-locate-protected-branch",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tokens": 7944,
+      "chars": 23832,
+      "toolCalls": 1,
+      "durationMs": 275,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "ProtectedBranch Match branch rule glob first matched",
+          "chars": 23832,
+          "tokens": 7944
+        }
+      ]
+    },
+    {
+      "taskId": "gt-locate-audit-origin",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 8458,
+      "chars": 25369,
+      "toolCalls": 4,
+      "durationMs": 1097,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0.75,
+        "defRecall": 0.75,
+        "filesMissed": [
+          "routers/common/audit.go"
+        ],
+        "symbolsMissed": [
+          "AuditOrigin"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "audit",
+          "chars": 9653,
+          "tokens": 3218
+        },
+        {
+          "tool": "read_file",
+          "args": "services/audit/scoped.go",
+          "chars": 4238,
+          "tokens": 1413
+        },
+        {
+          "tool": "read_file",
+          "args": "services/audit/notifier.go",
+          "chars": 5728,
+          "tokens": 1910
+        },
+        {
+          "tool": "read_file",
+          "args": "services/audit/event.go",
+          "chars": 5750,
+          "tokens": 1917
+        }
+      ]
+    },
+    {
+      "taskId": "gt-locate-audit-origin",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 6277,
+      "chars": 18827,
+      "toolCalls": 3,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0.25,
+        "defRecall": 0.25,
+        "filesMissed": [
+          "routers/common/audit.go"
+        ],
+        "symbolsMissed": [
+          "getOrigin",
+          "getIPAddress",
+          "AuditOrigin"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "audit",
+          "chars": 9653,
+          "tokens": 3218
+        },
+        {
+          "tool": "read_file",
+          "args": "services/audit/notifier.go:1-155",
+          "chars": 5728,
+          "tokens": 1910
+        },
+        {
+          "tool": "read_file",
+          "args": "services/audit/scoped.go:30-123",
+          "chars": 3446,
+          "tokens": 1149
+        }
+      ]
+    },
+    {
+      "taskId": "gt-locate-audit-origin",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1371,
+      "chars": 4111,
+      "toolCalls": 1,
+      "durationMs": 48,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"audit event origin web api cli system client ip address\"",
+          "chars": 4111,
+          "tokens": 1371
+        }
+      ]
+    },
+    {
+      "taskId": "gt-locate-audit-origin",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 763,
+      "chars": 2285,
+      "toolCalls": 3,
+      "durationMs": 36,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"audit event origin web api cli system client ip address\"",
+          "chars": 1621,
+          "tokens": 541
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#jf2",
+          "chars": 432,
+          "tokens": 144
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#kev",
+          "chars": 232,
+          "tokens": 78
+        }
+      ]
+    },
+    {
+      "taskId": "gt-locate-audit-origin",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tokens": 368,
+      "chars": 1103,
+      "toolCalls": 1,
+      "durationMs": 49,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "services/audit/event.go",
+          "routers/common/audit.go"
+        ],
+        "symbolsMissed": [
+          "getOrigin",
+          "getIPAddress",
+          "SetRequestInfo",
+          "AuditOrigin"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "audit event origin web api cli system client ip address",
+          "chars": 1103,
+          "tokens": 368
+        }
+      ]
+    },
+    {
+      "taskId": "gt-locate-audit-origin",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tokens": 8210,
+      "chars": 24628,
+      "toolCalls": 1,
+      "durationMs": 285,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.75,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "audit event origin web api cli system client ip address",
+          "chars": 24628,
+          "tokens": 8210
+        }
+      ]
+    },
+    {
+      "taskId": "gt-explain-egress",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 42955,
+      "chars": 128858,
+      "toolCalls": 4,
+      "durationMs": 1235,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "modules/egress/policy/policy.go"
+        ],
+        "symbolsMissed": [
+          "checkAddr",
+          "gate",
+          "allowCheck",
+          "dialContext"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "outgoing",
+          "chars": 1645,
+          "tokens": 549
+        },
+        {
+          "tool": "read_file",
+          "args": "web_src/js/components/WorkflowGraph.utils.ts",
+          "chars": 19337,
+          "tokens": 6446
+        },
+        {
+          "tool": "read_file",
+          "args": "web_src/js/components/WorkflowGraph.vue",
+          "chars": 21478,
+          "tokens": 7160
+        },
+        {
+          "tool": "read_file",
+          "args": "custom/conf/app.example.ini",
+          "chars": 86398,
+          "tokens": 28800
+        }
+      ]
+    },
+    {
+      "taskId": "gt-explain-egress",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 6448,
+      "chars": 19340,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "modules/egress/policy/policy.go"
+        ],
+        "symbolsMissed": [
+          "checkAddr",
+          "gate",
+          "allowCheck",
+          "dialContext"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "outgoing",
+          "chars": 1645,
+          "tokens": 549
+        },
+        {
+          "tool": "read_file",
+          "args": "web_src/js/components/WorkflowGraph.utils.ts:5-125",
+          "chars": 3036,
+          "tokens": 1012
+        },
+        {
+          "tool": "read_file",
+          "args": "web_src/js/components/WorkflowGraph.utils.ts:168-288",
+          "chars": 4140,
+          "tokens": 1380
+        },
+        {
+          "tool": "read_file",
+          "args": "web_src/js/components/WorkflowGraph.utils.ts:323-443",
+          "chars": 4457,
+          "tokens": 1486
+        },
+        {
+          "tool": "read_file",
+          "args": "web_src/js/components/WorkflowGraph.vue:301-421",
+          "chars": 6062,
+          "tokens": 2021
+        }
+      ]
+    },
+    {
+      "taskId": "gt-explain-egress",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 956,
+      "chars": 2867,
+      "toolCalls": 1,
+      "durationMs": 50,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "checkAddr",
+          "dialContext"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"outgoing http request host allow block list lax strict dns rebinding\"",
+          "chars": 2867,
+          "tokens": 956
+        }
+      ]
+    },
+    {
+      "taskId": "gt-explain-egress",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 738,
+      "chars": 2209,
+      "toolCalls": 3,
+      "durationMs": 36,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0.25,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "checkAddr",
+          "dialContext"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"outgoing http request host allow block list lax strict dns rebinding\"",
+          "chars": 1646,
+          "tokens": 549
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#9f8",
+          "chars": 412,
+          "tokens": 138
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#7ud",
+          "chars": 151,
+          "tokens": 51
+        }
+      ]
+    },
+    {
+      "taskId": "gt-explain-egress",
+      "kind": "explain",
+      "strategy": "kirograph",
+      "tokens": 1034,
+      "chars": 3101,
+      "toolCalls": 1,
+      "durationMs": 49,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "modules/egress/policy/policy.go"
+        ],
+        "symbolsMissed": [
+          "checkAddr",
+          "gate",
+          "allowCheck",
+          "dialContext"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "outgoing http request host allow block list lax strict dns rebinding",
+          "chars": 3101,
+          "tokens": 1034
+        }
+      ]
+    },
+    {
+      "taskId": "gt-explain-egress",
+      "kind": "explain",
+      "strategy": "codegraph",
+      "tokens": 7118,
+      "chars": 21352,
+      "toolCalls": 1,
+      "durationMs": 428,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.25,
+        "defRecall": 0.25,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "checkAddr",
+          "gate",
+          "dialContext"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "outgoing http request host allow block list lax strict dns rebinding",
+          "chars": 21352,
+          "tokens": 7118
+        }
+      ]
+    },
+    {
+      "taskId": "gt-explain-audit",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 5898,
+      "chars": 17692,
+      "toolCalls": 4,
+      "durationMs": 884,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0.5,
+        "defRecall": 0,
+        "filesMissed": [
+          "services/audit/message.go"
+        ],
+        "symbolsMissed": [
+          "buildEvent",
+          "renderMessage"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "impersonator",
+          "chars": 6539,
+          "tokens": 2180
+        },
+        {
+          "tool": "read_file",
+          "args": "models/audit/audit_event.go",
+          "chars": 5931,
+          "tokens": 1977
+        },
+        {
+          "tool": "read_file",
+          "args": "services/audit/actor.go",
+          "chars": 3069,
+          "tokens": 1023
+        },
+        {
+          "tool": "read_file",
+          "args": "services/auth/impersonate.go",
+          "chars": 2153,
+          "tokens": 718
+        }
+      ]
+    },
+    {
+      "taskId": "gt-explain-audit",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 6256,
+      "chars": 18764,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0.5,
+        "defRecall": 0,
+        "filesMissed": [
+          "services/audit/message.go"
+        ],
+        "symbolsMissed": [
+          "buildEvent",
+          "renderMessage"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "impersonator",
+          "chars": 6539,
+          "tokens": 2180
+        },
+        {
+          "tool": "read_file",
+          "args": "models/audit/audit_event.go:1-109",
+          "chars": 3299,
+          "tokens": 1100
+        },
+        {
+          "tool": "read_file",
+          "args": "services/audit/actor.go:1-77",
+          "chars": 2930,
+          "tokens": 977
+        },
+        {
+          "tool": "read_file",
+          "args": "services/audit/refs.go:1-105",
+          "chars": 3843,
+          "tokens": 1281
+        },
+        {
+          "tool": "read_file",
+          "args": "services/auth/impersonate.go:1-74",
+          "chars": 2153,
+          "tokens": 718
+        }
+      ]
+    },
+    {
+      "taskId": "gt-explain-audit",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 1423,
+      "chars": 4268,
+      "toolCalls": 1,
+      "durationMs": 55,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"audit log event record actor impersonator scope message\"",
+          "chars": 4268,
+          "tokens": 1423
+        }
+      ]
+    },
+    {
+      "taskId": "gt-explain-audit",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 906,
+      "chars": 2713,
+      "toolCalls": 3,
+      "durationMs": 32,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.75,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"audit log event record actor impersonator scope message\"",
+          "chars": 2072,
+          "tokens": 691
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#kf1",
+          "chars": 448,
+          "tokens": 150
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#kf0",
+          "chars": 193,
+          "tokens": 65
+        }
+      ]
+    },
+    {
+      "taskId": "gt-explain-audit",
+      "kind": "explain",
+      "strategy": "kirograph",
+      "tokens": 371,
+      "chars": 1111,
+      "toolCalls": 1,
+      "durationMs": 40,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "services/audit/event.go",
+          "services/audit/message.go"
+        ],
+        "symbolsMissed": [
+          "Record",
+          "RecordAs",
+          "buildEvent",
+          "renderMessage"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "audit log event record actor impersonator scope message",
+          "chars": 1111,
+          "tokens": 371
+        }
+      ]
+    },
+    {
+      "taskId": "gt-explain-audit",
+      "kind": "explain",
+      "strategy": "codegraph",
+      "tokens": 6255,
+      "chars": 18763,
+      "toolCalls": 1,
+      "durationMs": 248,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0.25,
+        "defRecall": 0,
+        "filesMissed": [
+          "services/audit/message.go"
+        ],
+        "symbolsMissed": [
+          "Record",
+          "RecordAs",
+          "renderMessage"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "audit log event record actor impersonator scope message",
+          "chars": 18763,
+          "tokens": 6255
+        }
+      ]
+    },
+    {
+      "taskId": "gt-explain-globallock",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 358497,
+      "chars": 1075490,
+      "toolCalls": 4,
+      "durationMs": 857,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.75,
+        "defRecall": 0.25,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "startExtend"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "acquire|held",
+          "chars": 10047,
+          "tokens": 3349
+        },
+        {
+          "tool": "read_file",
+          "args": "assets/go-licenses.json",
+          "chars": 1061679,
+          "tokens": 353893
+        },
+        {
+          "tool": "read_file",
+          "args": "modules/globallock/globallock.go",
+          "chars": 2148,
+          "tokens": 716
+        },
+        {
+          "tool": "read_file",
+          "args": "modules/globallock/locker.go",
+          "chars": 1616,
+          "tokens": 539
+        }
+      ]
+    },
+    {
+      "taskId": "gt-explain-globallock",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 32075,
+      "chars": 96223,
+      "toolCalls": 5,
+      "durationMs": 3,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.75,
+        "defRecall": 0.25,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "startExtend"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "acquire|held",
+          "chars": 10047,
+          "tokens": 3349
+        },
+        {
+          "tool": "read_file",
+          "args": "assets/go-licenses.json:990-1110",
+          "chars": 79457,
+          "tokens": 26486
+        },
+        {
+          "tool": "read_file",
+          "args": "models/db/index.go:1-88",
+          "chars": 2955,
+          "tokens": 985
+        },
+        {
+          "tool": "read_file",
+          "args": "modules/globallock/globallock.go:1-83",
+          "chars": 2148,
+          "tokens": 716
+        },
+        {
+          "tool": "read_file",
+          "args": "modules/globallock/locker.go:1-39",
+          "chars": 1616,
+          "tokens": 539
+        }
+      ]
+    },
+    {
+      "taskId": "gt-explain-globallock",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 1307,
+      "chars": 3920,
+      "toolCalls": 1,
+      "durationMs": 39,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.75,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"global lock redis acquire expiry extend held\"",
+          "chars": 3920,
+          "tokens": 1307
+        }
+      ]
+    },
+    {
+      "taskId": "gt-explain-globallock",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 741,
+      "chars": 2221,
+      "toolCalls": 3,
+      "durationMs": 22,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.25,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"global lock redis acquire expiry extend held\"",
+          "chars": 1946,
+          "tokens": 649
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#8u2",
+          "chars": 191,
+          "tokens": 64
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#8u1",
+          "chars": 84,
+          "tokens": 28
+        }
+      ]
+    },
+    {
+      "taskId": "gt-explain-globallock",
+      "kind": "explain",
+      "strategy": "kirograph",
+      "tokens": 366,
+      "chars": 1096,
+      "toolCalls": 1,
+      "durationMs": 37,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.25,
+        "defRecall": 0,
+        "filesMissed": [
+          "modules/globallock/redis_locker.go",
+          "modules/globallock/globallock.go"
+        ],
+        "symbolsMissed": [
+          "startExtend",
+          "NewRedisLocker",
+          "initDefaultLocker"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "global lock redis acquire expiry extend held",
+          "chars": 1096,
+          "tokens": 366
+        }
+      ]
+    },
+    {
+      "taskId": "gt-explain-globallock",
+      "kind": "explain",
+      "strategy": "codegraph",
+      "tokens": 3925,
+      "chars": 11775,
+      "toolCalls": 1,
+      "durationMs": 231,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "global lock redis acquire expiry extend held",
+          "chars": 11775,
+          "tokens": 3925
+        }
+      ]
+    },
+    {
+      "taskId": "gt-usage-egress-transport",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 12324,
+      "chars": 36969,
+      "toolCalls": 4,
+      "durationMs": 306,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.2,
+        "defRecall": 0.2,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "openIDInstance",
+          "oauth2AvatarHTTPClient",
+          "NewMigrationHTTPTransport",
+          "Init"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "NewHTTPTransport|egress",
+          "chars": 9830,
+          "tokens": 3277
+        },
+        {
+          "tool": "read_file",
+          "args": "services/gitproxy/server.go",
+          "chars": 13230,
+          "tokens": 4410
+        },
+        {
+          "tool": "read_file",
+          "args": "modules/setting/security.go",
+          "chars": 9179,
+          "tokens": 3060
+        },
+        {
+          "tool": "read_file",
+          "args": "modules/egress/policies_test.go",
+          "chars": 4730,
+          "tokens": 1577
+        }
+      ]
+    },
+    {
+      "taskId": "gt-usage-egress-transport",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 6276,
+      "chars": 18825,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.8,
+        "defRecall": 0.8,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "newServer"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "NewHTTPTransport|egress",
+          "chars": 9830,
+          "tokens": 3277
+        },
+        {
+          "tool": "read_file",
+          "args": "modules/auth/openid/openid.go:1-50",
+          "chars": 1410,
+          "tokens": 470
+        },
+        {
+          "tool": "read_file",
+          "args": "routers/web/auth/oauth.go:245-365",
+          "chars": 3547,
+          "tokens": 1183
+        },
+        {
+          "tool": "read_file",
+          "args": "services/migrations/http_client.go:1-29",
+          "chars": 891,
+          "tokens": 297
+        },
+        {
+          "tool": "read_file",
+          "args": "services/webhook/deliver.go:217-321",
+          "chars": 3147,
+          "tokens": 1049
+        }
+      ]
+    },
+    {
+      "taskId": "gt-usage-egress-transport",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 889,
+      "chars": 2666,
+      "toolCalls": 1,
+      "durationMs": 35,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.4,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"egress policy NewHTTPTransport\"",
+          "chars": 2666,
+          "tokens": 889
+        }
+      ]
+    },
+    {
+      "taskId": "gt-usage-egress-transport",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 453,
+      "chars": 1355,
+      "toolCalls": 3,
+      "durationMs": 18,
+      "recall": {
+        "fileRecall": 0.2,
+        "symbolRecall": 0.2,
+        "defRecall": 0.2,
+        "filesMissed": [
+          "modules/auth/openid/openid.go",
+          "routers/web/auth/oauth.go",
+          "services/gitproxy/server.go",
+          "services/webhook/deliver.go"
+        ],
+        "symbolsMissed": [
+          "openIDInstance",
+          "oauth2AvatarHTTPClient",
+          "newServer",
+          "Init"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"egress policy NewHTTPTransport\"",
+          "chars": 710,
+          "tokens": 237
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#5v0",
+          "chars": 397,
+          "tokens": 133
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#lq2",
+          "chars": 248,
+          "tokens": 83
+        }
+      ]
+    },
+    {
+      "taskId": "gt-usage-egress-transport",
+      "kind": "usage",
+      "strategy": "kirograph",
+      "tokens": 85,
+      "chars": 255,
+      "toolCalls": 1,
+      "durationMs": 32,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "modules/auth/openid/openid.go",
+          "routers/web/auth/oauth.go",
+          "services/gitproxy/server.go",
+          "services/migrations/http_client.go",
+          "services/webhook/deliver.go"
+        ],
+        "symbolsMissed": [
+          "openIDInstance",
+          "oauth2AvatarHTTPClient",
+          "newServer",
+          "NewMigrationHTTPTransport",
+          "Init"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "egress policy NewHTTPTransport",
+          "chars": 255,
+          "tokens": 85
+        }
+      ]
+    },
+    {
+      "taskId": "gt-usage-egress-transport",
+      "kind": "usage",
+      "strategy": "codegraph",
+      "tokens": 8203,
+      "chars": 24607,
+      "toolCalls": 1,
+      "durationMs": 149,
+      "recall": {
+        "fileRecall": 0.8,
+        "symbolRecall": 0.8,
+        "defRecall": 0,
+        "filesMissed": [
+          "modules/auth/openid/openid.go"
+        ],
+        "symbolsMissed": [
+          "openIDInstance"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "egress policy NewHTTPTransport",
+          "chars": 24607,
+          "tokens": 8203
+        }
+      ]
+    },
+    {
+      "taskId": "gt-usage-automerge-check",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 4591,
+      "chars": 13767,
+      "toolCalls": 4,
+      "durationMs": 105,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.8333333333333334,
+        "defRecall": 0.8333333333333334,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "markPullRequestAsMergeable"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "StartAutoMergeCheckByPullHead",
+          "chars": 704,
+          "tokens": 235
+        },
+        {
+          "tool": "read_file",
+          "args": "services/automerge/notify.go",
+          "chars": 2107,
+          "tokens": 703
+        },
+        {
+          "tool": "read_file",
+          "args": "services/automerge/automerge.go",
+          "chars": 9461,
+          "tokens": 3154
+        },
+        {
+          "tool": "read_file",
+          "args": "services/automergequeue/automergequeue.go",
+          "chars": 1495,
+          "tokens": 499
+        }
+      ]
+    },
+    {
+      "taskId": "gt-usage-automerge-check",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 4429,
+      "chars": 13282,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "StartAutoMergeCheckByPullHead",
+          "chars": 704,
+          "tokens": 235
+        },
+        {
+          "tool": "read_file",
+          "args": "services/automerge/automerge.go:6-126",
+          "chars": 4479,
+          "tokens": 1493
+        },
+        {
+          "tool": "read_file",
+          "args": "services/automerge/notify.go:1-65",
+          "chars": 2107,
+          "tokens": 703
+        },
+        {
+          "tool": "read_file",
+          "args": "services/automergequeue/automergequeue.go:1-53",
+          "chars": 1495,
+          "tokens": 499
+        },
+        {
+          "tool": "read_file",
+          "args": "services/pull/check.go:238-358",
+          "chars": 4497,
+          "tokens": 1499
+        }
+      ]
+    },
+    {
+      "taskId": "gt-usage-automerge-check",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 679,
+      "chars": 2037,
+      "toolCalls": 1,
+      "durationMs": 36,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"StartAutoMergeCheckByPullHead\"",
+          "chars": 2037,
+          "tokens": 679
+        }
+      ]
+    },
+    {
+      "taskId": "gt-usage-automerge-check",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 485,
+      "chars": 1455,
+      "toolCalls": 3,
+      "durationMs": 23,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.16666666666666666,
+        "defRecall": 0,
+        "filesMissed": [
+          "services/automerge/automerge.go",
+          "services/automerge/notify.go",
+          "services/pull/check.go"
+        ],
+        "symbolsMissed": [
+          "populateRecentAutoMergeItems",
+          "PullRequestReview",
+          "PullReviewDismiss",
+          "CreateCommitStatus",
+          "markPullRequestAsMergeable"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"StartAutoMergeCheckByPullHead\"",
+          "chars": 666,
+          "tokens": 222
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#hzz",
+          "chars": 582,
+          "tokens": 194
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#hzy",
+          "chars": 207,
+          "tokens": 69
+        }
+      ]
+    },
+    {
+      "taskId": "gt-usage-automerge-check",
+      "kind": "usage",
+      "strategy": "kirograph",
+      "tokens": 498,
+      "chars": 1492,
+      "toolCalls": 1,
+      "durationMs": 37,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "services/automerge/automerge.go",
+          "services/automerge/notify.go",
+          "services/pull/check.go"
+        ],
+        "symbolsMissed": [
+          "populateRecentAutoMergeItems",
+          "ScheduleAutoMerge",
+          "PullRequestReview",
+          "PullReviewDismiss",
+          "CreateCommitStatus",
+          "markPullRequestAsMergeable"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "StartAutoMergeCheckByPullHead",
+          "chars": 1492,
+          "tokens": 498
+        }
+      ]
+    },
+    {
+      "taskId": "gt-usage-automerge-check",
+      "kind": "usage",
+      "strategy": "codegraph",
+      "tokens": 8330,
+      "chars": 24988,
+      "toolCalls": 1,
+      "durationMs": 118,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "StartAutoMergeCheckByPullHead",
+          "chars": 24988,
+          "tokens": 8330
+        }
+      ]
+    },
+    {
+      "taskId": "gt-usage-pull-working-lock",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 29411,
+      "chars": 88228,
+      "toolCalls": 4,
+      "durationMs": 112,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.8333333333333334,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "getPullWorkingLockKey",
+          "chars": 785,
+          "tokens": 262
+        },
+        {
+          "tool": "read_file",
+          "args": "services/pull/check.go",
+          "chars": 19552,
+          "tokens": 6518
+        },
+        {
+          "tool": "read_file",
+          "args": "services/pull/merge.go",
+          "chars": 30970,
+          "tokens": 10324
+        },
+        {
+          "tool": "read_file",
+          "args": "services/pull/pull.go",
+          "chars": 36921,
+          "tokens": 12307
+        }
+      ]
+    },
+    {
+      "taskId": "gt-usage-pull-working-lock",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 6140,
+      "chars": 18413,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.8333333333333334,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "ChangeTargetBranch"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "getPullWorkingLockKey",
+          "chars": 785,
+          "tokens": 262
+        },
+        {
+          "tool": "read_file",
+          "args": "services/pull/check.go:58-178",
+          "chars": 5038,
+          "tokens": 1680
+        },
+        {
+          "tool": "read_file",
+          "args": "services/pull/check.go:417-537",
+          "chars": 3704,
+          "tokens": 1235
+        },
+        {
+          "tool": "read_file",
+          "args": "services/pull/merge.go:250-370",
+          "chars": 4357,
+          "tokens": 1453
+        },
+        {
+          "tool": "read_file",
+          "args": "services/pull/merge.go:667-787",
+          "chars": 4529,
+          "tokens": 1510
+        }
+      ]
+    },
+    {
+      "taskId": "gt-usage-pull-working-lock",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 322,
+      "chars": 966,
+      "toolCalls": 1,
+      "durationMs": 36,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"getPullWorkingLockKey\"",
+          "chars": 966,
+          "tokens": 322
+        }
+      ]
+    },
+    {
+      "taskId": "gt-usage-pull-working-lock",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 201,
+      "chars": 600,
+      "toolCalls": 3,
+      "durationMs": 18,
+      "recall": {
+        "fileRecall": 0.25,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "services/pull/check.go",
+          "services/pull/merge.go",
+          "services/pull/update.go"
+        ],
+        "symbolsMissed": [
+          "StartPullRequestCheckOnView",
+          "checkPullRequestMergeable",
+          "Merge",
+          "MergedManually",
+          "ChangeTargetBranch",
+          "Update"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"getPullWorkingLockKey\"",
+          "chars": 332,
+          "tokens": 111
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#msw",
+          "chars": 127,
+          "tokens": 43
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#nf9",
+          "chars": 141,
+          "tokens": 47
+        }
+      ]
+    },
+    {
+      "taskId": "gt-usage-pull-working-lock",
+      "kind": "usage",
+      "strategy": "kirograph",
+      "tokens": 466,
+      "chars": 1398,
+      "toolCalls": 1,
+      "durationMs": 49,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "services/pull/check.go",
+          "services/pull/merge.go",
+          "services/pull/pull.go",
+          "services/pull/update.go"
+        ],
+        "symbolsMissed": [
+          "StartPullRequestCheckOnView",
+          "checkPullRequestMergeable",
+          "Merge",
+          "MergedManually",
+          "ChangeTargetBranch",
+          "Update"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "getPullWorkingLockKey",
+          "chars": 1398,
+          "tokens": 466
+        }
+      ]
+    },
+    {
+      "taskId": "gt-usage-pull-working-lock",
+      "kind": "usage",
+      "strategy": "codegraph",
+      "tokens": 8303,
+      "chars": 24909,
+      "toolCalls": 1,
+      "durationMs": 108,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.16666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "getPullWorkingLockKey",
+          "chars": 24909,
+          "tokens": 8303
+        }
+      ]
+    },
+    {
+      "taskId": "gt-impact-remove-scheduled-automerge",
+      "kind": "impact",
+      "strategy": "native-naive",
+      "tokens": 37254,
+      "chars": 111759,
+      "toolCalls": 4,
+      "durationMs": 111,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "RemoveScheduledAutoMerge",
+          "chars": 597,
+          "tokens": 199
+        },
+        {
+          "tool": "read_file",
+          "args": "routers/web/repo/pull.go",
+          "chars": 53862,
+          "tokens": 17954
+        },
+        {
+          "tool": "read_file",
+          "args": "services/automerge/automerge.go",
+          "chars": 9461,
+          "tokens": 3154
+        },
+        {
+          "tool": "read_file",
+          "args": "routers/api/v1/repo/pull.go",
+          "chars": 47839,
+          "tokens": 15947
+        }
+      ]
+    },
+    {
+      "taskId": "gt-impact-remove-scheduled-automerge",
+      "kind": "impact",
+      "strategy": "native-ranged",
+      "tokens": 4113,
+      "chars": 12335,
+      "toolCalls": 4,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "CancelScheduledAutoMerge"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "RemoveScheduledAutoMerge",
+          "chars": 597,
+          "tokens": 199
+        },
+        {
+          "tool": "read_file",
+          "args": "routers/api/v1/repo/pull.go:1291-1411",
+          "chars": 3160,
+          "tokens": 1054
+        },
+        {
+          "tool": "read_file",
+          "args": "routers/web/repo/pull.go:1216-1336",
+          "chars": 3739,
+          "tokens": 1247
+        },
+        {
+          "tool": "read_file",
+          "args": "services/automerge/automerge.go:31-151",
+          "chars": 4839,
+          "tokens": 1613
+        }
+      ]
+    },
+    {
+      "taskId": "gt-impact-remove-scheduled-automerge",
+      "kind": "impact",
+      "strategy": "kopt-pack",
+      "tokens": 681,
+      "chars": 2041,
+      "toolCalls": 1,
+      "durationMs": 29,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"RemoveScheduledAutoMerge\"",
+          "chars": 2041,
+          "tokens": 681
+        }
+      ]
+    },
+    {
+      "taskId": "gt-impact-remove-scheduled-automerge",
+      "kind": "impact",
+      "strategy": "kopt-hits+read",
+      "tokens": 986,
+      "chars": 2957,
+      "toolCalls": 3,
+      "durationMs": 15,
+      "recall": {
+        "fileRecall": 0.6666666666666666,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [
+          "routers/web/repo/pull.go"
+        ],
+        "symbolsMissed": [
+          "CancelAutoMergePullRequest"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"RemoveScheduledAutoMerge\"",
+          "chars": 1427,
+          "tokens": 476
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#hz4",
+          "chars": 480,
+          "tokens": 160
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#hz3",
+          "chars": 1050,
+          "tokens": 350
+        }
+      ]
+    },
+    {
+      "taskId": "gt-impact-remove-scheduled-automerge",
+      "kind": "impact",
+      "strategy": "kirograph",
+      "tokens": 137,
+      "chars": 411,
+      "toolCalls": 1,
+      "durationMs": 37,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.3333333333333333,
+        "defRecall": 0,
+        "filesMissed": [
+          "services/automerge/automerge.go",
+          "routers/api/v1/repo/pull.go",
+          "routers/web/repo/pull.go"
+        ],
+        "symbolsMissed": [
+          "CancelScheduledAutoMerge",
+          "CancelAutoMergePullRequest"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "RemoveScheduledAutoMerge",
+          "chars": 411,
+          "tokens": 137
+        }
+      ]
+    },
+    {
+      "taskId": "gt-impact-remove-scheduled-automerge",
+      "kind": "impact",
+      "strategy": "codegraph",
+      "tokens": 8311,
+      "chars": 24931,
+      "toolCalls": 1,
+      "durationMs": 103,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "RemoveScheduledAutoMerge",
+          "chars": 24931,
+          "tokens": 8311
+        }
+      ]
+    },
+    {
+      "taskId": "gt-impact-migration-policy",
+      "kind": "impact",
+      "strategy": "native-naive",
+      "tokens": 3373,
+      "chars": 10114,
+      "toolCalls": 4,
+      "durationMs": 664,
+      "recall": {
+        "fileRecall": 0.75,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [
+          "services/gitproxy/server.go"
+        ],
+        "symbolsMissed": [
+          "IsMigrateURLAllowed",
+          "Run"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "newMigrationPolicy",
+          "chars": 715,
+          "tokens": 239
+        },
+        {
+          "tool": "read_file",
+          "args": "modules/egress/policies.go",
+          "chars": 3778,
+          "tokens": 1260
+        },
+        {
+          "tool": "read_file",
+          "args": "modules/egress/policies_test.go",
+          "chars": 4730,
+          "tokens": 1577
+        },
+        {
+          "tool": "read_file",
+          "args": "services/migrations/http_client.go",
+          "chars": 891,
+          "tokens": 297
+        }
+      ]
+    },
+    {
+      "taskId": "gt-impact-migration-policy",
+      "kind": "impact",
+      "strategy": "native-ranged",
+      "tokens": 3806,
+      "chars": 11413,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0.75,
+        "symbolRecall": 0.8333333333333334,
+        "defRecall": 0.8333333333333334,
+        "filesMissed": [
+          "services/gitproxy/server.go"
+        ],
+        "symbolsMissed": [
+          "Run"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "newMigrationPolicy",
+          "chars": 715,
+          "tokens": 239
+        },
+        {
+          "tool": "read_file",
+          "args": "modules/egress/policies.go:1-83",
+          "chars": 2688,
+          "tokens": 896
+        },
+        {
+          "tool": "read_file",
+          "args": "modules/egress/policies_test.go:1-88",
+          "chars": 3196,
+          "tokens": 1066
+        },
+        {
+          "tool": "read_file",
+          "args": "services/migrations/http_client.go:1-29",
+          "chars": 891,
+          "tokens": 297
+        },
+        {
+          "tool": "read_file",
+          "args": "services/migrations/migrate.go:13-133",
+          "chars": 3923,
+          "tokens": 1308
+        }
+      ]
+    },
+    {
+      "taskId": "gt-impact-migration-policy",
+      "kind": "impact",
+      "strategy": "kopt-pack",
+      "tokens": 683,
+      "chars": 2049,
+      "toolCalls": 1,
+      "durationMs": 34,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"newMigrationPolicy migrations blocked host list\"",
+          "chars": 2049,
+          "tokens": 683
+        }
+      ]
+    },
+    {
+      "taskId": "gt-impact-migration-policy",
+      "kind": "impact",
+      "strategy": "kopt-hits+read",
+      "tokens": 389,
+      "chars": 1164,
+      "toolCalls": 3,
+      "durationMs": 19,
+      "recall": {
+        "fileRecall": 0.25,
+        "symbolRecall": 0.5,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [
+          "services/migrations/migrate.go",
+          "services/migrations/http_client.go",
+          "services/gitproxy/server.go"
+        ],
+        "symbolsMissed": [
+          "IsMigrateURLAllowed",
+          "NewMigrationHTTPTransport",
+          "Run"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"newMigrationPolicy migrations blocked host list\"",
+          "chars": 584,
+          "tokens": 195
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#5ts",
+          "chars": 456,
+          "tokens": 152
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#5tn",
+          "chars": 124,
+          "tokens": 42
+        }
+      ]
+    },
+    {
+      "taskId": "gt-impact-migration-policy",
+      "kind": "impact",
+      "strategy": "kirograph",
+      "tokens": 1109,
+      "chars": 3327,
+      "toolCalls": 1,
+      "durationMs": 42,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.16666666666666666,
+        "defRecall": 0,
+        "filesMissed": [
+          "modules/egress/policies.go",
+          "services/migrations/migrate.go",
+          "services/migrations/http_client.go",
+          "services/gitproxy/server.go"
+        ],
+        "symbolsMissed": [
+          "NewMigrationPolicy",
+          "NewGitPolicy",
+          "IsMigrateURLAllowed",
+          "NewMigrationHTTPTransport",
+          "Run"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "newMigrationPolicy migrations blocked host list",
+          "chars": 3327,
+          "tokens": 1109
+        }
+      ]
+    },
+    {
+      "taskId": "gt-impact-migration-policy",
+      "kind": "impact",
+      "strategy": "codegraph",
+      "tokens": 8328,
+      "chars": 24983,
+      "toolCalls": 1,
+      "durationMs": 297,
+      "recall": {
+        "fileRecall": 0.25,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [
+          "services/migrations/migrate.go",
+          "services/migrations/http_client.go",
+          "services/gitproxy/server.go"
+        ],
+        "symbolsMissed": [
+          "IsMigrateURLAllowed",
+          "NewMigrationHTTPTransport",
+          "Run"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "newMigrationPolicy migrations blocked host list",
+          "chars": 24983,
+          "tokens": 8328
+        }
+      ]
+    }
+  ],
+  "aggregates": [
+    {
+      "strategy": "native-naive",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 14141.5,
+      "meanTokens": 45777,
+      "p90Tokens": 42955,
+      "totalTokens": 549323,
+      "totalChars": 1647920,
+      "meanToolCalls": 3.8333333333333335,
+      "meanFileRecall": 0.7291666666666666,
+      "meanSymbolRecall": 0.6416666666666667,
+      "meanDefRecall": 0.5444444444444444,
+      "found": 4,
+      "foundRate": 0.3333333333333333,
+      "tokensPerFound": 137331
+    },
+    {
+      "strategy": "native-ranged",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 6266,
+      "meanTokens": 7640,
+      "p90Tokens": 7746,
+      "totalTokens": 91684,
+      "totalChars": 275003,
+      "meanToolCalls": 4.25,
+      "meanFileRecall": 0.7291666666666666,
+      "meanSymbolRecall": 0.6361111111111111,
+      "meanDefRecall": 0.5388888888888889,
+      "found": 3,
+      "foundRate": 0.25,
+      "tokensPerFound": 30561
+    },
+    {
+      "strategy": "kopt-pack",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 1131.5,
+      "meanTokens": 1096,
+      "p90Tokens": 1598,
+      "totalTokens": 13154,
+      "totalChars": 39452,
+      "meanToolCalls": 1,
+      "meanFileRecall": 1,
+      "meanSymbolRecall": 0.9583333333333334,
+      "meanDefRecall": 0.5263888888888889,
+      "found": 11,
+      "foundRate": 0.9166666666666666,
+      "tokensPerFound": 1196
+    },
+    {
+      "strategy": "kopt-hits+read",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 752,
+      "meanTokens": 878,
+      "p90Tokens": 1645,
+      "totalTokens": 10533,
+      "totalChars": 31561,
+      "meanToolCalls": 3,
+      "meanFileRecall": 0.6555555555555556,
+      "meanSymbolRecall": 0.6694444444444446,
+      "meanDefRecall": 0.48194444444444445,
+      "found": 5,
+      "foundRate": 0.4166666666666667,
+      "tokensPerFound": 2107
+    },
+    {
+      "strategy": "kirograph",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 482,
+      "meanTokens": 611,
+      "p90Tokens": 1109,
+      "totalTokens": 7333,
+      "totalChars": 21986,
+      "meanToolCalls": 1,
+      "meanFileRecall": 0.08333333333333333,
+      "meanSymbolRecall": 0.09027777777777778,
+      "meanDefRecall": 0,
+      "found": 0,
+      "foundRate": 0,
+      "tokensPerFound": null
+    },
+    {
+      "strategy": "codegraph",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 8256.5,
+      "meanTokens": 7631,
+      "p90Tokens": 8328,
+      "totalTokens": 91569,
+      "totalChars": 274692,
+      "meanToolCalls": 1,
+      "meanFileRecall": 0.7958333333333334,
+      "meanSymbolRecall": 0.6916666666666668,
+      "meanDefRecall": 0.3055555555555555,
+      "found": 6,
+      "foundRate": 0.5,
+      "tokensPerFound": 15262
+    }
+  ],
+  "paired": [
+    {
+      "a": "native-naive",
+      "b": "kopt-pack",
+      "nRun": 12,
+      "nBoth": 4,
+      "onlyA": 0,
+      "onlyB": 7,
+      "medianRatio": 0.04111014208208239,
+      "geoMeanRatio": 0.060007366263249276,
+      "bCheaper": 3
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-pack",
+      "nRun": 12,
+      "nBoth": 3,
+      "onlyA": 0,
+      "onlyB": 8,
+      "medianRatio": 0.26810035842293906,
+      "geoMeanRatio": 0.36703373691026003,
+      "bCheaper": 2
+    },
+    {
+      "a": "native-naive",
+      "b": "kopt-hits+read",
+      "nRun": 12,
+      "nBoth": 2,
+      "onlyA": 2,
+      "onlyB": 3,
+      "medianRatio": 0.4315870265449826,
+      "geoMeanRatio": 0.21304279397361495,
+      "bCheaper": 2
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-hits+read",
+      "nRun": 12,
+      "nBoth": 2,
+      "onlyA": 1,
+      "onlyB": 3,
+      "medianRatio": 0.5969237716253211,
+      "geoMeanRatio": 0.4753295231521127,
+      "bCheaper": 2
+    },
+    {
+      "a": "kirograph",
+      "b": "kopt-pack",
+      "nRun": 12,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 11,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "codegraph",
+      "b": "kopt-pack",
+      "nRun": 12,
+      "nBoth": 6,
+      "onlyA": 0,
+      "onlyB": 5,
+      "medianRatio": 0.12446553596769672,
+      "geoMeanRatio": 0.12256844375285339,
+      "bCheaper": 6
+    },
+    {
+      "a": "kirograph",
+      "b": "kopt-hits+read",
+      "nRun": 12,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 5,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "codegraph",
+      "b": "kopt-hits+read",
+      "nRun": 12,
+      "nBoth": 3,
+      "onlyA": 3,
+      "onlyB": 2,
+      "medianRatio": 0.18878980891719746,
+      "geoMeanRatio": 0.15373126405344817,
+      "bCheaper": 3
+    },
+    {
+      "a": "native-ranged",
+      "b": "kirograph",
+      "nRun": 12,
+      "nBoth": 0,
+      "onlyA": 3,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-ranged",
+      "b": "codegraph",
+      "nRun": 12,
+      "nBoth": 2,
+      "onlyA": 1,
+      "onlyB": 4,
+      "medianRatio": 1.5098552307979909,
+      "geoMeanRatio": 1.4635823797871015,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-naive",
+      "b": "native-ranged",
+      "nRun": 12,
+      "nBoth": 2,
+      "onlyA": 2,
+      "onlyB": 1,
+      "medianRatio": 0.5403966712174636,
+      "geoMeanRatio": 0.4482002139501821,
+      "bCheaper": 2
+    }
+  ],
+  "byKind": [
+    {
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tasks": 4,
+      "found": 2,
+      "medianTokens": 12208.5
+    },
+    {
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tasks": 4,
+      "found": 2,
+      "medianTokens": 6626
+    },
+    {
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tasks": 4,
+      "found": 4,
+      "medianTokens": 1486.5
+    },
+    {
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tasks": 4,
+      "found": 3,
+      "medianTokens": 1370
+    },
+    {
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tasks": 4,
+      "found": 0,
+      "medianTokens": 539.5
+    },
+    {
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tasks": 4,
+      "found": 2,
+      "medianTokens": 8264
+    },
+    {
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tasks": 3,
+      "found": 0,
+      "medianTokens": 42955
+    },
+    {
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tasks": 3,
+      "found": 0,
+      "medianTokens": 6448
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tasks": 3,
+      "found": 2,
+      "medianTokens": 1307
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tasks": 3,
+      "found": 2,
+      "medianTokens": 741
+    },
+    {
+      "kind": "explain",
+      "strategy": "kirograph",
+      "tasks": 3,
+      "found": 0,
+      "medianTokens": 371
+    },
+    {
+      "kind": "explain",
+      "strategy": "codegraph",
+      "tasks": 3,
+      "found": 1,
+      "medianTokens": 6255
+    },
+    {
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tasks": 3,
+      "found": 1,
+      "medianTokens": 12324
+    },
+    {
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tasks": 3,
+      "found": 1,
+      "medianTokens": 6140
+    },
+    {
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tasks": 3,
+      "found": 3,
+      "medianTokens": 679
+    },
+    {
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tasks": 3,
+      "found": 0,
+      "medianTokens": 453
+    },
+    {
+      "kind": "usage",
+      "strategy": "kirograph",
+      "tasks": 3,
+      "found": 0,
+      "medianTokens": 466
+    },
+    {
+      "kind": "usage",
+      "strategy": "codegraph",
+      "tasks": 3,
+      "found": 2,
+      "medianTokens": 8303
+    },
+    {
+      "kind": "impact",
+      "strategy": "native-naive",
+      "tasks": 2,
+      "found": 1,
+      "medianTokens": 20313.5
+    },
+    {
+      "kind": "impact",
+      "strategy": "native-ranged",
+      "tasks": 2,
+      "found": 0,
+      "medianTokens": 3959.5
+    },
+    {
+      "kind": "impact",
+      "strategy": "kopt-pack",
+      "tasks": 2,
+      "found": 2,
+      "medianTokens": 682
+    },
+    {
+      "kind": "impact",
+      "strategy": "kopt-hits+read",
+      "tasks": 2,
+      "found": 0,
+      "medianTokens": 687.5
+    },
+    {
+      "kind": "impact",
+      "strategy": "kirograph",
+      "tasks": 2,
+      "found": 0,
+      "medianTokens": 623
+    },
+    {
+      "kind": "impact",
+      "strategy": "codegraph",
+      "tasks": 2,
+      "found": 1,
+      "medianTokens": 8319.5
+    }
+  ]
+}

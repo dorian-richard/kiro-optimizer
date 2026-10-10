@@ -148,7 +148,7 @@ export interface RetrievalModule {
   read(store: Store, p: ReadParams, ctx: ToolContext): ToolResult;
 }
 
-type IndexOpts = { config: KoptConfig; onProgress?: (done: number, total: number) => void };
+type IndexOpts = { config: KoptConfig; repoName?: string; onProgress?: (done: number, total: number) => void };
 type IndexStatsLike = { filesIndexed: number; symbols: number; durationMs: number };
 
 export interface IndexerModule {
@@ -182,12 +182,13 @@ export async function loadKoptModules(): Promise<KoptModules> {
 
 /**
  * Up to `n` follow-up targets from a `find` hits listing: symbol handles first (`#3mv`), else `path:start-end`.
- * The header line is skipped.
+ * The header line and the per-file `also: name L12 #id` lines (other names of a listed file, not hits) are skipped.
  */
 export function extractTargets(text: string, n: number): string[] {
   const out: string[] = [];
   for (const line of text.split('\n').slice(1)) {
     if (out.length >= n) break;
+    if (/^\s*also:/.test(line)) continue;
     const handle = /(?:^|\s)(#[0-9a-z]{1,10})\b/.exec(line)?.[1];
     const range = /([\w./-]+\.[\w]+:\d+-\d+)/.exec(line)?.[1];
     const t = handle ?? range;

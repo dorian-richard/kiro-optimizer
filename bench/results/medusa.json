@@ -1,0 +1,3052 @@
+{
+  "meta": {
+    "label": "medusa",
+    "repo": {
+      "name": "medusa",
+      "url": "https://github.com/medusajs/medusa.git",
+      "tag": "v2.21.2",
+      "commit": "020565398e436a2bc65777a3b1ad347b4735d6df",
+      "language": "typescript",
+      "path": "bench/repos/medusa"
+    },
+    "repoRoot": "bench/repos/medusa",
+    "headCommit": "020565398e436a2bc65777a3b1ad347b4735d6df",
+    "date": "2026-10-09T22:37:19.804Z",
+    "input": "search",
+    "charsPerToken": 3,
+    "strategies": [
+      "native-naive",
+      "native-ranged",
+      "kopt-pack",
+      "kopt-hits+read",
+      "kirograph",
+      "codegraph"
+    ],
+    "grepLimits": {
+      "maxMatches": 100,
+      "maxChars": 10000,
+      "maxLineChars": 250
+    },
+    "readLimits": {
+      "naiveTopFiles": 3,
+      "naiveMaxLines": 2000,
+      "rangedMatches": 4,
+      "rangedContext": 60
+    },
+    "koptBudgets": {
+      "find": 700,
+      "pack": 2500,
+      "read": 3000
+    },
+    "index": {
+      "built": false,
+      "durationMs": 0,
+      "files": 11970,
+      "symbols": 40269,
+      "path": "<index-dir>/.kopt-medusa/index.db"
+    },
+    "notes": [
+      "kirograph: outputs loaded from bench/competitors/results/kirograph-medusa.jsonl",
+      "codegraph: outputs loaded from bench/competitors/results/codegraph-medusa.jsonl"
+    ],
+    "durationMs": 925661
+  },
+  "results": [
+    {
+      "taskId": "md-locate-permanent-failure",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 47482,
+      "chars": 142440,
+      "toolCalls": 4,
+      "durationMs": 140943,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.25,
+        "defRecall": 0,
+        "filesMissed": [
+          "packages/core/workflows-sdk/src/utils/composer/helpers/step-response.ts",
+          "packages/core/orchestration/src/transaction/errors.ts",
+          "packages/core/orchestration/src/transaction/transaction-orchestrator.ts"
+        ],
+        "symbolsMissed": [
+          "isPermanentStepFailureError",
+          "executeSyncStep",
+          "executeAsyncStep"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "permanentFailure",
+          "chars": 10041,
+          "tokens": 3347
+        },
+        {
+          "tool": "read_file",
+          "args": "www/apps/book/public/llms-full.txt",
+          "chars": 73690,
+          "tokens": 24564
+        },
+        {
+          "tool": "read_file",
+          "args": "www/apps/book/app/learn/fundamentals/workflows/errors/page.mdx",
+          "chars": 11764,
+          "tokens": 3922
+        },
+        {
+          "tool": "read_file",
+          "args": "www/utils/generated/typedoc-json-output/workflows.json",
+          "chars": 46945,
+          "tokens": 15649
+        }
+      ]
+    },
+    {
+      "taskId": "md-locate-permanent-failure",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 9042,
+      "chars": 27123,
+      "toolCalls": 4,
+      "durationMs": 47,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.25,
+        "defRecall": 0,
+        "filesMissed": [
+          "packages/core/workflows-sdk/src/utils/composer/helpers/step-response.ts",
+          "packages/core/orchestration/src/transaction/errors.ts",
+          "packages/core/orchestration/src/transaction/transaction-orchestrator.ts"
+        ],
+        "symbolsMissed": [
+          "isPermanentStepFailureError",
+          "executeSyncStep",
+          "executeAsyncStep"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "permanentFailure",
+          "chars": 10041,
+          "tokens": 3347
+        },
+        {
+          "tool": "read_file",
+          "args": "www/apps/book/public/llms-full.txt:25997-26117",
+          "chars": 4292,
+          "tokens": 1431
+        },
+        {
+          "tool": "read_file",
+          "args": "www/apps/book/public/llms-full.txt:26866-27050",
+          "chars": 7337,
+          "tokens": 2446
+        },
+        {
+          "tool": "read_file",
+          "args": "www/apps/book/public/llms-full.txt:128963-129083",
+          "chars": 5453,
+          "tokens": 1818
+        }
+      ]
+    },
+    {
+      "taskId": "md-locate-permanent-failure",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1207,
+      "chars": 3621,
+      "toolCalls": 1,
+      "durationMs": 290,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"StepResponse permanentFailure permanent step failure error retry\"",
+          "chars": 3621,
+          "tokens": 1207
+        }
+      ]
+    },
+    {
+      "taskId": "md-locate-permanent-failure",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 1863,
+      "chars": 5587,
+      "toolCalls": 3,
+      "durationMs": 24,
+      "recall": {
+        "fileRecall": 0.6666666666666666,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [
+          "packages/core/orchestration/src/transaction/transaction-orchestrator.ts"
+        ],
+        "symbolsMissed": [
+          "executeSyncStep",
+          "executeAsyncStep"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"StepResponse permanentFailure permanent step failure error retry\"",
+          "chars": 1429,
+          "tokens": 477
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#iwn",
+          "chars": 360,
+          "tokens": 120
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#iwi",
+          "chars": 3798,
+          "tokens": 1266
+        }
+      ]
+    },
+    {
+      "taskId": "md-locate-permanent-failure",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tokens": 1565,
+      "chars": 4693,
+      "toolCalls": 1,
+      "durationMs": 553,
+      "recall": {
+        "fileRecall": 0.3333333333333333,
+        "symbolRecall": 0.25,
+        "defRecall": 0,
+        "filesMissed": [
+          "packages/core/workflows-sdk/src/utils/composer/helpers/step-response.ts",
+          "packages/core/orchestration/src/transaction/errors.ts"
+        ],
+        "symbolsMissed": [
+          "isPermanentStepFailureError",
+          "executeSyncStep",
+          "executeAsyncStep"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "StepResponse permanentFailure permanent step failure error retry",
+          "chars": 4693,
+          "tokens": 1565
+        }
+      ]
+    },
+    {
+      "taskId": "md-locate-permanent-failure",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tokens": 8300,
+      "chars": 24898,
+      "toolCalls": 1,
+      "durationMs": 4034,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "StepResponse permanentFailure permanent step failure error retry",
+          "chars": 24898,
+          "tokens": 8300
+        }
+      ]
+    },
+    {
+      "taskId": "md-locate-available-quantity",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 45754,
+      "chars": 137257,
+      "toolCalls": 4,
+      "durationMs": 59613,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "packages/modules/inventory/src/repositories/inventory-level.ts",
+          "packages/modules/inventory/src/services/inventory-module.ts"
+        ],
+        "symbolsMissed": [
+          "getAvailableQuantity",
+          "retrieveAvailableQuantity"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "reserved",
+          "chars": 9962,
+          "tokens": 3321
+        },
+        {
+          "tool": "read_file",
+          "args": "www/utils/generated/typedoc-json-output/0-types.json",
+          "chars": 49816,
+          "tokens": 16606
+        },
+        {
+          "tool": "read_file",
+          "args": "packages/medusa/src/migration-scripts/reconcile-inventory-reserved-quantity.ts",
+          "chars": 3789,
+          "tokens": 1263
+        },
+        {
+          "tool": "read_file",
+          "args": "www/apps/book/public/llms-full.txt",
+          "chars": 73690,
+          "tokens": 24564
+        }
+      ]
+    },
+    {
+      "taskId": "md-locate-available-quantity",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 7149,
+      "chars": 21443,
+      "toolCalls": 5,
+      "durationMs": 97,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "packages/modules/inventory/src/repositories/inventory-level.ts",
+          "packages/modules/inventory/src/services/inventory-module.ts"
+        ],
+        "symbolsMissed": [
+          "getAvailableQuantity",
+          "retrieveAvailableQuantity"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "reserved",
+          "chars": 9962,
+          "tokens": 3321
+        },
+        {
+          "tool": "read_file",
+          "args": "packages/medusa/src/migration-scripts/reconcile-inventory-reserved-quantity.ts:60-133",
+          "chars": 1998,
+          "tokens": 666
+        },
+        {
+          "tool": "read_file",
+          "args": "www/utils/generated/typedoc-json-output/0-types.json:18701-18821",
+          "chars": 3079,
+          "tokens": 1027
+        },
+        {
+          "tool": "read_file",
+          "args": "www/utils/generated/typedoc-json-output/0-types.json:130726-130846",
+          "chars": 3105,
+          "tokens": 1035
+        },
+        {
+          "tool": "read_file",
+          "args": "www/utils/generated/typedoc-json-output/0-types.json:131009-131129",
+          "chars": 3299,
+          "tokens": 1100
+        }
+      ]
+    },
+    {
+      "taskId": "md-locate-available-quantity",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1393,
+      "chars": 4178,
+      "toolCalls": 1,
+      "durationMs": 301,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"inventory item available quantity stock locations stocked reserved\"",
+          "chars": 4178,
+          "tokens": 1393
+        }
+      ]
+    },
+    {
+      "taskId": "md-locate-available-quantity",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 981,
+      "chars": 2941,
+      "toolCalls": 3,
+      "durationMs": 48,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"inventory item available quantity stock locations stocked reserved\"",
+          "chars": 2034,
+          "tokens": 678
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#nqg",
+          "chars": 454,
+          "tokens": 152
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#nqh",
+          "chars": 453,
+          "tokens": 151
+        }
+      ]
+    },
+    {
+      "taskId": "md-locate-available-quantity",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tokens": 1090,
+      "chars": 3268,
+      "toolCalls": 1,
+      "durationMs": 346,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "packages/modules/inventory/src/repositories/inventory-level.ts",
+          "packages/modules/inventory/src/services/inventory-module.ts"
+        ],
+        "symbolsMissed": [
+          "getAvailableQuantity",
+          "retrieveAvailableQuantity"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "inventory item available quantity stock locations stocked reserved",
+          "chars": 3268,
+          "tokens": 1090
+        }
+      ]
+    },
+    {
+      "taskId": "md-locate-available-quantity",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tokens": 8329,
+      "chars": 24985,
+      "toolCalls": 1,
+      "durationMs": 391,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "packages/modules/inventory/src/repositories/inventory-level.ts"
+        ],
+        "symbolsMissed": [
+          "getAvailableQuantity",
+          "retrieveAvailableQuantity"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "inventory item available quantity stock locations stocked reserved",
+          "chars": 24985,
+          "tokens": 8329
+        }
+      ]
+    },
+    {
+      "taskId": "md-locate-capture-payment",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 27858,
+      "chars": 83571,
+      "toolCalls": 2,
+      "durationMs": 154863,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "packages/admin/dashboard/src/routes/orders/order-detail/components/order-payment-section/order-payment-section.tsx",
+          "packages/admin/dashboard/src/hooks/api/payments.tsx"
+        ],
+        "symbolsMissed": [
+          "Payment",
+          "useCapturePayment"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "confirmation",
+          "chars": 9881,
+          "tokens": 3294
+        },
+        {
+          "tool": "read_file",
+          "args": "www/apps/book/public/llms-full.txt",
+          "chars": 73690,
+          "tokens": 24564
+        }
+      ]
+    },
+    {
+      "taskId": "md-locate-capture-payment",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 10316,
+      "chars": 30942,
+      "toolCalls": 5,
+      "durationMs": 52,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "packages/admin/dashboard/src/routes/orders/order-detail/components/order-payment-section/order-payment-section.tsx",
+          "packages/admin/dashboard/src/hooks/api/payments.tsx"
+        ],
+        "symbolsMissed": [
+          "Payment",
+          "useCapturePayment"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "confirmation",
+          "chars": 9881,
+          "tokens": 3294
+        },
+        {
+          "tool": "read_file",
+          "args": "www/apps/book/public/llms-full.txt:16451-16571",
+          "chars": 6892,
+          "tokens": 2298
+        },
+        {
+          "tool": "read_file",
+          "args": "www/apps/book/public/llms-full.txt:17203-17323",
+          "chars": 4500,
+          "tokens": 1500
+        },
+        {
+          "tool": "read_file",
+          "args": "www/apps/book/public/llms-full.txt:69072-69192",
+          "chars": 5020,
+          "tokens": 1674
+        },
+        {
+          "tool": "read_file",
+          "args": "www/apps/book/public/llms-full.txt:69353-69473",
+          "chars": 4649,
+          "tokens": 1550
+        }
+      ]
+    },
+    {
+      "taskId": "md-locate-capture-payment",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1364,
+      "chars": 4090,
+      "toolCalls": 1,
+      "durationMs": 731,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"admin order payment capture confirmation\"",
+          "chars": 4090,
+          "tokens": 1364
+        }
+      ]
+    },
+    {
+      "taskId": "md-locate-capture-payment",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 993,
+      "chars": 2977,
+      "toolCalls": 3,
+      "durationMs": 67,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"admin order payment capture confirmation\"",
+          "chars": 2067,
+          "tokens": 689
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#6z",
+          "chars": 687,
+          "tokens": 229
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#8q5",
+          "chars": 223,
+          "tokens": 75
+        }
+      ]
+    },
+    {
+      "taskId": "md-locate-capture-payment",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tokens": 1045,
+      "chars": 3133,
+      "toolCalls": 1,
+      "durationMs": 169,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "packages/admin/dashboard/src/routes/orders/order-detail/components/order-payment-section/order-payment-section.tsx",
+          "packages/admin/dashboard/src/hooks/api/payments.tsx"
+        ],
+        "symbolsMissed": [
+          "Payment",
+          "useCapturePayment"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "admin order payment capture confirmation",
+          "chars": 3133,
+          "tokens": 1045
+        }
+      ]
+    },
+    {
+      "taskId": "md-locate-capture-payment",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tokens": 8321,
+      "chars": 24962,
+      "toolCalls": 1,
+      "durationMs": 372,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [
+          "packages/admin/dashboard/src/hooks/api/payments.tsx"
+        ],
+        "symbolsMissed": [],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "admin order payment capture confirmation",
+          "chars": 24962,
+          "tokens": 8321
+        }
+      ]
+    },
+    {
+      "taskId": "md-locate-lock-renewal",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 40076,
+      "chars": 120222,
+      "toolCalls": 4,
+      "durationMs": 49001,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "renew",
+          "chars": 10019,
+          "tokens": 3340
+        },
+        {
+          "tool": "read_file",
+          "args": "packages/modules/providers/locking-redis/src/services/redis-lock.ts",
+          "chars": 12778,
+          "tokens": 4260
+        },
+        {
+          "tool": "read_file",
+          "args": "packages/core/types/src/locking/index.ts",
+          "chars": 23735,
+          "tokens": 7912
+        },
+        {
+          "tool": "read_file",
+          "args": "www/apps/book/public/llms-full.txt",
+          "chars": 73690,
+          "tokens": 24564
+        }
+      ]
+    },
+    {
+      "taskId": "md-locate-lock-renewal",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 7969,
+      "chars": 23904,
+      "toolCalls": 4,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "renew",
+          "chars": 10019,
+          "tokens": 3340
+        },
+        {
+          "tool": "read_file",
+          "args": "packages/core/types/src/locking/index.ts:70-190",
+          "chars": 5168,
+          "tokens": 1723
+        },
+        {
+          "tool": "read_file",
+          "args": "packages/modules/providers/locking-redis/src/services/redis-lock.ts:1-170",
+          "chars": 5364,
+          "tokens": 1788
+        },
+        {
+          "tool": "read_file",
+          "args": "packages/modules/providers/locking-redis/src/services/redis-lock.ts:175-295",
+          "chars": 3353,
+          "tokens": 1118
+        }
+      ]
+    },
+    {
+      "taskId": "md-locate-lock-renewal",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1386,
+      "chars": 4156,
+      "toolCalls": 1,
+      "durationMs": 309,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"redis lock lease extend renew long running job lost\"",
+          "chars": 4156,
+          "tokens": 1386
+        }
+      ]
+    },
+    {
+      "taskId": "md-locate-lock-renewal",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 1989,
+      "chars": 5967,
+      "toolCalls": 3,
+      "durationMs": 34,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"redis lock lease extend renew long running job lost\"",
+          "chars": 2046,
+          "tokens": 682
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#pqp",
+          "chars": 1899,
+          "tokens": 633
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#pqo",
+          "chars": 2022,
+          "tokens": 674
+        }
+      ]
+    },
+    {
+      "taskId": "md-locate-lock-renewal",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tokens": 1342,
+      "chars": 4025,
+      "toolCalls": 1,
+      "durationMs": 179,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "renewUntilStopped"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "redis lock lease extend renew long running job lost",
+          "chars": 4025,
+          "tokens": 1342
+        }
+      ]
+    },
+    {
+      "taskId": "md-locate-lock-renewal",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tokens": 8320,
+      "chars": 24959,
+      "toolCalls": 1,
+      "durationMs": 256,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "redis lock lease extend renew long running job lost",
+          "chars": 24959,
+          "tokens": 8320
+        }
+      ]
+    },
+    {
+      "taskId": "md-explain-compensation",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 27901,
+      "chars": 83701,
+      "toolCalls": 2,
+      "durationMs": 411194,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "packages/core/orchestration/src/transaction/transaction-orchestrator.ts"
+        ],
+        "symbolsMissed": [
+          "setStepFailure",
+          "checkAllSteps",
+          "flagStepsToRevert",
+          "getCompensationSteps"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "rollback",
+          "chars": 10011,
+          "tokens": 3337
+        },
+        {
+          "tool": "read_file",
+          "args": "www/apps/book/public/llms-full.txt",
+          "chars": 73690,
+          "tokens": 24564
+        }
+      ]
+    },
+    {
+      "taskId": "md-explain-compensation",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 9668,
+      "chars": 29000,
+      "toolCalls": 5,
+      "durationMs": 34,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "packages/core/orchestration/src/transaction/transaction-orchestrator.ts"
+        ],
+        "symbolsMissed": [
+          "setStepFailure",
+          "checkAllSteps",
+          "flagStepsToRevert",
+          "getCompensationSteps"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "rollback",
+          "chars": 10011,
+          "tokens": 3337
+        },
+        {
+          "tool": "read_file",
+          "args": "www/apps/book/public/llms-full.txt:16898-17018",
+          "chars": 3676,
+          "tokens": 1226
+        },
+        {
+          "tool": "read_file",
+          "args": "www/apps/book/public/llms-full.txt:19077-19197",
+          "chars": 4968,
+          "tokens": 1656
+        },
+        {
+          "tool": "read_file",
+          "args": "www/apps/book/public/llms-full.txt:20942-21062",
+          "chars": 5659,
+          "tokens": 1887
+        },
+        {
+          "tool": "read_file",
+          "args": "www/apps/book/public/llms-full.txt:25530-25650",
+          "chars": 4686,
+          "tokens": 1562
+        }
+      ]
+    },
+    {
+      "taskId": "md-explain-compensation",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 1373,
+      "chars": 4119,
+      "toolCalls": 1,
+      "durationMs": 269,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.25,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "checkAllSteps",
+          "flagStepsToRevert",
+          "getCompensationSteps"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"workflow transaction step permanent failure compensate rollback\"",
+          "chars": 4119,
+          "tokens": 1373
+        }
+      ]
+    },
+    {
+      "taskId": "md-explain-compensation",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 950,
+      "chars": 2848,
+      "toolCalls": 3,
+      "durationMs": 37,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.25,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "checkAllSteps",
+          "flagStepsToRevert",
+          "getCompensationSteps"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"workflow transaction step permanent failure compensate rollback\"",
+          "chars": 2021,
+          "tokens": 674
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#iwn",
+          "chars": 360,
+          "tokens": 120
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#7lx",
+          "chars": 467,
+          "tokens": 156
+        }
+      ]
+    },
+    {
+      "taskId": "md-explain-compensation",
+      "kind": "explain",
+      "strategy": "kirograph",
+      "tokens": 1025,
+      "chars": 3073,
+      "toolCalls": 1,
+      "durationMs": 103,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "packages/core/orchestration/src/transaction/transaction-orchestrator.ts"
+        ],
+        "symbolsMissed": [
+          "setStepFailure",
+          "checkAllSteps",
+          "flagStepsToRevert",
+          "getCompensationSteps"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "workflow transaction step permanent failure compensate rollback",
+          "chars": 3073,
+          "tokens": 1025
+        }
+      ]
+    },
+    {
+      "taskId": "md-explain-compensation",
+      "kind": "explain",
+      "strategy": "codegraph",
+      "tokens": 8328,
+      "chars": 24983,
+      "toolCalls": 1,
+      "durationMs": 250,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "setStepFailure",
+          "checkAllSteps",
+          "flagStepsToRevert",
+          "getCompensationSteps"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "workflow transaction step permanent failure compensate rollback",
+          "chars": 24983,
+          "tokens": 8328
+        }
+      ]
+    },
+    {
+      "taskId": "md-explain-buy-get",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 50387,
+      "chars": 151155,
+      "toolCalls": 4,
+      "durationMs": 35457,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "eligible",
+          "chars": 9926,
+          "tokens": 3309
+        },
+        {
+          "tool": "read_file",
+          "args": "packages/modules/promotion/src/utils/compute-actions/buy-get.ts",
+          "chars": 21356,
+          "tokens": 7119
+        },
+        {
+          "tool": "read_file",
+          "args": "packages/modules/promotion/src/services/promotion-module.ts",
+          "chars": 60049,
+          "tokens": 20017
+        },
+        {
+          "tool": "read_file",
+          "args": "www/utils/generated/typedoc-json-output/core-flows.json",
+          "chars": 59824,
+          "tokens": 19942
+        }
+      ]
+    },
+    {
+      "taskId": "md-explain-buy-get",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 6839,
+      "chars": 20516,
+      "toolCalls": 3,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0.25,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "getComputedActionsForBuyGet",
+          "applyPromotionToTargetItems"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "eligible",
+          "chars": 9926,
+          "tokens": 3309
+        },
+        {
+          "tool": "read_file",
+          "args": "packages/modules/promotion/src/utils/compute-actions/buy-get.ts:1-220",
+          "chars": 6927,
+          "tokens": 2309
+        },
+        {
+          "tool": "read_file",
+          "args": "packages/modules/promotion/src/utils/compute-actions/buy-get.ts:333-453",
+          "chars": 3663,
+          "tokens": 1221
+        }
+      ]
+    },
+    {
+      "taskId": "md-explain-buy-get",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 1326,
+      "chars": 3976,
+      "toolCalls": 1,
+      "durationMs": 278,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"buy get promotion eligible items quantities apply\"",
+          "chars": 3976,
+          "tokens": 1326
+        }
+      ]
+    },
+    {
+      "taskId": "md-explain-buy-get",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 1293,
+      "chars": 3876,
+      "toolCalls": 3,
+      "durationMs": 40,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.25,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"buy get promotion eligible items quantities apply\"",
+          "chars": 2083,
+          "tokens": 695
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#q8v",
+          "chars": 150,
+          "tokens": 50
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#q94",
+          "chars": 1643,
+          "tokens": 548
+        }
+      ]
+    },
+    {
+      "taskId": "md-explain-buy-get",
+      "kind": "explain",
+      "strategy": "kirograph",
+      "tokens": 1750,
+      "chars": 5248,
+      "toolCalls": 1,
+      "durationMs": 140,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "packages/modules/promotion/src/utils/compute-actions/buy-get.ts"
+        ],
+        "symbolsMissed": [
+          "getComputedActionsForBuyGet",
+          "preparePromotionApplicationState",
+          "applyPromotionToTargetItems",
+          "filterItemsByPromotionRules"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "buy get promotion eligible items quantities apply",
+          "chars": 5248,
+          "tokens": 1750
+        }
+      ]
+    },
+    {
+      "taskId": "md-explain-buy-get",
+      "kind": "explain",
+      "strategy": "codegraph",
+      "tokens": 8316,
+      "chars": 24947,
+      "toolCalls": 1,
+      "durationMs": 294,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "buy get promotion eligible items quantities apply",
+          "chars": 24947,
+          "tokens": 8316
+        }
+      ]
+    },
+    {
+      "taskId": "md-explain-price-lists",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 27885,
+      "chars": 83653,
+      "toolCalls": 2,
+      "durationMs": 53657,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0,
+        "filesMissed": [
+          "packages/modules/pricing/src/services/pricing-module.ts",
+          "packages/modules/pricing/src/repositories/pricing.ts"
+        ],
+        "symbolsMissed": [
+          "PricingModuleService"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "calculated",
+          "chars": 9963,
+          "tokens": 3321
+        },
+        {
+          "tool": "read_file",
+          "args": "www/apps/book/public/llms-full.txt",
+          "chars": 73690,
+          "tokens": 24564
+        }
+      ]
+    },
+    {
+      "taskId": "md-explain-price-lists",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 9825,
+      "chars": 29473,
+      "toolCalls": 3,
+      "durationMs": 26,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0,
+        "filesMissed": [
+          "packages/modules/pricing/src/services/pricing-module.ts",
+          "packages/modules/pricing/src/repositories/pricing.ts"
+        ],
+        "symbolsMissed": [
+          "PricingModuleService"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "calculated",
+          "chars": 9963,
+          "tokens": 3321
+        },
+        {
+          "tool": "read_file",
+          "args": "www/apps/book/public/llms-full.txt:37133-37422",
+          "chars": 13029,
+          "tokens": 4343
+        },
+        {
+          "tool": "read_file",
+          "args": "www/apps/book/public/llms-full.txt:38331-38451",
+          "chars": 6481,
+          "tokens": 2161
+        }
+      ]
+    },
+    {
+      "taskId": "md-explain-price-lists",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 1386,
+      "chars": 4158,
+      "toolCalls": 1,
+      "durationMs": 122,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 1,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [
+          "packages/modules/pricing/src/repositories/pricing.ts"
+        ],
+        "symbolsMissed": [],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"pricing calculated price original price price list sale override\"",
+          "chars": 4158,
+          "tokens": 1386
+        }
+      ]
+    },
+    {
+      "taskId": "md-explain-price-lists",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 763,
+      "chars": 2288,
+      "toolCalls": 3,
+      "durationMs": 42,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [
+          "packages/modules/pricing/src/repositories/pricing.ts"
+        ],
+        "symbolsMissed": [
+          "PricingModuleService"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"pricing calculated price original price price list sale override\"",
+          "chars": 2072,
+          "tokens": 691
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#fk1",
+          "chars": 111,
+          "tokens": 37
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#fti",
+          "chars": 105,
+          "tokens": 35
+        }
+      ]
+    },
+    {
+      "taskId": "md-explain-price-lists",
+      "kind": "explain",
+      "strategy": "kirograph",
+      "tokens": 1137,
+      "chars": 3409,
+      "toolCalls": 1,
+      "durationMs": 93,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "packages/modules/pricing/src/services/pricing-module.ts",
+          "packages/modules/pricing/src/repositories/pricing.ts"
+        ],
+        "symbolsMissed": [
+          "calculatePrices",
+          "calculatePrices",
+          "PricingModuleService"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "pricing calculated price original price price list sale override",
+          "chars": 3409,
+          "tokens": 1137
+        }
+      ]
+    },
+    {
+      "taskId": "md-explain-price-lists",
+      "kind": "explain",
+      "strategy": "codegraph",
+      "tokens": 8317,
+      "chars": 24950,
+      "toolCalls": 1,
+      "durationMs": 320,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "PricingModuleService"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "pricing calculated price original price price list sale override",
+          "chars": 24950,
+          "tokens": 8317
+        }
+      ]
+    },
+    {
+      "taskId": "md-usage-cancel-transaction",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 60981,
+      "chars": 182937,
+      "toolCalls": 4,
+      "durationMs": 1598,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.8,
+        "defRecall": 0.6,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "registerStepFailure"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "cancelTransaction",
+          "chars": 2939,
+          "tokens": 980
+        },
+        {
+          "tool": "read_file",
+          "args": "packages/core/orchestration/src/transaction/transaction-orchestrator.ts",
+          "chars": 55382,
+          "tokens": 18461
+        },
+        {
+          "tool": "read_file",
+          "args": "www/utils/generated/typedoc-json-output/workflows.json",
+          "chars": 46945,
+          "tokens": 15649
+        },
+        {
+          "tool": "read_file",
+          "args": "www/apps/resources/generated/files-map.mjs",
+          "chars": 77671,
+          "tokens": 25891
+        }
+      ]
+    },
+    {
+      "taskId": "md-usage-cancel-transaction",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 4640,
+      "chars": 13915,
+      "toolCalls": 3,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.8,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "cancelTransaction",
+          "chars": 2939,
+          "tokens": 980
+        },
+        {
+          "tool": "read_file",
+          "args": "packages/core/orchestration/src/transaction/transaction-orchestrator.ts:1286-1525",
+          "chars": 6961,
+          "tokens": 2321
+        },
+        {
+          "tool": "read_file",
+          "args": "packages/core/orchestration/src/transaction/transaction-orchestrator.ts:1942-2080",
+          "chars": 4015,
+          "tokens": 1339
+        }
+      ]
+    },
+    {
+      "taskId": "md-usage-cancel-transaction",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 1274,
+      "chars": 3821,
+      "toolCalls": 1,
+      "durationMs": 43,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"TransactionOrchestrator cancelTransaction\"",
+          "chars": 3821,
+          "tokens": 1274
+        }
+      ]
+    },
+    {
+      "taskId": "md-usage-cancel-transaction",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 3441,
+      "chars": 10319,
+      "toolCalls": 3,
+      "durationMs": 15,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0.8,
+        "defRecall": 0.8,
+        "filesMissed": [
+          "packages/core/orchestration/src/workflow/local-workflow.ts"
+        ],
+        "symbolsMissed": [
+          "cancel"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"TransactionOrchestrator cancelTransaction\"",
+          "chars": 861,
+          "tokens": 287
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#8gq",
+          "chars": 1201,
+          "tokens": 401
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#8fd",
+          "chars": 8257,
+          "tokens": 2753
+        }
+      ]
+    },
+    {
+      "taskId": "md-usage-cancel-transaction",
+      "kind": "usage",
+      "strategy": "kirograph",
+      "tokens": 1313,
+      "chars": 3937,
+      "toolCalls": 1,
+      "durationMs": 146,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "packages/core/orchestration/src/transaction/transaction-orchestrator.ts",
+          "packages/core/orchestration/src/workflow/local-workflow.ts"
+        ],
+        "symbolsMissed": [
+          "handleStepSuccess",
+          "handleStepFailure",
+          "registerStepSuccess",
+          "registerStepFailure",
+          "cancel"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "TransactionOrchestrator cancelTransaction",
+          "chars": 3937,
+          "tokens": 1313
+        }
+      ]
+    },
+    {
+      "taskId": "md-usage-cancel-transaction",
+      "kind": "usage",
+      "strategy": "codegraph",
+      "tokens": 8308,
+      "chars": 24924,
+      "toolCalls": 1,
+      "durationMs": 161,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.6,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "TransactionOrchestrator cancelTransaction",
+          "chars": 24924,
+          "tokens": 8308
+        }
+      ]
+    },
+    {
+      "taskId": "md-usage-refund-hook",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 9300,
+      "chars": 27896,
+      "toolCalls": 4,
+      "durationMs": 515,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "useRefundPayment",
+          "chars": 865,
+          "tokens": 289
+        },
+        {
+          "tool": "read_file",
+          "args": "packages/admin/dashboard/src/routes/orders/order-balance-settlement/components/order-balance-settlement-form/order-balance-settlement-form.tsx",
+          "chars": 13620,
+          "tokens": 4540
+        },
+        {
+          "tool": "read_file",
+          "args": "packages/admin/dashboard/src/routes/orders/order-create-refund/components/create-refund-form/create-refund-form.tsx",
+          "chars": 10487,
+          "tokens": 3496
+        },
+        {
+          "tool": "read_file",
+          "args": "packages/admin/dashboard/src/hooks/api/payments.tsx",
+          "chars": 2924,
+          "tokens": 975
+        }
+      ]
+    },
+    {
+      "taskId": "md-usage-refund-hook",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 3552,
+      "chars": 10652,
+      "toolCalls": 3,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "useRefundPayment",
+          "chars": 865,
+          "tokens": 289
+        },
+        {
+          "tool": "read_file",
+          "args": "packages/admin/dashboard/src/routes/orders/order-balance-settlement/components/order-balance-settlement-form/order-balance-settlement-form.tsx:1-157",
+          "chars": 4539,
+          "tokens": 1513
+        },
+        {
+          "tool": "read_file",
+          "args": "packages/admin/dashboard/src/routes/orders/order-create-refund/components/create-refund-form/create-refund-form.tsx:1-161",
+          "chars": 5248,
+          "tokens": 1750
+        }
+      ]
+    },
+    {
+      "taskId": "md-usage-refund-hook",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 973,
+      "chars": 2918,
+      "toolCalls": 1,
+      "durationMs": 37,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"useRefundPayment\"",
+          "chars": 2918,
+          "tokens": 973
+        }
+      ]
+    },
+    {
+      "taskId": "md-usage-refund-hook",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 996,
+      "chars": 2984,
+      "toolCalls": 3,
+      "durationMs": 14,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "packages/admin/dashboard/src/routes/orders/order-create-refund/components/create-refund-form/create-refund-form.tsx",
+          "packages/admin/dashboard/src/routes/orders/order-balance-settlement/components/order-balance-settlement-form/order-balance-settlement-form.tsx"
+        ],
+        "symbolsMissed": [
+          "CreateRefundForm",
+          "OrderBalanceSettlementForm"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"useRefundPayment\"",
+          "chars": 2010,
+          "tokens": 670
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#70",
+          "chars": 685,
+          "tokens": 229
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#oq4",
+          "chars": 289,
+          "tokens": 97
+        }
+      ]
+    },
+    {
+      "taskId": "md-usage-refund-hook",
+      "kind": "usage",
+      "strategy": "kirograph",
+      "tokens": 1149,
+      "chars": 3447,
+      "toolCalls": 1,
+      "durationMs": 111,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "packages/admin/dashboard/src/routes/orders/order-create-refund/components/create-refund-form/create-refund-form.tsx",
+          "packages/admin/dashboard/src/routes/orders/order-balance-settlement/components/order-balance-settlement-form/order-balance-settlement-form.tsx"
+        ],
+        "symbolsMissed": [
+          "CreateRefundForm",
+          "OrderBalanceSettlementForm"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "useRefundPayment",
+          "chars": 3447,
+          "tokens": 1149
+        }
+      ]
+    },
+    {
+      "taskId": "md-usage-refund-hook",
+      "kind": "usage",
+      "strategy": "codegraph",
+      "tokens": 8224,
+      "chars": 24672,
+      "toolCalls": 1,
+      "durationMs": 172,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "useRefundPayment",
+          "chars": 24672,
+          "tokens": 8224
+        }
+      ]
+    },
+    {
+      "taskId": "md-usage-rules-valid",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 29806,
+      "chars": 89414,
+      "toolCalls": 4,
+      "durationMs": 562,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.75,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "areRulesValidForContext",
+          "chars": 1061,
+          "tokens": 354
+        },
+        {
+          "tool": "read_file",
+          "args": "packages/modules/promotion/src/services/promotion-module.ts",
+          "chars": 60049,
+          "tokens": 20017
+        },
+        {
+          "tool": "read_file",
+          "args": "packages/modules/promotion/src/utils/compute-actions/buy-get.ts",
+          "chars": 21356,
+          "tokens": 7119
+        },
+        {
+          "tool": "read_file",
+          "args": "packages/modules/promotion/src/utils/compute-actions/line-items.ts",
+          "chars": 6948,
+          "tokens": 2316
+        }
+      ]
+    },
+    {
+      "taskId": "md-usage-rules-valid",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 4668,
+      "chars": 13998,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.25,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "computeActions",
+          "filterItemsByPromotionRules",
+          "getValidItemsForPromotion"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "areRulesValidForContext",
+          "chars": 1061,
+          "tokens": 354
+        },
+        {
+          "tool": "read_file",
+          "args": "packages/modules/promotion/src/services/promotion-module.ts:1-120",
+          "chars": 3757,
+          "tokens": 1253
+        },
+        {
+          "tool": "read_file",
+          "args": "packages/modules/promotion/src/services/promotion-module.ts:874-994",
+          "chars": 3973,
+          "tokens": 1325
+        },
+        {
+          "tool": "read_file",
+          "args": "packages/modules/promotion/src/utils/compute-actions/buy-get.ts:1-75",
+          "chars": 2141,
+          "tokens": 714
+        },
+        {
+          "tool": "read_file",
+          "args": "packages/modules/promotion/src/utils/validations/promotion-rule.ts:1-115",
+          "chars": 3066,
+          "tokens": 1022
+        }
+      ]
+    },
+    {
+      "taskId": "md-usage-rules-valid",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 996,
+      "chars": 2986,
+      "toolCalls": 1,
+      "durationMs": 42,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"areRulesValidForContext\"",
+          "chars": 2986,
+          "tokens": 996
+        }
+      ]
+    },
+    {
+      "taskId": "md-usage-rules-valid",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 858,
+      "chars": 2569,
+      "toolCalls": 3,
+      "durationMs": 18,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "packages/modules/promotion/src/services/promotion-module.ts",
+          "packages/modules/promotion/src/utils/compute-actions/buy-get.ts",
+          "packages/modules/promotion/src/utils/compute-actions/line-items.ts",
+          "packages/modules/promotion/src/utils/compute-actions/shipping-methods.ts"
+        ],
+        "symbolsMissed": [
+          "computeActions",
+          "filterItemsByPromotionRules",
+          "getValidItemsForPromotion",
+          "getComputedActionsForShippingMethods"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"areRulesValidForContext\"",
+          "chars": 971,
+          "tokens": 324
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#q9e",
+          "chars": 1417,
+          "tokens": 473
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#o7o",
+          "chars": 181,
+          "tokens": 61
+        }
+      ]
+    },
+    {
+      "taskId": "md-usage-rules-valid",
+      "kind": "usage",
+      "strategy": "kirograph",
+      "tokens": 1224,
+      "chars": 3671,
+      "toolCalls": 1,
+      "durationMs": 107,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "packages/modules/promotion/src/services/promotion-module.ts",
+          "packages/modules/promotion/src/utils/compute-actions/buy-get.ts",
+          "packages/modules/promotion/src/utils/compute-actions/line-items.ts",
+          "packages/modules/promotion/src/utils/compute-actions/shipping-methods.ts"
+        ],
+        "symbolsMissed": [
+          "computeActions",
+          "filterItemsByPromotionRules",
+          "getValidItemsForPromotion",
+          "getComputedActionsForShippingMethods"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "areRulesValidForContext",
+          "chars": 3671,
+          "tokens": 1224
+        }
+      ]
+    },
+    {
+      "taskId": "md-usage-rules-valid",
+      "kind": "usage",
+      "strategy": "codegraph",
+      "tokens": 8316,
+      "chars": 24948,
+      "toolCalls": 1,
+      "durationMs": 193,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "areRulesValidForContext",
+          "chars": 24948,
+          "tokens": 8316
+        }
+      ]
+    },
+    {
+      "taskId": "md-impact-budget-exceeded",
+      "kind": "impact",
+      "strategy": "native-naive",
+      "tokens": 11768,
+      "chars": 35301,
+      "toolCalls": 4,
+      "durationMs": 3651,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.8,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "computeActionForBudgetExceeded",
+          "chars": 1190,
+          "tokens": 397
+        },
+        {
+          "tool": "read_file",
+          "args": "packages/modules/promotion/src/utils/compute-actions/shipping-methods.ts",
+          "chars": 5807,
+          "tokens": 1936
+        },
+        {
+          "tool": "read_file",
+          "args": "packages/modules/promotion/src/utils/compute-actions/buy-get.ts",
+          "chars": 21356,
+          "tokens": 7119
+        },
+        {
+          "tool": "read_file",
+          "args": "packages/modules/promotion/src/utils/compute-actions/line-items.ts",
+          "chars": 6948,
+          "tokens": 2316
+        }
+      ]
+    },
+    {
+      "taskId": "md-impact-budget-exceeded",
+      "kind": "impact",
+      "strategy": "native-ranged",
+      "tokens": 3045,
+      "chars": 9131,
+      "toolCalls": 3,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.6,
+        "defRecall": 0.4,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "applyPromotionToTargetItems",
+          "applyPromotionToItems"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "computeActionForBudgetExceeded",
+          "chars": 1190,
+          "tokens": 397
+        },
+        {
+          "tool": "read_file",
+          "args": "packages/modules/promotion/src/utils/compute-actions/shipping-methods.ts:1-202",
+          "chars": 5807,
+          "tokens": 1936
+        },
+        {
+          "tool": "read_file",
+          "args": "packages/modules/promotion/src/utils/compute-actions/usage.ts:1-74",
+          "chars": 2134,
+          "tokens": 712
+        }
+      ]
+    },
+    {
+      "taskId": "md-impact-budget-exceeded",
+      "kind": "impact",
+      "strategy": "kopt-pack",
+      "tokens": 865,
+      "chars": 2594,
+      "toolCalls": 1,
+      "durationMs": 42,
+      "recall": {
+        "fileRecall": 0.8,
+        "symbolRecall": 0.8,
+        "defRecall": 0.2,
+        "filesMissed": [
+          "packages/modules/promotion/src/services/promotion-module.ts"
+        ],
+        "symbolsMissed": [
+          "computeActions"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"computeActionForBudgetExceeded campaign budget\"",
+          "chars": 2594,
+          "tokens": 865
+        }
+      ]
+    },
+    {
+      "taskId": "md-impact-budget-exceeded",
+      "kind": "impact",
+      "strategy": "kopt-hits+read",
+      "tokens": 730,
+      "chars": 2186,
+      "toolCalls": 3,
+      "durationMs": 15,
+      "recall": {
+        "fileRecall": 0.2,
+        "symbolRecall": 0.2,
+        "defRecall": 0.2,
+        "filesMissed": [
+          "packages/modules/promotion/src/services/promotion-module.ts",
+          "packages/modules/promotion/src/utils/compute-actions/buy-get.ts",
+          "packages/modules/promotion/src/utils/compute-actions/line-items.ts",
+          "packages/modules/promotion/src/utils/compute-actions/shipping-methods.ts"
+        ],
+        "symbolsMissed": [
+          "computeActions",
+          "applyPromotionToTargetItems",
+          "applyPromotionToItems",
+          "applyPromotionToShippingMethods"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"computeActionForBudgetExceeded campaign budget\"",
+          "chars": 986,
+          "tokens": 329
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#pk8",
+          "chars": 953,
+          "tokens": 318
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#ggm",
+          "chars": 247,
+          "tokens": 83
+        }
+      ]
+    },
+    {
+      "taskId": "md-impact-budget-exceeded",
+      "kind": "impact",
+      "strategy": "kirograph",
+      "tokens": 1556,
+      "chars": 4666,
+      "toolCalls": 1,
+      "durationMs": 81,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.2,
+        "defRecall": 0,
+        "filesMissed": [
+          "packages/modules/promotion/src/utils/compute-actions/usage.ts",
+          "packages/modules/promotion/src/services/promotion-module.ts",
+          "packages/modules/promotion/src/utils/compute-actions/buy-get.ts",
+          "packages/modules/promotion/src/utils/compute-actions/line-items.ts",
+          "packages/modules/promotion/src/utils/compute-actions/shipping-methods.ts"
+        ],
+        "symbolsMissed": [
+          "computeActions",
+          "applyPromotionToTargetItems",
+          "applyPromotionToItems",
+          "applyPromotionToShippingMethods"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "computeActionForBudgetExceeded campaign budget",
+          "chars": 4666,
+          "tokens": 1556
+        }
+      ]
+    },
+    {
+      "taskId": "md-impact-budget-exceeded",
+      "kind": "impact",
+      "strategy": "codegraph",
+      "tokens": 5891,
+      "chars": 17671,
+      "toolCalls": 1,
+      "durationMs": 303,
+      "recall": {
+        "fileRecall": 0.4,
+        "symbolRecall": 0.2,
+        "defRecall": 0.2,
+        "filesMissed": [
+          "packages/modules/promotion/src/utils/compute-actions/buy-get.ts",
+          "packages/modules/promotion/src/utils/compute-actions/line-items.ts",
+          "packages/modules/promotion/src/utils/compute-actions/shipping-methods.ts"
+        ],
+        "symbolsMissed": [
+          "computeActions",
+          "applyPromotionToTargetItems",
+          "applyPromotionToItems",
+          "applyPromotionToShippingMethods"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "computeActionForBudgetExceeded campaign budget",
+          "chars": 17671,
+          "tokens": 5891
+        }
+      ]
+    },
+    {
+      "taskId": "md-impact-transaction-key",
+      "kind": "impact",
+      "strategy": "native-naive",
+      "tokens": 25960,
+      "chars": 77872,
+      "toolCalls": 4,
+      "durationMs": 11303,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.2,
+        "defRecall": 0.2,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "createStepPayload",
+          "getTransactionAndStepFromIdempotencyKey",
+          "saveCheckpoint",
+          "loadTransaction"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "getKeyName",
+          "chars": 3871,
+          "tokens": 1291
+        },
+        {
+          "tool": "read_file",
+          "args": "packages/modules/providers/caching-redis/src/services/redis-cache.ts",
+          "chars": 14278,
+          "tokens": 4760
+        },
+        {
+          "tool": "read_file",
+          "args": "packages/modules/providers/locking-redis/src/services/redis-lock.ts",
+          "chars": 12778,
+          "tokens": 4260
+        },
+        {
+          "tool": "read_file",
+          "args": "www/utils/generated/typedoc-json-output/workflows.json",
+          "chars": 46945,
+          "tokens": 15649
+        }
+      ]
+    },
+    {
+      "taskId": "md-impact-transaction-key",
+      "kind": "impact",
+      "strategy": "native-ranged",
+      "tokens": 5848,
+      "chars": 17538,
+      "toolCalls": 5,
+      "durationMs": 1,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.2,
+        "defRecall": 0.2,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "createStepPayload",
+          "getTransactionAndStepFromIdempotencyKey",
+          "saveCheckpoint",
+          "loadTransaction"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "getKeyName",
+          "chars": 3871,
+          "tokens": 1291
+        },
+        {
+          "tool": "read_file",
+          "args": "packages/core/orchestration/src/transaction/transaction-orchestrator.ts:103-223",
+          "chars": 2908,
+          "tokens": 970
+        },
+        {
+          "tool": "read_file",
+          "args": "packages/modules/providers/caching-redis/src/services/redis-cache.ts:1-120",
+          "chars": 3458,
+          "tokens": 1153
+        },
+        {
+          "tool": "read_file",
+          "args": "packages/modules/providers/caching-redis/src/services/redis-cache.ts:149-269",
+          "chars": 3543,
+          "tokens": 1181
+        },
+        {
+          "tool": "read_file",
+          "args": "packages/modules/providers/locking-redis/src/services/redis-lock.ts:83-203",
+          "chars": 3758,
+          "tokens": 1253
+        }
+      ]
+    },
+    {
+      "taskId": "md-impact-transaction-key",
+      "kind": "impact",
+      "strategy": "kopt-pack",
+      "tokens": 1113,
+      "chars": 3338,
+      "toolCalls": 1,
+      "durationMs": 80,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.4,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"TransactionOrchestrator getKeyName separator idempotency key\"",
+          "chars": 3338,
+          "tokens": 1113
+        }
+      ]
+    },
+    {
+      "taskId": "md-impact-transaction-key",
+      "kind": "impact",
+      "strategy": "kopt-hits+read",
+      "tokens": 3093,
+      "chars": 9275,
+      "toolCalls": 3,
+      "durationMs": 24,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0.6,
+        "defRecall": 0.6,
+        "filesMissed": [
+          "packages/core/orchestration/src/transaction/distributed-transaction.ts"
+        ],
+        "symbolsMissed": [
+          "saveCheckpoint",
+          "loadTransaction"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"TransactionOrchestrator getKeyName separator idempotency key\"",
+          "chars": 833,
+          "tokens": 278
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#8fu",
+          "chars": 185,
+          "tokens": 62
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#8fd",
+          "chars": 8257,
+          "tokens": 2753
+        }
+      ]
+    },
+    {
+      "taskId": "md-impact-transaction-key",
+      "kind": "impact",
+      "strategy": "kirograph",
+      "tokens": 1319,
+      "chars": 3956,
+      "toolCalls": 1,
+      "durationMs": 70,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.2,
+        "defRecall": 0,
+        "filesMissed": [
+          "packages/core/orchestration/src/transaction/transaction-orchestrator.ts",
+          "packages/core/orchestration/src/transaction/distributed-transaction.ts"
+        ],
+        "symbolsMissed": [
+          "createStepPayload",
+          "getTransactionAndStepFromIdempotencyKey",
+          "saveCheckpoint",
+          "loadTransaction"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "TransactionOrchestrator getKeyName separator idempotency key",
+          "chars": 3956,
+          "tokens": 1319
+        }
+      ]
+    },
+    {
+      "taskId": "md-impact-transaction-key",
+      "kind": "impact",
+      "strategy": "codegraph",
+      "tokens": 8331,
+      "chars": 24993,
+      "toolCalls": 1,
+      "durationMs": 315,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.4,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "TransactionOrchestrator getKeyName separator idempotency key",
+          "chars": 24993,
+          "tokens": 8331
+        }
+      ]
+    }
+  ],
+  "aggregates": [
+    {
+      "strategy": "native-naive",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 28853.5,
+      "meanTokens": 33763,
+      "p90Tokens": 50387,
+      "totalTokens": 405158,
+      "totalChars": 1215419,
+      "meanToolCalls": 3.5,
+      "meanFileRecall": 0.5833333333333334,
+      "meanSymbolRecall": 0.576388888888889,
+      "meanDefRecall": 0.4458333333333333,
+      "found": 5,
+      "foundRate": 0.4166666666666667,
+      "tokensPerFound": 81032
+    },
+    {
+      "strategy": "native-ranged",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 6994,
+      "meanTokens": 6880,
+      "p90Tokens": 9825,
+      "totalTokens": 82561,
+      "totalChars": 247635,
+      "meanToolCalls": 4,
+      "meanFileRecall": 0.5833333333333334,
+      "meanSymbolRecall": 0.4555555555555555,
+      "meanDefRecall": 0.30416666666666664,
+      "found": 3,
+      "foundRate": 0.25,
+      "tokensPerFound": 27520
+    },
+    {
+      "strategy": "kopt-pack",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 1300,
+      "meanTokens": 1221,
+      "p90Tokens": 1386,
+      "totalTokens": 14656,
+      "totalChars": 43955,
+      "meanToolCalls": 1,
+      "meanFileRecall": 0.9416666666666668,
+      "meanSymbolRecall": 0.9208333333333334,
+      "meanDefRecall": 0.43888888888888894,
+      "found": 9,
+      "foundRate": 0.75,
+      "tokensPerFound": 1628
+    },
+    {
+      "strategy": "kopt-hits+read",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 994.5,
+      "meanTokens": 1496,
+      "p90Tokens": 3093,
+      "totalTokens": 17950,
+      "totalChars": 53817,
+      "meanToolCalls": 3,
+      "meanFileRecall": 0.6138888888888888,
+      "meanSymbolRecall": 0.5847222222222223,
+      "meanDefRecall": 0.5013888888888889,
+      "found": 4,
+      "foundRate": 0.3333333333333333,
+      "tokensPerFound": 4488
+    },
+    {
+      "strategy": "kirograph",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 1268.5,
+      "meanTokens": 1293,
+      "p90Tokens": 1565,
+      "totalTokens": 15515,
+      "totalChars": 46526,
+      "meanToolCalls": 1,
+      "meanFileRecall": 0.1111111111111111,
+      "meanSymbolRecall": 0.09583333333333333,
+      "meanDefRecall": 0,
+      "found": 0,
+      "foundRate": 0,
+      "tokensPerFound": null
+    },
+    {
+      "strategy": "codegraph",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 8316.5,
+      "meanTokens": 8108,
+      "p90Tokens": 8329,
+      "totalTokens": 97301,
+      "totalChars": 291892,
+      "meanToolCalls": 1,
+      "meanFileRecall": 0.8666666666666667,
+      "meanSymbolRecall": 0.7388888888888889,
+      "meanDefRecall": 0.36388888888888893,
+      "found": 7,
+      "foundRate": 0.5833333333333334,
+      "tokensPerFound": 13900
+    }
+  ],
+  "paired": [
+    {
+      "a": "native-naive",
+      "b": "kopt-pack",
+      "nRun": 12,
+      "nBoth": 4,
+      "onlyA": 1,
+      "onlyB": 5,
+      "medianRatio": 0.03400019028463781,
+      "geoMeanRatio": 0.042234985990310156,
+      "bCheaper": 4
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-pack",
+      "nRun": 12,
+      "nBoth": 3,
+      "onlyA": 0,
+      "onlyB": 6,
+      "medianRatio": 0.27393018018018017,
+      "geoMeanRatio": 0.23562258231748576,
+      "bCheaper": 3
+    },
+    {
+      "a": "native-naive",
+      "b": "kopt-hits+read",
+      "nRun": 12,
+      "nBoth": 2,
+      "onlyA": 3,
+      "onlyB": 2,
+      "medianRatio": 0.037646041289288064,
+      "geoMeanRatio": 0.03568742552201946,
+      "bCheaper": 2
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-hits+read",
+      "nRun": 12,
+      "nBoth": 1,
+      "onlyA": 2,
+      "onlyB": 3,
+      "medianRatio": 0.2495921696574225,
+      "geoMeanRatio": 0.24959216965742254,
+      "bCheaper": 1
+    },
+    {
+      "a": "kirograph",
+      "b": "kopt-pack",
+      "nRun": 12,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 9,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "codegraph",
+      "b": "kopt-pack",
+      "nRun": 12,
+      "nBoth": 7,
+      "onlyA": 0,
+      "onlyB": 2,
+      "medianRatio": 0.14542168674698794,
+      "geoMeanRatio": 0.14124184581716018,
+      "bCheaper": 7
+    },
+    {
+      "a": "kirograph",
+      "b": "kopt-hits+read",
+      "nRun": 12,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 4,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "codegraph",
+      "b": "kopt-hits+read",
+      "nRun": 12,
+      "nBoth": 2,
+      "onlyA": 5,
+      "onlyB": 2,
+      "medianRatio": 0.19727295274170276,
+      "geoMeanRatio": 0.19279588072201287,
+      "bCheaper": 2
+    },
+    {
+      "a": "native-ranged",
+      "b": "kirograph",
+      "nRun": 12,
+      "nBoth": 0,
+      "onlyA": 3,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-ranged",
+      "b": "codegraph",
+      "nRun": 12,
+      "nBoth": 3,
+      "onlyA": 0,
+      "onlyB": 4,
+      "medianRatio": 1.7905172413793105,
+      "geoMeanRatio": 1.629681430965379,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-naive",
+      "b": "native-ranged",
+      "nRun": 12,
+      "nBoth": 2,
+      "onlyA": 3,
+      "onlyB": 1,
+      "medianRatio": 0.2903913371046625,
+      "geoMeanRatio": 0.27558446592335867,
+      "bCheaper": 2
+    }
+  ],
+  "byKind": [
+    {
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tasks": 4,
+      "found": 1,
+      "medianTokens": 42915
+    },
+    {
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tasks": 4,
+      "found": 1,
+      "medianTokens": 8505.5
+    },
+    {
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tasks": 4,
+      "found": 4,
+      "medianTokens": 1375
+    },
+    {
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tasks": 4,
+      "found": 3,
+      "medianTokens": 1428
+    },
+    {
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tasks": 4,
+      "found": 0,
+      "medianTokens": 1216
+    },
+    {
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tasks": 4,
+      "found": 2,
+      "medianTokens": 8320.5
+    },
+    {
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tasks": 3,
+      "found": 1,
+      "medianTokens": 27901
+    },
+    {
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tasks": 3,
+      "found": 0,
+      "medianTokens": 9668
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tasks": 3,
+      "found": 1,
+      "medianTokens": 1373
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tasks": 3,
+      "found": 1,
+      "medianTokens": 950
+    },
+    {
+      "kind": "explain",
+      "strategy": "kirograph",
+      "tasks": 3,
+      "found": 0,
+      "medianTokens": 1137
+    },
+    {
+      "kind": "explain",
+      "strategy": "codegraph",
+      "tasks": 3,
+      "found": 1,
+      "medianTokens": 8317
+    },
+    {
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tasks": 3,
+      "found": 2,
+      "medianTokens": 29806
+    },
+    {
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tasks": 3,
+      "found": 2,
+      "medianTokens": 4640
+    },
+    {
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tasks": 3,
+      "found": 3,
+      "medianTokens": 996
+    },
+    {
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tasks": 3,
+      "found": 0,
+      "medianTokens": 996
+    },
+    {
+      "kind": "usage",
+      "strategy": "kirograph",
+      "tasks": 3,
+      "found": 0,
+      "medianTokens": 1224
+    },
+    {
+      "kind": "usage",
+      "strategy": "codegraph",
+      "tasks": 3,
+      "found": 3,
+      "medianTokens": 8308
+    },
+    {
+      "kind": "impact",
+      "strategy": "native-naive",
+      "tasks": 2,
+      "found": 1,
+      "medianTokens": 18864
+    },
+    {
+      "kind": "impact",
+      "strategy": "native-ranged",
+      "tasks": 2,
+      "found": 0,
+      "medianTokens": 4446.5
+    },
+    {
+      "kind": "impact",
+      "strategy": "kopt-pack",
+      "tasks": 2,
+      "found": 1,
+      "medianTokens": 989
+    },
+    {
+      "kind": "impact",
+      "strategy": "kopt-hits+read",
+      "tasks": 2,
+      "found": 0,
+      "medianTokens": 1911.5
+    },
+    {
+      "kind": "impact",
+      "strategy": "kirograph",
+      "tasks": 2,
+      "found": 0,
+      "medianTokens": 1437.5
+    },
+    {
+      "kind": "impact",
+      "strategy": "codegraph",
+      "tasks": 2,
+      "found": 1,
+      "medianTokens": 7111
+    }
+  ]
+}

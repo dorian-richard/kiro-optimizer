@@ -1,0 +1,118 @@
+{
+  "label": "kirograph",
+  "tool": "kirograph",
+  "package": "kirograph",
+  "version": "1.4.0",
+  "mode": "default",
+  "repo": {
+    "name": "spring-framework",
+    "url": "https://github.com/spring-projects/spring-framework.git",
+    "tag": "v7.0.9",
+    "commit": "82a6b40b9366ec181ededdad282b307ee5381a52",
+    "language": "java",
+    "path": "bench/repos/spring-framework"
+  },
+  "headCommit": "82a6b40b9366ec181ededdad282b307ee5381a52",
+  "commitMatchesTasks": true,
+  "date": "2026-10-09T13:01:51.963Z",
+  "image": "kopt-bench/kirograph:1.4.0",
+  "imageId": "sha256:bc769b34b739a6d6b3ed1f2954ed9df3e387e6c6dcfc597528ca16d232dac57e",
+  "engine": "docker",
+  "limits": "memory=3g cpus=8",
+  "cgroupMemory": {
+    "maxBytes": 3221225472,
+    "peakBytes": 2840674304,
+    "oomKills": 0
+  },
+  "container": {
+    "node": "v22.23.3",
+    "arch": "arm64",
+    "platform": "linux",
+    "cpus": 10,
+    "memBytes": 8214851584,
+    "network": "none"
+  },
+  "primaryTool": "kirograph_context",
+  "toolArgsExample": {
+    "task": "<input>"
+  },
+  "serverCommand": {
+    "command": "kirograph",
+    "args": [
+      "serve",
+      "--mcp",
+      "--path",
+      "/work/<repo>"
+    ]
+  },
+  "oneSessionPerTask": true,
+  "indexOk": true,
+  "indexMs": 1948639,
+  "indexSteps": [
+    {
+      "command": "kirograph init /work/spring-framework",
+      "ms": 709,
+      "exit": 0,
+      "signal": null,
+      "oomKills": 0
+    },
+    {
+      "command": "kirograph index /work/spring-framework",
+      "ms": 1947930,
+      "exit": 0,
+      "signal": null,
+      "oomKills": 0
+    }
+  ],
+  "copyMs": 32746,
+  "indexDirs": [
+    "<repo>/.kirograph"
+  ],
+  "indexSizeBytes": 850923354,
+  "modelBytes": 0,
+  "indexStatus": "Graph\n  Files      9720\n  Symbols    293121\n  Edges      918247\n  Frameworks express, spring\n\n  By kind\n  ┌───────────┬──────────────────┐\n  │ method    │ 92072            │\n  ├───────────┼──────────────────┤\n  │ import    │ 90121            │\n  ├───────────┼──────────────────┤\n  │ variable  │ 74885            │\n  ├───────────┼──────────────────┤\n  │ class     │ 16199            │\n  ├───────────┼──────────────────┤\n  │ property  │ 15536            │\n  ├───────────┼──────────────────┤\n  │ function  │ 2322             │\n  ├───────────┼──────────────────┤\n  │ interface │ 1803             │\n  ├───────────┼──────────────────┤\n  │ enum      │ 183              │\n  └───────────┴──────────────────┘\n\n  By language\n  ┌────────────┬──────────────────┐\n  │ java       │ 9190             │\n  ├────────────┼──────────────────┤\n  │ kotlin     │ 388              │\n  ├────────────┼──────────────────┤\n  │ sql        │ 80               │\n  ├────────────┼──────────────────┤\n  │ css        │ 20               │\n  ├────────────┼──────────────────┤\n  │ yaml       │ 19               │\n  ├────────────┼──────────────────┤\n  │ javascript │ 10               │\n  ├────────────┼──────────────────┤\n  │ html       │ 9                │\n  ├────────────┼──────────────────┤\n  │ python     │ 2                │\n  ├────────────┼──────────────────┤\n  │ ruby       │ 2                │\n  └────────────┴──────────────────┘\n\n  Sync\n  Status     idle\n  Pending    14 files pending\n  ⚠ Index may be stale. Run `kirograph sync` to update.\n\n  Semantic Search\n  Status     disabled",
+  "surface": {
+    "serverInfo": {
+      "name": "kirograph",
+      "version": "0.1.0"
+    },
+    "toolCount": 7,
+    "toolNames": [
+      "kirograph_search",
+      "kirograph_context",
+      "kirograph_node",
+      "kirograph_gain",
+      "kirograph_read",
+      "kirograph_retrieve",
+      "kirograph_budget"
+    ],
+    "toolsChars": 4418,
+    "toolsEstTokens": 1473,
+    "instructionsChars": 0,
+    "instructionsEstTokens": 0,
+    "primaryToolListed": true,
+    "file": "kirograph.surface.json"
+  },
+  "inputs": {
+    "search": {
+      "file": "kirograph-spring-framework.jsonl",
+      "tasks": 15,
+      "failures": 0,
+      "queryMsMedian": 200,
+      "queryMsP90": 327,
+      "startupMsMedian": 193
+    },
+    "question": {
+      "file": "kirograph-spring-framework-question.jsonl",
+      "tasks": 15,
+      "failures": 9,
+      "queryMsMedian": 20,
+      "queryMsP90": 210,
+      "startupMsMedian": 196
+    }
+  },
+  "charsPerToken": 3,
+  "errors": [
+    "9/15 question queries failed or returned isError"
+  ]
+}

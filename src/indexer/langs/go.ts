@@ -34,11 +34,28 @@ function typeName(node: Node | null | undefined): string | undefined {
   return undefined;
 }
 
+/**
+ * Type recorded for a variable, parameter or field: `pkg.Name` for a type of an imported package (`*policy.Policy`,
+ * resolved through the import, see Ex.typeHint), else the simple type name.
+ */
+function varType(node: Node | null | undefined): string | undefined {
+  if (!node) return undefined;
+  if (node.type === 'pointer_type') return varType(node.namedChildren[0]);
+  if (node.type === 'generic_type') return varType(node.childForFieldName('type') ?? node.namedChildren[0]);
+  if (node.type === 'qualified_type') {
+    const pkg = node.childForFieldName('package')?.text;
+    const name = node.childForFieldName('name')?.text;
+    return name ? (pkg ? `${pkg}.${name}` : name) : undefined;
+  }
+  return typeName(node);
+}
+
 function params(ex: Ex, list: Node | null, inner: Scope): void {
   for (const p of list?.namedChildren ?? []) {
     if (p?.type !== 'parameter_declaration' && p?.type !== 'variadic_parameter_declaration') continue;
     const ty = p.childForFieldName('type');
-    const t = typeName(ty);
+    // `...T` is a slice of T: nothing callable on it as a T
+    const t = p.type === 'variadic_parameter_declaration' ? undefined : varType(ty);
     for (const n of p.childrenForFieldName('name')) if (n) inner.vars.set(n.text, t);
     typeRefs(ex, ty, inner);
   }
@@ -109,7 +126,7 @@ function typeSpec(ex: Ex, spec: Node, outer: Node, scope: Scope, single: boolean
         if (en && fty) ex.addRef(inner, en, 'inherit', fty, fty.type === 'qualified_type' ? fty.childForFieldName('package')?.text : undefined);
         continue;
       }
-      const t = typeName(fty);
+      const t = varType(fty);
       for (const fnode of names) {
         const fidx = ex.addSymbol({ name: fnode.text, kind: 'field', node: f, scope: inner, exported: exportedName(fnode.text) });
         inner.vars.set(fnode.text, t);
@@ -141,11 +158,19 @@ function valueSpecs(ex: Ex, node: Node, scope: Scope, kind: 'const' | 'var'): vo
   for (const spec of specs) {
     const ty = spec.childForFieldName('type');
     const value = spec.childForFieldName('value');
-    const t = typeName(ty) ?? compositeType(value?.namedChildren[0]);
+    const t = varType(ty) ?? compositeType(value?.namedChildren[0]);
+    if (scope.local) {
+      // `var x = svc.Load()`: visit the value first so a call-initialized local carries the call's hint
+      if (value) ex.visit(ex, value, scope);
+      const names = spec.childrenForFieldName('name').filter((x): x is Node => !!x);
+      const vals = value?.namedChildren ?? [];
+      names.forEach((n, i) => scope.vars.set(n.text, t ?? (vals.length === names.length || i === 0 ? ex.valueHint(vals[vals.length === names.length ? i : 0]) : undefined)));
+      continue;
+    }
     for (const n of spec.childrenForFieldName('name')) {
       if (!n) continue;
       scope.vars.set(n.text, t);
-      if (scope.local || n.text === '_') continue;
+      if (n.text === '_') continue;
       const one = specs.length === 1 && spec.childrenForFieldName('name').length === 1;
       const idx = ex.addSymbol({
         name: n.text,
@@ -160,14 +185,13 @@ function valueSpecs(ex: Ex, node: Node, scope: Scope, kind: 'const' | 'var'): vo
       typeRefs(ex, ty, inner);
       if (value) ex.visit(ex, value, inner);
     }
-    if (scope.local && value) ex.visit(ex, value, scope);
   }
 }
 
 function compositeType(v: Node | null | undefined): string | undefined {
   if (!v) return undefined;
   if (v.type === 'unary_expression') return compositeType(v.childForFieldName('operand'));
-  if (v.type === 'composite_literal') return typeName(v.childForFieldName('type'));
+  if (v.type === 'composite_literal') return varType(v.childForFieldName('type'));
   return undefined;
 }
 
@@ -219,23 +243,27 @@ export function visitGo(ex: Ex, node: Node, scope: Scope): void {
     case 'short_var_declaration': {
       const left = node.childForFieldName('left')?.namedChildren ?? [];
       const right = node.childForFieldName('right')?.namedChildren ?? [];
-      left.forEach((l, i) => {
-        if (l?.type === 'identifier') scope.vars.set(l.text, compositeType(right[i]));
-      });
+      // values first: `t, err := p.NewTransport()` types t from the call's declared (first) result
       for (const r of right) if (r) ex.visit(ex, r, scope);
+      left.forEach((l, i) => {
+        if (l?.type !== 'identifier') return;
+        const r = right.length === left.length ? right[i] : i === 0 ? right[0] : undefined;
+        scope.vars.set(l.text, compositeType(r) ?? ex.valueHint(r));
+      });
       return;
     }
     case 'call_expression': {
       const f = node.childForFieldName('function');
-      if (f?.type === 'identifier') ex.addRef(scope, f.text, 'call', f);
+      if (f?.type === 'identifier') ex.noteCall(node, ex.addRef(scope, f.text, 'call', f));
       else if (f?.type === 'selector_expression') {
         const field = f.childForFieldName('field');
         const operand = f.childForFieldName('operand');
-        if (field) {
-          const q = operand?.text;
-          ex.addRef(scope, field.text, 'call', field, q, ex.receiverHint(q, scope));
+        const ref = field ? ex.addRef(scope, field.text, 'call', field, operand?.text, ex.receiverHint(operand?.text, scope)) : undefined;
+        ex.noteCall(node, ref);
+        if (operand) {
+          ex.visit(ex, operand, scope);
+          ex.chainHint(ref, operand);
         }
-        if (operand) ex.visit(ex, operand, scope);
       } else if (f) ex.visit(ex, f, scope);
       const args = node.childForFieldName('arguments');
       if (args) ex.visitChildren(args, scope);
@@ -253,7 +281,19 @@ export function visitGo(ex: Ex, node: Node, scope: Scope): void {
         if (name) ex.addRef(scope, name, 'new', ty);
       }
       const body = node.childForFieldName('body');
-      if (body) ex.visitChildren(body, scope);
+      // `Client{Transport: t}`: each key is a write of that field of the literal's struct type
+      const st = ty?.type === 'type_identifier' || ty?.type === 'qualified_type' || ty?.type === 'generic_type' ? varType(ty) : undefined;
+      if (body && st) keyedWrites(ex, body, scope, st);
+      else if (body) ex.visitChildren(body, scope);
+      return;
+    }
+    case 'selector_expression': {
+      // `s.field`, `pkg.Var`, `s.f = v`, `s.n++` (calls record their callee themselves); standard-library package
+      // members (`http.StatusOK`, `time.Second`) are never repository code
+      const operand = node.childForFieldName('operand');
+      const spec = operand?.type === 'identifier' && !scope.vars.get(operand.text) ? ex.moduleAlias.get(operand.text) : undefined;
+      const std = spec !== undefined && !spec.split('/')[0].includes('.');
+      ex.memberRef(scope, node, std ? null : node.childForFieldName('field'), operand);
       return;
     }
     case 'func_literal': {
@@ -263,6 +303,23 @@ export function visitGo(ex: Ex, node: Node, scope: Scope): void {
     }
     default:
       ex.visitChildren(node, scope);
+  }
+}
+
+/** Fields set by a struct literal (`T{Name: v}`): one write per key, typed with the literal's type `t`. */
+function keyedWrites(ex: Ex, body: Node, scope: Scope, t: string): void {
+  const hint = ex.hintForType(t);
+  for (const el of body.namedChildren) {
+    if (el?.type !== 'keyed_element') {
+      if (el) ex.visit(ex, el, scope);
+      continue;
+    }
+    const kids = el.namedChildren.filter((c): c is Node => !!c);
+    const keyNode = kids[0]?.type === 'literal_element' ? kids[0].namedChildren[0] : kids[0];
+    if (kids.length === 2 && (keyNode?.type === 'identifier' || keyNode?.type === 'field_identifier')) {
+      ex.addRef(scope, keyNode.text, 'write', keyNode, t, hint);
+      ex.visit(ex, kids[1], scope);
+    } else ex.visitChildren(el, scope);
   }
 }
 

@@ -12,6 +12,10 @@ export interface RunRecord {
   writeSeq: number;
   /** writeSeq at which a duplicate was already blocked once (allow the retry to avoid deadlocks). */
   dupBlockedAt?: number;
+  /** promptSeq when it ran: a new user prompt ("run it again") always lets the next identical run through. */
+  promptSeq?: number;
+  /** Workspace fingerprint taken right after the run (PostToolUse); see fingerprint.ts. */
+  fp?: string;
 }
 
 export interface SessionState {
@@ -37,6 +41,8 @@ export interface SessionState {
   lastWriteAt: number;
   /** Symbol handles already front-loaded by UserPromptSubmit (not re-sent in the same session). */
   frontSent: string[];
+  /** Incremented on every user prompt. */
+  promptSeq: number;
 }
 
 const MAX_MAP_ENTRIES = 300;
@@ -55,7 +61,7 @@ export function sessionFile(userDir: string, sessionId: string): string {
 export function newSession(id: string, now = Date.now()): SessionState {
   return {
     v: 1, id, startedAt: now, updatedAt: now, toolCalls: 0, budgetFrom: 0, blocks: {}, deniedReads: {}, redirected: {},
-    runs: {}, writeSeq: 0, lastWriteCall: 0, lastWriteAt: 0, frontSent: [],
+    runs: {}, writeSeq: 0, lastWriteCall: 0, lastWriteAt: 0, frontSent: [], promptSeq: 0,
   };
 }
 
@@ -66,7 +72,7 @@ export function loadSession(userDir: string, id: string): SessionState {
     if (raw && raw.v === 1 && typeof raw.toolCalls === 'number') {
       const base = newSession(id, raw.startedAt ?? Date.now());
       return { ...base, ...raw, blocks: raw.blocks ?? {}, deniedReads: raw.deniedReads ?? {}, redirected: raw.redirected ?? {}, runs: raw.runs ?? {},
-        frontSent: Array.isArray(raw.frontSent) ? raw.frontSent : [] };
+        frontSent: Array.isArray(raw.frontSent) ? raw.frontSent : [], promptSeq: typeof raw.promptSeq === 'number' ? raw.promptSeq : 0 };
     }
   } catch {
     // missing or corrupt: start fresh

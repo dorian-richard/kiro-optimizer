@@ -11,14 +11,16 @@
     },
     "repoRoot": "bench/repos/django",
     "headCommit": "2212534bae393714e1e51db2341d4fd5545e19f6",
-    "date": "2026-10-09T09:44:21.509Z",
+    "date": "2026-10-09T22:21:37.795Z",
     "input": "search",
     "charsPerToken": 3,
     "strategies": [
       "native-naive",
       "native-ranged",
       "kopt-pack",
-      "kopt-hits+read"
+      "kopt-hits+read",
+      "kirograph",
+      "codegraph"
     ],
     "grepLimits": {
       "maxMatches": 100,
@@ -34,17 +36,20 @@
     "koptBudgets": {
       "find": 700,
       "pack": 2500,
-      "read": 2000
+      "read": 3000
     },
     "index": {
       "built": false,
       "durationMs": 0,
       "files": 2964,
-      "symbols": 50978,
-      "path": "bench/repos/.kopt-django/index.db"
+      "symbols": 51183,
+      "path": "<index-dir>/.kopt-django/index.db"
     },
-    "notes": [],
-    "durationMs": 6329
+    "notes": [
+      "kirograph: outputs loaded from bench/competitors/results/kirograph-django.jsonl",
+      "codegraph: outputs loaded from bench/competitors/results/codegraph-django.jsonl"
+    ],
+    "durationMs": 15170
   },
   "results": [
     {
@@ -54,7 +59,7 @@
       "tokens": 48894,
       "chars": 146677,
       "toolCalls": 4,
-      "durationMs": 333,
+      "durationMs": 1867,
       "recall": {
         "fileRecall": 1,
         "symbolRecall": 0.6666666666666666,
@@ -147,26 +152,24 @@
       "taskId": "dj-locate-db-cache-cull",
       "kind": "locate",
       "strategy": "kopt-pack",
-      "tokens": 1050,
-      "chars": 3150,
+      "tokens": 1377,
+      "chars": 4129,
       "toolCalls": 1,
-      "durationMs": 58,
+      "durationMs": 105,
       "recall": {
         "fileRecall": 1,
-        "symbolRecall": 0.6666666666666666,
+        "symbolRecall": 1,
         "defRecall": 0.6666666666666666,
         "filesMissed": [],
-        "symbolsMissed": [
-          "_base_set"
-        ],
-        "found": false
+        "symbolsMissed": [],
+        "found": true
       },
       "calls": [
         {
           "tool": "kopt_find",
           "args": "pack \"database cache backend delete expired entries max entries cull\"",
-          "chars": 3150,
-          "tokens": 1050
+          "chars": 4129,
+          "tokens": 1377
         }
       ]
     },
@@ -174,10 +177,10 @@
       "taskId": "dj-locate-db-cache-cull",
       "kind": "locate",
       "strategy": "kopt-hits+read",
-      "tokens": 904,
-      "chars": 2707,
+      "tokens": 970,
+      "chars": 2906,
       "toolCalls": 3,
-      "durationMs": 18,
+      "durationMs": 206,
       "recall": {
         "fileRecall": 1,
         "symbolRecall": 0.6666666666666666,
@@ -192,20 +195,83 @@
         {
           "tool": "kopt_find",
           "args": "hits \"database cache backend delete expired entries max entries cull\"",
-          "chars": 1412,
-          "tokens": 471
+          "chars": 1611,
+          "tokens": 537
         },
         {
           "tool": "kopt_read",
-          "args": "#4rl",
+          "args": "#148",
           "chars": 787,
           "tokens": 263
         },
         {
           "tool": "kopt_read",
-          "args": "#4rp",
+          "args": "#14c",
           "chars": 508,
           "tokens": 170
+        }
+      ]
+    },
+    {
+      "taskId": "dj-locate-db-cache-cull",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tokens": 732,
+      "chars": 2195,
+      "toolCalls": 1,
+      "durationMs": 206,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "django/core/cache/backends/db.py",
+          "django/db/backends/base/operations.py"
+        ],
+        "symbolsMissed": [
+          "_cull",
+          "_base_set",
+          "cache_key_culling_sql"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "database cache backend delete expired entries max entries cull",
+          "chars": 2195,
+          "tokens": 732
+        }
+      ]
+    },
+    {
+      "taskId": "dj-locate-db-cache-cull",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tokens": 8330,
+      "chars": 24990,
+      "toolCalls": 1,
+      "durationMs": 1217,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "django/db/backends/base/operations.py"
+        ],
+        "symbolsMissed": [
+          "_cull",
+          "_base_set",
+          "cache_key_culling_sql"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "database cache backend delete expired entries max entries cull",
+          "chars": 24990,
+          "tokens": 8330
         }
       ]
     },
@@ -216,7 +282,7 @@
       "tokens": 48259,
       "chars": 144771,
       "toolCalls": 4,
-      "durationMs": 131,
+      "durationMs": 749,
       "recall": {
         "fileRecall": 1,
         "symbolRecall": 0.5,
@@ -261,7 +327,7 @@
       "tokens": 7992,
       "chars": 23971,
       "toolCalls": 5,
-      "durationMs": 1,
+      "durationMs": 2,
       "recall": {
         "fileRecall": 1,
         "symbolRecall": 1,
@@ -307,10 +373,10 @@
       "taskId": "dj-locate-accept-language",
       "kind": "locate",
       "strategy": "kopt-pack",
-      "tokens": 1053,
-      "chars": 3158,
+      "tokens": 1362,
+      "chars": 4085,
       "toolCalls": 1,
-      "durationMs": 26,
+      "durationMs": 104,
       "recall": {
         "fileRecall": 1,
         "symbolRecall": 1,
@@ -323,8 +389,8 @@
         {
           "tool": "kopt_find",
           "args": "pack \"language from request Accept-Language header\"",
-          "chars": 3158,
-          "tokens": 1053
+          "chars": 4085,
+          "tokens": 1362
         }
       ]
     },
@@ -332,10 +398,10 @@
       "taskId": "dj-locate-accept-language",
       "kind": "locate",
       "strategy": "kopt-hits+read",
-      "tokens": 1277,
-      "chars": 3828,
+      "tokens": 1333,
+      "chars": 3994,
       "toolCalls": 3,
-      "durationMs": 10,
+      "durationMs": 40,
       "recall": {
         "fileRecall": 1,
         "symbolRecall": 1,
@@ -348,20 +414,72 @@
         {
           "tool": "kopt_find",
           "args": "hits \"language from request Accept-Language header\"",
-          "chars": 1842,
-          "tokens": 614
+          "chars": 2008,
+          "tokens": 670
         },
         {
           "tool": "kopt_read",
-          "args": "#cd8",
+          "args": "#dh2",
           "chars": 1159,
           "tokens": 387
         },
         {
           "tool": "kopt_read",
-          "args": "#cd7",
+          "args": "#dh1",
           "chars": 827,
           "tokens": 276
+        }
+      ]
+    },
+    {
+      "taskId": "dj-locate-accept-language",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tokens": 879,
+      "chars": 2636,
+      "toolCalls": 1,
+      "durationMs": 129,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "parse_accept_lang_header"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "language from request Accept-Language header",
+          "chars": 2636,
+          "tokens": 879
+        }
+      ]
+    },
+    {
+      "taskId": "dj-locate-accept-language",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tokens": 8315,
+      "chars": 24944,
+      "toolCalls": 1,
+      "durationMs": 205,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "language from request Accept-Language header",
+          "chars": 24944,
+          "tokens": 8315
         }
       ]
     },
@@ -372,7 +490,7 @@
       "tokens": 37719,
       "chars": 113152,
       "toolCalls": 4,
-      "durationMs": 2285,
+      "durationMs": 1793,
       "recall": {
         "fileRecall": 1,
         "symbolRecall": 1,
@@ -415,7 +533,7 @@
       "tokens": 7757,
       "chars": 23263,
       "toolCalls": 5,
-      "durationMs": 1,
+      "durationMs": 2,
       "recall": {
         "fileRecall": 1,
         "symbolRecall": 0.6666666666666666,
@@ -463,10 +581,10 @@
       "taskId": "dj-locate-test-shuffle",
       "kind": "locate",
       "strategy": "kopt-pack",
-      "tokens": 627,
-      "chars": 1880,
+      "tokens": 1236,
+      "chars": 3708,
       "toolCalls": 1,
-      "durationMs": 22,
+      "durationMs": 68,
       "recall": {
         "fileRecall": 1,
         "symbolRecall": 1,
@@ -479,8 +597,8 @@
         {
           "tool": "kopt_find",
           "args": "pack \"test runner shuffle seed order\"",
-          "chars": 1880,
-          "tokens": 627
+          "chars": 3708,
+          "tokens": 1236
         }
       ]
     },
@@ -488,10 +606,10 @@
       "taskId": "dj-locate-test-shuffle",
       "kind": "locate",
       "strategy": "kopt-hits+read",
-      "tokens": 715,
-      "chars": 2140,
+      "tokens": 794,
+      "chars": 2377,
       "toolCalls": 3,
-      "durationMs": 11,
+      "durationMs": 74,
       "recall": {
         "fileRecall": 1,
         "symbolRecall": 1,
@@ -504,20 +622,73 @@
         {
           "tool": "kopt_find",
           "args": "hits \"test runner shuffle seed order\"",
-          "chars": 1087,
-          "tokens": 363
+          "chars": 1525,
+          "tokens": 509
         },
         {
           "tool": "kopt_read",
-          "args": "#bdl",
+          "args": "#5tw",
           "chars": 170,
           "tokens": 57
         },
         {
           "tool": "kopt_read",
-          "args": "#bdc",
-          "chars": 883,
-          "tokens": 295
+          "args": "#5uh",
+          "chars": 682,
+          "tokens": 228
+        }
+      ]
+    },
+    {
+      "taskId": "dj-locate-test-shuffle",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tokens": 1040,
+      "chars": 3118,
+      "toolCalls": 1,
+      "durationMs": 95,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.3333333333333333,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "Shuffler",
+          "shuffle_tests"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "test runner shuffle seed order",
+          "chars": 3118,
+          "tokens": 1040
+        }
+      ]
+    },
+    {
+      "taskId": "dj-locate-test-shuffle",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tokens": 8319,
+      "chars": 24955,
+      "toolCalls": 1,
+      "durationMs": 381,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "test runner shuffle seed order",
+          "chars": 24955,
+          "tokens": 8319
         }
       ]
     },
@@ -528,7 +699,7 @@
       "tokens": 15045,
       "chars": 45130,
       "toolCalls": 4,
-      "durationMs": 193,
+      "durationMs": 1043,
       "recall": {
         "fileRecall": 0.5,
         "symbolRecall": 0,
@@ -629,10 +800,10 @@
       "taskId": "dj-locate-session-vary-cookie",
       "kind": "locate",
       "strategy": "kopt-pack",
-      "tokens": 1385,
-      "chars": 4155,
+      "tokens": 1206,
+      "chars": 3618,
       "toolCalls": 1,
-      "durationMs": 25,
+      "durationMs": 46,
       "recall": {
         "fileRecall": 1,
         "symbolRecall": 1,
@@ -645,8 +816,8 @@
         {
           "tool": "kopt_find",
           "args": "pack \"session middleware vary cookie header accessed\"",
-          "chars": 4155,
-          "tokens": 1385
+          "chars": 3618,
+          "tokens": 1206
         }
       ]
     },
@@ -654,10 +825,10 @@
       "taskId": "dj-locate-session-vary-cookie",
       "kind": "locate",
       "strategy": "kopt-hits+read",
-      "tokens": 1734,
-      "chars": 5197,
+      "tokens": 1803,
+      "chars": 5404,
       "toolCalls": 3,
-      "durationMs": 11,
+      "durationMs": 46,
       "recall": {
         "fileRecall": 1,
         "symbolRecall": 1,
@@ -670,20 +841,79 @@
         {
           "tool": "kopt_find",
           "args": "hits \"session middleware vary cookie header accessed\"",
-          "chars": 1645,
-          "tokens": 549
+          "chars": 1852,
+          "tokens": 618
         },
         {
           "tool": "kopt_read",
-          "args": "#4lz",
+          "args": "#bkj",
           "chars": 3448,
           "tokens": 1150
         },
         {
           "tool": "kopt_read",
-          "args": "#4m2",
+          "args": "#bkm",
           "chars": 104,
           "tokens": 35
+        }
+      ]
+    },
+    {
+      "taskId": "dj-locate-session-vary-cookie",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tokens": 747,
+      "chars": 2239,
+      "toolCalls": 1,
+      "durationMs": 171,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "django/contrib/sessions/middleware.py",
+          "django/utils/cache.py"
+        ],
+        "symbolsMissed": [
+          "SessionMiddleware",
+          "process_response",
+          "patch_vary_headers"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "session middleware vary cookie header accessed",
+          "chars": 2239,
+          "tokens": 747
+        }
+      ]
+    },
+    {
+      "taskId": "dj-locate-session-vary-cookie",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tokens": 8299,
+      "chars": 24896,
+      "toolCalls": 1,
+      "durationMs": 263,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 1,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [
+          "django/utils/cache.py"
+        ],
+        "symbolsMissed": [],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "session middleware vary cookie header accessed",
+          "chars": 24896,
+          "tokens": 8299
         }
       ]
     },
@@ -694,7 +924,7 @@
       "tokens": 31689,
       "chars": 95063,
       "toolCalls": 4,
-      "durationMs": 148,
+      "durationMs": 1126,
       "recall": {
         "fileRecall": 1,
         "symbolRecall": 0.5,
@@ -740,7 +970,7 @@
       "tokens": 5219,
       "chars": 15649,
       "toolCalls": 5,
-      "durationMs": 0,
+      "durationMs": 3,
       "recall": {
         "fileRecall": 1,
         "symbolRecall": 1,
@@ -786,10 +1016,10 @@
       "taskId": "dj-explain-migration-optimizer",
       "kind": "explain",
       "strategy": "kopt-pack",
-      "tokens": 584,
-      "chars": 1751,
+      "tokens": 1283,
+      "chars": 3849,
       "toolCalls": 1,
-      "durationMs": 22,
+      "durationMs": 138,
       "recall": {
         "fileRecall": 1,
         "symbolRecall": 1,
@@ -802,8 +1032,8 @@
         {
           "tool": "kopt_find",
           "args": "pack \"migration optimizer merge operations reduce\"",
-          "chars": 1751,
-          "tokens": 584
+          "chars": 3849,
+          "tokens": 1283
         }
       ]
     },
@@ -811,10 +1041,10 @@
       "taskId": "dj-explain-migration-optimizer",
       "kind": "explain",
       "strategy": "kopt-hits+read",
-      "tokens": 1562,
-      "chars": 4680,
+      "tokens": 1647,
+      "chars": 4937,
       "toolCalls": 3,
-      "durationMs": 10,
+      "durationMs": 96,
       "recall": {
         "fileRecall": 1,
         "symbolRecall": 1,
@@ -827,20 +1057,79 @@
         {
           "tool": "kopt_find",
           "args": "hits \"migration optimizer merge operations reduce\"",
-          "chars": 1282,
-          "tokens": 428
+          "chars": 1539,
+          "tokens": 513
         },
         {
           "tool": "kopt_read",
-          "args": "#79x",
+          "args": "#9bq",
           "chars": 3298,
           "tokens": 1100
         },
         {
           "tool": "kopt_read",
-          "args": "#79z",
+          "args": "#9bs",
           "chars": 100,
           "tokens": 34
+        }
+      ]
+    },
+    {
+      "taskId": "dj-explain-migration-optimizer",
+      "kind": "explain",
+      "strategy": "kirograph",
+      "tokens": 802,
+      "chars": 2406,
+      "toolCalls": 1,
+      "durationMs": 98,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.25,
+        "defRecall": 0,
+        "filesMissed": [
+          "django/db/migrations/optimizer.py",
+          "django/db/migrations/operations/base.py"
+        ],
+        "symbolsMissed": [
+          "MigrationOptimizer",
+          "optimize",
+          "optimize_inner"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "migration optimizer merge operations reduce",
+          "chars": 2406,
+          "tokens": 802
+        }
+      ]
+    },
+    {
+      "taskId": "dj-explain-migration-optimizer",
+      "kind": "explain",
+      "strategy": "codegraph",
+      "tokens": 7132,
+      "chars": 21394,
+      "toolCalls": 1,
+      "durationMs": 232,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 1,
+        "defRecall": 0.75,
+        "filesMissed": [
+          "django/db/migrations/operations/base.py"
+        ],
+        "symbolsMissed": [],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "migration optimizer merge operations reduce",
+          "chars": 21394,
+          "tokens": 7132
         }
       ]
     },
@@ -851,7 +1140,7 @@
       "tokens": 43481,
       "chars": 130440,
       "toolCalls": 3,
-      "durationMs": 137,
+      "durationMs": 705,
       "recall": {
         "fileRecall": 1,
         "symbolRecall": 1,
@@ -928,10 +1217,10 @@
       "taskId": "dj-explain-template-lookup",
       "kind": "explain",
       "strategy": "kopt-pack",
-      "tokens": 234,
-      "chars": 702,
+      "tokens": 951,
+      "chars": 2852,
       "toolCalls": 1,
-      "durationMs": 26,
+      "durationMs": 28,
       "recall": {
         "fileRecall": 1,
         "symbolRecall": 1,
@@ -944,8 +1233,8 @@
         {
           "tool": "kopt_find",
           "args": "pack \"Variable _resolve_lookup template variable lookup\"",
-          "chars": 702,
-          "tokens": 234
+          "chars": 2852,
+          "tokens": 951
         }
       ]
     },
@@ -953,10 +1242,10 @@
       "taskId": "dj-explain-template-lookup",
       "kind": "explain",
       "strategy": "kopt-hits+read",
-      "tokens": 1800,
-      "chars": 5398,
+      "tokens": 1877,
+      "chars": 5629,
       "toolCalls": 3,
-      "durationMs": 13,
+      "durationMs": 27,
       "recall": {
         "fileRecall": 1,
         "symbolRecall": 1,
@@ -969,20 +1258,70 @@
         {
           "tool": "kopt_find",
           "args": "hits \"Variable _resolve_lookup template variable lookup\"",
-          "chars": 531,
-          "tokens": 177
+          "chars": 762,
+          "tokens": 254
         },
         {
           "tool": "kopt_read",
-          "args": "#azc",
+          "args": "#5mf",
           "chars": 4092,
           "tokens": 1364
         },
         {
           "tool": "kopt_read",
-          "args": "#az9",
+          "args": "#5mc",
           "chars": 775,
           "tokens": 259
+        }
+      ]
+    },
+    {
+      "taskId": "dj-explain-template-lookup",
+      "kind": "explain",
+      "strategy": "kirograph",
+      "tokens": 3407,
+      "chars": 10220,
+      "toolCalls": 1,
+      "durationMs": 116,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "Variable _resolve_lookup template variable lookup",
+          "chars": 10220,
+          "tokens": 3407
+        }
+      ]
+    },
+    {
+      "taskId": "dj-explain-template-lookup",
+      "kind": "explain",
+      "strategy": "codegraph",
+      "tokens": 8313,
+      "chars": 24937,
+      "toolCalls": 1,
+      "durationMs": 183,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "Variable _resolve_lookup template variable lookup",
+          "chars": 24937,
+          "tokens": 8313
         }
       ]
     },
@@ -993,7 +1332,7 @@
       "tokens": 788,
       "chars": 2361,
       "toolCalls": 3,
-      "durationMs": 190,
+      "durationMs": 1208,
       "recall": {
         "fileRecall": 0,
         "symbolRecall": 0,
@@ -1078,17 +1417,16 @@
       "taskId": "dj-explain-password-upgrade",
       "kind": "explain",
       "strategy": "kopt-pack",
-      "tokens": 476,
-      "chars": 1426,
+      "tokens": 1246,
+      "chars": 3737,
       "toolCalls": 1,
-      "durationMs": 25,
+      "durationMs": 54,
       "recall": {
         "fileRecall": 1,
-        "symbolRecall": 0.5,
+        "symbolRecall": 0.75,
         "defRecall": 0.5,
         "filesMissed": [],
         "symbolsMissed": [
-          "verify_password",
           "identify_hasher"
         ],
         "found": false
@@ -1097,8 +1435,8 @@
         {
           "tool": "kopt_find",
           "args": "pack \"check password hasher must update iterations rehash\"",
-          "chars": 1426,
-          "tokens": 476
+          "chars": 3737,
+          "tokens": 1246
         }
       ]
     },
@@ -1106,10 +1444,10 @@
       "taskId": "dj-explain-password-upgrade",
       "kind": "explain",
       "strategy": "kopt-hits+read",
-      "tokens": 652,
-      "chars": 1953,
+      "tokens": 789,
+      "chars": 2363,
       "toolCalls": 3,
-      "durationMs": 12,
+      "durationMs": 72,
       "recall": {
         "fileRecall": 1,
         "symbolRecall": 0.5,
@@ -1125,20 +1463,81 @@
         {
           "tool": "kopt_find",
           "args": "hits \"check password hasher must update iterations rehash\"",
-          "chars": 1587,
-          "tokens": 529
+          "chars": 1997,
+          "tokens": 666
         },
         {
           "tool": "kopt_read",
-          "args": "#1wk",
+          "args": "#at7",
           "chars": 266,
           "tokens": 89
         },
         {
           "tool": "kopt_read",
-          "args": "#1wa",
+          "args": "#asx",
           "chars": 100,
           "tokens": 34
+        }
+      ]
+    },
+    {
+      "taskId": "dj-explain-password-upgrade",
+      "kind": "explain",
+      "strategy": "kirograph",
+      "tokens": 2307,
+      "chars": 6920,
+      "toolCalls": 1,
+      "durationMs": 113,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "django/contrib/auth/hashers.py"
+        ],
+        "symbolsMissed": [
+          "check_password",
+          "verify_password",
+          "identify_hasher",
+          "must_update"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "check password hasher must update iterations rehash",
+          "chars": 6920,
+          "tokens": 2307
+        }
+      ]
+    },
+    {
+      "taskId": "dj-explain-password-upgrade",
+      "kind": "explain",
+      "strategy": "codegraph",
+      "tokens": 8317,
+      "chars": 24949,
+      "toolCalls": 1,
+      "durationMs": 326,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.25,
+        "defRecall": 0.25,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "check_password",
+          "verify_password",
+          "identify_hasher"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "check password hasher must update iterations rehash",
+          "chars": 24949,
+          "tokens": 8317
         }
       ]
     },
@@ -1149,7 +1548,7 @@
       "tokens": 46394,
       "chars": 139177,
       "toolCalls": 4,
-      "durationMs": 174,
+      "durationMs": 885,
       "recall": {
         "fileRecall": 1,
         "symbolRecall": 1,
@@ -1232,10 +1631,10 @@
       "taskId": "dj-explain-autoreload-stat",
       "kind": "explain",
       "strategy": "kopt-pack",
-      "tokens": 679,
-      "chars": 2037,
+      "tokens": 1291,
+      "chars": 3871,
       "toolCalls": 1,
-      "durationMs": 19,
+      "durationMs": 88,
       "recall": {
         "fileRecall": 1,
         "symbolRecall": 0.75,
@@ -1250,8 +1649,8 @@
         {
           "tool": "kopt_find",
           "args": "pack \"autoreload reloader detect file changes without watchman\"",
-          "chars": 2037,
-          "tokens": 679
+          "chars": 3871,
+          "tokens": 1291
         }
       ]
     },
@@ -1259,10 +1658,10 @@
       "taskId": "dj-explain-autoreload-stat",
       "kind": "explain",
       "strategy": "kopt-hits+read",
-      "tokens": 795,
-      "chars": 2383,
+      "tokens": 3547,
+      "chars": 10639,
       "toolCalls": 3,
-      "durationMs": 11,
+      "durationMs": 47,
       "recall": {
         "fileRecall": 1,
         "symbolRecall": 0.75,
@@ -1277,20 +1676,74 @@
         {
           "tool": "kopt_find",
           "args": "hits \"autoreload reloader detect file changes without watchman\"",
-          "chars": 1046,
-          "tokens": 349
+          "chars": 1433,
+          "tokens": 478
         },
         {
           "tool": "kopt_read",
-          "args": "#bnq",
-          "chars": 1065,
-          "tokens": 355
+          "args": "#5wl",
+          "chars": 8898,
+          "tokens": 2966
         },
         {
           "tool": "kopt_read",
-          "args": "#bo7",
-          "chars": 272,
-          "tokens": 91
+          "args": "#5wc",
+          "chars": 308,
+          "tokens": 103
+        }
+      ]
+    },
+    {
+      "taskId": "dj-explain-autoreload-stat",
+      "kind": "explain",
+      "strategy": "kirograph",
+      "tokens": 1019,
+      "chars": 3055,
+      "toolCalls": 1,
+      "durationMs": 95,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.25,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "StatReloader",
+          "tick",
+          "snapshot_files"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "autoreload reloader detect file changes without watchman",
+          "chars": 3055,
+          "tokens": 1019
+        }
+      ]
+    },
+    {
+      "taskId": "dj-explain-autoreload-stat",
+      "kind": "explain",
+      "strategy": "codegraph",
+      "tokens": 8330,
+      "chars": 24990,
+      "toolCalls": 1,
+      "durationMs": 213,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "autoreload reloader detect file changes without watchman",
+          "chars": 24990,
+          "tokens": 8330
         }
       ]
     },
@@ -1301,7 +1754,7 @@
       "tokens": 6602,
       "chars": 19805,
       "toolCalls": 2,
-      "durationMs": 165,
+      "durationMs": 198,
       "recall": {
         "fileRecall": 1,
         "symbolRecall": 1,
@@ -1366,10 +1819,10 @@
       "taskId": "dj-usage-add-new-csrf-cookie",
       "kind": "usage",
       "strategy": "kopt-pack",
-      "tokens": 251,
-      "chars": 752,
+      "tokens": 661,
+      "chars": 1982,
       "toolCalls": 1,
-      "durationMs": 19,
+      "durationMs": 22,
       "recall": {
         "fileRecall": 1,
         "symbolRecall": 1,
@@ -1382,8 +1835,8 @@
         {
           "tool": "kopt_find",
           "args": "pack \"_add_new_csrf_cookie\"",
-          "chars": 752,
-          "tokens": 251
+          "chars": 1982,
+          "tokens": 661
         }
       ]
     },
@@ -1391,38 +1844,93 @@
       "taskId": "dj-usage-add-new-csrf-cookie",
       "kind": "usage",
       "strategy": "kopt-hits+read",
-      "tokens": 713,
-      "chars": 2135,
+      "tokens": 354,
+      "chars": 1060,
       "toolCalls": 3,
-      "durationMs": 11,
+      "durationMs": 18,
       "recall": {
         "fileRecall": 1,
-        "symbolRecall": 0.6666666666666666,
-        "defRecall": 0.3333333333333333,
+        "symbolRecall": 1,
+        "defRecall": 0,
         "filesMissed": [],
-        "symbolsMissed": [
-          "get_token"
-        ],
-        "found": false
+        "symbolsMissed": [],
+        "found": true
       },
       "calls": [
         {
           "tool": "kopt_find",
           "args": "hits \"_add_new_csrf_cookie\"",
-          "chars": 451,
-          "tokens": 151
+          "chars": 601,
+          "tokens": 201
         },
         {
           "tool": "kopt_read",
-          "args": "#aj9",
+          "args": "#28p",
           "chars": 351,
           "tokens": 117
         },
         {
           "tool": "kopt_read",
-          "args": "#aji",
-          "chars": 1333,
-          "tokens": 445
+          "args": "#dhe",
+          "chars": 108,
+          "tokens": 36
+        }
+      ]
+    },
+    {
+      "taskId": "dj-usage-add-new-csrf-cookie",
+      "kind": "usage",
+      "strategy": "kirograph",
+      "tokens": 680,
+      "chars": 2040,
+      "toolCalls": 1,
+      "durationMs": 94,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.3333333333333333,
+        "defRecall": 0,
+        "filesMissed": [
+          "django/middleware/csrf.py"
+        ],
+        "symbolsMissed": [
+          "rotate_token",
+          "process_request"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "_add_new_csrf_cookie",
+          "chars": 2040,
+          "tokens": 680
+        }
+      ]
+    },
+    {
+      "taskId": "dj-usage-add-new-csrf-cookie",
+      "kind": "usage",
+      "strategy": "codegraph",
+      "tokens": 6251,
+      "chars": 18752,
+      "toolCalls": 1,
+      "durationMs": 67,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "process_request"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "_add_new_csrf_cookie",
+          "chars": 18752,
+          "tokens": 6251
         }
       ]
     },
@@ -1433,7 +1941,7 @@
       "tokens": 44674,
       "chars": 134019,
       "toolCalls": 3,
-      "durationMs": 107,
+      "durationMs": 148,
       "recall": {
         "fileRecall": 1,
         "symbolRecall": 1,
@@ -1516,10 +2024,10 @@
       "taskId": "dj-usage-construct-instance",
       "kind": "usage",
       "strategy": "kopt-pack",
-      "tokens": 681,
-      "chars": 2041,
+      "tokens": 796,
+      "chars": 2388,
       "toolCalls": 1,
-      "durationMs": 22,
+      "durationMs": 21,
       "recall": {
         "fileRecall": 1,
         "symbolRecall": 1,
@@ -1532,8 +2040,8 @@
         {
           "tool": "kopt_find",
           "args": "pack \"construct_instance\"",
-          "chars": 2041,
-          "tokens": 681
+          "chars": 2388,
+          "tokens": 796
         }
       ]
     },
@@ -1541,10 +2049,10 @@
       "taskId": "dj-usage-construct-instance",
       "kind": "usage",
       "strategy": "kopt-hits+read",
-      "tokens": 872,
-      "chars": 2611,
+      "tokens": 894,
+      "chars": 2677,
       "toolCalls": 3,
-      "durationMs": 10,
+      "durationMs": 16,
       "recall": {
         "fileRecall": 1,
         "symbolRecall": 0.3333333333333333,
@@ -1560,20 +2068,77 @@
         {
           "tool": "kopt_find",
           "args": "hits \"construct_instance\"",
-          "chars": 584,
-          "tokens": 195
+          "chars": 650,
+          "tokens": 217
         },
         {
           "tool": "kopt_read",
-          "args": "#a1s",
+          "args": "#ct0",
           "chars": 1576,
           "tokens": 526
         },
         {
           "tool": "kopt_read",
-          "args": "#ub0",
+          "args": "#t8r",
           "chars": 451,
           "tokens": 151
+        }
+      ]
+    },
+    {
+      "taskId": "dj-usage-construct-instance",
+      "kind": "usage",
+      "strategy": "kirograph",
+      "tokens": 724,
+      "chars": 2170,
+      "toolCalls": 1,
+      "durationMs": 77,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.3333333333333333,
+        "defRecall": 0,
+        "filesMissed": [
+          "django/forms/models.py"
+        ],
+        "symbolsMissed": [
+          "_post_clean",
+          "BaseModelForm"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "construct_instance",
+          "chars": 2170,
+          "tokens": 724
+        }
+      ]
+    },
+    {
+      "taskId": "dj-usage-construct-instance",
+      "kind": "usage",
+      "strategy": "codegraph",
+      "tokens": 8311,
+      "chars": 24933,
+      "toolCalls": 1,
+      "durationMs": 125,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "BaseModelForm"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "construct_instance",
+          "chars": 24933,
+          "tokens": 8311
         }
       ]
     },
@@ -1584,7 +2149,7 @@
       "tokens": 65803,
       "chars": 197405,
       "toolCalls": 4,
-      "durationMs": 115,
+      "durationMs": 647,
       "recall": {
         "fileRecall": 0,
         "symbolRecall": 0,
@@ -1691,26 +2256,24 @@
       "taskId": "dj-usage-same-domain",
       "kind": "usage",
       "strategy": "kopt-pack",
-      "tokens": 779,
-      "chars": 2337,
+      "tokens": 1314,
+      "chars": 3942,
       "toolCalls": 1,
-      "durationMs": 18,
+      "durationMs": 91,
       "recall": {
-        "fileRecall": 0.6666666666666666,
+        "fileRecall": 1,
         "symbolRecall": 1,
         "defRecall": 0.25,
-        "filesMissed": [
-          "django/middleware/csrf.py"
-        ],
+        "filesMissed": [],
         "symbolsMissed": [],
-        "found": false
+        "found": true
       },
       "calls": [
         {
           "tool": "kopt_find",
           "args": "pack \"host matches domain pattern\"",
-          "chars": 2337,
-          "tokens": 779
+          "chars": 3942,
+          "tokens": 1314
         }
       ]
     },
@@ -1718,10 +2281,10 @@
       "taskId": "dj-usage-same-domain",
       "kind": "usage",
       "strategy": "kopt-hits+read",
-      "tokens": 729,
-      "chars": 2186,
+      "tokens": 861,
+      "chars": 2579,
       "toolCalls": 3,
-      "durationMs": 10,
+      "durationMs": 29,
       "recall": {
         "fileRecall": 0.6666666666666666,
         "symbolRecall": 0.5,
@@ -1739,20 +2302,81 @@
         {
           "tool": "kopt_find",
           "args": "hits \"host matches domain pattern\"",
-          "chars": 1452,
-          "tokens": 484
+          "chars": 1681,
+          "tokens": 561
         },
         {
           "tool": "kopt_read",
-          "args": "#c40",
+          "args": "#2jq",
           "chars": 591,
           "tokens": 197
         },
         {
           "tool": "kopt_read",
-          "args": "#5uq",
-          "chars": 143,
-          "tokens": 48
+          "args": "#136",
+          "chars": 307,
+          "tokens": 103
+        }
+      ]
+    },
+    {
+      "taskId": "dj-usage-same-domain",
+      "kind": "usage",
+      "strategy": "kirograph",
+      "tokens": 632,
+      "chars": 1896,
+      "toolCalls": 1,
+      "durationMs": 142,
+      "recall": {
+        "fileRecall": 0.3333333333333333,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "django/utils/http.py",
+          "django/middleware/csrf.py"
+        ],
+        "symbolsMissed": [
+          "is_same_domain",
+          "validate_host",
+          "_origin_verified",
+          "_check_referer"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "host matches domain pattern",
+          "chars": 1896,
+          "tokens": 632
+        }
+      ]
+    },
+    {
+      "taskId": "dj-usage-same-domain",
+      "kind": "usage",
+      "strategy": "codegraph",
+      "tokens": 8317,
+      "chars": 24950,
+      "toolCalls": 1,
+      "durationMs": 162,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "is_same_domain",
+          "validate_host"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "host matches domain pattern",
+          "chars": 24950,
+          "tokens": 8317
         }
       ]
     },
@@ -1763,7 +2387,7 @@
       "tokens": 50072,
       "chars": 150210,
       "toolCalls": 4,
-      "durationMs": 153,
+      "durationMs": 145,
       "recall": {
         "fileRecall": 1,
         "symbolRecall": 1,
@@ -1806,7 +2430,7 @@
       "tokens": 5566,
       "chars": 16692,
       "toolCalls": 5,
-      "durationMs": 1,
+      "durationMs": 0,
       "recall": {
         "fileRecall": 1,
         "symbolRecall": 0.75,
@@ -1854,29 +2478,24 @@
       "taskId": "dj-usage-resolve-callables",
       "kind": "usage",
       "strategy": "kopt-pack",
-      "tokens": 229,
-      "chars": 685,
+      "tokens": 358,
+      "chars": 1073,
       "toolCalls": 1,
-      "durationMs": 14,
+      "durationMs": 16,
       "recall": {
-        "fileRecall": 0.3333333333333333,
-        "symbolRecall": 0.75,
+        "fileRecall": 1,
+        "symbolRecall": 1,
         "defRecall": 0.25,
-        "filesMissed": [
-          "django/db/models/query.py",
-          "django/db/models/fields/related_descriptors.py"
-        ],
-        "symbolsMissed": [
-          "_add_items"
-        ],
-        "found": false
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
       },
       "calls": [
         {
           "tool": "kopt_find",
           "args": "pack \"resolve_callables\"",
-          "chars": 685,
-          "tokens": 229
+          "chars": 1073,
+          "tokens": 358
         }
       ]
     },
@@ -1887,7 +2506,7 @@
       "tokens": 265,
       "chars": 793,
       "toolCalls": 3,
-      "durationMs": 8,
+      "durationMs": 13,
       "recall": {
         "fileRecall": 0.3333333333333333,
         "symbolRecall": 0.25,
@@ -1912,15 +2531,73 @@
         },
         {
           "tool": "kopt_read",
-          "args": "#94f",
+          "args": "#246",
           "chars": 267,
           "tokens": 89
         },
         {
           "tool": "kopt_read",
-          "args": "#bee",
+          "args": "#iyz",
           "chars": 166,
           "tokens": 56
+        }
+      ]
+    },
+    {
+      "taskId": "dj-usage-resolve-callables",
+      "kind": "usage",
+      "strategy": "kirograph",
+      "tokens": 4203,
+      "chars": 12607,
+      "toolCalls": 1,
+      "durationMs": 98,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.25,
+        "defRecall": 0,
+        "filesMissed": [
+          "django/db/models/utils.py",
+          "django/db/models/query.py",
+          "django/db/models/fields/related_descriptors.py"
+        ],
+        "symbolsMissed": [
+          "get_or_create",
+          "update_or_create",
+          "_add_items"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "resolve_callables",
+          "chars": 12607,
+          "tokens": 4203
+        }
+      ]
+    },
+    {
+      "taskId": "dj-usage-resolve-callables",
+      "kind": "usage",
+      "strategy": "codegraph",
+      "tokens": 8332,
+      "chars": 24994,
+      "toolCalls": 1,
+      "durationMs": 116,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "resolve_callables",
+          "chars": 24994,
+          "tokens": 8332
         }
       ]
     },
@@ -1931,7 +2608,7 @@
       "tokens": 23996,
       "chars": 71984,
       "toolCalls": 2,
-      "durationMs": 128,
+      "durationMs": 145,
       "recall": {
         "fileRecall": 1,
         "symbolRecall": 1,
@@ -1962,7 +2639,7 @@
       "tokens": 2892,
       "chars": 8670,
       "toolCalls": 3,
-      "durationMs": 1,
+      "durationMs": 0,
       "recall": {
         "fileRecall": 1,
         "symbolRecall": 1,
@@ -1996,8 +2673,8 @@
       "taskId": "dj-impact-naive-now",
       "kind": "impact",
       "strategy": "kopt-pack",
-      "tokens": 162,
-      "chars": 484,
+      "tokens": 568,
+      "chars": 1704,
       "toolCalls": 1,
       "durationMs": 16,
       "recall": {
@@ -2012,8 +2689,8 @@
         {
           "tool": "kopt_find",
           "args": "pack \"_get_naive_now\"",
-          "chars": 484,
-          "tokens": 162
+          "chars": 1704,
+          "tokens": 568
         }
       ]
     },
@@ -2021,14 +2698,53 @@
       "taskId": "dj-impact-naive-now",
       "kind": "impact",
       "strategy": "kopt-hits+read",
-      "tokens": 217,
-      "chars": 647,
+      "tokens": 262,
+      "chars": 781,
       "toolCalls": 3,
-      "durationMs": 9,
+      "durationMs": 10,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "_check_fix_default_value"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"_get_naive_now\"",
+          "chars": 469,
+          "tokens": 157
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#9mh",
+          "chars": 109,
+          "tokens": 37
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#j60",
+          "chars": 203,
+          "tokens": 68
+        }
+      ]
+    },
+    {
+      "taskId": "dj-impact-naive-now",
+      "kind": "impact",
+      "strategy": "kirograph",
+      "tokens": 676,
+      "chars": 2026,
+      "toolCalls": 1,
+      "durationMs": 103,
       "recall": {
         "fileRecall": 1,
         "symbolRecall": 0.3333333333333333,
-        "defRecall": 0.3333333333333333,
+        "defRecall": 0,
         "filesMissed": [],
         "symbolsMissed": [
           "_check_if_value_fixed",
@@ -2038,22 +2754,35 @@
       },
       "calls": [
         {
-          "tool": "kopt_find",
-          "args": "hits \"_get_naive_now\"",
-          "chars": 335,
-          "tokens": 112
-        },
+          "tool": "kirograph",
+          "args": "_get_naive_now",
+          "chars": 2026,
+          "tokens": 676
+        }
+      ]
+    },
+    {
+      "taskId": "dj-impact-naive-now",
+      "kind": "impact",
+      "strategy": "codegraph",
+      "tokens": 8324,
+      "chars": 24972,
+      "toolCalls": 1,
+      "durationMs": 77,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
         {
-          "tool": "kopt_read",
-          "args": "#9gq",
-          "chars": 109,
-          "tokens": 37
-        },
-        {
-          "tool": "kopt_read",
-          "args": "#c87",
-          "chars": 203,
-          "tokens": 68
+          "tool": "codegraph",
+          "args": "_get_naive_now",
+          "chars": 24972,
+          "tokens": 8324
         }
       ]
     },
@@ -2064,7 +2793,7 @@
       "tokens": 77892,
       "chars": 233674,
       "toolCalls": 4,
-      "durationMs": 1156,
+      "durationMs": 2242,
       "recall": {
         "fileRecall": 0,
         "symbolRecall": 0,
@@ -2165,26 +2894,24 @@
       "taskId": "dj-impact-same-field-operation",
       "kind": "impact",
       "strategy": "kopt-pack",
-      "tokens": 710,
-      "chars": 2129,
+      "tokens": 1113,
+      "chars": 3339,
       "toolCalls": 1,
-      "durationMs": 53,
+      "durationMs": 89,
       "recall": {
         "fileRecall": 1,
-        "symbolRecall": 0.6666666666666666,
+        "symbolRecall": 1,
         "defRecall": 0.3333333333333333,
         "filesMissed": [],
-        "symbolsMissed": [
-          "AddField"
-        ],
-        "found": false
+        "symbolsMissed": [],
+        "found": true
       },
       "calls": [
         {
           "tool": "kopt_find",
           "args": "pack \"field operation same field model name\"",
-          "chars": 2129,
-          "tokens": 710
+          "chars": 3339,
+          "tokens": 1113
         }
       ]
     },
@@ -2192,38 +2919,92 @@
       "taskId": "dj-impact-same-field-operation",
       "kind": "impact",
       "strategy": "kopt-hits+read",
-      "tokens": 717,
-      "chars": 2147,
+      "tokens": 730,
+      "chars": 2188,
       "toolCalls": 3,
-      "durationMs": 34,
+      "durationMs": 77,
       "recall": {
         "fileRecall": 1,
-        "symbolRecall": 0.6666666666666666,
+        "symbolRecall": 1,
         "defRecall": 0.3333333333333333,
         "filesMissed": [],
-        "symbolsMissed": [
-          "AddField"
-        ],
-        "found": false
+        "symbolsMissed": [],
+        "found": true
       },
       "calls": [
         {
           "tool": "kopt_find",
           "args": "hits \"field operation same field model name\"",
-          "chars": 1741,
-          "tokens": 581
+          "chars": 1782,
+          "tokens": 594
         },
         {
           "tool": "kopt_read",
-          "args": "#7i5",
+          "args": "#can",
           "chars": 169,
           "tokens": 57
         },
         {
           "tool": "kopt_read",
-          "args": "#7i6",
+          "args": "#cao",
           "chars": 237,
           "tokens": 79
+        }
+      ]
+    },
+    {
+      "taskId": "dj-impact-same-field-operation",
+      "kind": "impact",
+      "strategy": "kirograph",
+      "tokens": 682,
+      "chars": 2046,
+      "toolCalls": 1,
+      "durationMs": 85,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "django/db/migrations/operations/fields.py"
+        ],
+        "symbolsMissed": [
+          "is_same_field_operation",
+          "AddField",
+          "AlterField"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "field operation same field model name",
+          "chars": 2046,
+          "tokens": 682
+        }
+      ]
+    },
+    {
+      "taskId": "dj-impact-same-field-operation",
+      "kind": "impact",
+      "strategy": "codegraph",
+      "tokens": 8323,
+      "chars": 24968,
+      "toolCalls": 1,
+      "durationMs": 252,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "field operation same field model name",
+          "chars": 24968,
+          "tokens": 8323
         }
       ]
     },
@@ -2234,7 +3015,7 @@
       "tokens": 43715,
       "chars": 131138,
       "toolCalls": 4,
-      "durationMs": 128,
+      "durationMs": 379,
       "recall": {
         "fileRecall": 1,
         "symbolRecall": 0.75,
@@ -2325,27 +3106,24 @@
       "taskId": "dj-impact-migrations-module",
       "kind": "impact",
       "strategy": "kopt-pack",
-      "tokens": 323,
-      "chars": 967,
+      "tokens": 488,
+      "chars": 1462,
       "toolCalls": 1,
-      "durationMs": 13,
+      "durationMs": 70,
       "recall": {
-        "fileRecall": 0.3333333333333333,
+        "fileRecall": 1,
         "symbolRecall": 1,
         "defRecall": 0.25,
-        "filesMissed": [
-          "django/db/migrations/questioner.py",
-          "django/db/migrations/writer.py"
-        ],
+        "filesMissed": [],
         "symbolsMissed": [],
-        "found": false
+        "found": true
       },
       "calls": [
         {
           "tool": "kopt_find",
           "args": "pack \"MigrationLoader migrations_module\"",
-          "chars": 967,
-          "tokens": 323
+          "chars": 1462,
+          "tokens": 488
         }
       ]
     },
@@ -2353,10 +3131,10 @@
       "taskId": "dj-impact-migrations-module",
       "kind": "impact",
       "strategy": "kopt-hits+read",
-      "tokens": 705,
-      "chars": 2114,
+      "tokens": 778,
+      "chars": 2331,
       "toolCalls": 3,
-      "durationMs": 10,
+      "durationMs": 27,
       "recall": {
         "fileRecall": 0.3333333333333333,
         "symbolRecall": 0.5,
@@ -2375,20 +3153,76 @@
         {
           "tool": "kopt_find",
           "args": "hits \"MigrationLoader migrations_module\"",
-          "chars": 426,
-          "tokens": 142
+          "chars": 643,
+          "tokens": 215
         },
         {
           "tool": "kopt_read",
-          "args": "#7a3",
+          "args": "#c8v",
           "chars": 575,
           "tokens": 192
         },
         {
           "tool": "kopt_read",
-          "args": "#7a1",
+          "args": "#c8t",
           "chars": 1113,
           "tokens": 371
+        }
+      ]
+    },
+    {
+      "taskId": "dj-impact-migrations-module",
+      "kind": "impact",
+      "strategy": "kirograph",
+      "tokens": 799,
+      "chars": 2396,
+      "toolCalls": 1,
+      "durationMs": 70,
+      "recall": {
+        "fileRecall": 0.6666666666666666,
+        "symbolRecall": 0.25,
+        "defRecall": 0,
+        "filesMissed": [
+          "django/db/migrations/questioner.py"
+        ],
+        "symbolsMissed": [
+          "load_disk",
+          "ask_initial",
+          "basedir"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "MigrationLoader migrations_module",
+          "chars": 2396,
+          "tokens": 799
+        }
+      ]
+    },
+    {
+      "taskId": "dj-impact-migrations-module",
+      "kind": "impact",
+      "strategy": "codegraph",
+      "tokens": 8319,
+      "chars": 24955,
+      "toolCalls": 1,
+      "durationMs": 152,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "MigrationLoader migrations_module",
+          "chars": 24955,
+          "tokens": 8319
         }
       ]
     }
@@ -2435,36 +3269,72 @@
       "tasks": 15,
       "skipped": 0,
       "errors": 0,
-      "medianTokens": 627,
-      "meanTokens": 615,
-      "p90Tokens": 1053,
-      "totalTokens": 9223,
-      "totalChars": 27654,
+      "medianTokens": 1206,
+      "meanTokens": 1017,
+      "p90Tokens": 1362,
+      "totalTokens": 15250,
+      "totalChars": 45739,
       "meanToolCalls": 1,
-      "meanFileRecall": 0.888888888888889,
-      "meanSymbolRecall": 0.8888888888888888,
+      "meanFileRecall": 1,
+      "meanSymbolRecall": 0.9666666666666667,
       "meanDefRecall": 0.5777777777777777,
-      "found": 8,
-      "foundRate": 0.5333333333333333,
-      "tokensPerFound": 1153
+      "found": 13,
+      "foundRate": 0.8666666666666667,
+      "tokensPerFound": 1173
     },
     {
       "strategy": "kopt-hits+read",
       "tasks": 15,
       "skipped": 0,
       "errors": 0,
-      "medianTokens": 729,
-      "meanTokens": 910,
-      "p90Tokens": 1734,
-      "totalTokens": 13657,
-      "totalChars": 40919,
+      "medianTokens": 861,
+      "meanTokens": 1127,
+      "p90Tokens": 1877,
+      "totalTokens": 16904,
+      "totalChars": 50658,
       "meanToolCalls": 3,
       "meanFileRecall": 0.888888888888889,
-      "meanSymbolRecall": 0.6777777777777777,
-      "meanDefRecall": 0.6333333333333333,
-      "found": 5,
-      "foundRate": 0.3333333333333333,
-      "tokensPerFound": 2731
+      "meanSymbolRecall": 0.7444444444444444,
+      "meanDefRecall": 0.611111111111111,
+      "found": 7,
+      "foundRate": 0.4666666666666667,
+      "tokensPerFound": 2415
+    },
+    {
+      "strategy": "kirograph",
+      "tasks": 15,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 799,
+      "meanTokens": 1289,
+      "p90Tokens": 3407,
+      "totalTokens": 19329,
+      "totalChars": 57970,
+      "meanToolCalls": 1,
+      "meanFileRecall": 0.4,
+      "meanSymbolRecall": 0.2555555555555556,
+      "meanDefRecall": 0,
+      "found": 1,
+      "foundRate": 0.06666666666666667,
+      "tokensPerFound": 19329
+    },
+    {
+      "strategy": "codegraph",
+      "tasks": 15,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 8317,
+      "meanTokens": 8102,
+      "p90Tokens": 8330,
+      "totalTokens": 121532,
+      "totalChars": 364579,
+      "meanToolCalls": 1,
+      "meanFileRecall": 0.9,
+      "meanSymbolRecall": 0.8055555555555556,
+      "meanDefRecall": 0.6222222222222221,
+      "found": 8,
+      "foundRate": 0.5333333333333333,
+      "tokensPerFound": 15192
     }
   ],
   "paired": [
@@ -2472,45 +3342,111 @@
       "a": "native-naive",
       "b": "kopt-pack",
       "nRun": 15,
-      "nBoth": 5,
-      "onlyA": 2,
-      "onlyB": 3,
-      "medianRatio": 0.015243765948874066,
-      "geoMeanRatio": 0.012847483477103289,
-      "bCheaper": 5
+      "nBoth": 6,
+      "onlyA": 1,
+      "onlyB": 7,
+      "medianRatio": 0.022771116928218288,
+      "geoMeanRatio": 0.024502111129259787,
+      "bCheaper": 6
     },
     {
       "a": "native-ranged",
       "b": "kopt-pack",
       "nRun": 15,
-      "nBoth": 6,
-      "onlyA": 2,
-      "onlyB": 2,
-      "medianRatio": 0.09196089335869408,
-      "geoMeanRatio": 0.08413602646823105,
-      "bCheaper": 6
+      "nBoth": 7,
+      "onlyA": 1,
+      "onlyB": 6,
+      "medianRatio": 0.17275204359673024,
+      "geoMeanRatio": 0.15989957020886317,
+      "bCheaper": 7
     },
     {
       "a": "native-naive",
       "b": "kopt-hits+read",
       "nRun": 15,
-      "nBoth": 2,
-      "onlyA": 5,
-      "onlyB": 3,
-      "medianRatio": 0.030176677901079925,
-      "geoMeanRatio": 0.028012987435417178,
-      "bCheaper": 2
+      "nBoth": 3,
+      "onlyA": 4,
+      "onlyB": 4,
+      "medianRatio": 0.0431682803983349,
+      "geoMeanRatio": 0.036524499577792705,
+      "bCheaper": 3
     },
     {
       "a": "native-ranged",
       "b": "kopt-hits+read",
       "nRun": 15,
-      "nBoth": 3,
-      "onlyA": 5,
-      "onlyB": 2,
-      "medianRatio": 0.29929105192565625,
-      "geoMeanRatio": 0.25006223712459347,
-      "bCheaper": 3
+      "nBoth": 4,
+      "onlyA": 4,
+      "onlyB": 3,
+      "medianRatio": 0.24118474433429404,
+      "geoMeanRatio": 0.20663177261301552,
+      "bCheaper": 4
+    },
+    {
+      "a": "kirograph",
+      "b": "kopt-pack",
+      "nRun": 15,
+      "nBoth": 1,
+      "onlyA": 0,
+      "onlyB": 12,
+      "medianRatio": 0.27913120046962137,
+      "geoMeanRatio": 0.27913120046962137,
+      "bCheaper": 1
+    },
+    {
+      "a": "codegraph",
+      "b": "kopt-pack",
+      "nRun": 15,
+      "nBoth": 7,
+      "onlyA": 1,
+      "onlyB": 6,
+      "medianRatio": 0.1143991338866835,
+      "geoMeanRatio": 0.0938302135696269,
+      "bCheaper": 7
+    },
+    {
+      "a": "kirograph",
+      "b": "kopt-hits+read",
+      "nRun": 15,
+      "nBoth": 1,
+      "onlyA": 0,
+      "onlyB": 6,
+      "medianRatio": 0.5509245670678016,
+      "geoMeanRatio": 0.5509245670678016,
+      "bCheaper": 1
+    },
+    {
+      "a": "codegraph",
+      "b": "kopt-hits+read",
+      "nRun": 15,
+      "nBoth": 4,
+      "onlyA": 4,
+      "onlyB": 3,
+      "medianRatio": 0.1278784259377121,
+      "geoMeanRatio": 0.13193702372169316,
+      "bCheaper": 4
+    },
+    {
+      "a": "native-ranged",
+      "b": "kirograph",
+      "nRun": 15,
+      "nBoth": 1,
+      "onlyA": 7,
+      "onlyB": 0,
+      "medianRatio": 0.6188919164396004,
+      "geoMeanRatio": 0.6188919164396004,
+      "bCheaper": 1
+    },
+    {
+      "a": "native-ranged",
+      "b": "codegraph",
+      "nRun": 15,
+      "nBoth": 5,
+      "onlyA": 3,
+      "onlyB": 3,
+      "medianRatio": 1.0404154154154155,
+      "geoMeanRatio": 1.359710155348326,
+      "bCheaper": 1
     },
     {
       "a": "native-naive",
@@ -2543,15 +3479,29 @@
       "kind": "locate",
       "strategy": "kopt-pack",
       "tasks": 4,
-      "found": 3,
-      "medianTokens": 1051.5
+      "found": 4,
+      "medianTokens": 1299
     },
     {
       "kind": "locate",
       "strategy": "kopt-hits+read",
       "tasks": 4,
       "found": 3,
-      "medianTokens": 1090.5
+      "medianTokens": 1151.5
+    },
+    {
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tasks": 4,
+      "found": 0,
+      "medianTokens": 813
+    },
+    {
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tasks": 4,
+      "found": 2,
+      "medianTokens": 8317
     },
     {
       "kind": "explain",
@@ -2572,14 +3522,28 @@
       "strategy": "kopt-pack",
       "tasks": 4,
       "found": 2,
-      "medianTokens": 530
+      "medianTokens": 1264.5
     },
     {
       "kind": "explain",
       "strategy": "kopt-hits+read",
       "tasks": 4,
       "found": 2,
-      "medianTokens": 1178.5
+      "medianTokens": 1762
+    },
+    {
+      "kind": "explain",
+      "strategy": "kirograph",
+      "tasks": 4,
+      "found": 1,
+      "medianTokens": 1663
+    },
+    {
+      "kind": "explain",
+      "strategy": "codegraph",
+      "tasks": 4,
+      "found": 2,
+      "medianTokens": 8315
     },
     {
       "kind": "usage",
@@ -2599,15 +3563,29 @@
       "kind": "usage",
       "strategy": "kopt-pack",
       "tasks": 4,
-      "found": 2,
-      "medianTokens": 466
+      "found": 4,
+      "medianTokens": 728.5
     },
     {
       "kind": "usage",
       "strategy": "kopt-hits+read",
       "tasks": 4,
+      "found": 1,
+      "medianTokens": 607.5
+    },
+    {
+      "kind": "usage",
+      "strategy": "kirograph",
+      "tasks": 4,
       "found": 0,
-      "medianTokens": 721
+      "medianTokens": 702
+    },
+    {
+      "kind": "usage",
+      "strategy": "codegraph",
+      "tasks": 4,
+      "found": 1,
+      "medianTokens": 8314
     },
     {
       "kind": "impact",
@@ -2627,15 +3605,29 @@
       "kind": "impact",
       "strategy": "kopt-pack",
       "tasks": 3,
-      "found": 1,
-      "medianTokens": 323
+      "found": 3,
+      "medianTokens": 568
     },
     {
       "kind": "impact",
       "strategy": "kopt-hits+read",
       "tasks": 3,
+      "found": 1,
+      "medianTokens": 730
+    },
+    {
+      "kind": "impact",
+      "strategy": "kirograph",
+      "tasks": 3,
       "found": 0,
-      "medianTokens": 705
+      "medianTokens": 682
+    },
+    {
+      "kind": "impact",
+      "strategy": "codegraph",
+      "tasks": 3,
+      "found": 3,
+      "medianTokens": 8323
     }
   ]
 }

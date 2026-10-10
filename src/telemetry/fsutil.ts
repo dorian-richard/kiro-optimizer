@@ -1,7 +1,7 @@
 // Small synchronous file and path helpers shared by hooks, telemetry, compress, indexer and retrieval
 // (short-lived processes, no daemons). Everything here must behave the same on Linux, macOS and Windows.
 
-import { closeSync, mkdirSync, openSync, readFileSync, renameSync, statSync, unlinkSync, writeFileSync } from 'node:fs';
+import { appendFileSync, chmodSync, closeSync, mkdirSync, openSync, readFileSync, renameSync, statSync, unlinkSync, writeFileSync } from 'node:fs';
 import { rename as renameAsync } from 'node:fs/promises';
 import { dirname, posix } from 'node:path';
 
@@ -180,7 +180,7 @@ function lockBusy(err: unknown): boolean {
  */
 export function withFileLock<T>(lockPath: string, fn: () => T, opts: { timeoutMs?: number; staleMs?: number; runUnlocked?: boolean } = {}): T | undefined {
   const { timeoutMs = 150, staleMs = 2000, runUnlocked = true } = opts;
-  mkdirSync(dirname(lockPath), { recursive: true });
+  mkdirPrivate(dirname(lockPath));
   const deadline = Date.now() + timeoutMs;
   let fd: number | undefined;
   while (fd === undefined) {
@@ -206,11 +206,49 @@ export function withFileLock<T>(lockPath: string, fn: () => T, opts: { timeoutMs
   }
 }
 
-/** Write to a temp file next to `path`, then rename over it (retrying transient Windows sharing violations). */
+// ---------------------------------------------------------------------------------------------------------------
+// Private files: kopt's user folder holds session state, usage logs, hook error logs and install state; command
+// logs can contain secrets. On POSIX they are created owner-only (0700 folders, 0600 files) whatever the umask;
+// Windows ignores the mode bits (the user profile is already private).
+
+export const PRIVATE_DIR_MODE = 0o700;
+export const PRIVATE_FILE_MODE = 0o600;
+
+/** mkdir -p with owner-only permissions for the folders it creates. */
+export function mkdirPrivate(dir: string): void {
+  mkdirSync(dir, { recursive: true, mode: PRIVATE_DIR_MODE });
+}
+
+/** Tighten an existing folder kopt owns to 0700 (POSIX; best effort, e.g. a ~/.kopt created by an older version). */
+export function tightenDir(dir: string): void {
+  if (process.platform === 'win32') return;
+  try {
+    const st = statSync(dir);
+    if (st.isDirectory() && (st.mode & 0o077) !== 0) chmodSync(dir, st.mode & ~0o077 & 0o7777);
+  } catch {
+    // missing or not ours
+  }
+}
+
+/** writeFileSync of a private file (0600 on POSIX, also when the file already existed with a wider mode). */
+export function writePrivateFile(path: string, data: string): void {
+  mkdirPrivate(dirname(path));
+  writeFileSync(path, data, { mode: PRIVATE_FILE_MODE });
+  if (process.platform !== 'win32') {
+    try { chmodSync(path, PRIVATE_FILE_MODE); } catch { /* best effort */ }
+  }
+}
+
+/** appendFileSync of a private file (created 0600 on POSIX). */
+export function appendPrivateFile(path: string, data: string): void {
+  appendFileSync(path, data, { mode: PRIVATE_FILE_MODE });
+}
+
+/** Write to a temp file next to `path`, then rename over it (retrying transient Windows sharing violations). Private. */
 export function atomicWrite(path: string, data: string): void {
-  mkdirSync(dirname(path), { recursive: true });
+  mkdirPrivate(dirname(path));
   const tmp = `${path}.${process.pid}.${Math.random().toString(36).slice(2, 8)}.tmp`;
-  writeFileSync(tmp, data);
+  writeFileSync(tmp, data, { mode: PRIVATE_FILE_MODE });
   try {
     renameWithRetry(tmp, path);
   } catch (err) {

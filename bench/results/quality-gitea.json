@@ -1,0 +1,273 @@
+{
+  "repo": "gitea",
+  "language": "go",
+  "repoRoot": "bench/repos/gitea",
+  "headCommit": "4ebd5e319b6a9e629bfd7a04292a6fe85b08dee9",
+  "date": "2026-10-09T22:38:04.151Z",
+  "index": {
+    "built": true,
+    "durationMs": 6271,
+    "files": 3402,
+    "symbols": 32905,
+    "refs": 226318,
+    "path": "<index-dir>/.kopt-gitea/index.db"
+  },
+  "files": {
+    "indexed": 3402,
+    "skipped": 3,
+    "skippedByReason": {
+      "minified": 3
+    },
+    "indexedByLang": {
+      "go": 3135,
+      "typescript": 267
+    }
+  },
+  "langs": [
+    {
+      "lang": "go",
+      "files": 3135,
+      "lines": 501132,
+      "symbols": 31784,
+      "symbolsPerKloc": 63.42,
+      "byKind": {
+        "function": {
+          "count": 11636,
+          "perKloc": 23.22
+        },
+        "field": {
+          "count": 9650,
+          "perKloc": 19.26
+        },
+        "method": {
+          "count": 4786,
+          "perKloc": 9.55
+        },
+        "constant": {
+          "count": 3025,
+          "perKloc": 6.04
+        },
+        "struct": {
+          "count": 2223,
+          "perKloc": 4.44
+        },
+        "type": {
+          "count": 319,
+          "perKloc": 0.64
+        },
+        "interface": {
+          "count": 145,
+          "perKloc": 0.29
+        }
+      },
+      "refs": 214747,
+      "refsResolved": 132005,
+      "resolvedRate": 0.6147,
+      "refsWithCandidate": 182070,
+      "resolvedOfCandidates": 0.725,
+      "refsByKind": {
+        "call": {
+          "total": 98162,
+          "resolved": 53665
+        },
+        "read": {
+          "total": 53482,
+          "resolved": 33217
+        },
+        "write": {
+          "total": 27688,
+          "resolved": 22984
+        },
+        "type_ref": {
+          "total": 24954,
+          "resolved": 13784
+        },
+        "new": {
+          "total": 10062,
+          "resolved": 8238
+        },
+        "inherit": {
+          "total": 399,
+          "resolved": 117
+        }
+      },
+      "parse": {
+        "sampledFiles": 1000,
+        "sampledLines": 160342,
+        "filesWithErrors": 13,
+        "errorNodes": 51,
+        "missingNodes": 7,
+        "errorFileRate": 0.013,
+        "errorsPerKloc": 0.362,
+        "parseFailures": 0,
+        "worst": [
+          {
+            "path": "tests/integration/repofiles_change_test.go",
+            "errors": 14,
+            "firstErrorLine": 108
+          },
+          {
+            "path": "modules/web/router_test.go",
+            "errors": 13,
+            "firstErrorLine": 56
+          },
+          {
+            "path": "tests/integration/api_pull_test.go",
+            "errors": 7,
+            "firstErrorLine": 513
+          },
+          {
+            "path": "tests/integration/api_admin_test.go",
+            "errors": 5,
+            "firstErrorLine": 207
+          },
+          {
+            "path": "tests/integration/api_repo_get_contents_list_test.go",
+            "errors": 4,
+            "firstErrorLine": 38
+          },
+          {
+            "path": "modules/git/commit_message.go",
+            "errors": 3,
+            "firstErrorLine": 48
+          },
+          {
+            "path": "services/gitdiff/gitdiff.go",
+            "errors": 3,
+            "firstErrorLine": 406
+          },
+          {
+            "path": "tests/integration/api_repo_file_create_test.go",
+            "errors": 3,
+            "firstErrorLine": 55
+          }
+        ]
+      },
+      "precision": {
+        "sampled": 30,
+        "nameOk": 30,
+        "startOk": 30,
+        "endOk": 30,
+        "signatureOk": 30,
+        "allOk": 30,
+        "rate": 1,
+        "failures": []
+      }
+    },
+    {
+      "lang": "typescript",
+      "files": 267,
+      "lines": 24578,
+      "symbols": 1121,
+      "symbolsPerKloc": 45.61,
+      "byKind": {
+        "function": {
+          "count": 687,
+          "perKloc": 27.95
+        },
+        "type": {
+          "count": 153,
+          "perKloc": 6.23
+        },
+        "method": {
+          "count": 93,
+          "perKloc": 3.78
+        },
+        "field": {
+          "count": 81,
+          "perKloc": 3.3
+        },
+        "property": {
+          "count": 42,
+          "perKloc": 1.71
+        },
+        "class": {
+          "count": 19,
+          "perKloc": 0.77
+        },
+        "constant": {
+          "count": 16,
+          "perKloc": 0.65
+        },
+        "constructor": {
+          "count": 14,
+          "perKloc": 0.57
+        },
+        "namespace": {
+          "count": 10,
+          "perKloc": 0.41
+        },
+        "interface": {
+          "count": 6,
+          "perKloc": 0.24
+        }
+      },
+      "refs": 11571,
+      "refsResolved": 3329,
+      "resolvedRate": 0.2877,
+      "refsWithCandidate": 5284,
+      "resolvedOfCandidates": 0.63,
+      "refsByKind": {
+        "call": {
+          "total": 6441,
+          "resolved": 1536
+        },
+        "read": {
+          "total": 1823,
+          "resolved": 240
+        },
+        "import": {
+          "total": 1402,
+          "resolved": 1039
+        },
+        "type_ref": {
+          "total": 1072,
+          "resolved": 377
+        },
+        "write": {
+          "total": 517,
+          "resolved": 114
+        },
+        "new": {
+          "total": 314,
+          "resolved": 22
+        },
+        "implement": {
+          "total": 1,
+          "resolved": 1
+        },
+        "inherit": {
+          "total": 1,
+          "resolved": 0
+        }
+      },
+      "parse": {
+        "sampledFiles": 267,
+        "sampledLines": 24845,
+        "filesWithErrors": 0,
+        "errorNodes": 0,
+        "missingNodes": 0,
+        "errorFileRate": 0,
+        "errorsPerKloc": 0,
+        "parseFailures": 0,
+        "worst": []
+      },
+      "precision": {
+        "sampled": 30,
+        "nameOk": 30,
+        "startOk": 30,
+        "endOk": 30,
+        "signatureOk": 30,
+        "allOk": 30,
+        "rate": 1,
+        "failures": []
+      }
+    }
+  ],
+  "settings": {
+    "parseSamplePerLang": 1000,
+    "precisionSamplePerLang": 30,
+    "seed": "gitea"
+  },
+  "durationMs": 1509
+}

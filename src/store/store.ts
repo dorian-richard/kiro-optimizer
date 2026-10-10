@@ -1,7 +1,13 @@
 import { mkdirSync, readFileSync, existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { DatabaseSync, type StatementSync } from 'node:sqlite';
+import { lockHolder } from '../indexer/lock.js';
 import { META, SCHEMA_SQL, SCHEMA_VERSION, type FileRow, type SymbolRow } from './schema.js';
+
+/** The schema without its secondary indexes (a bulk first build drops them and recreates them at its end). */
+const SCHEMA_TABLES_SQL = SCHEMA_SQL.replace(/^CREATE INDEX IF NOT EXISTS[^;]*;[ \t]*$/gm, '');
+/** How long a statement waits for another connection's write transaction (an indexing batch) before failing. */
+export const BUSY_TIMEOUT_MS = 10_000;
 
 /**
  * Thin wrapper over node:sqlite. Write paths live in indexer/, read paths in retrieval/;
@@ -24,9 +30,14 @@ export class Store {
     if (path !== ':memory:') mkdirSync(dirname(path), { recursive: true });
     const db = new DatabaseSync(path, { readOnly: !!opts.readonly });
     const store = new Store(path, db, opts.root);
+    // another process may be writing a batch (a Kiro window's server building the index): wait, do not fail
+    db.exec(`PRAGMA busy_timeout = ${BUSY_TIMEOUT_MS}`);
     if (!opts.readonly) {
       db.exec('PRAGMA journal_mode=WAL; PRAGMA synchronous=NORMAL; PRAGMA foreign_keys=ON; PRAGMA temp_store=MEMORY;');
-      db.exec(SCHEMA_SQL);
+      // While another process runs an indexing pass, its bulk first build may have dropped the secondary indexes:
+      // recreating them here would hold the write lock for minutes in the middle of its build. It restores them.
+      const building = path !== ':memory:' && lockHolder(`${path}.lock`) !== undefined;
+      db.exec(building ? SCHEMA_TABLES_SQL : SCHEMA_SQL);
       const v = store.getMeta(META.schemaVersion);
       if (v === undefined) store.setMeta(META.schemaVersion, String(SCHEMA_VERSION));
       else if (Number(v) !== SCHEMA_VERSION) {

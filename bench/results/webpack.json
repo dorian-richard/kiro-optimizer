@@ -1,0 +1,3034 @@
+{
+  "meta": {
+    "label": "webpack",
+    "repo": {
+      "name": "webpack",
+      "url": "https://github.com/webpack/webpack.git",
+      "tag": "v5.111.1",
+      "commit": "5a106753839fd7e1b86138c3a5f6b348341147a7",
+      "language": "javascript",
+      "path": "bench/repos/webpack"
+    },
+    "repoRoot": "bench/repos/webpack",
+    "headCommit": "5a106753839fd7e1b86138c3a5f6b348341147a7",
+    "date": "2026-10-09T22:37:49.719Z",
+    "input": "search",
+    "charsPerToken": 3,
+    "strategies": [
+      "native-naive",
+      "native-ranged",
+      "kopt-pack",
+      "kopt-hits+read",
+      "kirograph",
+      "codegraph"
+    ],
+    "grepLimits": {
+      "maxMatches": 100,
+      "maxChars": 10000,
+      "maxLineChars": 250
+    },
+    "readLimits": {
+      "naiveTopFiles": 3,
+      "naiveMaxLines": 2000,
+      "rangedMatches": 4,
+      "rangedContext": 60
+    },
+    "koptBudgets": {
+      "find": 700,
+      "pack": 2500,
+      "read": 3000
+    },
+    "index": {
+      "built": false,
+      "durationMs": 0,
+      "files": 14902,
+      "symbols": 22575,
+      "path": "<index-dir>/.kopt-webpack/index.db"
+    },
+    "notes": [
+      "kirograph: outputs loaded from bench/competitors/results/kirograph-webpack.jsonl",
+      "codegraph: outputs loaded from bench/competitors/results/codegraph-webpack.jsonl"
+    ],
+    "durationMs": 22674
+  },
+  "results": [
+    {
+      "taskId": "wp-locate-dotenv-expand",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 47931,
+      "chars": 143791,
+      "toolCalls": 4,
+      "durationMs": 2671,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "dotenv",
+          "chars": 9787,
+          "tokens": 3263
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/DotenvPlugin.js",
+          "chars": 16380,
+          "tokens": 5460
+        },
+        {
+          "tool": "read_file",
+          "args": "test/__snapshots__/Cli.basictest.js.snap",
+          "chars": 72252,
+          "tokens": 24084
+        },
+        {
+          "tool": "read_file",
+          "args": "types.d.ts",
+          "chars": 45372,
+          "tokens": 15124
+        }
+      ]
+    },
+    {
+      "taskId": "wp-locate-dotenv-expand",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 143254,
+      "chars": 429753,
+      "toolCalls": 5,
+      "durationMs": 3,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "dotenv",
+          "chars": 9787,
+          "tokens": 3263
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/DotenvPlugin.js:194-314",
+          "chars": 3760,
+          "tokens": 1254
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/errors/DotenvFileError.js:1-30",
+          "chars": 721,
+          "tokens": 241
+        },
+        {
+          "tool": "read_file",
+          "args": "schemas/WebpackOptions.check.js:1-6",
+          "chars": 412976,
+          "tokens": 137659
+        },
+        {
+          "tool": "read_file",
+          "args": "types.d.ts:7273-7393",
+          "chars": 2509,
+          "tokens": 837
+        }
+      ]
+    },
+    {
+      "taskId": "wp-locate-dotenv-expand",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1376,
+      "chars": 4127,
+      "toolCalls": 1,
+      "durationMs": 44,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"dotenv expand variable references default value\"",
+          "chars": 4127,
+          "tokens": 1376
+        }
+      ]
+    },
+    {
+      "taskId": "wp-locate-dotenv-expand",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 1596,
+      "chars": 4785,
+      "toolCalls": 3,
+      "durationMs": 22,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"dotenv expand variable references default value\"",
+          "chars": 2056,
+          "tokens": 686
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#3f6",
+          "chars": 1749,
+          "tokens": 583
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#3f7",
+          "chars": 980,
+          "tokens": 327
+        }
+      ]
+    },
+    {
+      "taskId": "wp-locate-dotenv-expand",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tokens": 1927,
+      "chars": 5779,
+      "toolCalls": 1,
+      "durationMs": 246,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "dotenv expand variable references default value",
+          "chars": 5779,
+          "tokens": 1927
+        }
+      ]
+    },
+    {
+      "taskId": "wp-locate-dotenv-expand",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tokens": 8325,
+      "chars": 24973,
+      "toolCalls": 1,
+      "durationMs": 12630,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "dotenv expand variable references default value",
+          "chars": 24973,
+          "tokens": 8325
+        }
+      ]
+    },
+    {
+      "taskId": "wp-locate-semver-satisfy",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 52305,
+      "chars": 156911,
+      "toolCalls": 4,
+      "durationMs": 3937,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/util/semver.js"
+        ],
+        "symbolsMissed": [
+          "satisfy",
+          "satisfyRuntimeCode"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "satisfies",
+          "chars": 1357,
+          "tokens": 453
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/sharing/utils.js",
+          "chars": 10332,
+          "tokens": 3444
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/html/syntax.js",
+          "chars": 99969,
+          "tokens": 33323
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/util/SourceProcessor.js",
+          "chars": 45253,
+          "tokens": 15085
+        }
+      ]
+    },
+    {
+      "taskId": "wp-locate-semver-satisfy",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 5853,
+      "chars": 17554,
+      "toolCalls": 5,
+      "durationMs": 2,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/util/semver.js"
+        ],
+        "symbolsMissed": [
+          "satisfy",
+          "satisfyRuntimeCode"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "satisfies",
+          "chars": 1357,
+          "tokens": 453
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/html/syntax.js:6634-6754",
+          "chars": 3372,
+          "tokens": 1124
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/sharing/utils.js:291-411",
+          "chars": 3384,
+          "tokens": 1128
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/util/SourceProcessor.js:108-228",
+          "chars": 4931,
+          "tokens": 1644
+        },
+        {
+          "tool": "read_file",
+          "args": "tooling/generate-css-data.js:5307-5427",
+          "chars": 4510,
+          "tokens": 1504
+        }
+      ]
+    },
+    {
+      "taskId": "wp-locate-semver-satisfy",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1307,
+      "chars": 3921,
+      "toolCalls": 1,
+      "durationMs": 45,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"shared module version satisfies required semver range runtime code\"",
+          "chars": 3921,
+          "tokens": 1307
+        }
+      ]
+    },
+    {
+      "taskId": "wp-locate-semver-satisfy",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 2663,
+      "chars": 7985,
+      "toolCalls": 3,
+      "durationMs": 30,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"shared module version satisfies required semver range runtime code\"",
+          "chars": 1582,
+          "tokens": 528
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#7bp",
+          "chars": 875,
+          "tokens": 292
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#7bk",
+          "chars": 5528,
+          "tokens": 1843
+        }
+      ]
+    },
+    {
+      "taskId": "wp-locate-semver-satisfy",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tokens": 729,
+      "chars": 2186,
+      "toolCalls": 1,
+      "durationMs": 146,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/util/semver.js"
+        ],
+        "symbolsMissed": [
+          "satisfy",
+          "satisfyRuntimeCode"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "shared module version satisfies required semver range runtime code",
+          "chars": 2186,
+          "tokens": 729
+        }
+      ]
+    },
+    {
+      "taskId": "wp-locate-semver-satisfy",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tokens": 8329,
+      "chars": 24987,
+      "toolCalls": 1,
+      "durationMs": 325,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "satisfy"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "shared module version satisfies required semver range runtime code",
+          "chars": 24987,
+          "tokens": 8329
+        }
+      ]
+    },
+    {
+      "taskId": "wp-locate-case-mismatch",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 40131,
+      "chars": 120387,
+      "toolCalls": 4,
+      "durationMs": 2802,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [
+          "lib/util/findCaseMismatch.js"
+        ],
+        "symbolsMissed": [],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "suggestion",
+          "chars": 4028,
+          "tokens": 1343
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/NormalModuleFactory.js",
+          "chars": 65939,
+          "tokens": 21980
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/WarnDeprecatedOptionPlugin.js",
+          "chars": 1696,
+          "tokens": 566
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/html/data.js",
+          "chars": 48724,
+          "tokens": 16242
+        }
+      ]
+    },
+    {
+      "taskId": "wp-locate-case-mismatch",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 5156,
+      "chars": 15462,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/util/findCaseMismatch.js"
+        ],
+        "symbolsMissed": [
+          "findCaseMismatch",
+          "_resolveResourceErrorHints"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "suggestion",
+          "chars": 4028,
+          "tokens": 1343
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/NormalModuleFactory.js:246-366",
+          "chars": 4308,
+          "tokens": 1436
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/NormalModuleFactory.js:1465-1585",
+          "chars": 4997,
+          "tokens": 1666
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/WarnDeprecatedOptionPlugin.js:1-65",
+          "chars": 1696,
+          "tokens": 566
+        },
+        {
+          "tool": "read_file",
+          "args": "test/configCases/errors/module-not-found-suggestion-unresolvable/index.js:1-13",
+          "chars": 433,
+          "tokens": 145
+        }
+      ]
+    },
+    {
+      "taskId": "wp-locate-case-mismatch",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1091,
+      "chars": 3273,
+      "toolCalls": 1,
+      "durationMs": 34,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"resolve error path differs letter case suggestion\"",
+          "chars": 3273,
+          "tokens": 1091
+        }
+      ]
+    },
+    {
+      "taskId": "wp-locate-case-mismatch",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 1049,
+      "chars": 3144,
+      "toolCalls": 3,
+      "durationMs": 27,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"resolve error path differs letter case suggestion\"",
+          "chars": 1973,
+          "tokens": 658
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#dv",
+          "chars": 904,
+          "tokens": 302
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#bvi",
+          "chars": 267,
+          "tokens": 89
+        }
+      ]
+    },
+    {
+      "taskId": "wp-locate-case-mismatch",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tokens": 5023,
+      "chars": 15069,
+      "toolCalls": 1,
+      "durationMs": 129,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/util/findCaseMismatch.js",
+          "lib/NormalModuleFactory.js"
+        ],
+        "symbolsMissed": [
+          "findCaseMismatch",
+          "_resolveResourceErrorHints"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "resolve error path differs letter case suggestion",
+          "chars": 15069,
+          "tokens": 5023
+        }
+      ]
+    },
+    {
+      "taskId": "wp-locate-case-mismatch",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tokens": 8315,
+      "chars": 24943,
+      "toolCalls": 1,
+      "durationMs": 283,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [
+          "lib/util/findCaseMismatch.js"
+        ],
+        "symbolsMissed": [
+          "findCaseMismatch"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "resolve error path differs letter case suggestion",
+          "chars": 24943,
+          "tokens": 8315
+        }
+      ]
+    },
+    {
+      "taskId": "wp-locate-circular-hints",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 22860,
+      "chars": 68574,
+      "toolCalls": 4,
+      "durationMs": 1779,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [
+          "lib/errors/CircularDependenciesWarning.js"
+        ],
+        "symbolsMissed": [],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "CircularModulesPlugin",
+          "chars": 1804,
+          "tokens": 602
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/CircularModulesPlugin.js",
+          "chars": 14556,
+          "tokens": 4852
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/optimize/ConstExportsPlugin.js",
+          "chars": 7240,
+          "tokens": 2414
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/WebpackOptionsApply.js",
+          "chars": 44974,
+          "tokens": 14992
+        }
+      ]
+    },
+    {
+      "taskId": "wp-locate-circular-hints",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 3763,
+      "chars": 11282,
+      "toolCalls": 4,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [
+          "lib/errors/CircularDependenciesWarning.js"
+        ],
+        "symbolsMissed": [],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "CircularModulesPlugin",
+          "chars": 1804,
+          "tokens": 602
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/CircularModulesPlugin.js:1-80",
+          "chars": 2872,
+          "tokens": 958
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/CircularModulesPlugin.js:284-470",
+          "chars": 5354,
+          "tokens": 1785
+        },
+        {
+          "tool": "read_file",
+          "args": "test/helpers/assertCircularModules.js:1-43",
+          "chars": 1252,
+          "tokens": 418
+        }
+      ]
+    },
+    {
+      "taskId": "wp-locate-circular-hints",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 909,
+      "chars": 2726,
+      "toolCalls": 1,
+      "durationMs": 22,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"CircularModulesPlugin hints circular dependencies warning\"",
+          "chars": 2726,
+          "tokens": 909
+        }
+      ]
+    },
+    {
+      "taskId": "wp-locate-circular-hints",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 1497,
+      "chars": 4487,
+      "toolCalls": 3,
+      "durationMs": 22,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"CircularModulesPlugin hints circular dependencies warning\"",
+          "chars": 664,
+          "tokens": 222
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#18k",
+          "chars": 3726,
+          "tokens": 1242
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#18n",
+          "chars": 97,
+          "tokens": 33
+        }
+      ]
+    },
+    {
+      "taskId": "wp-locate-circular-hints",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tokens": 732,
+      "chars": 2194,
+      "toolCalls": 1,
+      "durationMs": 100,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/CircularModulesPlugin.js",
+          "lib/errors/CircularDependenciesWarning.js"
+        ],
+        "symbolsMissed": [
+          "apply",
+          "CircularDependenciesWarning"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "CircularModulesPlugin hints circular dependencies warning",
+          "chars": 2194,
+          "tokens": 732
+        }
+      ]
+    },
+    {
+      "taskId": "wp-locate-circular-hints",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tokens": 8316,
+      "chars": 24946,
+      "toolCalls": 1,
+      "durationMs": 238,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [
+          "lib/CircularModulesPlugin.js",
+          "lib/errors/CircularDependenciesWarning.js"
+        ],
+        "symbolsMissed": [
+          "CircularDependenciesWarning"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "CircularModulesPlugin hints circular dependencies warning",
+          "chars": 24946,
+          "tokens": 8316
+        }
+      ]
+    },
+    {
+      "taskId": "wp-explain-lazy-barrel",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 37116,
+      "chars": 111341,
+      "toolCalls": 4,
+      "durationMs": 2779,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "barrel",
+          "chars": 10040,
+          "tokens": 3347
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/LazyBarrel.js",
+          "chars": 13111,
+          "tokens": 4371
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/Compilation.js",
+          "chars": 68728,
+          "tokens": 22910
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/FlagDependencyExportsPlugin.js",
+          "chars": 19462,
+          "tokens": 6488
+        }
+      ]
+    },
+    {
+      "taskId": "wp-explain-lazy-barrel",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 7576,
+      "chars": 22725,
+      "toolCalls": 3,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "barrel",
+          "chars": 10040,
+          "tokens": 3347
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/LazyBarrel.js:2-122",
+          "chars": 3956,
+          "tokens": 1319
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/LazyBarrel.js:140-389",
+          "chars": 8729,
+          "tokens": 2910
+        }
+      ]
+    },
+    {
+      "taskId": "wp-explain-lazy-barrel",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 1392,
+      "chars": 4175,
+      "toolCalls": 1,
+      "durationMs": 34,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"lazy barrel side effect free re-export deferred requests\"",
+          "chars": 4175,
+          "tokens": 1392
+        }
+      ]
+    },
+    {
+      "taskId": "wp-explain-lazy-barrel",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 4298,
+      "chars": 12888,
+      "toolCalls": 3,
+      "durationMs": 27,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"lazy barrel side effect free re-export deferred requests\"",
+          "chars": 2056,
+          "tokens": 686
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#5c0",
+          "chars": 3892,
+          "tokens": 1298
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#5ca",
+          "chars": 6940,
+          "tokens": 2314
+        }
+      ]
+    },
+    {
+      "taskId": "wp-explain-lazy-barrel",
+      "kind": "explain",
+      "strategy": "kirograph",
+      "tokens": 945,
+      "chars": 2834,
+      "toolCalls": 1,
+      "durationMs": 98,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/LazyBarrel.js"
+        ],
+        "symbolsMissed": [
+          "LazyBarrelController",
+          "classify",
+          "request",
+          "LazyBarrelInfo"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "lazy barrel side effect free re-export deferred requests",
+          "chars": 2834,
+          "tokens": 945
+        }
+      ]
+    },
+    {
+      "taskId": "wp-explain-lazy-barrel",
+      "kind": "explain",
+      "strategy": "codegraph",
+      "tokens": 8329,
+      "chars": 24986,
+      "toolCalls": 1,
+      "durationMs": 248,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.25,
+        "defRecall": 0.25,
+        "filesMissed": [
+          "lib/LazyBarrel.js"
+        ],
+        "symbolsMissed": [
+          "LazyBarrelController",
+          "classify",
+          "LazyBarrelInfo"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "lazy barrel side effect free re-export deferred requests",
+          "chars": 24986,
+          "tokens": 8329
+        }
+      ]
+    },
+    {
+      "taskId": "wp-explain-deterministic-grouping",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 30773,
+      "chars": 92315,
+      "toolCalls": 4,
+      "durationMs": 2194,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "grouping|similarity",
+          "chars": 5615,
+          "tokens": 1872
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/util/deterministicGrouping.js",
+          "chars": 15837,
+          "tokens": 5279
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/optimize/SplitChunksPlugin.js",
+          "chars": 65011,
+          "tokens": 21671
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/util/smartGrouping.js",
+          "chars": 5852,
+          "tokens": 1951
+        }
+      ]
+    },
+    {
+      "taskId": "wp-explain-deterministic-grouping",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 5927,
+      "chars": 17776,
+      "toolCalls": 5,
+      "durationMs": 2,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "grouping|similarity",
+          "chars": 5615,
+          "tokens": 1872
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/util/deterministicGrouping.js:1-88",
+          "chars": 2255,
+          "tokens": 752
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/util/deterministicGrouping.js:205-325",
+          "chars": 3116,
+          "tokens": 1039
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/util/deterministicGrouping.js:426-546",
+          "chars": 3864,
+          "tokens": 1288
+        },
+        {
+          "tool": "read_file",
+          "args": "types.d.ts:10079-10199",
+          "chars": 2926,
+          "tokens": 976
+        }
+      ]
+    },
+    {
+      "taskId": "wp-explain-deterministic-grouping",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 1309,
+      "chars": 3926,
+      "toolCalls": 1,
+      "durationMs": 44,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.75,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"split chunks max size deterministic grouping similarity\"",
+          "chars": 3926,
+          "tokens": 1309
+        }
+      ]
+    },
+    {
+      "taskId": "wp-explain-deterministic-grouping",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 714,
+      "chars": 2137,
+      "toolCalls": 3,
+      "durationMs": 22,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "getSimilarities",
+          "popNodes"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"split chunks max size deterministic grouping similarity\"",
+          "chars": 1607,
+          "tokens": 536
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#6sc",
+          "chars": 289,
+          "tokens": 97
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#6sg",
+          "chars": 241,
+          "tokens": 81
+        }
+      ]
+    },
+    {
+      "taskId": "wp-explain-deterministic-grouping",
+      "kind": "explain",
+      "strategy": "kirograph",
+      "tokens": 669,
+      "chars": 2005,
+      "toolCalls": 1,
+      "durationMs": 108,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.25,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/util/deterministicGrouping.js"
+        ],
+        "symbolsMissed": [
+          "getSimilarities",
+          "Group",
+          "popNodes"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "split chunks max size deterministic grouping similarity",
+          "chars": 2005,
+          "tokens": 669
+        }
+      ]
+    },
+    {
+      "taskId": "wp-explain-deterministic-grouping",
+      "kind": "explain",
+      "strategy": "codegraph",
+      "tokens": 8331,
+      "chars": 24993,
+      "toolCalls": 1,
+      "durationMs": 253,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.25,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/util/deterministicGrouping.js"
+        ],
+        "symbolsMissed": [
+          "getSimilarities",
+          "Group",
+          "popNodes"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "split chunks max size deterministic grouping similarity",
+          "chars": 24993,
+          "tokens": 8331
+        }
+      ]
+    },
+    {
+      "taskId": "wp-explain-circular-scc",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 40674,
+      "chars": 122019,
+      "toolCalls": 4,
+      "durationMs": 3394,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.25,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/CircularModulesPlugin.js"
+        ],
+        "symbolsMissed": [
+          "CycleGraph",
+          "getSynchronousTarget",
+          "isBindingRead"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "strongly|connected",
+          "chars": 6939,
+          "tokens": 2313
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/buildChunkGraph.js",
+          "chars": 47538,
+          "tokens": 15846
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/ChunkGraph.js",
+          "chars": 60049,
+          "tokens": 20017
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/container/HoistContainerReferencesPlugin.js",
+          "chars": 7493,
+          "tokens": 2498
+        }
+      ]
+    },
+    {
+      "taskId": "wp-explain-circular-scc",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 7586,
+      "chars": 22755,
+      "toolCalls": 4,
+      "durationMs": 1,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/CircularModulesPlugin.js"
+        ],
+        "symbolsMissed": [
+          "CycleGraph",
+          "build",
+          "getSynchronousTarget",
+          "isBindingRead"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "strongly|connected",
+          "chars": 6939,
+          "tokens": 2313
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/NormalModule.js:199-319",
+          "chars": 5390,
+          "tokens": 1797
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/dependencies/HarmonyCompatibilityDependency.js:1-106",
+          "chars": 3561,
+          "tokens": 1187
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/runtime/MakeDeferredNamespaceObjectRuntime.js:3-190",
+          "chars": 6865,
+          "tokens": 2289
+        }
+      ]
+    },
+    {
+      "taskId": "wp-explain-circular-scc",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 1128,
+      "chars": 3382,
+      "toolCalls": 1,
+      "durationMs": 31,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"circular modules synchronous import cycle strongly connected binding\"",
+          "chars": 3382,
+          "tokens": 1128
+        }
+      ]
+    },
+    {
+      "taskId": "wp-explain-circular-scc",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 3620,
+      "chars": 10859,
+      "toolCalls": 3,
+      "durationMs": 28,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.75,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"circular modules synchronous import cycle strongly connected binding\"",
+          "chars": 2051,
+          "tokens": 684
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#18h",
+          "chars": 5082,
+          "tokens": 1694
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#18k",
+          "chars": 3726,
+          "tokens": 1242
+        }
+      ]
+    },
+    {
+      "taskId": "wp-explain-circular-scc",
+      "kind": "explain",
+      "strategy": "kirograph",
+      "tokens": 735,
+      "chars": 2205,
+      "toolCalls": 1,
+      "durationMs": 81,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/CircularModulesPlugin.js"
+        ],
+        "symbolsMissed": [
+          "CycleGraph",
+          "build",
+          "getSynchronousTarget",
+          "isBindingRead"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "circular modules synchronous import cycle strongly connected binding",
+          "chars": 2205,
+          "tokens": 735
+        }
+      ]
+    },
+    {
+      "taskId": "wp-explain-circular-scc",
+      "kind": "explain",
+      "strategy": "codegraph",
+      "tokens": 8324,
+      "chars": 24972,
+      "toolCalls": 1,
+      "durationMs": 319,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "circular modules synchronous import cycle strongly connected binding",
+          "chars": 24972,
+          "tokens": 8324
+        }
+      ]
+    },
+    {
+      "taskId": "wp-usage-process-async-tree",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 26372,
+      "chars": 79111,
+      "toolCalls": 4,
+      "durationMs": 362,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.8333333333333334,
+        "defRecall": 0.8333333333333334,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "executeModule"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "processAsyncTree",
+          "chars": 1235,
+          "tokens": 412
+        },
+        {
+          "tool": "read_file",
+          "args": "test/unitCases/processAsyncTree.unittest.js",
+          "chars": 2336,
+          "tokens": 779
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/FileSystemInfo.js",
+          "chars": 62114,
+          "tokens": 20705
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/CleanPlugin.js",
+          "chars": 13426,
+          "tokens": 4476
+        }
+      ]
+    },
+    {
+      "taskId": "wp-usage-process-async-tree",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 4761,
+      "chars": 14276,
+      "toolCalls": 5,
+      "durationMs": 1,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.3333333333333333,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "applyDiff",
+          "executeModule",
+          "resolveBuildDependencies",
+          "_resolveContextTsh"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "processAsyncTree",
+          "chars": 1235,
+          "tokens": 412
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/FileSystemInfo.js:1-80",
+          "chars": 2827,
+          "tokens": 943
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/FileSystemInfo.js:1917-2037",
+          "chars": 3504,
+          "tokens": 1168
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/FileSystemInfo.js:4073-4193",
+          "chars": 3244,
+          "tokens": 1082
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/FileSystemInfo.js:4205-4325",
+          "chars": 3466,
+          "tokens": 1156
+        }
+      ]
+    },
+    {
+      "taskId": "wp-usage-process-async-tree",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 831,
+      "chars": 2493,
+      "toolCalls": 1,
+      "durationMs": 13,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.8333333333333334,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"processAsyncTree\"",
+          "chars": 2493,
+          "tokens": 831
+        }
+      ]
+    },
+    {
+      "taskId": "wp-usage-process-async-tree",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 1132,
+      "chars": 3394,
+      "toolCalls": 3,
+      "durationMs": 10,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/CleanPlugin.js",
+          "lib/Compilation.js",
+          "lib/FileSystemInfo.js"
+        ],
+        "symbolsMissed": [
+          "applyDiff",
+          "executeModule",
+          "resolveBuildDependencies",
+          "_resolveContextTimestamp",
+          "_resolveContextHash",
+          "_resolveContextTsh"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"processAsyncTree\"",
+          "chars": 737,
+          "tokens": 246
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#7b2",
+          "chars": 1394,
+          "tokens": 465
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#35z",
+          "chars": 1263,
+          "tokens": 421
+        }
+      ]
+    },
+    {
+      "taskId": "wp-usage-process-async-tree",
+      "kind": "usage",
+      "strategy": "kirograph",
+      "tokens": 5023,
+      "chars": 15069,
+      "toolCalls": 1,
+      "durationMs": 133,
+      "recall": {
+        "fileRecall": 0.3333333333333333,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/CleanPlugin.js",
+          "lib/Compilation.js"
+        ],
+        "symbolsMissed": [
+          "applyDiff",
+          "executeModule",
+          "resolveBuildDependencies",
+          "_resolveContextTimestamp",
+          "_resolveContextHash",
+          "_resolveContextTsh"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "processAsyncTree",
+          "chars": 15069,
+          "tokens": 5023
+        }
+      ]
+    },
+    {
+      "taskId": "wp-usage-process-async-tree",
+      "kind": "usage",
+      "strategy": "codegraph",
+      "tokens": 8329,
+      "chars": 24985,
+      "toolCalls": 1,
+      "durationMs": 110,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "processAsyncTree",
+          "chars": 24985,
+          "tokens": 8329
+        }
+      ]
+    },
+    {
+      "taskId": "wp-usage-unlazy-for-dependency",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 27390,
+      "chars": 82165,
+      "toolCalls": 3,
+      "durationMs": 409,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "unlazyForDependency",
+          "chars": 326,
+          "tokens": 109
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/Compilation.js",
+          "chars": 68728,
+          "tokens": 22910
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/LazyBarrel.js",
+          "chars": 13111,
+          "tokens": 4371
+        }
+      ]
+    },
+    {
+      "taskId": "wp-usage-unlazy-for-dependency",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 3051,
+      "chars": 9150,
+      "toolCalls": 3,
+      "durationMs": 1,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "_processModuleDependencies"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "unlazyForDependency",
+          "chars": 326,
+          "tokens": 109
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/Compilation.js:1977-2180",
+          "chars": 6236,
+          "tokens": 2079
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/LazyBarrel.js:321-389",
+          "chars": 2588,
+          "tokens": 863
+        }
+      ]
+    },
+    {
+      "taskId": "wp-usage-unlazy-for-dependency",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 579,
+      "chars": 1736,
+      "toolCalls": 1,
+      "durationMs": 12,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"unlazyForDependency\"",
+          "chars": 1736,
+          "tokens": 579
+        }
+      ]
+    },
+    {
+      "taskId": "wp-usage-unlazy-for-dependency",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 451,
+      "chars": 1351,
+      "toolCalls": 3,
+      "durationMs": 15,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [
+          "lib/Compilation.js"
+        ],
+        "symbolsMissed": [
+          "_processModuleDependencies"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"unlazyForDependency\"",
+          "chars": 632,
+          "tokens": 211
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#5cg",
+          "chars": 260,
+          "tokens": 87
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#5sy",
+          "chars": 459,
+          "tokens": 153
+        }
+      ]
+    },
+    {
+      "taskId": "wp-usage-unlazy-for-dependency",
+      "kind": "usage",
+      "strategy": "kirograph",
+      "tokens": 769,
+      "chars": 2306,
+      "toolCalls": 1,
+      "durationMs": 77,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "_processModuleDependencies"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "unlazyForDependency",
+          "chars": 2306,
+          "tokens": 769
+        }
+      ]
+    },
+    {
+      "taskId": "wp-usage-unlazy-for-dependency",
+      "kind": "usage",
+      "strategy": "codegraph",
+      "tokens": 8325,
+      "chars": 24974,
+      "toolCalls": 1,
+      "durationMs": 48,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [
+          "lib/Compilation.js"
+        ],
+        "symbolsMissed": [],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "unlazyForDependency",
+          "chars": 24974,
+          "tokens": 8325
+        }
+      ]
+    },
+    {
+      "taskId": "wp-usage-implicit-type-fallback",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 33632,
+      "chars": 100893,
+      "toolCalls": 3,
+      "durationMs": 334,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "implicitTypeLoaderFallback",
+          "chars": 376,
+          "tokens": 126
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/css/CssModulesPlugin.js",
+          "chars": 39239,
+          "tokens": 13080
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/html/HtmlModulesPlugin.js",
+          "chars": 61278,
+          "tokens": 20426
+        }
+      ]
+    },
+    {
+      "taskId": "wp-usage-implicit-type-fallback",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 5875,
+      "chars": 17618,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "implicitTypeLoaderFallback",
+          "chars": 376,
+          "tokens": 126
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/css/CssModulesPlugin.js:1-97",
+          "chars": 3788,
+          "tokens": 1263
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/css/CssModulesPlugin.js:217-337",
+          "chars": 4017,
+          "tokens": 1339
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/html/HtmlModulesPlugin.js:1-95",
+          "chars": 4258,
+          "tokens": 1420
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/html/HtmlModulesPlugin.js:763-883",
+          "chars": 5179,
+          "tokens": 1727
+        }
+      ]
+    },
+    {
+      "taskId": "wp-usage-implicit-type-fallback",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 781,
+      "chars": 2343,
+      "toolCalls": 1,
+      "durationMs": 26,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/css/CssModulesPlugin.js",
+          "lib/html/HtmlModulesPlugin.js"
+        ],
+        "symbolsMissed": [
+          "CssModulesPlugin",
+          "HtmlModulesPlugin"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"implicitTypeLoaderFallback\"",
+          "chars": 2343,
+          "tokens": 781
+        }
+      ]
+    },
+    {
+      "taskId": "wp-usage-implicit-type-fallback",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 905,
+      "chars": 2710,
+      "toolCalls": 3,
+      "durationMs": 30,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/css/CssModulesPlugin.js",
+          "lib/html/HtmlModulesPlugin.js"
+        ],
+        "symbolsMissed": [
+          "CssModulesPlugin",
+          "HtmlModulesPlugin"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"implicitTypeLoaderFallback\"",
+          "chars": 1585,
+          "tokens": 529
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#78m",
+          "chars": 1046,
+          "tokens": 349
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#erw",
+          "chars": 79,
+          "tokens": 27
+        }
+      ]
+    },
+    {
+      "taskId": "wp-usage-implicit-type-fallback",
+      "kind": "usage",
+      "strategy": "kirograph",
+      "tokens": 1146,
+      "chars": 3436,
+      "toolCalls": 1,
+      "durationMs": 96,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/css/CssModulesPlugin.js",
+          "lib/html/HtmlModulesPlugin.js"
+        ],
+        "symbolsMissed": [
+          "CssModulesPlugin",
+          "HtmlModulesPlugin"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "implicitTypeLoaderFallback",
+          "chars": 3436,
+          "tokens": 1146
+        }
+      ]
+    },
+    {
+      "taskId": "wp-usage-implicit-type-fallback",
+      "kind": "usage",
+      "strategy": "codegraph",
+      "tokens": 8305,
+      "chars": 24915,
+      "toolCalls": 1,
+      "durationMs": 62,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "implicitTypeLoaderFallback",
+          "chars": 24915,
+          "tokens": 8305
+        }
+      ]
+    },
+    {
+      "taskId": "wp-impact-legacy-is-circular",
+      "kind": "impact",
+      "strategy": "native-naive",
+      "tokens": 20478,
+      "chars": 61431,
+      "toolCalls": 4,
+      "durationMs": 678,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "HarmonyExportDependencyTemplate",
+          "HarmonyExportSpecifierDependencyTemplate"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "isCircular",
+          "chars": 821,
+          "tokens": 274
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/CircularModulesPlugin.js",
+          "chars": 14556,
+          "tokens": 4852
+        },
+        {
+          "tool": "read_file",
+          "args": "test/helpers/assertCircularModules.js",
+          "chars": 1252,
+          "tokens": 418
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/Module.js",
+          "chars": 44802,
+          "tokens": 14934
+        }
+      ]
+    },
+    {
+      "taskId": "wp-impact-legacy-is-circular",
+      "kind": "impact",
+      "strategy": "native-ranged",
+      "tokens": 5444,
+      "chars": 16325,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "HarmonyExportDependencyTemplate"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "isCircular",
+          "chars": 821,
+          "tokens": 274
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/CircularModulesPlugin.js:312-432",
+          "chars": 3597,
+          "tokens": 1199
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/Module.js:153-273",
+          "chars": 5389,
+          "tokens": 1797
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/dependencies/HarmonyExportExpressionDependency.js:209-329",
+          "chars": 4063,
+          "tokens": 1355
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/dependencies/HarmonyExportSpecifierDependency.js:115-202",
+          "chars": 2455,
+          "tokens": 819
+        }
+      ]
+    },
+    {
+      "taskId": "wp-impact-legacy-is-circular",
+      "kind": "impact",
+      "strategy": "kopt-pack",
+      "tokens": 1255,
+      "chars": 3764,
+      "toolCalls": 1,
+      "durationMs": 36,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"buildInfo isCircular\"",
+          "chars": 3764,
+          "tokens": 1255
+        }
+      ]
+    },
+    {
+      "taskId": "wp-impact-legacy-is-circular",
+      "kind": "impact",
+      "strategy": "kopt-hits+read",
+      "tokens": 557,
+      "chars": 1670,
+      "toolCalls": 3,
+      "durationMs": 11,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/dependencies/HarmonyExportExpressionDependency.js",
+          "lib/dependencies/HarmonyExportSpecifierDependency.js"
+        ],
+        "symbolsMissed": [
+          "HarmonyExportDependencyTemplate",
+          "HarmonyExportSpecifierDependencyTemplate"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"buildInfo isCircular\"",
+          "chars": 1127,
+          "tokens": 376
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#18n",
+          "chars": 279,
+          "tokens": 93
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#18m",
+          "chars": 264,
+          "tokens": 88
+        }
+      ]
+    },
+    {
+      "taskId": "wp-impact-legacy-is-circular",
+      "kind": "impact",
+      "strategy": "kirograph",
+      "tokens": 670,
+      "chars": 2010,
+      "toolCalls": 1,
+      "durationMs": 89,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/dependencies/HarmonyExportExpressionDependency.js",
+          "lib/dependencies/HarmonyExportSpecifierDependency.js"
+        ],
+        "symbolsMissed": [
+          "HarmonyExportDependencyTemplate",
+          "HarmonyExportSpecifierDependencyTemplate"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "buildInfo isCircular",
+          "chars": 2010,
+          "tokens": 670
+        }
+      ]
+    },
+    {
+      "taskId": "wp-impact-legacy-is-circular",
+      "kind": "impact",
+      "strategy": "codegraph",
+      "tokens": 8332,
+      "chars": 24995,
+      "toolCalls": 1,
+      "durationMs": 127,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/dependencies/HarmonyExportExpressionDependency.js",
+          "lib/dependencies/HarmonyExportSpecifierDependency.js"
+        ],
+        "symbolsMissed": [
+          "HarmonyExportDependencyTemplate",
+          "HarmonyExportSpecifierDependencyTemplate"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "buildInfo isCircular",
+          "chars": 24995,
+          "tokens": 8332
+        }
+      ]
+    },
+    {
+      "taskId": "wp-impact-synchronous-target",
+      "kind": "impact",
+      "strategy": "native-naive",
+      "tokens": 22962,
+      "chars": 68880,
+      "toolCalls": 4,
+      "durationMs": 613,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "CircularModulesPlugin|getSynchronousTarget",
+          "chars": 2110,
+          "tokens": 704
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/CircularModulesPlugin.js",
+          "chars": 14556,
+          "tokens": 4852
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/optimize/ConstExportsPlugin.js",
+          "chars": 7240,
+          "tokens": 2414
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/WebpackOptionsApply.js",
+          "chars": 44974,
+          "tokens": 14992
+        }
+      ]
+    },
+    {
+      "taskId": "wp-impact-synchronous-target",
+      "kind": "impact",
+      "strategy": "native-ranged",
+      "tokens": 4079,
+      "chars": 12229,
+      "toolCalls": 4,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "CircularModulesPlugin|getSynchronousTarget",
+          "chars": 2110,
+          "tokens": 704
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/CircularModulesPlugin.js:1-166",
+          "chars": 5407,
+          "tokens": 1803
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/CircularModulesPlugin.js:284-404",
+          "chars": 3460,
+          "tokens": 1154
+        },
+        {
+          "tool": "read_file",
+          "args": "test/helpers/assertCircularModules.js:1-43",
+          "chars": 1252,
+          "tokens": 418
+        }
+      ]
+    },
+    {
+      "taskId": "wp-impact-synchronous-target",
+      "kind": "impact",
+      "strategy": "kopt-pack",
+      "tokens": 719,
+      "chars": 2157,
+      "toolCalls": 1,
+      "durationMs": 22,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"CircularModulesPlugin getSynchronousTarget\"",
+          "chars": 2157,
+          "tokens": 719
+        }
+      ]
+    },
+    {
+      "taskId": "wp-impact-synchronous-target",
+      "kind": "impact",
+      "strategy": "kopt-hits+read",
+      "tokens": 1607,
+      "chars": 4817,
+      "toolCalls": 3,
+      "durationMs": 20,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"CircularModulesPlugin getSynchronousTarget\"",
+          "chars": 736,
+          "tokens": 246
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#18d",
+          "chars": 355,
+          "tokens": 119
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#18k",
+          "chars": 3726,
+          "tokens": 1242
+        }
+      ]
+    },
+    {
+      "taskId": "wp-impact-synchronous-target",
+      "kind": "impact",
+      "strategy": "kirograph",
+      "tokens": 727,
+      "chars": 2179,
+      "toolCalls": 1,
+      "durationMs": 87,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.3333333333333333,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/CircularModulesPlugin.js"
+        ],
+        "symbolsMissed": [
+          "build",
+          "formatShortestCycle"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "CircularModulesPlugin getSynchronousTarget",
+          "chars": 2179,
+          "tokens": 727
+        }
+      ]
+    },
+    {
+      "taskId": "wp-impact-synchronous-target",
+      "kind": "impact",
+      "strategy": "codegraph",
+      "tokens": 8319,
+      "chars": 24956,
+      "toolCalls": 1,
+      "durationMs": 146,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "CircularModulesPlugin getSynchronousTarget",
+          "chars": 24956,
+          "tokens": 8319
+        }
+      ]
+    }
+  ],
+  "aggregates": [
+    {
+      "strategy": "native-naive",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 32202.5,
+      "meanTokens": 33552,
+      "p90Tokens": 47931,
+      "totalTokens": 402624,
+      "totalChars": 1207818,
+      "meanToolCalls": 3.8333333333333335,
+      "meanFileRecall": 0.75,
+      "meanSymbolRecall": 0.7569444444444443,
+      "meanDefRecall": 0.6527777777777778,
+      "found": 6,
+      "foundRate": 0.5,
+      "tokensPerFound": 67104
+    },
+    {
+      "strategy": "native-ranged",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 5648.5,
+      "meanTokens": 16860,
+      "p90Tokens": 7586,
+      "totalTokens": 202325,
+      "totalChars": 606905,
+      "meanToolCalls": 4.416666666666667,
+      "meanFileRecall": 0.75,
+      "meanSymbolRecall": 0.611111111111111,
+      "meanDefRecall": 0.48611111111111116,
+      "found": 5,
+      "foundRate": 0.4166666666666667,
+      "tokensPerFound": 40465
+    },
+    {
+      "strategy": "kopt-pack",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 1109.5,
+      "meanTokens": 1056,
+      "p90Tokens": 1376,
+      "totalTokens": 12677,
+      "totalChars": 38023,
+      "meanToolCalls": 1,
+      "meanFileRecall": 0.9166666666666666,
+      "meanSymbolRecall": 0.9166666666666666,
+      "meanDefRecall": 0.7430555555555555,
+      "found": 11,
+      "foundRate": 0.9166666666666666,
+      "tokensPerFound": 1152
+    },
+    {
+      "strategy": "kopt-hits+read",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 1314.5,
+      "meanTokens": 1674,
+      "p90Tokens": 3620,
+      "totalTokens": 20089,
+      "totalChars": 60227,
+      "meanToolCalls": 3,
+      "meanFileRecall": 0.7083333333333334,
+      "meanSymbolRecall": 0.6666666666666666,
+      "meanDefRecall": 0.5902777777777778,
+      "found": 7,
+      "foundRate": 0.5833333333333334,
+      "tokensPerFound": 2870
+    },
+    {
+      "strategy": "kirograph",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 752,
+      "meanTokens": 1591,
+      "p90Tokens": 5023,
+      "totalTokens": 19095,
+      "totalChars": 57272,
+      "meanToolCalls": 1,
+      "meanFileRecall": 0.19444444444444442,
+      "meanSymbolRecall": 0.17361111111111113,
+      "meanDefRecall": 0.08333333333333333,
+      "found": 1,
+      "foundRate": 0.08333333333333333,
+      "tokensPerFound": 19095
+    },
+    {
+      "strategy": "codegraph",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 8325,
+      "meanTokens": 8323,
+      "p90Tokens": 8331,
+      "totalTokens": 99879,
+      "totalChars": 299625,
+      "meanToolCalls": 1,
+      "meanFileRecall": 0.5833333333333334,
+      "meanSymbolRecall": 0.6666666666666666,
+      "meanDefRecall": 0.40972222222222227,
+      "found": 5,
+      "foundRate": 0.4166666666666667,
+      "tokensPerFound": 19976
+    }
+  ],
+  "paired": [
+    {
+      "a": "native-naive",
+      "b": "kopt-pack",
+      "nRun": 12,
+      "nBoth": 5,
+      "onlyA": 1,
+      "onlyB": 6,
+      "medianRatio": 0.03131260343175681,
+      "geoMeanRatio": 0.031356754545214215,
+      "bCheaper": 5
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-pack",
+      "nRun": 12,
+      "nBoth": 4,
+      "onlyA": 1,
+      "onlyB": 7,
+      "medianRatio": 0.1800034068436655,
+      "geoMeanRatio": 0.09104324162943994,
+      "bCheaper": 4
+    },
+    {
+      "a": "native-naive",
+      "b": "kopt-hits+read",
+      "nRun": 12,
+      "nBoth": 3,
+      "onlyA": 3,
+      "onlyB": 4,
+      "medianRatio": 0.06998519292744534,
+      "geoMeanRatio": 0.0646213364390932,
+      "bCheaper": 3
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-hits+read",
+      "nRun": 12,
+      "nBoth": 3,
+      "onlyA": 2,
+      "onlyB": 4,
+      "medianRatio": 0.393969110075999,
+      "geoMeanRatio": 0.13554127982850686,
+      "bCheaper": 3
+    },
+    {
+      "a": "kirograph",
+      "b": "kopt-pack",
+      "nRun": 12,
+      "nBoth": 1,
+      "onlyA": 0,
+      "onlyB": 10,
+      "medianRatio": 0.7140633108458744,
+      "geoMeanRatio": 0.7140633108458744,
+      "bCheaper": 1
+    },
+    {
+      "a": "codegraph",
+      "b": "kopt-pack",
+      "nRun": 12,
+      "nBoth": 4,
+      "onlyA": 1,
+      "onlyB": 7,
+      "medianRatio": 0.11764182728214251,
+      "geoMeanRatio": 0.11788791505299674,
+      "bCheaper": 4
+    },
+    {
+      "a": "kirograph",
+      "b": "kopt-hits+read",
+      "nRun": 12,
+      "nBoth": 1,
+      "onlyA": 0,
+      "onlyB": 6,
+      "medianRatio": 0.8282304099636741,
+      "geoMeanRatio": 0.8282304099636741,
+      "bCheaper": 1
+    },
+    {
+      "a": "codegraph",
+      "b": "kopt-hits+read",
+      "nRun": 12,
+      "nBoth": 3,
+      "onlyA": 2,
+      "onlyB": 4,
+      "medianRatio": 0.19317225628080298,
+      "geoMeanRatio": 0.2525360008785851,
+      "bCheaper": 3
+    },
+    {
+      "a": "native-ranged",
+      "b": "kirograph",
+      "nRun": 12,
+      "nBoth": 1,
+      "onlyA": 4,
+      "onlyB": 0,
+      "medianRatio": 0.013451631368059531,
+      "geoMeanRatio": 0.013451631368059533,
+      "bCheaper": 1
+    },
+    {
+      "a": "native-ranged",
+      "b": "codegraph",
+      "nRun": 12,
+      "nBoth": 3,
+      "onlyA": 2,
+      "onlyB": 2,
+      "medianRatio": 1.4136170212765957,
+      "geoMeanRatio": 0.5512842138628351,
+      "bCheaper": 1
+    },
+    {
+      "a": "native-naive",
+      "b": "native-ranged",
+      "nRun": 12,
+      "nBoth": 5,
+      "onlyA": 1,
+      "onlyB": 0,
+      "medianRatio": 0.19260390602151237,
+      "geoMeanRatio": 0.3253618774414538,
+      "bCheaper": 4
+    }
+  ],
+  "byKind": [
+    {
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tasks": 4,
+      "found": 1,
+      "medianTokens": 44031
+    },
+    {
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tasks": 4,
+      "found": 1,
+      "medianTokens": 5504.5
+    },
+    {
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tasks": 4,
+      "found": 4,
+      "medianTokens": 1199
+    },
+    {
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tasks": 4,
+      "found": 4,
+      "medianTokens": 1546.5
+    },
+    {
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tasks": 4,
+      "found": 1,
+      "medianTokens": 1329.5
+    },
+    {
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tasks": 4,
+      "found": 1,
+      "medianTokens": 8320.5
+    },
+    {
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tasks": 3,
+      "found": 2,
+      "medianTokens": 37116
+    },
+    {
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tasks": 3,
+      "found": 2,
+      "medianTokens": 7576
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tasks": 3,
+      "found": 3,
+      "medianTokens": 1309
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tasks": 3,
+      "found": 2,
+      "medianTokens": 3620
+    },
+    {
+      "kind": "explain",
+      "strategy": "kirograph",
+      "tasks": 3,
+      "found": 0,
+      "medianTokens": 735
+    },
+    {
+      "kind": "explain",
+      "strategy": "codegraph",
+      "tasks": 3,
+      "found": 1,
+      "medianTokens": 8329
+    },
+    {
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tasks": 3,
+      "found": 2,
+      "medianTokens": 27390
+    },
+    {
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tasks": 3,
+      "found": 1,
+      "medianTokens": 4761
+    },
+    {
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tasks": 3,
+      "found": 2,
+      "medianTokens": 781
+    },
+    {
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tasks": 3,
+      "found": 0,
+      "medianTokens": 905
+    },
+    {
+      "kind": "usage",
+      "strategy": "kirograph",
+      "tasks": 3,
+      "found": 0,
+      "medianTokens": 1146
+    },
+    {
+      "kind": "usage",
+      "strategy": "codegraph",
+      "tasks": 3,
+      "found": 2,
+      "medianTokens": 8325
+    },
+    {
+      "kind": "impact",
+      "strategy": "native-naive",
+      "tasks": 2,
+      "found": 1,
+      "medianTokens": 21720
+    },
+    {
+      "kind": "impact",
+      "strategy": "native-ranged",
+      "tasks": 2,
+      "found": 1,
+      "medianTokens": 4761.5
+    },
+    {
+      "kind": "impact",
+      "strategy": "kopt-pack",
+      "tasks": 2,
+      "found": 2,
+      "medianTokens": 987
+    },
+    {
+      "kind": "impact",
+      "strategy": "kopt-hits+read",
+      "tasks": 2,
+      "found": 1,
+      "medianTokens": 1082
+    },
+    {
+      "kind": "impact",
+      "strategy": "kirograph",
+      "tasks": 2,
+      "found": 0,
+      "medianTokens": 698.5
+    },
+    {
+      "kind": "impact",
+      "strategy": "codegraph",
+      "tasks": 2,
+      "found": 1,
+      "medianTokens": 8325.5
+    }
+  ]
+}

@@ -18,6 +18,11 @@
   "files": [
     "dist",
     "templates",
+    "vendor",
+    "bench/ab/README.md",
+    "bench/ab/tasks.example.json",
+    "bench/ab/fake-kiro-cli.mjs",
+    "bench/ab/fake-kiro-cli.cmd",
     "README.md",
     "LICENSE"
   ],
@@ -27,7 +32,9 @@
     "dev": "tsx src/cli.ts",
     "test": "vitest run",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "bench": "tsx src/bench/cli.ts"
+    "bench": "tsx src/bench/cli.ts",
+    "bench:page": "node scripts/build-benchmarks-page.mjs",
+    "bench:compress": "node bench/compress/run.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.32.1",

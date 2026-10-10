@@ -1,0 +1,101 @@
+{
+  "label": "codegraph",
+  "tool": "codegraph",
+  "package": "@colbymchenry/codegraph",
+  "version": "1.6.2",
+  "mode": "default",
+  "repo": {
+    "name": "medusa",
+    "url": "https://github.com/medusajs/medusa.git",
+    "tag": "v2.21.2",
+    "commit": "020565398e436a2bc65777a3b1ad347b4735d6df",
+    "language": "typescript",
+    "path": "bench/repos/medusa"
+  },
+  "headCommit": "020565398e436a2bc65777a3b1ad347b4735d6df",
+  "commitMatchesTasks": true,
+  "date": "2026-10-09T13:59:08.096Z",
+  "image": "kopt-bench/codegraph:1.6.2",
+  "imageId": "sha256:db8f2e822e3863b14f3c037bc692fb20915bf2e48a3083248d72d3938a716f5a",
+  "engine": "docker",
+  "limits": "memory=6g cpus=8",
+  "cgroupMemory": {
+    "maxBytes": 6442450944,
+    "peakBytes": 4812615680,
+    "oomKills": 0
+  },
+  "container": {
+    "node": "v22.23.3",
+    "arch": "arm64",
+    "platform": "linux",
+    "cpus": 10,
+    "memBytes": 8214851584,
+    "network": "none"
+  },
+  "primaryTool": "codegraph_explore",
+  "toolArgsExample": {
+    "query": "<input>"
+  },
+  "serverCommand": {
+    "command": "codegraph",
+    "args": [
+      "serve",
+      "--mcp"
+    ]
+  },
+  "oneSessionPerTask": true,
+  "indexOk": true,
+  "indexMs": 30486,
+  "indexSteps": [
+    {
+      "command": "codegraph init --yes /work/medusa",
+      "ms": 30486,
+      "exit": 0,
+      "signal": null,
+      "oomKills": 0
+    }
+  ],
+  "copyMs": 46948,
+  "indexDirs": [
+    "<repo>/.codegraph"
+  ],
+  "indexSizeBytes": 327758053,
+  "modelBytes": 0,
+  "indexStatus": "CodeGraph Status\n\nProject: /work/medusa\n\nIndex Statistics:\n  Files:     13,679\n  Nodes:     96,937\n  Edges:     227,957\n  DB Size:   312.57 MB\n  Backend:   node:sqlite — built-in (full WAL)\n  Journal:   wal\n\nNodes by Kind:\n  import          32,273\n  property        19,891\n  file            11,975\n  function        9,173\n  constant        8,194\n  method          6,275\n  type_alias      4,242\n  interface       2,649\n  class           786\n  component       615\n  enum_member     526\n  enum            168\n  variable        123\n  route           47\n\nFiles by Language:\n  typescript      8,000\n  tsx             3,267\n  yaml            1,702\n  javascript      710\n\n✓ Index is up to date",
+  "surface": {
+    "serverInfo": {
+      "name": "codegraph",
+      "version": "1.6.2"
+    },
+    "toolCount": 1,
+    "toolNames": [
+      "codegraph_explore"
+    ],
+    "toolsChars": 1725,
+    "toolsEstTokens": 575,
+    "instructionsChars": 6718,
+    "instructionsEstTokens": 2240,
+    "primaryToolListed": true,
+    "file": "codegraph.surface.json"
+  },
+  "inputs": {
+    "search": {
+      "file": "codegraph-medusa.jsonl",
+      "tasks": 12,
+      "failures": 0,
+      "queryMsMedian": 299,
+      "queryMsP90": 391,
+      "startupMsMedian": 149
+    },
+    "question": {
+      "file": "codegraph-medusa-question.jsonl",
+      "tasks": 12,
+      "failures": 0,
+      "queryMsMedian": 492,
+      "queryMsP90": 690,
+      "startupMsMedian": 133
+    }
+  },
+  "charsPerToken": 3,
+  "errors": []
+}

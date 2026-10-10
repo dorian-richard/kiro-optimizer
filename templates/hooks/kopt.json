@@ -13,7 +13,7 @@
     },
     {
       "name": "kopt-prompt-pointers",
-      "description": "kopt: front-loads a few symbol pointers for the prompt only when retrieval is confident (budgets.frontload tokens, 400 ms cap). Re-arms the tool-call budget after a governor stop.",
+      "description": "kopt: adds up to 4 symbol pointers (budgets.frontload tokens, 400 ms cap) only when the prompt names code that the index finds, or its domain words are clearly covered; silent on follow-ups. Re-arms the tool-call budget once it was reached.",
       "trigger": "UserPromptSubmit",
       "action": {
         "type": "command",
@@ -23,7 +23,7 @@
     },
     {
       "name": "kopt-governor",
-      "description": "kopt session governor. No matcher on purpose: one process counts every call and gates by tool name. Blocks (exit 2, once per file/command, retry allowed): whole-file reads of files > governor.bigFileLines, verbose test/build shell commands (-> kopt_run), identical test/build re-runs with no file written since, and the session tool-call budget. The allow path prints nothing. Tool names verified 2026-10 (kiro.dev docs, Kiro IDE 0.12.318 bundle, kiro-cli 2.28 binary): read = read_file, read_files, fs_read (operations[]), read; shell = execute_bash, execute_pwsh, execute_cmd, shell; write = fs_write, fs_append, str_replace, edit_code, delete_file, write; MCP = mcp_<server>_<tool> (IDE) or @server/tool (CLI).",
+      "description": "kopt session governor. No matcher on purpose: one process counts every call and gates by tool name. Blocks (exit 2, once per file/command, retry allowed): whole-file reads of files above governor.bigFileTokens, test/build commands with predictably long output (-> kopt_run; never watch/serve/run commands; at most 3 per session), identical test/build re-runs with nothing changed since (workspace state), and the session tool-call budget. The allow path prints nothing. Tool names verified 2026-10 (kiro.dev docs, Kiro IDE 0.12.318 bundle, kiro-cli 2.28 binary): read = read_file, read_files, fs_read (operations[]), read; shell = execute_bash, execute_pwsh, execute_cmd, shell; write = fs_write, fs_append, str_replace, edit_code, delete_file, write, code; MCP = mcp_<server>_<tool> (IDE) or @server/tool (CLI).",
       "trigger": "PreToolUse",
       "action": {
         "type": "command",
@@ -73,7 +73,7 @@
     },
     {
       "name": "kopt-stop",
-      "description": "kopt: records the end of the turn in the local usage log (kopt stats) and drops log days older than 90 days; returns immediately.",
+      "description": "kopt: records the end of the turn in the local usage log (kopt stats) and drops log days older than 90 days; returns immediately and always exits 0 (never continues the agent).",
       "trigger": "Stop",
       "action": {
         "type": "command",

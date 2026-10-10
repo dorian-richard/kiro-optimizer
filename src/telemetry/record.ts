@@ -1,9 +1,10 @@
 // Event recording, kept dependency-light: hooks import this on every tool call.
 
-import { appendFileSync, existsSync, mkdirSync, readdirSync, unlinkSync } from 'node:fs';
+import { existsSync, readdirSync, unlinkSync } from 'node:fs';
 import { basename, join } from 'node:path';
 import type { KoptConfig } from '../core/config.js';
 import type { TelemetryEvent } from '../core/types.js';
+import { appendPrivateFile, mkdirPrivate } from './fsutil.js';
 
 export function telemetryDir(config: KoptConfig): string {
   return join(config.userDir, 'telemetry');
@@ -30,16 +31,16 @@ export function record(event: TelemetryEvent, config: KoptConfig): void {
     const file = join(dir, dayFileName(e.ts));
     const line = JSON.stringify(e) + '\n';
     if (!madeDirs.has(dir)) {
-      mkdirSync(dir, { recursive: true });
+      mkdirPrivate(dir);
       madeDirs.add(dir);
     }
-    // one write() per line keeps concurrent appends from interleaving (O_APPEND)
+    // one write() per line keeps concurrent appends from interleaving (O_APPEND); private (0600) on POSIX
     try {
-      appendFileSync(file, line);
+      appendPrivateFile(file, line);
     } catch (err) {
       if ((err as NodeJS.ErrnoException).code !== 'ENOENT') throw err;
-      mkdirSync(dir, { recursive: true });
-      appendFileSync(file, line);
+      mkdirPrivate(dir);
+      appendPrivateFile(file, line);
     }
   } catch {
     // telemetry must never break the caller

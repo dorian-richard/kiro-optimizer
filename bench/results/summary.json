@@ -1,0 +1,3179 @@
+{
+  "schema": "kopt-bench-summary/1",
+  "date": "2026-10-09T22:39:50.625Z",
+  "input": "search",
+  "strategies": [
+    "native-naive",
+    "native-ranged",
+    "kopt-pack",
+    "kopt-hits+read",
+    "kirograph",
+    "codegraph"
+  ],
+  "environment": {
+    "node": "v22.23.3",
+    "platform": "darwin-arm64",
+    "toolVersion": "0.1.0"
+  },
+  "rows": [
+    {
+      "repo": "spring-framework",
+      "language": "java",
+      "tag": "v7.0.9",
+      "commit": "82a6b40b9366ec181ededdad282b307ee5381a52",
+      "loc": 1500787,
+      "ok": true,
+      "verifyIssues": 0,
+      "tasks": 15,
+      "index": {
+        "built": true,
+        "durationMs": 20224,
+        "files": 9552,
+        "symbols": 138619,
+        "refs": 762001
+      },
+      "quality": {
+        "filesIndexed": 9552,
+        "filesSkipped": 0,
+        "parseErrorFileRate": 0.01,
+        "parseErrorsPerKloc": 0.072,
+        "symbolsPerKloc": 90.42,
+        "resolvedRate": 0.5094,
+        "resolvedOfCandidates": 0.6767,
+        "precisionRate": 1,
+        "precisionSampled": 30
+      },
+      "strategies": [
+        {
+          "strategy": "native-naive",
+          "tasks": 15,
+          "found": 9,
+          "foundRate": 0.6,
+          "medianTokens": 19851,
+          "meanTokens": 22982,
+          "tokensPerFound": 38303,
+          "meanFileRecall": 0.8222222222222223,
+          "meanSymbolRecall": 0.7111111111111111,
+          "meanDefRecall": 0.6333333333333333,
+          "skipped": 0
+        },
+        {
+          "strategy": "native-ranged",
+          "tasks": 15,
+          "found": 8,
+          "foundRate": 0.5333333333333333,
+          "medianTokens": 7378,
+          "meanTokens": 7509,
+          "tokensPerFound": 14080,
+          "meanFileRecall": 0.8222222222222223,
+          "meanSymbolRecall": 0.7,
+          "meanDefRecall": 0.5722222222222222,
+          "skipped": 0
+        },
+        {
+          "strategy": "kopt-pack",
+          "tasks": 15,
+          "found": 11,
+          "foundRate": 0.7333333333333333,
+          "medianTokens": 1327,
+          "meanTokens": 1304,
+          "tokensPerFound": 1778,
+          "meanFileRecall": 0.8888888888888888,
+          "meanSymbolRecall": 0.9277777777777777,
+          "meanDefRecall": 0.4777777777777777,
+          "skipped": 0
+        },
+        {
+          "strategy": "kopt-hits+read",
+          "tasks": 15,
+          "found": 5,
+          "foundRate": 0.3333333333333333,
+          "medianTokens": 1884,
+          "meanTokens": 2312,
+          "tokensPerFound": 6935,
+          "meanFileRecall": 0.811111111111111,
+          "meanSymbolRecall": 0.7055555555555555,
+          "meanDefRecall": 0.5944444444444443,
+          "skipped": 0
+        },
+        {
+          "strategy": "kirograph",
+          "tasks": 15,
+          "found": 0,
+          "foundRate": 0,
+          "medianTokens": 1208,
+          "meanTokens": 1268,
+          "tokensPerFound": null,
+          "meanFileRecall": 0.26666666666666666,
+          "meanSymbolRecall": 0.2111111111111111,
+          "meanDefRecall": 0,
+          "skipped": 0
+        },
+        {
+          "strategy": "codegraph",
+          "tasks": 15,
+          "found": 8,
+          "foundRate": 0.5333333333333333,
+          "medianTokens": 8307,
+          "meanTokens": 7778,
+          "tokensPerFound": 14584,
+          "meanFileRecall": 0.8,
+          "meanSymbolRecall": 0.7611111111111111,
+          "meanDefRecall": 0.47222222222222215,
+          "skipped": 0
+        }
+      ],
+      "byKind": [
+        {
+          "kind": "locate",
+          "strategy": "native-naive",
+          "tasks": 4,
+          "found": 2
+        },
+        {
+          "kind": "locate",
+          "strategy": "native-ranged",
+          "tasks": 4,
+          "found": 1
+        },
+        {
+          "kind": "locate",
+          "strategy": "kopt-pack",
+          "tasks": 4,
+          "found": 2
+        },
+        {
+          "kind": "locate",
+          "strategy": "kopt-hits+read",
+          "tasks": 4,
+          "found": 1
+        },
+        {
+          "kind": "locate",
+          "strategy": "kirograph",
+          "tasks": 4,
+          "found": 0
+        },
+        {
+          "kind": "locate",
+          "strategy": "codegraph",
+          "tasks": 4,
+          "found": 2
+        },
+        {
+          "kind": "explain",
+          "strategy": "native-naive",
+          "tasks": 4,
+          "found": 1
+        },
+        {
+          "kind": "explain",
+          "strategy": "native-ranged",
+          "tasks": 4,
+          "found": 2
+        },
+        {
+          "kind": "explain",
+          "strategy": "kopt-pack",
+          "tasks": 4,
+          "found": 2
+        },
+        {
+          "kind": "explain",
+          "strategy": "kopt-hits+read",
+          "tasks": 4,
+          "found": 1
+        },
+        {
+          "kind": "explain",
+          "strategy": "kirograph",
+          "tasks": 4,
+          "found": 0
+        },
+        {
+          "kind": "explain",
+          "strategy": "codegraph",
+          "tasks": 4,
+          "found": 2
+        },
+        {
+          "kind": "usage",
+          "strategy": "native-naive",
+          "tasks": 4,
+          "found": 3
+        },
+        {
+          "kind": "usage",
+          "strategy": "native-ranged",
+          "tasks": 4,
+          "found": 4
+        },
+        {
+          "kind": "usage",
+          "strategy": "kopt-pack",
+          "tasks": 4,
+          "found": 4
+        },
+        {
+          "kind": "usage",
+          "strategy": "kopt-hits+read",
+          "tasks": 4,
+          "found": 1
+        },
+        {
+          "kind": "usage",
+          "strategy": "kirograph",
+          "tasks": 4,
+          "found": 0
+        },
+        {
+          "kind": "usage",
+          "strategy": "codegraph",
+          "tasks": 4,
+          "found": 2
+        },
+        {
+          "kind": "impact",
+          "strategy": "native-naive",
+          "tasks": 3,
+          "found": 3
+        },
+        {
+          "kind": "impact",
+          "strategy": "native-ranged",
+          "tasks": 3,
+          "found": 1
+        },
+        {
+          "kind": "impact",
+          "strategy": "kopt-pack",
+          "tasks": 3,
+          "found": 3
+        },
+        {
+          "kind": "impact",
+          "strategy": "kopt-hits+read",
+          "tasks": 3,
+          "found": 2
+        },
+        {
+          "kind": "impact",
+          "strategy": "kirograph",
+          "tasks": 3,
+          "found": 0
+        },
+        {
+          "kind": "impact",
+          "strategy": "codegraph",
+          "tasks": 3,
+          "found": 2
+        }
+      ],
+      "failures": {
+        "strategy": "kopt-pack",
+        "tasks": 15,
+        "missed": 4,
+        "byCause": {
+          "ranking": 1,
+          "unresolved-refs": 0,
+          "extraction": 0,
+          "budget-format": 3,
+          "multi-step": 0
+        },
+        "itemsByCause": {
+          "ranking": 1,
+          "unresolved-refs": 0,
+          "extraction": 0,
+          "budget-format": 5,
+          "multi-step": 0
+        }
+      },
+      "files": {
+        "quality": "bench/results/quality-spring-framework.md",
+        "bench": "bench/results/spring-framework.md"
+      },
+      "durationMs": 49676
+    },
+    {
+      "repo": "django",
+      "language": "python",
+      "tag": "6.1.2",
+      "commit": "2212534bae393714e1e51db2341d4fd5545e19f6",
+      "loc": 524516,
+      "ok": true,
+      "verifyIssues": 0,
+      "tasks": 15,
+      "index": {
+        "built": true,
+        "durationMs": 6778,
+        "files": 2964,
+        "symbols": 51183,
+        "refs": 231792
+      },
+      "quality": {
+        "filesIndexed": 2964,
+        "filesSkipped": 0,
+        "parseErrorFileRate": 0,
+        "parseErrorsPerKloc": 0,
+        "symbolsPerKloc": 97.42,
+        "resolvedRate": 0.4442,
+        "resolvedOfCandidates": 0.5945,
+        "precisionRate": 1,
+        "precisionSampled": 30
+      },
+      "strategies": [
+        {
+          "strategy": "native-naive",
+          "tasks": 15,
+          "found": 7,
+          "foundRate": 0.4666666666666667,
+          "medianTokens": 43715,
+          "meanTokens": 39002,
+          "tokensPerFound": 83575,
+          "meanFileRecall": 0.7666666666666667,
+          "meanSymbolRecall": 0.6277777777777778,
+          "meanDefRecall": 0.611111111111111,
+          "skipped": 0
+        },
+        {
+          "strategy": "native-ranged",
+          "tasks": 15,
+          "found": 8,
+          "foundRate": 0.5333333333333333,
+          "medianTokens": 6737,
+          "meanTokens": 6132,
+          "tokensPerFound": 11497,
+          "meanFileRecall": 0.7666666666666667,
+          "meanSymbolRecall": 0.6722222222222222,
+          "meanDefRecall": 0.5388888888888889,
+          "skipped": 0
+        },
+        {
+          "strategy": "kopt-pack",
+          "tasks": 15,
+          "found": 13,
+          "foundRate": 0.8666666666666667,
+          "medianTokens": 1206,
+          "meanTokens": 1017,
+          "tokensPerFound": 1173,
+          "meanFileRecall": 1,
+          "meanSymbolRecall": 0.9666666666666667,
+          "meanDefRecall": 0.5777777777777777,
+          "skipped": 0
+        },
+        {
+          "strategy": "kopt-hits+read",
+          "tasks": 15,
+          "found": 7,
+          "foundRate": 0.4666666666666667,
+          "medianTokens": 861,
+          "meanTokens": 1127,
+          "tokensPerFound": 2415,
+          "meanFileRecall": 0.888888888888889,
+          "meanSymbolRecall": 0.7444444444444444,
+          "meanDefRecall": 0.611111111111111,
+          "skipped": 0
+        },
+        {
+          "strategy": "kirograph",
+          "tasks": 15,
+          "found": 1,
+          "foundRate": 0.06666666666666667,
+          "medianTokens": 799,
+          "meanTokens": 1289,
+          "tokensPerFound": 19329,
+          "meanFileRecall": 0.4,
+          "meanSymbolRecall": 0.2555555555555556,
+          "meanDefRecall": 0,
+          "skipped": 0
+        },
+        {
+          "strategy": "codegraph",
+          "tasks": 15,
+          "found": 8,
+          "foundRate": 0.5333333333333333,
+          "medianTokens": 8317,
+          "meanTokens": 8102,
+          "tokensPerFound": 15192,
+          "meanFileRecall": 0.9,
+          "meanSymbolRecall": 0.8055555555555556,
+          "meanDefRecall": 0.6222222222222221,
+          "skipped": 0
+        }
+      ],
+      "byKind": [
+        {
+          "kind": "locate",
+          "strategy": "native-naive",
+          "tasks": 4,
+          "found": 1
+        },
+        {
+          "kind": "locate",
+          "strategy": "native-ranged",
+          "tasks": 4,
+          "found": 1
+        },
+        {
+          "kind": "locate",
+          "strategy": "kopt-pack",
+          "tasks": 4,
+          "found": 4
+        },
+        {
+          "kind": "locate",
+          "strategy": "kopt-hits+read",
+          "tasks": 4,
+          "found": 3
+        },
+        {
+          "kind": "locate",
+          "strategy": "kirograph",
+          "tasks": 4,
+          "found": 0
+        },
+        {
+          "kind": "locate",
+          "strategy": "codegraph",
+          "tasks": 4,
+          "found": 2
+        },
+        {
+          "kind": "explain",
+          "strategy": "native-naive",
+          "tasks": 4,
+          "found": 2
+        },
+        {
+          "kind": "explain",
+          "strategy": "native-ranged",
+          "tasks": 4,
+          "found": 3
+        },
+        {
+          "kind": "explain",
+          "strategy": "kopt-pack",
+          "tasks": 4,
+          "found": 2
+        },
+        {
+          "kind": "explain",
+          "strategy": "kopt-hits+read",
+          "tasks": 4,
+          "found": 2
+        },
+        {
+          "kind": "explain",
+          "strategy": "kirograph",
+          "tasks": 4,
+          "found": 1
+        },
+        {
+          "kind": "explain",
+          "strategy": "codegraph",
+          "tasks": 4,
+          "found": 2
+        },
+        {
+          "kind": "usage",
+          "strategy": "native-naive",
+          "tasks": 4,
+          "found": 3
+        },
+        {
+          "kind": "usage",
+          "strategy": "native-ranged",
+          "tasks": 4,
+          "found": 2
+        },
+        {
+          "kind": "usage",
+          "strategy": "kopt-pack",
+          "tasks": 4,
+          "found": 4
+        },
+        {
+          "kind": "usage",
+          "strategy": "kopt-hits+read",
+          "tasks": 4,
+          "found": 1
+        },
+        {
+          "kind": "usage",
+          "strategy": "kirograph",
+          "tasks": 4,
+          "found": 0
+        },
+        {
+          "kind": "usage",
+          "strategy": "codegraph",
+          "tasks": 4,
+          "found": 1
+        },
+        {
+          "kind": "impact",
+          "strategy": "native-naive",
+          "tasks": 3,
+          "found": 1
+        },
+        {
+          "kind": "impact",
+          "strategy": "native-ranged",
+          "tasks": 3,
+          "found": 2
+        },
+        {
+          "kind": "impact",
+          "strategy": "kopt-pack",
+          "tasks": 3,
+          "found": 3
+        },
+        {
+          "kind": "impact",
+          "strategy": "kopt-hits+read",
+          "tasks": 3,
+          "found": 1
+        },
+        {
+          "kind": "impact",
+          "strategy": "kirograph",
+          "tasks": 3,
+          "found": 0
+        },
+        {
+          "kind": "impact",
+          "strategy": "codegraph",
+          "tasks": 3,
+          "found": 3
+        }
+      ],
+      "failures": {
+        "strategy": "kopt-pack",
+        "tasks": 15,
+        "missed": 2,
+        "byCause": {
+          "ranking": 1,
+          "unresolved-refs": 0,
+          "extraction": 0,
+          "budget-format": 0,
+          "multi-step": 1
+        },
+        "itemsByCause": {
+          "ranking": 1,
+          "unresolved-refs": 0,
+          "extraction": 0,
+          "budget-format": 0,
+          "multi-step": 1
+        }
+      },
+      "files": {
+        "quality": "bench/results/quality-django.md",
+        "bench": "bench/results/django.md"
+      },
+      "durationMs": 24584
+    },
+    {
+      "repo": "medusa",
+      "language": "typescript",
+      "tag": "v2.21.2",
+      "commit": "020565398e436a2bc65777a3b1ad347b4735d6df",
+      "loc": 931608,
+      "ok": true,
+      "verifyIssues": 0,
+      "tasks": 12,
+      "index": {
+        "built": true,
+        "durationMs": 12764,
+        "files": 11970,
+        "symbols": 40269,
+        "refs": 253019
+      },
+      "quality": {
+        "filesIndexed": 11970,
+        "filesSkipped": 9,
+        "parseErrorFileRate": 0.001,
+        "parseErrorsPerKloc": 0.007,
+        "symbolsPerKloc": 34.85,
+        "resolvedRate": 0.2482,
+        "resolvedOfCandidates": 0.3565,
+        "precisionRate": 1,
+        "precisionSampled": 30
+      },
+      "strategies": [
+        {
+          "strategy": "native-naive",
+          "tasks": 12,
+          "found": 5,
+          "foundRate": 0.4166666666666667,
+          "medianTokens": 28853.5,
+          "meanTokens": 33763,
+          "tokensPerFound": 81032,
+          "meanFileRecall": 0.5833333333333334,
+          "meanSymbolRecall": 0.576388888888889,
+          "meanDefRecall": 0.4458333333333333,
+          "skipped": 0
+        },
+        {
+          "strategy": "native-ranged",
+          "tasks": 12,
+          "found": 3,
+          "foundRate": 0.25,
+          "medianTokens": 6994,
+          "meanTokens": 6880,
+          "tokensPerFound": 27520,
+          "meanFileRecall": 0.5833333333333334,
+          "meanSymbolRecall": 0.4555555555555555,
+          "meanDefRecall": 0.30416666666666664,
+          "skipped": 0
+        },
+        {
+          "strategy": "kopt-pack",
+          "tasks": 12,
+          "found": 9,
+          "foundRate": 0.75,
+          "medianTokens": 1300,
+          "meanTokens": 1221,
+          "tokensPerFound": 1628,
+          "meanFileRecall": 0.9416666666666668,
+          "meanSymbolRecall": 0.9208333333333334,
+          "meanDefRecall": 0.43888888888888894,
+          "skipped": 0
+        },
+        {
+          "strategy": "kopt-hits+read",
+          "tasks": 12,
+          "found": 4,
+          "foundRate": 0.3333333333333333,
+          "medianTokens": 994.5,
+          "meanTokens": 1496,
+          "tokensPerFound": 4488,
+          "meanFileRecall": 0.6138888888888888,
+          "meanSymbolRecall": 0.5847222222222223,
+          "meanDefRecall": 0.5013888888888889,
+          "skipped": 0
+        },
+        {
+          "strategy": "kirograph",
+          "tasks": 12,
+          "found": 0,
+          "foundRate": 0,
+          "medianTokens": 1268.5,
+          "meanTokens": 1293,
+          "tokensPerFound": null,
+          "meanFileRecall": 0.1111111111111111,
+          "meanSymbolRecall": 0.09583333333333333,
+          "meanDefRecall": 0,
+          "skipped": 0
+        },
+        {
+          "strategy": "codegraph",
+          "tasks": 12,
+          "found": 7,
+          "foundRate": 0.5833333333333334,
+          "medianTokens": 8316.5,
+          "meanTokens": 8108,
+          "tokensPerFound": 13900,
+          "meanFileRecall": 0.8666666666666667,
+          "meanSymbolRecall": 0.7388888888888889,
+          "meanDefRecall": 0.36388888888888893,
+          "skipped": 0
+        }
+      ],
+      "byKind": [
+        {
+          "kind": "locate",
+          "strategy": "native-naive",
+          "tasks": 4,
+          "found": 1
+        },
+        {
+          "kind": "locate",
+          "strategy": "native-ranged",
+          "tasks": 4,
+          "found": 1
+        },
+        {
+          "kind": "locate",
+          "strategy": "kopt-pack",
+          "tasks": 4,
+          "found": 4
+        },
+        {
+          "kind": "locate",
+          "strategy": "kopt-hits+read",
+          "tasks": 4,
+          "found": 3
+        },
+        {
+          "kind": "locate",
+          "strategy": "kirograph",
+          "tasks": 4,
+          "found": 0
+        },
+        {
+          "kind": "locate",
+          "strategy": "codegraph",
+          "tasks": 4,
+          "found": 2
+        },
+        {
+          "kind": "explain",
+          "strategy": "native-naive",
+          "tasks": 3,
+          "found": 1
+        },
+        {
+          "kind": "explain",
+          "strategy": "native-ranged",
+          "tasks": 3,
+          "found": 0
+        },
+        {
+          "kind": "explain",
+          "strategy": "kopt-pack",
+          "tasks": 3,
+          "found": 1
+        },
+        {
+          "kind": "explain",
+          "strategy": "kopt-hits+read",
+          "tasks": 3,
+          "found": 1
+        },
+        {
+          "kind": "explain",
+          "strategy": "kirograph",
+          "tasks": 3,
+          "found": 0
+        },
+        {
+          "kind": "explain",
+          "strategy": "codegraph",
+          "tasks": 3,
+          "found": 1
+        },
+        {
+          "kind": "usage",
+          "strategy": "native-naive",
+          "tasks": 3,
+          "found": 2
+        },
+        {
+          "kind": "usage",
+          "strategy": "native-ranged",
+          "tasks": 3,
+          "found": 2
+        },
+        {
+          "kind": "usage",
+          "strategy": "kopt-pack",
+          "tasks": 3,
+          "found": 3
+        },
+        {
+          "kind": "usage",
+          "strategy": "kopt-hits+read",
+          "tasks": 3,
+          "found": 0
+        },
+        {
+          "kind": "usage",
+          "strategy": "kirograph",
+          "tasks": 3,
+          "found": 0
+        },
+        {
+          "kind": "usage",
+          "strategy": "codegraph",
+          "tasks": 3,
+          "found": 3
+        },
+        {
+          "kind": "impact",
+          "strategy": "native-naive",
+          "tasks": 2,
+          "found": 1
+        },
+        {
+          "kind": "impact",
+          "strategy": "native-ranged",
+          "tasks": 2,
+          "found": 0
+        },
+        {
+          "kind": "impact",
+          "strategy": "kopt-pack",
+          "tasks": 2,
+          "found": 1
+        },
+        {
+          "kind": "impact",
+          "strategy": "kopt-hits+read",
+          "tasks": 2,
+          "found": 0
+        },
+        {
+          "kind": "impact",
+          "strategy": "kirograph",
+          "tasks": 2,
+          "found": 0
+        },
+        {
+          "kind": "impact",
+          "strategy": "codegraph",
+          "tasks": 2,
+          "found": 1
+        }
+      ],
+      "failures": {
+        "strategy": "kopt-pack",
+        "tasks": 12,
+        "missed": 3,
+        "byCause": {
+          "ranking": 0,
+          "unresolved-refs": 1,
+          "extraction": 0,
+          "budget-format": 1,
+          "multi-step": 1
+        },
+        "itemsByCause": {
+          "ranking": 0,
+          "unresolved-refs": 1,
+          "extraction": 0,
+          "budget-format": 2,
+          "multi-step": 2
+        }
+      },
+      "files": {
+        "quality": "bench/results/quality-medusa.md",
+        "bench": "bench/results/medusa.md"
+      },
+      "durationMs": 942029
+    },
+    {
+      "repo": "webpack",
+      "language": "javascript",
+      "tag": "v5.111.1",
+      "commit": "5a106753839fd7e1b86138c3a5f6b348341147a7",
+      "loc": 582325,
+      "ok": true,
+      "verifyIssues": 0,
+      "tasks": 12,
+      "index": {
+        "built": true,
+        "durationMs": 4951,
+        "files": 14902,
+        "symbols": 22575,
+        "refs": 128969
+      },
+      "quality": {
+        "filesIndexed": 14902,
+        "filesSkipped": 50,
+        "parseErrorFileRate": 0.019,
+        "parseErrorsPerKloc": 1.175,
+        "symbolsPerKloc": 27.23,
+        "resolvedRate": 0.2028,
+        "resolvedOfCandidates": 0.3201,
+        "precisionRate": 1,
+        "precisionSampled": 30
+      },
+      "strategies": [
+        {
+          "strategy": "native-naive",
+          "tasks": 12,
+          "found": 6,
+          "foundRate": 0.5,
+          "medianTokens": 32202.5,
+          "meanTokens": 33552,
+          "tokensPerFound": 67104,
+          "meanFileRecall": 0.75,
+          "meanSymbolRecall": 0.7569444444444443,
+          "meanDefRecall": 0.6527777777777778,
+          "skipped": 0
+        },
+        {
+          "strategy": "native-ranged",
+          "tasks": 12,
+          "found": 5,
+          "foundRate": 0.4166666666666667,
+          "medianTokens": 5648.5,
+          "meanTokens": 16860,
+          "tokensPerFound": 40465,
+          "meanFileRecall": 0.75,
+          "meanSymbolRecall": 0.611111111111111,
+          "meanDefRecall": 0.48611111111111116,
+          "skipped": 0
+        },
+        {
+          "strategy": "kopt-pack",
+          "tasks": 12,
+          "found": 11,
+          "foundRate": 0.9166666666666666,
+          "medianTokens": 1109.5,
+          "meanTokens": 1056,
+          "tokensPerFound": 1152,
+          "meanFileRecall": 0.9166666666666666,
+          "meanSymbolRecall": 0.9166666666666666,
+          "meanDefRecall": 0.7430555555555555,
+          "skipped": 0
+        },
+        {
+          "strategy": "kopt-hits+read",
+          "tasks": 12,
+          "found": 7,
+          "foundRate": 0.5833333333333334,
+          "medianTokens": 1314.5,
+          "meanTokens": 1674,
+          "tokensPerFound": 2870,
+          "meanFileRecall": 0.7083333333333334,
+          "meanSymbolRecall": 0.6666666666666666,
+          "meanDefRecall": 0.5902777777777778,
+          "skipped": 0
+        },
+        {
+          "strategy": "kirograph",
+          "tasks": 12,
+          "found": 1,
+          "foundRate": 0.08333333333333333,
+          "medianTokens": 752,
+          "meanTokens": 1591,
+          "tokensPerFound": 19095,
+          "meanFileRecall": 0.19444444444444442,
+          "meanSymbolRecall": 0.17361111111111113,
+          "meanDefRecall": 0.08333333333333333,
+          "skipped": 0
+        },
+        {
+          "strategy": "codegraph",
+          "tasks": 12,
+          "found": 5,
+          "foundRate": 0.4166666666666667,
+          "medianTokens": 8325,
+          "meanTokens": 8323,
+          "tokensPerFound": 19976,
+          "meanFileRecall": 0.5833333333333334,
+          "meanSymbolRecall": 0.6666666666666666,
+          "meanDefRecall": 0.40972222222222227,
+          "skipped": 0
+        }
+      ],
+      "byKind": [
+        {
+          "kind": "locate",
+          "strategy": "native-naive",
+          "tasks": 4,
+          "found": 1
+        },
+        {
+          "kind": "locate",
+          "strategy": "native-ranged",
+          "tasks": 4,
+          "found": 1
+        },
+        {
+          "kind": "locate",
+          "strategy": "kopt-pack",
+          "tasks": 4,
+          "found": 4
+        },
+        {
+          "kind": "locate",
+          "strategy": "kopt-hits+read",
+          "tasks": 4,
+          "found": 4
+        },
+        {
+          "kind": "locate",
+          "strategy": "kirograph",
+          "tasks": 4,
+          "found": 1
+        },
+        {
+          "kind": "locate",
+          "strategy": "codegraph",
+          "tasks": 4,
+          "found": 1
+        },
+        {
+          "kind": "explain",
+          "strategy": "native-naive",
+          "tasks": 3,
+          "found": 2
+        },
+        {
+          "kind": "explain",
+          "strategy": "native-ranged",
+          "tasks": 3,
+          "found": 2
+        },
+        {
+          "kind": "explain",
+          "strategy": "kopt-pack",
+          "tasks": 3,
+          "found": 3
+        },
+        {
+          "kind": "explain",
+          "strategy": "kopt-hits+read",
+          "tasks": 3,
+          "found": 2
+        },
+        {
+          "kind": "explain",
+          "strategy": "kirograph",
+          "tasks": 3,
+          "found": 0
+        },
+        {
+          "kind": "explain",
+          "strategy": "codegraph",
+          "tasks": 3,
+          "found": 1
+        },
+        {
+          "kind": "usage",
+          "strategy": "native-naive",
+          "tasks": 3,
+          "found": 2
+        },
+        {
+          "kind": "usage",
+          "strategy": "native-ranged",
+          "tasks": 3,
+          "found": 1
+        },
+        {
+          "kind": "usage",
+          "strategy": "kopt-pack",
+          "tasks": 3,
+          "found": 2
+        },
+        {
+          "kind": "usage",
+          "strategy": "kopt-hits+read",
+          "tasks": 3,
+          "found": 0
+        },
+        {
+          "kind": "usage",
+          "strategy": "kirograph",
+          "tasks": 3,
+          "found": 0
+        },
+        {
+          "kind": "usage",
+          "strategy": "codegraph",
+          "tasks": 3,
+          "found": 2
+        },
+        {
+          "kind": "impact",
+          "strategy": "native-naive",
+          "tasks": 2,
+          "found": 1
+        },
+        {
+          "kind": "impact",
+          "strategy": "native-ranged",
+          "tasks": 2,
+          "found": 1
+        },
+        {
+          "kind": "impact",
+          "strategy": "kopt-pack",
+          "tasks": 2,
+          "found": 2
+        },
+        {
+          "kind": "impact",
+          "strategy": "kopt-hits+read",
+          "tasks": 2,
+          "found": 1
+        },
+        {
+          "kind": "impact",
+          "strategy": "kirograph",
+          "tasks": 2,
+          "found": 0
+        },
+        {
+          "kind": "impact",
+          "strategy": "codegraph",
+          "tasks": 2,
+          "found": 1
+        }
+      ],
+      "failures": {
+        "strategy": "kopt-pack",
+        "tasks": 12,
+        "missed": 1,
+        "byCause": {
+          "ranking": 0,
+          "unresolved-refs": 1,
+          "extraction": 0,
+          "budget-format": 0,
+          "multi-step": 0
+        },
+        "itemsByCause": {
+          "ranking": 0,
+          "unresolved-refs": 2,
+          "extraction": 0,
+          "budget-format": 0,
+          "multi-step": 0
+        }
+      },
+      "files": {
+        "quality": "bench/results/quality-webpack.md",
+        "bench": "bench/results/webpack.md"
+      },
+      "durationMs": 29552
+    },
+    {
+      "repo": "jellyfin",
+      "language": "c_sharp",
+      "tag": "v10.11.11",
+      "commit": "1fbd8739292cce610231be93daf43368733edf63",
+      "loc": 277939,
+      "ok": true,
+      "verifyIssues": 0,
+      "tasks": 12,
+      "index": {
+        "built": true,
+        "durationMs": 2144,
+        "files": 1922,
+        "symbols": 17980,
+        "refs": 87194
+      },
+      "quality": {
+        "filesIndexed": 1922,
+        "filesSkipped": 0,
+        "parseErrorFileRate": 0.007,
+        "parseErrorsPerKloc": 0.109,
+        "symbolsPerKloc": 77.55,
+        "resolvedRate": 0.4882,
+        "resolvedOfCandidates": 0.7262,
+        "precisionRate": 0.9667,
+        "precisionSampled": 30
+      },
+      "strategies": [
+        {
+          "strategy": "native-naive",
+          "tasks": 12,
+          "found": 5,
+          "foundRate": 0.4166666666666667,
+          "medianTokens": 13681,
+          "meanTokens": 19285,
+          "tokensPerFound": 46284,
+          "meanFileRecall": 0.9583333333333334,
+          "meanSymbolRecall": 0.7083333333333334,
+          "meanDefRecall": 0.625,
+          "skipped": 0
+        },
+        {
+          "strategy": "native-ranged",
+          "tasks": 12,
+          "found": 5,
+          "foundRate": 0.4166666666666667,
+          "medianTokens": 6577.5,
+          "meanTokens": 6766,
+          "tokensPerFound": 16238,
+          "meanFileRecall": 0.9583333333333334,
+          "meanSymbolRecall": 0.7569444444444445,
+          "meanDefRecall": 0.6319444444444444,
+          "skipped": 0
+        },
+        {
+          "strategy": "kopt-pack",
+          "tasks": 12,
+          "found": 10,
+          "foundRate": 0.8333333333333334,
+          "medianTokens": 1298.5,
+          "meanTokens": 1140,
+          "tokensPerFound": 1369,
+          "meanFileRecall": 0.875,
+          "meanSymbolRecall": 0.8958333333333334,
+          "meanDefRecall": 0.3263888888888889,
+          "skipped": 0
+        },
+        {
+          "strategy": "kopt-hits+read",
+          "tasks": 12,
+          "found": 2,
+          "foundRate": 0.16666666666666666,
+          "medianTokens": 1310,
+          "meanTokens": 1772,
+          "tokensPerFound": 10631,
+          "meanFileRecall": 0.548611111111111,
+          "meanSymbolRecall": 0.4375,
+          "meanDefRecall": 0.31249999999999994,
+          "skipped": 0
+        },
+        {
+          "strategy": "kirograph",
+          "tasks": 12,
+          "found": 0,
+          "foundRate": 0,
+          "medianTokens": 864.5,
+          "meanTokens": 693,
+          "tokensPerFound": null,
+          "meanFileRecall": 0.2777777777777778,
+          "meanSymbolRecall": 0.09027777777777778,
+          "meanDefRecall": 0,
+          "skipped": 0
+        },
+        {
+          "strategy": "codegraph",
+          "tasks": 12,
+          "found": 8,
+          "foundRate": 0.6666666666666666,
+          "medianTokens": 8316,
+          "meanTokens": 8038,
+          "tokensPerFound": 12058,
+          "meanFileRecall": 0.9166666666666666,
+          "meanSymbolRecall": 0.7916666666666666,
+          "meanDefRecall": 0.46527777777777773,
+          "skipped": 0
+        }
+      ],
+      "byKind": [
+        {
+          "kind": "locate",
+          "strategy": "native-naive",
+          "tasks": 4,
+          "found": 0
+        },
+        {
+          "kind": "locate",
+          "strategy": "native-ranged",
+          "tasks": 4,
+          "found": 1
+        },
+        {
+          "kind": "locate",
+          "strategy": "kopt-pack",
+          "tasks": 4,
+          "found": 3
+        },
+        {
+          "kind": "locate",
+          "strategy": "kopt-hits+read",
+          "tasks": 4,
+          "found": 1
+        },
+        {
+          "kind": "locate",
+          "strategy": "kirograph",
+          "tasks": 4,
+          "found": 0
+        },
+        {
+          "kind": "locate",
+          "strategy": "codegraph",
+          "tasks": 4,
+          "found": 2
+        },
+        {
+          "kind": "explain",
+          "strategy": "native-naive",
+          "tasks": 3,
+          "found": 3
+        },
+        {
+          "kind": "explain",
+          "strategy": "native-ranged",
+          "tasks": 3,
+          "found": 2
+        },
+        {
+          "kind": "explain",
+          "strategy": "kopt-pack",
+          "tasks": 3,
+          "found": 2
+        },
+        {
+          "kind": "explain",
+          "strategy": "kopt-hits+read",
+          "tasks": 3,
+          "found": 1
+        },
+        {
+          "kind": "explain",
+          "strategy": "kirograph",
+          "tasks": 3,
+          "found": 0
+        },
+        {
+          "kind": "explain",
+          "strategy": "codegraph",
+          "tasks": 3,
+          "found": 1
+        },
+        {
+          "kind": "usage",
+          "strategy": "native-naive",
+          "tasks": 3,
+          "found": 1
+        },
+        {
+          "kind": "usage",
+          "strategy": "native-ranged",
+          "tasks": 3,
+          "found": 1
+        },
+        {
+          "kind": "usage",
+          "strategy": "kopt-pack",
+          "tasks": 3,
+          "found": 3
+        },
+        {
+          "kind": "usage",
+          "strategy": "kopt-hits+read",
+          "tasks": 3,
+          "found": 0
+        },
+        {
+          "kind": "usage",
+          "strategy": "kirograph",
+          "tasks": 3,
+          "found": 0
+        },
+        {
+          "kind": "usage",
+          "strategy": "codegraph",
+          "tasks": 3,
+          "found": 3
+        },
+        {
+          "kind": "impact",
+          "strategy": "native-naive",
+          "tasks": 2,
+          "found": 1
+        },
+        {
+          "kind": "impact",
+          "strategy": "native-ranged",
+          "tasks": 2,
+          "found": 1
+        },
+        {
+          "kind": "impact",
+          "strategy": "kopt-pack",
+          "tasks": 2,
+          "found": 2
+        },
+        {
+          "kind": "impact",
+          "strategy": "kopt-hits+read",
+          "tasks": 2,
+          "found": 0
+        },
+        {
+          "kind": "impact",
+          "strategy": "kirograph",
+          "tasks": 2,
+          "found": 0
+        },
+        {
+          "kind": "impact",
+          "strategy": "codegraph",
+          "tasks": 2,
+          "found": 2
+        }
+      ],
+      "failures": {
+        "strategy": "kopt-pack",
+        "tasks": 12,
+        "missed": 2,
+        "byCause": {
+          "ranking": 0,
+          "unresolved-refs": 0,
+          "extraction": 0,
+          "budget-format": 1,
+          "multi-step": 1
+        },
+        "itemsByCause": {
+          "ranking": 0,
+          "unresolved-refs": 0,
+          "extraction": 0,
+          "budget-format": 3,
+          "multi-step": 1
+        }
+      },
+      "files": {
+        "quality": "bench/results/quality-jellyfin.md",
+        "bench": "bench/results/jellyfin.md"
+      },
+      "durationMs": 6492
+    },
+    {
+      "repo": "gitea",
+      "language": "go",
+      "tag": "v28.1.0",
+      "commit": "4ebd5e319b6a9e629bfd7a04292a6fe85b08dee9",
+      "loc": 504963,
+      "ok": true,
+      "verifyIssues": 0,
+      "tasks": 12,
+      "index": {
+        "built": true,
+        "durationMs": 6271,
+        "files": 3402,
+        "symbols": 32905,
+        "refs": 226318
+      },
+      "quality": {
+        "filesIndexed": 3402,
+        "filesSkipped": 3,
+        "parseErrorFileRate": 0.013,
+        "parseErrorsPerKloc": 0.362,
+        "symbolsPerKloc": 63.42,
+        "resolvedRate": 0.6147,
+        "resolvedOfCandidates": 0.725,
+        "precisionRate": 1,
+        "precisionSampled": 30
+      },
+      "strategies": [
+        {
+          "strategy": "native-naive",
+          "tasks": 12,
+          "found": 4,
+          "foundRate": 0.3333333333333333,
+          "medianTokens": 14141.5,
+          "meanTokens": 45777,
+          "tokensPerFound": 137331,
+          "meanFileRecall": 0.7291666666666666,
+          "meanSymbolRecall": 0.6416666666666667,
+          "meanDefRecall": 0.5444444444444444,
+          "skipped": 0
+        },
+        {
+          "strategy": "native-ranged",
+          "tasks": 12,
+          "found": 3,
+          "foundRate": 0.25,
+          "medianTokens": 6266,
+          "meanTokens": 7640,
+          "tokensPerFound": 30561,
+          "meanFileRecall": 0.7291666666666666,
+          "meanSymbolRecall": 0.6361111111111111,
+          "meanDefRecall": 0.5388888888888889,
+          "skipped": 0
+        },
+        {
+          "strategy": "kopt-pack",
+          "tasks": 12,
+          "found": 11,
+          "foundRate": 0.9166666666666666,
+          "medianTokens": 1131.5,
+          "meanTokens": 1096,
+          "tokensPerFound": 1196,
+          "meanFileRecall": 1,
+          "meanSymbolRecall": 0.9583333333333334,
+          "meanDefRecall": 0.5263888888888889,
+          "skipped": 0
+        },
+        {
+          "strategy": "kopt-hits+read",
+          "tasks": 12,
+          "found": 5,
+          "foundRate": 0.4166666666666667,
+          "medianTokens": 752,
+          "meanTokens": 878,
+          "tokensPerFound": 2107,
+          "meanFileRecall": 0.6555555555555556,
+          "meanSymbolRecall": 0.6694444444444446,
+          "meanDefRecall": 0.48194444444444445,
+          "skipped": 0
+        },
+        {
+          "strategy": "kirograph",
+          "tasks": 12,
+          "found": 0,
+          "foundRate": 0,
+          "medianTokens": 482,
+          "meanTokens": 611,
+          "tokensPerFound": null,
+          "meanFileRecall": 0.08333333333333333,
+          "meanSymbolRecall": 0.09027777777777778,
+          "meanDefRecall": 0,
+          "skipped": 0
+        },
+        {
+          "strategy": "codegraph",
+          "tasks": 12,
+          "found": 6,
+          "foundRate": 0.5,
+          "medianTokens": 8256.5,
+          "meanTokens": 7631,
+          "tokensPerFound": 15262,
+          "meanFileRecall": 0.7958333333333334,
+          "meanSymbolRecall": 0.6916666666666668,
+          "meanDefRecall": 0.3055555555555555,
+          "skipped": 0
+        }
+      ],
+      "byKind": [
+        {
+          "kind": "locate",
+          "strategy": "native-naive",
+          "tasks": 4,
+          "found": 2
+        },
+        {
+          "kind": "locate",
+          "strategy": "native-ranged",
+          "tasks": 4,
+          "found": 2
+        },
+        {
+          "kind": "locate",
+          "strategy": "kopt-pack",
+          "tasks": 4,
+          "found": 4
+        },
+        {
+          "kind": "locate",
+          "strategy": "kopt-hits+read",
+          "tasks": 4,
+          "found": 3
+        },
+        {
+          "kind": "locate",
+          "strategy": "kirograph",
+          "tasks": 4,
+          "found": 0
+        },
+        {
+          "kind": "locate",
+          "strategy": "codegraph",
+          "tasks": 4,
+          "found": 2
+        },
+        {
+          "kind": "explain",
+          "strategy": "native-naive",
+          "tasks": 3,
+          "found": 0
+        },
+        {
+          "kind": "explain",
+          "strategy": "native-ranged",
+          "tasks": 3,
+          "found": 0
+        },
+        {
+          "kind": "explain",
+          "strategy": "kopt-pack",
+          "tasks": 3,
+          "found": 2
+        },
+        {
+          "kind": "explain",
+          "strategy": "kopt-hits+read",
+          "tasks": 3,
+          "found": 2
+        },
+        {
+          "kind": "explain",
+          "strategy": "kirograph",
+          "tasks": 3,
+          "found": 0
+        },
+        {
+          "kind": "explain",
+          "strategy": "codegraph",
+          "tasks": 3,
+          "found": 1
+        },
+        {
+          "kind": "usage",
+          "strategy": "native-naive",
+          "tasks": 3,
+          "found": 1
+        },
+        {
+          "kind": "usage",
+          "strategy": "native-ranged",
+          "tasks": 3,
+          "found": 1
+        },
+        {
+          "kind": "usage",
+          "strategy": "kopt-pack",
+          "tasks": 3,
+          "found": 3
+        },
+        {
+          "kind": "usage",
+          "strategy": "kopt-hits+read",
+          "tasks": 3,
+          "found": 0
+        },
+        {
+          "kind": "usage",
+          "strategy": "kirograph",
+          "tasks": 3,
+          "found": 0
+        },
+        {
+          "kind": "usage",
+          "strategy": "codegraph",
+          "tasks": 3,
+          "found": 2
+        },
+        {
+          "kind": "impact",
+          "strategy": "native-naive",
+          "tasks": 2,
+          "found": 1
+        },
+        {
+          "kind": "impact",
+          "strategy": "native-ranged",
+          "tasks": 2,
+          "found": 0
+        },
+        {
+          "kind": "impact",
+          "strategy": "kopt-pack",
+          "tasks": 2,
+          "found": 2
+        },
+        {
+          "kind": "impact",
+          "strategy": "kopt-hits+read",
+          "tasks": 2,
+          "found": 0
+        },
+        {
+          "kind": "impact",
+          "strategy": "kirograph",
+          "tasks": 2,
+          "found": 0
+        },
+        {
+          "kind": "impact",
+          "strategy": "codegraph",
+          "tasks": 2,
+          "found": 1
+        }
+      ],
+      "failures": {
+        "strategy": "kopt-pack",
+        "tasks": 12,
+        "missed": 1,
+        "byCause": {
+          "ranking": 0,
+          "unresolved-refs": 0,
+          "extraction": 0,
+          "budget-format": 0,
+          "multi-step": 1
+        },
+        "itemsByCause": {
+          "ranking": 0,
+          "unresolved-refs": 0,
+          "extraction": 0,
+          "budget-format": 0,
+          "multi-step": 2
+        }
+      },
+      "files": {
+        "quality": "bench/results/quality-gitea.md",
+        "bench": "bench/results/gitea.md"
+      },
+      "durationMs": 17060
+    },
+    {
+      "repo": "exposed",
+      "language": "kotlin",
+      "tag": "1.5.0",
+      "commit": "84361204b6639cad5696506a26595c97afac3531",
+      "loc": 141939,
+      "ok": true,
+      "verifyIssues": 0,
+      "tasks": 12,
+      "index": {
+        "built": true,
+        "durationMs": 2057,
+        "files": 864,
+        "symbols": 12962,
+        "refs": 78309
+      },
+      "quality": {
+        "filesIndexed": 864,
+        "filesSkipped": 2,
+        "parseErrorFileRate": 0.0116,
+        "parseErrorsPerKloc": 0.238,
+        "symbolsPerKloc": 91.06,
+        "resolvedRate": 0.51,
+        "resolvedOfCandidates": 0.7286,
+        "precisionRate": 0.9667,
+        "precisionSampled": 30
+      },
+      "strategies": [
+        {
+          "strategy": "native-naive",
+          "tasks": 12,
+          "found": 4,
+          "foundRate": 0.3333333333333333,
+          "medianTokens": 15909.5,
+          "meanTokens": 29524,
+          "tokensPerFound": 88573,
+          "meanFileRecall": 0.7083333333333334,
+          "meanSymbolRecall": 0.5694444444444444,
+          "meanDefRecall": 0.3680555555555556,
+          "skipped": 0
+        },
+        {
+          "strategy": "native-ranged",
+          "tasks": 12,
+          "found": 4,
+          "foundRate": 0.3333333333333333,
+          "medianTokens": 9658.5,
+          "meanTokens": 28507,
+          "tokensPerFound": 85522,
+          "meanFileRecall": 0.7083333333333334,
+          "meanSymbolRecall": 0.6069444444444445,
+          "meanDefRecall": 0.4055555555555555,
+          "skipped": 0
+        },
+        {
+          "strategy": "kopt-pack",
+          "tasks": 12,
+          "found": 8,
+          "foundRate": 0.6666666666666666,
+          "medianTokens": 1301.5,
+          "meanTokens": 1136,
+          "tokensPerFound": 1703,
+          "meanFileRecall": 0.8333333333333334,
+          "meanSymbolRecall": 0.9097222222222223,
+          "meanDefRecall": 0.34722222222222215,
+          "skipped": 0
+        },
+        {
+          "strategy": "kopt-hits+read",
+          "tasks": 12,
+          "found": 2,
+          "foundRate": 0.16666666666666666,
+          "medianTokens": 906,
+          "meanTokens": 994,
+          "tokensPerFound": 5963,
+          "meanFileRecall": 0.6180555555555555,
+          "meanSymbolRecall": 0.623611111111111,
+          "meanDefRecall": 0.31805555555555554,
+          "skipped": 0
+        },
+        {
+          "strategy": "kirograph",
+          "tasks": 12,
+          "found": 1,
+          "foundRate": 0.08333333333333333,
+          "medianTokens": 1099.5,
+          "meanTokens": 1733,
+          "tokensPerFound": 20798,
+          "meanFileRecall": 0.5069444444444444,
+          "meanSymbolRecall": 0.24305555555555555,
+          "meanDefRecall": 0.10416666666666667,
+          "skipped": 0
+        },
+        {
+          "strategy": "codegraph",
+          "tasks": 12,
+          "found": 9,
+          "foundRate": 0.75,
+          "medianTokens": 8305,
+          "meanTokens": 8265,
+          "tokensPerFound": 11019,
+          "meanFileRecall": 0.875,
+          "meanSymbolRecall": 1,
+          "meanDefRecall": 0.5541666666666667,
+          "skipped": 0
+        }
+      ],
+      "byKind": [
+        {
+          "kind": "locate",
+          "strategy": "native-naive",
+          "tasks": 4,
+          "found": 2
+        },
+        {
+          "kind": "locate",
+          "strategy": "native-ranged",
+          "tasks": 4,
+          "found": 2
+        },
+        {
+          "kind": "locate",
+          "strategy": "kopt-pack",
+          "tasks": 4,
+          "found": 3
+        },
+        {
+          "kind": "locate",
+          "strategy": "kopt-hits+read",
+          "tasks": 4,
+          "found": 2
+        },
+        {
+          "kind": "locate",
+          "strategy": "kirograph",
+          "tasks": 4,
+          "found": 1
+        },
+        {
+          "kind": "locate",
+          "strategy": "codegraph",
+          "tasks": 4,
+          "found": 2
+        },
+        {
+          "kind": "explain",
+          "strategy": "native-naive",
+          "tasks": 3,
+          "found": 0
+        },
+        {
+          "kind": "explain",
+          "strategy": "native-ranged",
+          "tasks": 3,
+          "found": 0
+        },
+        {
+          "kind": "explain",
+          "strategy": "kopt-pack",
+          "tasks": 3,
+          "found": 0
+        },
+        {
+          "kind": "explain",
+          "strategy": "kopt-hits+read",
+          "tasks": 3,
+          "found": 0
+        },
+        {
+          "kind": "explain",
+          "strategy": "kirograph",
+          "tasks": 3,
+          "found": 0
+        },
+        {
+          "kind": "explain",
+          "strategy": "codegraph",
+          "tasks": 3,
+          "found": 2
+        },
+        {
+          "kind": "usage",
+          "strategy": "native-naive",
+          "tasks": 3,
+          "found": 1
+        },
+        {
+          "kind": "usage",
+          "strategy": "native-ranged",
+          "tasks": 3,
+          "found": 1
+        },
+        {
+          "kind": "usage",
+          "strategy": "kopt-pack",
+          "tasks": 3,
+          "found": 3
+        },
+        {
+          "kind": "usage",
+          "strategy": "kopt-hits+read",
+          "tasks": 3,
+          "found": 0
+        },
+        {
+          "kind": "usage",
+          "strategy": "kirograph",
+          "tasks": 3,
+          "found": 0
+        },
+        {
+          "kind": "usage",
+          "strategy": "codegraph",
+          "tasks": 3,
+          "found": 3
+        },
+        {
+          "kind": "impact",
+          "strategy": "native-naive",
+          "tasks": 2,
+          "found": 1
+        },
+        {
+          "kind": "impact",
+          "strategy": "native-ranged",
+          "tasks": 2,
+          "found": 1
+        },
+        {
+          "kind": "impact",
+          "strategy": "kopt-pack",
+          "tasks": 2,
+          "found": 2
+        },
+        {
+          "kind": "impact",
+          "strategy": "kopt-hits+read",
+          "tasks": 2,
+          "found": 0
+        },
+        {
+          "kind": "impact",
+          "strategy": "kirograph",
+          "tasks": 2,
+          "found": 0
+        },
+        {
+          "kind": "impact",
+          "strategy": "codegraph",
+          "tasks": 2,
+          "found": 2
+        }
+      ],
+      "failures": {
+        "strategy": "kopt-pack",
+        "tasks": 12,
+        "missed": 4,
+        "byCause": {
+          "ranking": 1,
+          "unresolved-refs": 0,
+          "extraction": 0,
+          "budget-format": 0,
+          "multi-step": 3
+        },
+        "itemsByCause": {
+          "ranking": 1,
+          "unresolved-refs": 0,
+          "extraction": 0,
+          "budget-format": 3,
+          "multi-step": 3
+        }
+      },
+      "files": {
+        "quality": "bench/results/quality-exposed.md",
+        "bench": "bench/results/exposed.md"
+      },
+      "durationMs": 15307
+    },
+    {
+      "repo": "meilisearch",
+      "language": "rust",
+      "tag": "v1.54.3",
+      "commit": "7ebd97e38c36882b0c78d79e433b9115b4f003b3",
+      "loc": 268304,
+      "ok": true,
+      "verifyIssues": 0,
+      "tasks": 12,
+      "index": {
+        "built": true,
+        "durationMs": 2210,
+        "files": 715,
+        "symbols": 18280,
+        "refs": 99034
+      },
+      "quality": {
+        "filesIndexed": 715,
+        "filesSkipped": 0,
+        "parseErrorFileRate": 0.0014,
+        "parseErrorsPerKloc": 0.011,
+        "symbolsPerKloc": 68.2,
+        "resolvedRate": 0.3891,
+        "resolvedOfCandidates": 0.5229,
+        "precisionRate": 1,
+        "precisionSampled": 30
+      },
+      "strategies": [
+        {
+          "strategy": "native-naive",
+          "tasks": 12,
+          "found": 7,
+          "foundRate": 0.5833333333333334,
+          "medianTokens": 28385,
+          "meanTokens": 31261,
+          "tokensPerFound": 53591,
+          "meanFileRecall": 0.6666666666666666,
+          "meanSymbolRecall": 0.7083333333333334,
+          "meanDefRecall": 0.4875,
+          "skipped": 0
+        },
+        {
+          "strategy": "native-ranged",
+          "tasks": 12,
+          "found": 3,
+          "foundRate": 0.25,
+          "medianTokens": 6194,
+          "meanTokens": 6448,
+          "tokensPerFound": 25791,
+          "meanFileRecall": 0.6666666666666666,
+          "meanSymbolRecall": 0.5333333333333333,
+          "meanDefRecall": 0.34722222222222227,
+          "skipped": 0
+        },
+        {
+          "strategy": "kopt-pack",
+          "tasks": 12,
+          "found": 7,
+          "foundRate": 0.5833333333333334,
+          "medianTokens": 1325,
+          "meanTokens": 1286,
+          "tokensPerFound": 2204,
+          "meanFileRecall": 0.7847222222222222,
+          "meanSymbolRecall": 0.7749999999999999,
+          "meanDefRecall": 0.4055555555555555,
+          "skipped": 0
+        },
+        {
+          "strategy": "kopt-hits+read",
+          "tasks": 12,
+          "found": 4,
+          "foundRate": 0.3333333333333333,
+          "medianTokens": 832,
+          "meanTokens": 1113,
+          "tokensPerFound": 3339,
+          "meanFileRecall": 0.7013888888888888,
+          "meanSymbolRecall": 0.6486111111111111,
+          "meanDefRecall": 0.37083333333333335,
+          "skipped": 0
+        },
+        {
+          "strategy": "kirograph",
+          "tasks": 12,
+          "found": 0,
+          "foundRate": 0,
+          "medianTokens": 1057.5,
+          "meanTokens": 1447,
+          "tokensPerFound": null,
+          "meanFileRecall": 0.36111111111111116,
+          "meanSymbolRecall": 0.08888888888888889,
+          "meanDefRecall": 0,
+          "skipped": 0
+        },
+        {
+          "strategy": "codegraph",
+          "tasks": 12,
+          "found": 5,
+          "foundRate": 0.4166666666666667,
+          "medianTokens": 8317.5,
+          "meanTokens": 8057,
+          "tokensPerFound": 19337,
+          "meanFileRecall": 0.6875,
+          "meanSymbolRecall": 0.6833333333333332,
+          "meanDefRecall": 0.31805555555555554,
+          "skipped": 0
+        }
+      ],
+      "byKind": [
+        {
+          "kind": "locate",
+          "strategy": "native-naive",
+          "tasks": 4,
+          "found": 1
+        },
+        {
+          "kind": "locate",
+          "strategy": "native-ranged",
+          "tasks": 4,
+          "found": 1
+        },
+        {
+          "kind": "locate",
+          "strategy": "kopt-pack",
+          "tasks": 4,
+          "found": 4
+        },
+        {
+          "kind": "locate",
+          "strategy": "kopt-hits+read",
+          "tasks": 4,
+          "found": 4
+        },
+        {
+          "kind": "locate",
+          "strategy": "kirograph",
+          "tasks": 4,
+          "found": 0
+        },
+        {
+          "kind": "locate",
+          "strategy": "codegraph",
+          "tasks": 4,
+          "found": 2
+        },
+        {
+          "kind": "explain",
+          "strategy": "native-naive",
+          "tasks": 3,
+          "found": 1
+        },
+        {
+          "kind": "explain",
+          "strategy": "native-ranged",
+          "tasks": 3,
+          "found": 0
+        },
+        {
+          "kind": "explain",
+          "strategy": "kopt-pack",
+          "tasks": 3,
+          "found": 1
+        },
+        {
+          "kind": "explain",
+          "strategy": "kopt-hits+read",
+          "tasks": 3,
+          "found": 0
+        },
+        {
+          "kind": "explain",
+          "strategy": "kirograph",
+          "tasks": 3,
+          "found": 0
+        },
+        {
+          "kind": "explain",
+          "strategy": "codegraph",
+          "tasks": 3,
+          "found": 0
+        },
+        {
+          "kind": "usage",
+          "strategy": "native-naive",
+          "tasks": 3,
+          "found": 3
+        },
+        {
+          "kind": "usage",
+          "strategy": "native-ranged",
+          "tasks": 3,
+          "found": 1
+        },
+        {
+          "kind": "usage",
+          "strategy": "kopt-pack",
+          "tasks": 3,
+          "found": 1
+        },
+        {
+          "kind": "usage",
+          "strategy": "kopt-hits+read",
+          "tasks": 3,
+          "found": 0
+        },
+        {
+          "kind": "usage",
+          "strategy": "kirograph",
+          "tasks": 3,
+          "found": 0
+        },
+        {
+          "kind": "usage",
+          "strategy": "codegraph",
+          "tasks": 3,
+          "found": 2
+        },
+        {
+          "kind": "impact",
+          "strategy": "native-naive",
+          "tasks": 2,
+          "found": 2
+        },
+        {
+          "kind": "impact",
+          "strategy": "native-ranged",
+          "tasks": 2,
+          "found": 1
+        },
+        {
+          "kind": "impact",
+          "strategy": "kopt-pack",
+          "tasks": 2,
+          "found": 1
+        },
+        {
+          "kind": "impact",
+          "strategy": "kopt-hits+read",
+          "tasks": 2,
+          "found": 0
+        },
+        {
+          "kind": "impact",
+          "strategy": "kirograph",
+          "tasks": 2,
+          "found": 0
+        },
+        {
+          "kind": "impact",
+          "strategy": "codegraph",
+          "tasks": 2,
+          "found": 1
+        }
+      ],
+      "failures": {
+        "strategy": "kopt-pack",
+        "tasks": 12,
+        "missed": 5,
+        "byCause": {
+          "ranking": 0,
+          "unresolved-refs": 2,
+          "extraction": 1,
+          "budget-format": 2,
+          "multi-step": 0
+        },
+        "itemsByCause": {
+          "ranking": 0,
+          "unresolved-refs": 7,
+          "extraction": 2,
+          "budget-format": 5,
+          "multi-step": 0
+        }
+      },
+      "files": {
+        "quality": "bench/results/quality-meilisearch.md",
+        "bench": "bench/results/meilisearch.md"
+      },
+      "durationMs": 8088
+    },
+    {
+      "repo": "laravel",
+      "language": "php",
+      "tag": "v13.35.0",
+      "commit": "a413a9da94884e5e9d58f4e6612884f712827804",
+      "loc": 574366,
+      "ok": true,
+      "verifyIssues": 0,
+      "tasks": 12,
+      "index": {
+        "built": true,
+        "durationMs": 4359,
+        "files": 3114,
+        "symbols": 40979,
+        "refs": 193174
+      },
+      "quality": {
+        "filesIndexed": 3114,
+        "filesSkipped": 2,
+        "parseErrorFileRate": 0.003,
+        "parseErrorsPerKloc": 0.016,
+        "symbolsPerKloc": 71.35,
+        "resolvedRate": 0.5545,
+        "resolvedOfCandidates": 0.717,
+        "precisionRate": 1,
+        "precisionSampled": 30
+      },
+      "strategies": [
+        {
+          "strategy": "native-naive",
+          "tasks": 12,
+          "found": 6,
+          "foundRate": 0.5,
+          "medianTokens": 22327,
+          "meanTokens": 29214,
+          "tokensPerFound": 58428,
+          "meanFileRecall": 0.7777777777777777,
+          "meanSymbolRecall": 0.7083333333333334,
+          "meanDefRecall": 0.6041666666666666,
+          "skipped": 0
+        },
+        {
+          "strategy": "native-ranged",
+          "tasks": 12,
+          "found": 4,
+          "foundRate": 0.3333333333333333,
+          "medianTokens": 4785.5,
+          "meanTokens": 34005,
+          "tokensPerFound": 102016,
+          "meanFileRecall": 0.7777777777777777,
+          "meanSymbolRecall": 0.6194444444444444,
+          "meanDefRecall": 0.43194444444444446,
+          "skipped": 0
+        },
+        {
+          "strategy": "kopt-pack",
+          "tasks": 12,
+          "found": 9,
+          "foundRate": 0.75,
+          "medianTokens": 1297.5,
+          "meanTokens": 1235,
+          "tokensPerFound": 1646,
+          "meanFileRecall": 0.9166666666666666,
+          "meanSymbolRecall": 0.9375,
+          "meanDefRecall": 0.6166666666666667,
+          "skipped": 0
+        },
+        {
+          "strategy": "kopt-hits+read",
+          "tasks": 12,
+          "found": 6,
+          "foundRate": 0.5,
+          "medianTokens": 1006.5,
+          "meanTokens": 1353,
+          "tokensPerFound": 2706,
+          "meanFileRecall": 0.8611111111111112,
+          "meanSymbolRecall": 0.8388888888888889,
+          "meanDefRecall": 0.6097222222222222,
+          "skipped": 0
+        },
+        {
+          "strategy": "kirograph",
+          "tasks": 12,
+          "found": 0,
+          "foundRate": 0,
+          "medianTokens": 1382,
+          "meanTokens": 1274,
+          "tokensPerFound": null,
+          "meanFileRecall": 0.15277777777777776,
+          "meanSymbolRecall": 0.1722222222222222,
+          "meanDefRecall": 0.0375,
+          "skipped": 0
+        },
+        {
+          "strategy": "codegraph",
+          "tasks": 12,
+          "found": 5,
+          "foundRate": 0.4166666666666667,
+          "medianTokens": 8308,
+          "meanTokens": 7924,
+          "tokensPerFound": 19017,
+          "meanFileRecall": 0.7777777777777778,
+          "meanSymbolRecall": 0.6958333333333333,
+          "meanDefRecall": 0.49166666666666664,
+          "skipped": 0
+        }
+      ],
+      "byKind": [
+        {
+          "kind": "locate",
+          "strategy": "native-naive",
+          "tasks": 4,
+          "found": 1
+        },
+        {
+          "kind": "locate",
+          "strategy": "native-ranged",
+          "tasks": 4,
+          "found": 1
+        },
+        {
+          "kind": "locate",
+          "strategy": "kopt-pack",
+          "tasks": 4,
+          "found": 3
+        },
+        {
+          "kind": "locate",
+          "strategy": "kopt-hits+read",
+          "tasks": 4,
+          "found": 2
+        },
+        {
+          "kind": "locate",
+          "strategy": "kirograph",
+          "tasks": 4,
+          "found": 0
+        },
+        {
+          "kind": "locate",
+          "strategy": "codegraph",
+          "tasks": 4,
+          "found": 1
+        },
+        {
+          "kind": "explain",
+          "strategy": "native-naive",
+          "tasks": 3,
+          "found": 0
+        },
+        {
+          "kind": "explain",
+          "strategy": "native-ranged",
+          "tasks": 3,
+          "found": 0
+        },
+        {
+          "kind": "explain",
+          "strategy": "kopt-pack",
+          "tasks": 3,
+          "found": 1
+        },
+        {
+          "kind": "explain",
+          "strategy": "kopt-hits+read",
+          "tasks": 3,
+          "found": 1
+        },
+        {
+          "kind": "explain",
+          "strategy": "kirograph",
+          "tasks": 3,
+          "found": 0
+        },
+        {
+          "kind": "explain",
+          "strategy": "codegraph",
+          "tasks": 3,
+          "found": 1
+        },
+        {
+          "kind": "usage",
+          "strategy": "native-naive",
+          "tasks": 3,
+          "found": 3
+        },
+        {
+          "kind": "usage",
+          "strategy": "native-ranged",
+          "tasks": 3,
+          "found": 1
+        },
+        {
+          "kind": "usage",
+          "strategy": "kopt-pack",
+          "tasks": 3,
+          "found": 3
+        },
+        {
+          "kind": "usage",
+          "strategy": "kopt-hits+read",
+          "tasks": 3,
+          "found": 3
+        },
+        {
+          "kind": "usage",
+          "strategy": "kirograph",
+          "tasks": 3,
+          "found": 0
+        },
+        {
+          "kind": "usage",
+          "strategy": "codegraph",
+          "tasks": 3,
+          "found": 2
+        },
+        {
+          "kind": "impact",
+          "strategy": "native-naive",
+          "tasks": 2,
+          "found": 2
+        },
+        {
+          "kind": "impact",
+          "strategy": "native-ranged",
+          "tasks": 2,
+          "found": 2
+        },
+        {
+          "kind": "impact",
+          "strategy": "kopt-pack",
+          "tasks": 2,
+          "found": 2
+        },
+        {
+          "kind": "impact",
+          "strategy": "kopt-hits+read",
+          "tasks": 2,
+          "found": 0
+        },
+        {
+          "kind": "impact",
+          "strategy": "kirograph",
+          "tasks": 2,
+          "found": 0
+        },
+        {
+          "kind": "impact",
+          "strategy": "codegraph",
+          "tasks": 2,
+          "found": 1
+        }
+      ],
+      "failures": {
+        "strategy": "kopt-pack",
+        "tasks": 12,
+        "missed": 3,
+        "byCause": {
+          "ranking": 0,
+          "unresolved-refs": 0,
+          "extraction": 0,
+          "budget-format": 2,
+          "multi-step": 1
+        },
+        "itemsByCause": {
+          "ranking": 0,
+          "unresolved-refs": 0,
+          "extraction": 0,
+          "budget-format": 3,
+          "multi-step": 1
+        }
+      },
+      "files": {
+        "quality": "bench/results/quality-laravel.md",
+        "bench": "bench/results/laravel.md"
+      },
+      "durationMs": 11955
+    },
+    {
+      "repo": "discourse",
+      "language": "ruby",
+      "tag": "v2026.9.0",
+      "commit": "343b20f97ef5f6bd70826ee0e993ba348b210fd5",
+      "loc": 1422206,
+      "ok": true,
+      "verifyIssues": 0,
+      "tasks": 12,
+      "index": {
+        "built": true,
+        "durationMs": 10398,
+        "files": 15517,
+        "symbols": 82698,
+        "refs": 507395
+      },
+      "quality": {
+        "filesIndexed": 15517,
+        "filesSkipped": 5,
+        "parseErrorFileRate": 0,
+        "parseErrorsPerKloc": 0,
+        "symbolsPerKloc": 43.95,
+        "resolvedRate": 0.2133,
+        "resolvedOfCandidates": 0.2804,
+        "precisionRate": 1,
+        "precisionSampled": 30
+      },
+      "strategies": [
+        {
+          "strategy": "native-naive",
+          "tasks": 12,
+          "found": 3,
+          "foundRate": 0.25,
+          "medianTokens": 22658,
+          "meanTokens": 27226,
+          "tokensPerFound": 108903,
+          "meanFileRecall": 0.6666666666666666,
+          "meanSymbolRecall": 0.4763888888888889,
+          "meanDefRecall": 0.40972222222222215,
+          "skipped": 0
+        },
+        {
+          "strategy": "native-ranged",
+          "tasks": 12,
+          "found": 6,
+          "foundRate": 0.5,
+          "medianTokens": 5988,
+          "meanTokens": 7422,
+          "tokensPerFound": 14844,
+          "meanFileRecall": 0.625,
+          "meanSymbolRecall": 0.6,
+          "meanDefRecall": 0.5208333333333334,
+          "skipped": 0
+        },
+        {
+          "strategy": "kopt-pack",
+          "tasks": 12,
+          "found": 11,
+          "foundRate": 0.9166666666666666,
+          "medianTokens": 1309.5,
+          "meanTokens": 1198,
+          "tokensPerFound": 1307,
+          "meanFileRecall": 0.9583333333333334,
+          "meanSymbolRecall": 0.9833333333333334,
+          "meanDefRecall": 0.5805555555555556,
+          "skipped": 0
+        },
+        {
+          "strategy": "kopt-hits+read",
+          "tasks": 12,
+          "found": 7,
+          "foundRate": 0.5833333333333334,
+          "medianTokens": 1165.5,
+          "meanTokens": 1190,
+          "tokensPerFound": 2040,
+          "meanFileRecall": 0.8125000000000001,
+          "meanSymbolRecall": 0.7847222222222223,
+          "meanDefRecall": 0.6708333333333334,
+          "skipped": 0
+        },
+        {
+          "strategy": "kirograph",
+          "tasks": 12,
+          "found": 1,
+          "foundRate": 0.08333333333333333,
+          "medianTokens": 1020,
+          "meanTokens": 1311,
+          "tokensPerFound": 15730,
+          "meanFileRecall": 0.08333333333333333,
+          "meanSymbolRecall": 0.10416666666666667,
+          "meanDefRecall": 0.041666666666666664,
+          "skipped": 0
+        },
+        {
+          "strategy": "codegraph",
+          "tasks": 12,
+          "found": 8,
+          "foundRate": 0.6666666666666666,
+          "medianTokens": 7953.5,
+          "meanTokens": 7651,
+          "tokensPerFound": 11477,
+          "meanFileRecall": 0.75,
+          "meanSymbolRecall": 0.7083333333333334,
+          "meanDefRecall": 0.4763888888888889,
+          "skipped": 0
+        }
+      ],
+      "byKind": [
+        {
+          "kind": "locate",
+          "strategy": "native-naive",
+          "tasks": 4,
+          "found": 2
+        },
+        {
+          "kind": "locate",
+          "strategy": "native-ranged",
+          "tasks": 4,
+          "found": 2
+        },
+        {
+          "kind": "locate",
+          "strategy": "kopt-pack",
+          "tasks": 4,
+          "found": 4
+        },
+        {
+          "kind": "locate",
+          "strategy": "kopt-hits+read",
+          "tasks": 4,
+          "found": 4
+        },
+        {
+          "kind": "locate",
+          "strategy": "kirograph",
+          "tasks": 4,
+          "found": 1
+        },
+        {
+          "kind": "locate",
+          "strategy": "codegraph",
+          "tasks": 4,
+          "found": 2
+        },
+        {
+          "kind": "explain",
+          "strategy": "native-naive",
+          "tasks": 3,
+          "found": 0
+        },
+        {
+          "kind": "explain",
+          "strategy": "native-ranged",
+          "tasks": 3,
+          "found": 0
+        },
+        {
+          "kind": "explain",
+          "strategy": "kopt-pack",
+          "tasks": 3,
+          "found": 2
+        },
+        {
+          "kind": "explain",
+          "strategy": "kopt-hits+read",
+          "tasks": 3,
+          "found": 3
+        },
+        {
+          "kind": "explain",
+          "strategy": "kirograph",
+          "tasks": 3,
+          "found": 0
+        },
+        {
+          "kind": "explain",
+          "strategy": "codegraph",
+          "tasks": 3,
+          "found": 3
+        },
+        {
+          "kind": "usage",
+          "strategy": "native-naive",
+          "tasks": 3,
+          "found": 1
+        },
+        {
+          "kind": "usage",
+          "strategy": "native-ranged",
+          "tasks": 3,
+          "found": 3
+        },
+        {
+          "kind": "usage",
+          "strategy": "kopt-pack",
+          "tasks": 3,
+          "found": 3
+        },
+        {
+          "kind": "usage",
+          "strategy": "kopt-hits+read",
+          "tasks": 3,
+          "found": 0
+        },
+        {
+          "kind": "usage",
+          "strategy": "kirograph",
+          "tasks": 3,
+          "found": 0
+        },
+        {
+          "kind": "usage",
+          "strategy": "codegraph",
+          "tasks": 3,
+          "found": 1
+        },
+        {
+          "kind": "impact",
+          "strategy": "native-naive",
+          "tasks": 2,
+          "found": 0
+        },
+        {
+          "kind": "impact",
+          "strategy": "native-ranged",
+          "tasks": 2,
+          "found": 1
+        },
+        {
+          "kind": "impact",
+          "strategy": "kopt-pack",
+          "tasks": 2,
+          "found": 2
+        },
+        {
+          "kind": "impact",
+          "strategy": "kopt-hits+read",
+          "tasks": 2,
+          "found": 0
+        },
+        {
+          "kind": "impact",
+          "strategy": "kirograph",
+          "tasks": 2,
+          "found": 0
+        },
+        {
+          "kind": "impact",
+          "strategy": "codegraph",
+          "tasks": 2,
+          "found": 2
+        }
+      ],
+      "failures": {
+        "strategy": "kopt-pack",
+        "tasks": 12,
+        "missed": 1,
+        "byCause": {
+          "ranking": 1,
+          "unresolved-refs": 0,
+          "extraction": 0,
+          "budget-format": 0,
+          "multi-step": 0
+        },
+        "itemsByCause": {
+          "ranking": 1,
+          "unresolved-refs": 0,
+          "extraction": 0,
+          "budget-format": 0,
+          "multi-step": 0
+        }
+      },
+      "files": {
+        "quality": "bench/results/quality-discourse.md",
+        "bench": "bench/results/discourse.md"
+      },
+      "durationMs": 52898
+    },
+    {
+      "repo": "playframework",
+      "language": "scala",
+      "tag": "3.0.12",
+      "commit": "316f494b2d1292c250c19685f21189ab077d7229",
+      "loc": 114091,
+      "ok": true,
+      "verifyIssues": 0,
+      "tasks": 12,
+      "index": {
+        "built": true,
+        "durationMs": 2237,
+        "files": 1427,
+        "symbols": 18592,
+        "refs": 81803
+      },
+      "quality": {
+        "filesIndexed": 1427,
+        "filesSkipped": 0,
+        "parseErrorFileRate": 0,
+        "parseErrorsPerKloc": 0,
+        "symbolsPerKloc": 105.69,
+        "resolvedRate": 0.3831,
+        "resolvedOfCandidates": 0.5745,
+        "precisionRate": 1,
+        "precisionSampled": 30
+      },
+      "strategies": [
+        {
+          "strategy": "native-naive",
+          "tasks": 12,
+          "found": 9,
+          "foundRate": 0.75,
+          "medianTokens": 21801.5,
+          "meanTokens": 23042,
+          "tokensPerFound": 30723,
+          "meanFileRecall": 0.9166666666666666,
+          "meanSymbolRecall": 0.7916666666666666,
+          "meanDefRecall": 0.75,
+          "skipped": 0
+        },
+        {
+          "strategy": "native-ranged",
+          "tasks": 12,
+          "found": 5,
+          "foundRate": 0.4166666666666667,
+          "medianTokens": 7631,
+          "meanTokens": 10102,
+          "tokensPerFound": 24245,
+          "meanFileRecall": 0.9166666666666666,
+          "meanSymbolRecall": 0.5208333333333334,
+          "meanDefRecall": 0.4305555555555555,
+          "skipped": 0
+        },
+        {
+          "strategy": "kopt-pack",
+          "tasks": 12,
+          "found": 8,
+          "foundRate": 0.6666666666666666,
+          "medianTokens": 1319,
+          "meanTokens": 1337,
+          "tokensPerFound": 2006,
+          "meanFileRecall": 1,
+          "meanSymbolRecall": 0.8958333333333334,
+          "meanDefRecall": 0.38888888888888884,
+          "skipped": 0
+        },
+        {
+          "strategy": "kopt-hits+read",
+          "tasks": 12,
+          "found": 5,
+          "foundRate": 0.4166666666666667,
+          "medianTokens": 1345.5,
+          "meanTokens": 1568,
+          "tokensPerFound": 3762,
+          "meanFileRecall": 0.9166666666666666,
+          "meanSymbolRecall": 0.6875,
+          "meanDefRecall": 0.40972222222222215,
+          "skipped": 0
+        },
+        {
+          "strategy": "kirograph",
+          "tasks": 12,
+          "found": 0,
+          "foundRate": 0,
+          "medianTokens": 1306.5,
+          "meanTokens": 1443,
+          "tokensPerFound": null,
+          "meanFileRecall": 0.16666666666666666,
+          "meanSymbolRecall": 0.09722222222222221,
+          "meanDefRecall": 0.027777777777777776,
+          "skipped": 0
+        },
+        {
+          "strategy": "codegraph",
+          "tasks": 12,
+          "found": 10,
+          "foundRate": 0.8333333333333334,
+          "medianTokens": 8318.5,
+          "meanTokens": 8199,
+          "tokensPerFound": 9839,
+          "meanFileRecall": 0.9166666666666666,
+          "meanSymbolRecall": 0.8541666666666666,
+          "meanDefRecall": 0.5138888888888888,
+          "skipped": 0
+        }
+      ],
+      "byKind": [
+        {
+          "kind": "locate",
+          "strategy": "native-naive",
+          "tasks": 4,
+          "found": 3
+        },
+        {
+          "kind": "locate",
+          "strategy": "native-ranged",
+          "tasks": 4,
+          "found": 1
+        },
+        {
+          "kind": "locate",
+          "strategy": "kopt-pack",
+          "tasks": 4,
+          "found": 3
+        },
+        {
+          "kind": "locate",
+          "strategy": "kopt-hits+read",
+          "tasks": 4,
+          "found": 1
+        },
+        {
+          "kind": "locate",
+          "strategy": "kirograph",
+          "tasks": 4,
+          "found": 0
+        },
+        {
+          "kind": "locate",
+          "strategy": "codegraph",
+          "tasks": 4,
+          "found": 3
+        },
+        {
+          "kind": "explain",
+          "strategy": "native-naive",
+          "tasks": 3,
+          "found": 2
+        },
+        {
+          "kind": "explain",
+          "strategy": "native-ranged",
+          "tasks": 3,
+          "found": 1
+        },
+        {
+          "kind": "explain",
+          "strategy": "kopt-pack",
+          "tasks": 3,
+          "found": 1
+        },
+        {
+          "kind": "explain",
+          "strategy": "kopt-hits+read",
+          "tasks": 3,
+          "found": 1
+        },
+        {
+          "kind": "explain",
+          "strategy": "kirograph",
+          "tasks": 3,
+          "found": 0
+        },
+        {
+          "kind": "explain",
+          "strategy": "codegraph",
+          "tasks": 3,
+          "found": 2
+        },
+        {
+          "kind": "usage",
+          "strategy": "native-naive",
+          "tasks": 3,
+          "found": 2
+        },
+        {
+          "kind": "usage",
+          "strategy": "native-ranged",
+          "tasks": 3,
+          "found": 1
+        },
+        {
+          "kind": "usage",
+          "strategy": "kopt-pack",
+          "tasks": 3,
+          "found": 2
+        },
+        {
+          "kind": "usage",
+          "strategy": "kopt-hits+read",
+          "tasks": 3,
+          "found": 1
+        },
+        {
+          "kind": "usage",
+          "strategy": "kirograph",
+          "tasks": 3,
+          "found": 0
+        },
+        {
+          "kind": "usage",
+          "strategy": "codegraph",
+          "tasks": 3,
+          "found": 3
+        },
+        {
+          "kind": "impact",
+          "strategy": "native-naive",
+          "tasks": 2,
+          "found": 2
+        },
+        {
+          "kind": "impact",
+          "strategy": "native-ranged",
+          "tasks": 2,
+          "found": 2
+        },
+        {
+          "kind": "impact",
+          "strategy": "kopt-pack",
+          "tasks": 2,
+          "found": 2
+        },
+        {
+          "kind": "impact",
+          "strategy": "kopt-hits+read",
+          "tasks": 2,
+          "found": 2
+        },
+        {
+          "kind": "impact",
+          "strategy": "kirograph",
+          "tasks": 2,
+          "found": 0
+        },
+        {
+          "kind": "impact",
+          "strategy": "codegraph",
+          "tasks": 2,
+          "found": 2
+        }
+      ],
+      "failures": {
+        "strategy": "kopt-pack",
+        "tasks": 12,
+        "missed": 4,
+        "byCause": {
+          "ranking": 2,
+          "unresolved-refs": 0,
+          "extraction": 1,
+          "budget-format": 0,
+          "multi-step": 1
+        },
+        "itemsByCause": {
+          "ranking": 2,
+          "unresolved-refs": 1,
+          "extraction": 1,
+          "budget-format": 0,
+          "multi-step": 1
+        }
+      },
+      "files": {
+        "quality": "bench/results/quality-playframework.md",
+        "bench": "bench/results/playframework.md"
+      },
+      "durationMs": 8985
+    }
+  ],
+  "totals": [
+    {
+      "strategy": "native-naive",
+      "tasks": 138,
+      "found": 65,
+      "foundRate": 0.47101449275362317,
+      "medianTokens": 25054.5,
+      "meanTokens": 30446,
+      "tokensPerFound": 64638,
+      "meanFileRecall": 0.7602657004830918,
+      "meanSymbolRecall": 0.6618357487922706,
+      "meanDefRecall": 0.5602657004830919,
+      "skipped": 0
+    },
+    {
+      "strategy": "native-ranged",
+      "tasks": 138,
+      "found": 54,
+      "foundRate": 0.391304347826087,
+      "medianTokens": 6674.5,
+      "meanTokens": 12320,
+      "tokensPerFound": 31485,
+      "meanFileRecall": 0.7566425120772947,
+      "meanSymbolRecall": 0.6135265700483091,
+      "meanDefRecall": 0.4770531400966182,
+      "skipped": 0
+    },
+    {
+      "strategy": "kopt-pack",
+      "tasks": 138,
+      "found": 108,
+      "foundRate": 0.782608695652174,
+      "medianTokens": 1298.5,
+      "meanTokens": 1183,
+      "tokensPerFound": 1512,
+      "meanFileRecall": 0.9206521739130433,
+      "meanSymbolRecall": 0.9183574879227053,
+      "meanDefRecall": 0.4950483091787438,
+      "skipped": 0
+    },
+    {
+      "strategy": "kopt-hits+read",
+      "tasks": 138,
+      "found": 54,
+      "foundRate": 0.391304347826087,
+      "medianTokens": 1091.5,
+      "meanTokens": 1420,
+      "tokensPerFound": 3630,
+      "meanFileRecall": 0.7444444444444444,
+      "meanSymbolRecall": 0.6742753623188408,
+      "meanDefRecall": 0.5019323671497584,
+      "skipped": 0
+    },
+    {
+      "strategy": "kirograph",
+      "tasks": 138,
+      "found": 4,
+      "foundRate": 0.028985507246376812,
+      "medianTokens": 1085,
+      "meanTokens": 1269,
+      "tokensPerFound": 43774,
+      "meanFileRecall": 0.24094202898550723,
+      "meanSymbolRecall": 0.15120772946859903,
+      "meanDefRecall": 0.02560386473429952,
+      "skipped": 0
+    },
+    {
+      "strategy": "codegraph",
+      "tasks": 138,
+      "found": 79,
+      "foundRate": 0.572463768115942,
+      "medianTokens": 8315,
+      "meanTokens": 8004,
+      "tokensPerFound": 13982,
+      "meanFileRecall": 0.8082125603864733,
+      "meanSymbolRecall": 0.7642512077294684,
+      "meanDefRecall": 0.4579710144927536,
+      "skipped": 0
+    }
+  ],
+  "notes": [],
+  "failuresFile": "bench/results/failures.md",
+  "failureTotals": {
+    "strategy": "kopt-pack",
+    "tasks": 138,
+    "missed": 30,
+    "byCause": {
+      "ranking": 6,
+      "unresolved-refs": 4,
+      "extraction": 2,
+      "budget-format": 9,
+      "multi-step": 9
+    },
+    "itemsByCause": {
+      "ranking": 6,
+      "unresolved-refs": 11,
+      "extraction": 3,
+      "budget-format": 21,
+      "multi-step": 11
+    }
+  }
+}

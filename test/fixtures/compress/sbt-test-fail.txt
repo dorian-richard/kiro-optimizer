@@ -1,0 +1,267 @@
+[info] welcome to sbt 1.9.7 (Eclipse Adoptium Java 17.0.9)
+[info] loading settings for project shop-build from plugins.sbt ...
+[info] loading project definition from /home/dev/shop/project
+[info] loading settings for project root from build.sbt ...
+[info] set current project to shop (in build file:/home/dev/shop/)
+[info] compiling 42 Scala sources to /home/dev/shop/target/scala-2.13/classes ...
+[info] done compiling
+[info] compiling 18 Scala sources to /home/dev/shop/target/scala-2.13/test-classes ...
+[info] done compiling
+[info] Cart0Spec:
+[info] Cart
+[info] - should validates order when refund is valid
+[info] - should rejects token when customer is missing
+[info] - should retries batch when customer is empty
+[info] - should computes item when invoice is empty
+[info] - should paginates currency when item is empty
+[info] - should formats payload when timeout is missing
+[info] Orders1Spec:
+[info] Orders
+[info] - should validates discount when currency is missing
+[info] - should deletes invoice when invoice is valid
+[info] - should paginates discount when rounding is missing
+[info] - should paginates invoice when payload is missing
+[info] - should formats payload when invoice is empty
+[info] - should updates total when discount is missing
+[info] Refunds2Spec:
+[info] Refunds
+[info] - should lists customer when rounding is empty
+[info] - should serializes address when refund is missing
+[info] - should handles refund when timeout is empty
+[info] - should computes payload when timeout is missing
+[info] - should rejects total when order is valid
+[info] - should rejects rounding when invoice is valid
+[info] Payments3Spec:
+[info] Payments
+[info] - should computes order when refund is empty
+[info] - should computes total when address is missing
+[info] - should parses refund when invoice is missing
+[info] - should formats refund when currency is missing
+[info] - should validates currency when timeout is empty
+[info] - should caches rounding when order is valid
+[info] CartSpec:
+[info] Invoices
+[info] - should handles refund when timeout is valid
+[info] - should deletes customer when currency is empty
+[info] - should serializes timeout when discount is valid
+[info] - should compute the total with discount *** FAILED ***
+[info]   100 did not equal 90 (CartSpec.scala:14)
+[info] - should caches timeout when refund is empty
+[info] - should formats page when order is empty
+[info] Customers5Spec:
+[info] Customers
+[info] - should validates batch when page is missing
+[info] - should validates customer when customer is empty
+[info] - should computes address when address is empty
+[info] - should computes order when customer is empty
+[info] - should serializes total when token is valid
+[info] - should paginates address when total is valid
+[info] Catalog6Spec:
+[info] Catalog
+[info] - should rejects payload when address is valid
+[info] - should computes invoice when currency is empty
+[info] - should parses batch when token is empty
+[info] - should serializes timeout when page is valid
+[info] - should paginates refund when item is missing
+[info] - should creates discount when token is missing
+[info] Inventory7Spec:
+[info] Inventory
+[info] - should handles customer when refund is missing
+[info] - should parses page when customer is missing
+[info] - should creates token when order is empty
+[info] - should computes batch when item is empty
+[info] - should formats timeout when address is missing
+[info] - should formats invoice when currency is empty
+[info] Shipping8Spec:
+[info] Shipping
+[info] - should handles rounding when currency is empty
+[info] - should paginates rounding when timeout is empty
+[info] - should rejects total when rounding is empty
+[info] - should retries rounding when item is empty
+[info] - should handles rounding when order is missing
+[info] - should lists token when address is missing
+[info] Auth9Spec:
+[info] Auth
+[info] - should creates payload when total is missing
+[info] - should deletes page when currency is valid
+[info] - should lists order when item is missing
+[info] - should formats address when token is empty
+[info] - should lists batch when batch is missing
+[info] - should creates discount when refund is empty
+[info] Pricing10Spec:
+[info] Pricing
+[info] - should handles batch when order is empty
+[info] - should lists payload when token is missing
+[info] - should caches address when timeout is missing
+[info] - should deletes currency when invoice is empty
+[info] - should formats timeout when address is empty
+[info] - should formats timeout when invoice is empty
+[info] OrderSpec:
+[info] Tax
+[info] - should parses discount when batch is empty
+[info] - should reject empty orders *** FAILED ***
+[info]   java.lang.IllegalStateException: no items
+[info]   at com.acme.shop.orders.OrderService.create(OrderService.scala:22)
+[info]   at com.acme.shop.orders.OrderSpec.$anonfun$new$2(OrderSpec.scala:31)
+[info]   at org.scalatest.OutcomeOf.outcomeOf(OutcomeOf.scala:85)
+[info]   at org.scalatest.OutcomeOf.outcomeOf$(OutcomeOf.scala:83)
+[info]   at org.scalatest.Transformer.apply(Transformer.scala:22)
+[info]   ...
+[info] - should computes rounding when invoice is missing
+[info] - should creates refund when discount is empty
+[info] - should paginates page when address is missing
+[info] - should validates customer when batch is missing
+[info] Discounts12Spec:
+[info] Discounts
+[info] - should paginates total when customer is missing
+[info] - should deletes total when batch is empty
+[info] - should serializes item when page is missing
+[info] - should deletes invoice when order is valid
+[info] - should computes customer when refund is empty
+[info] - should validates payload when payload is valid
+[info] Reports13Spec:
+[info] Reports
+[info] - should deletes total when page is empty
+[info] - should lists payload when address is valid
+[info] - should deletes invoice when currency is missing
+[info] - should lists rounding when rounding is missing
+[info] - should paginates discount when total is valid
+[info] - should formats page when batch is empty
+[info] Webhooks14Spec:
+[info] Webhooks
+[info] - should handles token when rounding is empty
+[info] - should lists total when discount is valid
+[info] - should caches item when page is valid
+[info] - should retries discount when rounding is empty
+[info] - should rejects timeout when invoice is missing
+[info] - should creates payload when timeout is empty
+[info] Notifications15Spec:
+[info] Notifications
+[info] - should caches payload when customer is empty
+[info] - should formats address when customer is valid
+[info] - should handles page when currency is missing
+[info] - should deletes batch when invoice is missing
+[info] - should formats order when page is missing
+[info] - should computes token when payload is missing
+[info] Cart16Spec:
+[info] Cart
+[info] - should updates payload when batch is missing
+[info] - should creates token when discount is empty
+[info] - should serializes page when discount is empty
+[info] - should retries item when payload is missing
+[info] - should creates currency when customer is empty
+[info] - should serializes order when customer is missing
+[info] Orders17Spec:
+[info] Orders
+[info] - should creates invoice when refund is valid
+[info] - should retries timeout when customer is valid
+[info] - should retries discount when rounding is valid
+[info] - should creates invoice when rounding is missing
+[info] - should creates total when batch is valid
+[info] - should creates timeout when currency is empty
+[info] Refunds18Spec:
+[info] Refunds
+[info] - should validates page when invoice is empty
+[info] - should rejects refund when order is valid
+[info] - should paginates currency when discount is missing
+[info] - should validates currency when total is empty
+[info] - should caches currency when payload is valid
+[info] - should creates customer when refund is valid
+[info] Payments19Spec:
+[info] Payments
+[info] - should validates item when address is empty
+[info] - should retries batch when currency is valid
+[info] - should parses discount when order is empty
+[info] - should paginates currency when timeout is missing
+[info] - should lists total when token is empty
+[info] - should parses timeout when token is missing
+[info] Invoices20Spec:
+[info] Invoices
+[info] - should handles discount when batch is valid
+[info] - should handles token when customer is empty
+[info] - should computes rounding when payload is missing
+[info] - should computes currency when batch is empty
+[info] - should handles customer when total is missing
+[info] - should computes order when currency is valid
+[info] Customers21Spec:
+[info] Customers
+[info] - should formats page when item is empty
+[info] - should validates page when batch is empty
+[info] - should computes total when payload is valid
+[info] - should paginates total when rounding is valid
+[info] - should computes invoice when timeout is missing
+[info] - should formats payload when customer is missing
+[info] Catalog22Spec:
+[info] Catalog
+[info] - should updates invoice when invoice is valid
+[info] - should caches rounding when total is missing
+[info] - should updates order when order is missing
+[info] - should creates total when order is empty
+[info] - should computes timeout when item is valid
+[info] - should rejects invoice when customer is missing
+[info] Inventory23Spec:
+[info] Inventory
+[info] - should handles customer when payload is empty
+[info] - should computes discount when currency is empty
+[info] - should creates item when payload is missing
+[info] - should retries page when item is missing
+[info] - should serializes batch when payload is missing
+[info] - should computes token when invoice is valid
+[info] Shipping24Spec:
+[info] Shipping
+[info] - should lists customer when currency is missing
+[info] - should updates discount when discount is empty
+[info] - should updates payload when item is empty
+[info] - should computes page when rounding is missing
+[info] - should serializes order when refund is missing
+[info] - should creates batch when page is missing
+[info] Auth25Spec:
+[info] Auth
+[info] - should caches item when refund is empty
+[info] - should formats token when rounding is empty
+[info] - should serializes address when item is empty
+[info] - should creates payload when order is empty
+[info] - should computes currency when currency is empty
+[info] - should computes batch when total is missing
+[info] Pricing26Spec:
+[info] Pricing
+[info] - should computes discount when discount is missing
+[info] - should serializes order when order is empty
+[info] - should lists address when order is valid
+[info] - should handles timeout when discount is valid
+[info] - should formats discount when address is valid
+[info] - should deletes rounding when currency is empty
+[info] Tax27Spec:
+[info] Tax
+[info] - should updates total when timeout is empty
+[info] - should validates item when discount is empty
+[info] - should computes order when invoice is empty
+[info] - should computes rounding when page is valid
+[info] - should deletes page when rounding is valid
+[info] - should rejects invoice when discount is missing
+[info] Discounts28Spec:
+[info] Discounts
+[info] - should creates timeout when rounding is valid
+[info] - should deletes timeout when batch is missing
+[info] - should creates refund when batch is missing
+[info] - should formats item when timeout is valid
+[info] - should deletes rounding when batch is empty
+[info] - should retries batch when customer is missing
+[info] Reports29Spec:
+[info] Reports
+[info] - should lists total when currency is missing
+[info] - should parses currency when discount is missing
+[info] - should formats address when page is missing
+[info] - should parses total when refund is valid
+[info] - should caches batch when currency is empty
+[info] - should parses total when customer is valid
+[info] Run completed in 3 seconds, 120 milliseconds.
+[info] Total number of tests run: 180
+[info] Suites: completed 30, aborted 0
+[info] Tests: succeeded 178, failed 2, canceled 0, ignored 0, pending 0
+[info] *** 2 TESTS FAILED ***
+[error] Failed tests:
+[error] 	com.acme.shop.cart.CartSpec
+[error] 	com.acme.shop.orders.OrderSpec
+[error] (Test / test) sbt.TestsFailedException: Tests unsuccessful
+[error] Total time: 24 s, completed Oct 9, 2026, 10:12:01 AM

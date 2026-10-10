@@ -4,11 +4,12 @@
 import { existsSync, readdirSync } from 'node:fs';
 import { isAbsolute, join, resolve } from 'node:path';
 import { parseArgs } from 'node:util';
-import { runAll } from './all.js';
+import { failureSummary, runAll } from './all.js';
+import { analyzeFailures, buildFailureReport, renderFailuresMarkdown, writeFailures, type TaskFailure } from './failures.js';
 import { findLangRepo, loadLangsFile } from './langs.js';
 import { runQuality, writeQuality } from './quality.js';
 import { renderMarkdown, writeResults } from './report.js';
-import { BENCH_DIR, PROJECT_ROOT, gitHead, openKoptIndex, runBench } from './run.js';
+import { BENCH_DIR, PROJECT_ROOT, gitHead, openKoptIndex, repoIndexDir, runBench, taskInput } from './run.js';
 import { loadTaskFile, verifyTasks } from './tasks.js';
 import { ALL_STRATEGIES, EXTERNAL_STRATEGIES, type BenchInput, type LangId, type StrategyName } from './types.js';
 
@@ -21,7 +22,22 @@ export { computeRecall, aggregate, compare, median, mean } from './metrics.js';
 export { runBench, openKoptIndex, taskInput, resolveStrategies, PROJECT_ROOT, BENCH_DIR, COMPETITORS_DIR, type BenchOptions, type OpenedIndex, type IndexInfo } from './run.js';
 export { loadCompetitors, parseCompetitorJsonl, competitorResult, pickLine, type CompetitorLine, type CompetitorFile } from './competitors.js';
 export { runQuality, writeQuality, renderQualityMarkdown, checkSymbol, countParseErrors, blankStringsAndComments, type QualityOptions } from './quality.js';
-export { runAll, renderSummaryMarkdown, writeSummary, type AllOptions } from './all.js';
+export { runAll, renderSummaryMarkdown, writeSummary, failureSummary, type AllOptions } from './all.js';
+export {
+  analyzeFailures,
+  buildFailureReport,
+  renderFailuresMarkdown,
+  writeFailures,
+  parseKoptOutput,
+  taskTargets,
+  termCoverage,
+  primaryCause,
+  FAILURE_CAUSES,
+  CAUSE_LABEL,
+  type TaskFailure,
+  type FailureReport,
+  type ItemEvidence,
+} from './failures.js';
 export { loadLangsFile, validateLangsFile, findLangRepo } from './langs.js';
 
 // ---------------------------------------------------------------------------------------------------------
@@ -29,7 +45,9 @@ export { loadLangsFile, validateLangsFile, findLangRepo } from './langs.js';
 
 const HELP = `kopt bench [<repo-name|tasks.json> ...] [options]
 kopt bench quality <repo-name> ... [options]
+kopt bench failures [<repo-name> ...] [options]
 kopt bench all [options]
+kopt bench ab ...        online A/B: real Kiro credits with headless kiro-cli on your repo (kopt bench ab --help)
 
 Offline proxy benchmark: tokens returned to the model and recall of verified gold items,
 for native Kiro exploration (grep_search + read_file) vs kopt (kopt_find / kopt_read) vs
@@ -38,8 +56,12 @@ competitor outputs recorded in bench/competitors/results/<tool>-<repo>.jsonl.
   (default)              run the strategies on bench/tasks/<repo>.json (all task files when none given)
   quality <repo> ...     index the repo and measure extraction quality per language
                          -> bench/results/quality-<repo>.{md,json}
-  all                    every repo of bench/langs.json: verify + index + quality + strategies
-                         -> bench/results/<repo>.{md,json}, quality-<repo>.*, summary.{md,json}
+  failures [<repo> ...]  run kopt-pack and classify every miss (ranking, unresolved refs, extraction gap,
+                         budget/format, multi-step) with evidence from the index; all repos of
+                         bench/langs.json by default -> bench/results/failures.{md,json}
+                         (failures-<repo>.* when repos are named)
+  all                    every repo of bench/langs.json: verify + index + quality + strategies + failures
+                         -> bench/results/<repo>.{md,json}, quality-<repo>.*, failures.*, summary.{md,json}
 
   --all                  run every bench/tasks/*.json (default command)
   --repo <path>          checkout to explore (default: bench/repos/<name>)
@@ -51,12 +73,14 @@ competitor outputs recorded in bench/competitors/results/<tool>-<repo>.jsonl.
   --only <names>         (all) comma list of repo names from bench/langs.json
   --label <name>         results file name (default: repo name)
   --out <dir>            output directory (default: bench/results)
-  --index-dir <dir>      kopt index location (default: bench/repos/.kopt-<name>)
+  --index-dir <dir>      kopt index location (default: bench/repos/.kopt-<name>); with several repos (and for
+                         all) the parent folder: one <dir>/.kopt-<name> per repo
   --rebuild-index        delete and rebuild the kopt index first
   --competitors <dir>    competitor results directory (default: bench/competitors/results)
   --parse-sample <n>     (quality) files re-parsed per language (default 1000)
   --precision-sample <n> (quality) symbols checked per language (default 30)
   --no-quality           (all) skip the quality pass
+  --no-failures          (all) skip the failure analysis
   --clone                (all) clone missing checkouts at their pinned tag
   --langs <file>         (all) corpus file (default: bench/langs.json)
   --chars-per-token <n>  token estimate calibration (default 3.0)
@@ -77,6 +101,12 @@ function positiveInt(v: string | undefined, flag: string): number | undefined {
 }
 
 export async function runBenchCli(argv: string[]): Promise<void> {
+  if (argv[0] === 'ab') {
+    // the online A/B owns its options (different from the offline benchmark's)
+    const { runAbCli } = await import('./ab/cli.js');
+    process.exitCode = await runAbCli(argv.slice(1));
+    return;
+  }
   const { values, positionals } = parseArgs({
     args: argv,
     allowPositionals: true,
@@ -95,6 +125,7 @@ export async function runBenchCli(argv: string[]): Promise<void> {
       'parse-sample': { type: 'string' },
       'precision-sample': { type: 'string' },
       'no-quality': { type: 'boolean' },
+      'no-failures': { type: 'boolean' },
       clone: { type: 'boolean' },
       langs: { type: 'string' },
       'chars-per-token': { type: 'string' },
@@ -126,8 +157,10 @@ export async function runBenchCli(argv: string[]): Promise<void> {
       competitorsDir: values.competitors,
       outDir,
       rebuildIndex: values['rebuild-index'],
+      indexDir: values['index-dir'],
       clone: values.clone,
       quality: !values['no-quality'],
+      failures: !values['no-failures'],
       parseSample,
       precisionSample,
       charsPerToken,
@@ -138,6 +171,51 @@ export async function runBenchCli(argv: string[]): Promise<void> {
     const md = renderSummaryMarkdown(summary);
     process.stdout.write(md.split('\n## Found by task kind')[0].trimEnd() + '\n\n' + written.filter((w) => /summary/.test(w)).map((w) => `wrote ${w}`).join('\n') + '\n');
     if (summary.rows.some((r) => !r.ok || r.verifyIssues)) process.exitCode = 1;
+    return;
+  }
+
+  if (sub === 'failures') {
+    const langsPath = resolve(values.langs ?? join(BENCH_DIR, 'langs.json'));
+    const langs = loadLangsFile(langsPath);
+    const named = positionals.slice(1);
+    for (const n of named) if (!findLangRepo(langs, n)) throw new Error(`${n} is not in ${langsPath}`);
+    const repos = named.length ? langs.repos.filter((r) => named.includes(r.name)) : langs.repos;
+    const benchInput = input ?? 'search';
+    const all: TaskFailure[] = [];
+    const ran: Array<{ repo: string; language: string; tasks: number }> = [];
+    for (const lr of repos) {
+      const taskPath = join(BENCH_DIR, 'tasks', `${lr.name}.json`);
+      const repoRoot = join(BENCH_DIR, 'repos', lr.name);
+      if (!existsSync(taskPath) || !existsSync(repoRoot)) {
+        log(`${lr.name}: skipped (task file or checkout missing)`);
+        continue;
+      }
+      const tf = loadTaskFile(taskPath);
+      const indexDir = repoIndexDir(values['index-dir'], lr.name, repos.length > 1);
+      const res = await runBench({ repoRoot, tasks: tf.tasks, repo: tf.repo, strategies: ['kopt-pack'], input: benchInput, indexDir, onProgress: log });
+      const opened = await openKoptIndex(repoRoot, lr.name, { indexDir, onProgress: log });
+      if (!opened.store || !opened.retrieval) {
+        log(`${lr.name}: skipped (${opened.skip ?? 'kopt unavailable'})`);
+        opened.store?.close();
+        continue;
+      }
+      try {
+        const fs = await analyzeFailures({
+          repo: lr.name, language: lr.language, repoRoot, store: opened.store, config: opened.config, retrieval: opened.retrieval,
+          tasks: tf.tasks, results: res.results, input: benchInput, inputOf: (t) => taskInput(t, benchInput), onProgress: log,
+        });
+        all.push(...fs);
+        ran.push({ repo: lr.name, language: lr.language, tasks: tf.tasks.length });
+        const sm = failureSummary(fs, tf.tasks.length);
+        log(`${lr.name}: ${sm.missed}/${sm.tasks} missed`);
+      } finally {
+        opened.store.close();
+      }
+    }
+    const report = buildFailureReport(all, ran, 'kopt-pack', benchInput);
+    const base = named.length ? `failures-${named.join('-')}` : 'failures';
+    const written = writeFailures(report, outDir, benchInput === 'search' ? base : `${base}-${benchInput}`);
+    process.stdout.write(renderFailuresMarkdown(report).split('\n## ').slice(0, 3).join('\n## ').trimEnd() + '\n\n' + written.map((w) => `wrote ${w}`).join('\n') + '\n');
     return;
   }
 
@@ -153,7 +231,8 @@ export async function runBenchCli(argv: string[]): Promise<void> {
       const tf = existsSync(taskPath) ? loadTaskFile(taskPath) : undefined;
       const repoRoot = resolve(values.repo ?? join(PROJECT_ROOT, tf?.repo.path ?? join('bench', 'repos', name)));
       if (!existsSync(repoRoot)) throw new Error(`checkout missing: ${repoRoot}${lr ? `\n  clone it with: git clone --depth 1 --branch ${lr.tag} ${lr.url} ${repoRoot}` : ''}`);
-      const opened = await openKoptIndex(repoRoot, name, { indexDir: values['index-dir'], rebuildIndex: values['rebuild-index'], needRetrieval: false, onProgress: log });
+      const indexDir = repoIndexDir(values['index-dir'], name, names.length > 1);
+      const opened = await openKoptIndex(repoRoot, name, { indexDir, rebuildIndex: values['rebuild-index'], needRetrieval: false, onProgress: log });
       if (!opened.store || !opened.index) throw new Error(opened.skip ?? 'index unavailable');
       try {
         const q = await runQuality({
@@ -214,7 +293,7 @@ export async function runBenchCli(argv: string[]): Promise<void> {
       strategies,
       input,
       label: files.length > 1 ? undefined : values.label,
-      indexDir: values['index-dir'],
+      indexDir: repoIndexDir(values['index-dir'], tf.repo.name, files.length > 1),
       rebuildIndex: values['rebuild-index'],
       charsPerToken,
       keepOutputs: values.raw,

@@ -1,6 +1,9 @@
 // Persistence of extracted files. Symbol ids are stable across re-indexing of a file (matched by kind +
-// qualified name + occurrence) and never reused once retired, so `#handles` already in a model's context
-// keep pointing at the same symbol after edits, and refs from other files stay valid.
+// qualified name + occurrence), so `#handles` already in a model's context keep pointing at the same symbol
+// after edits, and refs from other files stay valid. An id that disappears from its file is retired, never
+// given to another symbol, but it comes back when the same kind + qualified name reappears in the same file:
+// a transient syntax error (a method missing its closing brace swallows the next ones) or a branch switch
+// that deletes and restores a file must not break the handles the model holds.
 
 import type { StatementSync } from 'node:sqlite';
 import { SCHEMA_SQL } from '../store/schema.js';
@@ -21,7 +24,19 @@ CREATE TABLE IF NOT EXISTS idx_skipped (
   mtime_ms INTEGER NOT NULL,
   reason   TEXT NOT NULL
 );
+CREATE TABLE IF NOT EXISTS idx_retired (
+  path       TEXT NOT NULL,
+  id         INTEGER NOT NULL,
+  kind       TEXT NOT NULL,
+  qname      TEXT NOT NULL,
+  rank       REAL NOT NULL DEFAULT 0,
+  retired_at INTEGER NOT NULL,
+  PRIMARY KEY (path, id)
+) WITHOUT ROWID;
 `;
+
+/** Retired ids kept for revival (most recent first); older ones are forgotten for good. */
+export const MAX_RETIRED = 50_000;
 
 export const META_NEXT_SYMBOL = 'idx_next_symbol_id';
 
@@ -59,6 +74,8 @@ export interface WriteTracker {
   changedFileIds: Set<number>;
   addedFileIds: Set<number>;
   removedFileIds: Set<number>;
+  /** Paths of removed files (their rows are gone by the time references are resolved). */
+  removedPaths: Set<string>;
   removedSymbolIds: Set<number>;
   changedNames: Set<string>;
   filesIndexed: number;
@@ -71,6 +88,7 @@ export function newTracker(): WriteTracker {
     changedFileIds: new Set(),
     addedFileIds: new Set(),
     removedFileIds: new Set(),
+    removedPaths: new Set(),
     removedSymbolIds: new Set(),
     changedNames: new Set(),
     filesIndexed: 0,
@@ -82,6 +100,9 @@ export function newTracker(): WriteTracker {
 export class Writer {
   private nextId: number;
   private readonly s: Record<string, StatementSync>;
+  /** Whether idx_retired may hold rows (skips a lookup per file on first builds). */
+  private anyRetired: boolean;
+  private retiredAdded = 0;
 
   constructor(private readonly store: Store) {
     store.db.exec(INDEXER_SQL);
@@ -90,6 +111,7 @@ export class Writer {
     const p = (sql: string) => store.prepare(sql);
     this.s = {
       insFile: p('INSERT INTO files(path, lang, hash, size, line_count, mtime_ms, namespace, rank, indexed_at) VALUES (?, ?, ?, ?, ?, ?, ?, 0, ?)'),
+      selFile: p('SELECT id, size, mtime_ms, hash FROM files WHERE path = ?'),
       updFile: p('UPDATE files SET lang = ?, hash = ?, size = ?, line_count = ?, mtime_ms = ?, namespace = ?, indexed_at = ? WHERE id = ?'),
       updStat: p('UPDATE files SET size = ?, mtime_ms = ? WHERE id = ?'),
       oldSyms: p('SELECT id, kind, qname, name, rank FROM symbols WHERE file_id = ? ORDER BY id'),
@@ -108,7 +130,27 @@ export class Writer {
       insImport: p('INSERT INTO file_imports(file_id, spec) VALUES (?, ?)'),
       upsSkip: p('INSERT OR REPLACE INTO idx_skipped(path, size, mtime_ms, reason) VALUES (?, ?, ?, ?)'),
       delSkip: p('DELETE FROM idx_skipped WHERE path = ?'),
+      selRetired: p('SELECT id, kind, qname, rank FROM idx_retired WHERE path = ? ORDER BY id'),
+      delRetired: p('DELETE FROM idx_retired WHERE path = ? AND id = ?'),
+      insRetired: p('INSERT OR REPLACE INTO idx_retired(id, path, kind, qname, rank, retired_at) VALUES (?, ?, ?, ?, ?, ?)'),
     };
+    this.anyRetired = !!store.db.prepare('SELECT 1 FROM idx_retired LIMIT 1').get();
+  }
+
+  private retire(path: string, o: { id: number; kind: string; qname: string; rank: number }, now: number): void {
+    this.s.insRetired.run(o.id, path, o.kind, o.qname, o.rank, now);
+    this.anyRetired = true;
+    this.retiredAdded++;
+  }
+
+  /** Keeps idx_retired bounded (call once per pass, outside other transactions). */
+  pruneRetired(max = MAX_RETIRED): void {
+    if (!this.retiredAdded) return;
+    this.retiredAdded = 0;
+    const n = (this.store.db.prepare('SELECT count(*) AS n FROM idx_retired').get() as { n: number }).n;
+    if (n <= max) return;
+    const cut = this.store.db.prepare('SELECT retired_at AS t FROM idx_retired ORDER BY retired_at DESC LIMIT 1 OFFSET ?').get(max) as { t: number } | undefined;
+    if (cut) this.store.db.prepare('DELETE FROM idx_retired WHERE retired_at <= ?').run(cut.t);
   }
 
   /** Applies a batch of prepared files in one transaction. */
@@ -147,14 +189,23 @@ export class Writer {
     const f: IxFile = it.file;
     const mtime = Math.round(it.mtimeMs);
     let fileId: number;
+    if (!row) {
+      // Written since this pass loaded the file list (an indexer of an older kopt version without the index lock):
+      // replace that row instead of failing the whole batch on UNIQUE(path).
+      const existing = this.s.selFile.get(it.rel) as DbFile | undefined;
+      if (existing) {
+        row = { id: existing.id, size: existing.size, mtime_ms: existing.mtime_ms, hash: existing.hash };
+        dbFiles.set(it.rel, row);
+      }
+    }
     const reuse = new Map<string, Array<{ id: number; rank: number }>>();
-    const oldNames = new Map<number, string>();
+    const oldSyms = new Map<number, { id: number; kind: string; qname: string; name: string; rank: number }>();
     if (row) {
       fileId = row.id;
       for (const o of this.s.oldSyms.all(fileId) as Array<{ id: number; kind: string; qname: string; name: string; rank: number }>) {
         const key = `${o.kind}\u0000${o.qname}`;
         (reuse.get(key) ?? reuse.set(key, []).get(key)!).push({ id: o.id, rank: o.rank });
-        oldNames.set(o.id, o.name);
+        oldSyms.set(o.id, o);
       }
       this.s.delFts.run(fileId);
       this.s.delSyms.run(fileId);
@@ -174,25 +225,43 @@ export class Writer {
     t.changedFileIds.add(fileId);
     t.filesIndexed++;
 
-    // stable ids: same kind + qualified name (+ occurrence order for overloads) keeps the old id
+    // stable ids: same kind + qualified name (+ occurrence order for overloads) keeps the old id, else a
+    // retired id of this file revives, else a fresh one
     const ids: number[] = new Array(f.symbols.length);
     const ranks: number[] = new Array(f.symbols.length);
+    let retired: Map<string, Array<{ id: number; rank: number }>> | undefined;
     for (let i = 0; i < f.symbols.length; i++) {
       const s = f.symbols[i];
-      const old = reuse.get(`${s.kind}\u0000${s.qualifiedName}`)?.shift();
+      const key = `${s.kind}\u0000${s.qualifiedName}`;
+      const old = reuse.get(key)?.shift();
       if (old) {
         ids[i] = old.id;
         ranks[i] = old.rank;
-        oldNames.delete(old.id);
+        oldSyms.delete(old.id);
+        continue;
+      }
+      if (this.anyRetired && !retired) {
+        retired = new Map();
+        for (const r of this.s.selRetired.all(it.rel) as Array<{ id: number; kind: string; qname: string; rank: number }>) {
+          const k = `${r.kind}\u0000${r.qname}`;
+          (retired.get(k) ?? retired.set(k, []).get(k)!).push({ id: r.id, rank: r.rank });
+        }
+      }
+      const back = retired?.get(key)?.shift();
+      if (back) {
+        this.s.delRetired.run(it.rel, back.id);
+        ids[i] = back.id;
+        ranks[i] = back.rank;
       } else {
         ids[i] = this.nextId++;
         ranks[i] = 0;
-        t.changedNames.add(s.name);
       }
+      t.changedNames.add(s.name);
     }
-    for (const [id, name] of oldNames) {
-      t.removedSymbolIds.add(id);
-      t.changedNames.add(name);
+    for (const o of oldSyms.values()) {
+      t.removedSymbolIds.add(o.id);
+      t.changedNames.add(o.name);
+      this.retire(it.rel, o, now);
     }
 
     const fts = it.fts ?? ftsRows(f);
@@ -227,15 +296,18 @@ export class Writer {
 
   /** Must run inside a transaction. */
   deleteFile(path: string, row: DbFile, dbFiles: Map<string, DbFile>, t: WriteTracker): void {
-    for (const o of this.s.oldSyms.all(row.id) as Array<{ id: number; name: string }>) {
+    const now = Date.now();
+    for (const o of this.s.oldSyms.all(row.id) as Array<{ id: number; kind: string; qname: string; name: string; rank: number }>) {
       t.removedSymbolIds.add(o.id);
       t.changedNames.add(o.name);
+      this.retire(path, o, now);
     }
     this.s.delFts.run(row.id);
     this.s.delHints.run(row.id);
     this.s.delFile.run(row.id); // cascades to symbols, refs, file_imports
     dbFiles.delete(path);
     t.removedFileIds.add(row.id);
+    t.removedPaths.add(path);
     t.filesDeleted++;
   }
 

@@ -22,14 +22,30 @@ import {
   sha1,
   shortQ,
   unchangedLine,
+  withNote,
 } from './common.js';
 import { fileSymbols, resolveTarget, type ResolvedTarget, type SymbolCandidate } from './resolve.js';
 import { search } from './search.js';
 import { descendantIds, fitEntries, functionSkeleton, isContainer, skeletonEntries } from './skeleton.js';
 import { type Located, type Source, currentExtraction, loadSource, locate, relocate, sliceLines } from './source.js';
+import { methodFamily, unresolvedCount } from './usage.js';
 
-/** Whole files at most this long are returned verbatim by default; longer ones as a skeleton. */
-export const FILE_BODY_MAX_LINES = 150;
+/** Largest maxTokens a caller may pass (MAX_TOKENS_CAP of the MCP layer): one call can return up to this. */
+export const READ_CAP = 8000;
+/** Defaults of budgets.readSymbol / budgets.readFile for configs written before they existed. */
+const READ_SYMBOL_DEFAULT = 6000;
+const READ_FILE_DEFAULT = 4000;
+
+/**
+ * Budgets of one read call. Without an explicit maxTokens, a named function gets up to `symbol` tokens and a file
+ * or type up to `file` tokens verbatim (one call instead of a skeleton card plus a re-read); ranges keep `range`.
+ */
+interface ReadBudgets {
+  range: number;
+  symbol: number;
+  file: number;
+  explicit: boolean;
+}
 
 export type ReadMode = 'body' | 'skeleton' | 'card';
 
@@ -161,7 +177,6 @@ export function subRanges(src: Source, start: number, end: number, chunkTokens: 
 const CALLERS_COUNT_SQL = 'SELECT count(*) AS n, count(DISTINCT file_id) AS f FROM refs WHERE to_symbol_id = ?';
 const CALLEES_COUNT_SQL = "SELECT count(DISTINCT name) AS n FROM refs WHERE from_symbol_id = ? AND kind IN ('call', 'new')";
 const MEMBERS_COUNT_SQL = 'SELECT count(*) AS n FROM symbols WHERE parent_id = ?';
-const UNRESOLVED_COUNT_SQL = 'SELECT count(*) AS n FROM refs WHERE name = ? AND to_symbol_id IS NULL';
 const IMPORTS_COUNT_SQL = 'SELECT count(*) AS n FROM file_imports WHERE file_id = ?';
 const IMPORTERS_COUNT_SQL = 'SELECT count(DISTINCT file_id) AS n FROM file_imports WHERE target_file_id = ?';
 const FILE_SYMS_COUNT_SQL = 'SELECT count(*) AS n FROM symbols WHERE file_id = ?';
@@ -173,7 +188,7 @@ export function symbolCard(store: Store, sym: SymbolRow, file: FileRow): string 
   const callers = store.prepare(CALLERS_COUNT_SQL).get(sym.id) as { n: number; f: number };
   const callees = num(store, CALLEES_COUNT_SQL, sym.id);
   const members = num(store, MEMBERS_COUNT_SQL, sym.id);
-  const unresolved = callers.n < 3 ? num(store, UNRESOLVED_COUNT_SQL, sym.name) : 0;
+  const unresolved = callers.n < 3 ? unresolvedCount(store, sym, methodFamily(store, sym)) : 0;
   const lines = [
     `${h(sym.id)} ${sym.kind} ${shortQ(sym.qname, sym.name)} · ${file.path}:${sym.start_line}-${sym.end_line} (${sym.end_line - sym.start_line + 1} lines)`,
     clip(sym.signature || sym.name, 300),
@@ -288,6 +303,11 @@ function markdownOrEmpty(src: Source, maxTokens: number): FileSkeleton {
 // ---------------------------------------------------------------------------------------------
 // read()
 
+/** Budget suggestion rounded up to a multiple of 100, capped at READ_CAP. */
+function roundUp(tokens: number): number {
+  return Math.min(READ_CAP, Math.ceil(tokens / 100) * 100);
+}
+
 function message(text: string, maxTokens: number, meta?: Record<string, unknown>): ToolResult {
   return result(text, maxTokens, meta);
 }
@@ -328,18 +348,39 @@ export function ambiguousText(what: string, candidates: SymbolCandidate[], total
   return compose((tok) => `${what} · ${total} candidates · ~${tok} tok${more}`, `${renderGrouped(rows, (r) => pointerLine(r, false))}\n${hint}`, maxTokens);
 }
 
+/** Budgets of a read call (see ReadBudgets). */
+export function readBudgets(config: ToolContext['config'], requested: unknown): ReadBudgets {
+  const b = config.budgets;
+  const range = budgetOf(requested, b.read);
+  const n = Number(requested);
+  const explicit = requested !== undefined && requested !== null && Number.isFinite(n) && n > 0;
+  if (explicit) return { range, symbol: range, file: range, explicit };
+  const symbol = Math.min(READ_CAP, Math.max(range, budgetOf(b.readSymbol, READ_SYMBOL_DEFAULT)));
+  const file = Math.min(READ_CAP, Math.max(range, budgetOf(b.readFile, READ_FILE_DEFAULT)));
+  return { range, symbol, file, explicit };
+}
+
+/** Largest output a read call may return (the MCP layer's safety cap when the call omits maxTokens). */
+export function readCap(config: ToolContext['config'], requested?: unknown): number {
+  const r = readBudgets(config, requested);
+  return Math.max(r.range, r.symbol, r.file);
+}
+
 export function read(store: Store, p: ReadParams, ctx: ToolContext): ToolResult {
   ctx.ledger.tick();
-  const maxTokens = budgetOf(p?.maxTokens, ctx.config.budgets.read);
+  const budgets = readBudgets(ctx.config, p?.maxTokens);
+  const maxTokens = budgets.range;
   const target = typeof p?.target === 'string' ? p.target : '';
   const mode = p?.mode;
   if (mode !== undefined && mode !== 'body' && mode !== 'skeleton' && mode !== 'card') {
     return message(`unknown mode "${String(mode)}"; use body, skeleton or card`, maxTokens);
   }
-  return guard('read', maxTokens, () => readTarget(store, resolveTarget(store, target), mode, ctx, maxTokens, !!p.fresh));
+  const cap = Math.max(budgets.range, budgets.symbol, budgets.file);
+  return guard('read', cap, () => readTarget(store, resolveTarget(store, target), mode, ctx, budgets, !!p.fresh));
 }
 
-function readTarget(store: Store, t: ResolvedTarget, mode: ReadMode | undefined, ctx: ToolContext, maxTokens: number, fresh: boolean): ToolResult {
+function readTarget(store: Store, t: ResolvedTarget, mode: ReadMode | undefined, ctx: ToolContext, b: ReadBudgets, fresh: boolean): ToolResult {
+  const maxTokens = b.range;
   switch (t.kind) {
     case 'none':
       return noneResult(store, t, maxTokens);
@@ -349,39 +390,80 @@ function readTarget(store: Store, t: ResolvedTarget, mode: ReadMode | undefined,
       const text = ambiguousText(`read ${quote(t.query)}`, t.candidates, t.total, maxTokens);
       return message(text, maxTokens, { resolved: 'ambiguous', candidates: t.total });
     }
-    case 'symbol':
-      return readSymbol(store, t.symbol, t.file, mode ?? 'body', ctx, maxTokens, fresh);
+    case 'symbol': {
+      // A named function comes whole up to budgets.readSymbol, a type up to budgets.readFile (like a file).
+      const m = mode ?? 'body';
+      const budget = m === 'body' ? (isContainer(t.symbol.kind) ? b.file : b.symbol) : maxTokens;
+      return withNote(readSymbol(store, t.symbol, t.file, m, ctx, budget, fresh, b.explicit), t.note, budget);
+    }
     case 'range':
       return readRange(store, t.path, t.file, t.start, t.end, ctx, maxTokens, fresh);
     case 'file':
-      return readFile(store, t.path, t.file, mode, ctx, maxTokens, fresh);
+      return readFile(store, t.path, t.file, mode, ctx, b, fresh);
   }
 }
 
-function readSymbol(store: Store, sym: SymbolRow, file: FileRow, mode: ReadMode, ctx: ToolContext, maxTokens: number, fresh: boolean): ToolResult {
+function readSymbol(store: Store, sym: SymbolRow, file: FileRow, mode: ReadMode, ctx: ToolContext, maxTokens: number, fresh: boolean, explicit = true): ToolResult {
   const meta = { resolved: 'symbol', mode };
   if (mode === 'card') return result(symbolCard(store, sym, file), maxTokens, meta);
   const sec = symbolSection(store, sym, file, { mode, ctx, fresh, maxTokens });
   if (sec.kind === 'error' || sec.kind === 'unchanged') return result(sec.text, maxTokens, { ...meta, outcome: sec.kind });
-  sec.commit?.();
-  if (!sec.overBudget) return result(sec.text, maxTokens, { ...meta, outcome: sec.kind });
-  // Body over budget: skeleton + where to read in parts.
+  if (!sec.overBudget) {
+    sec.commit?.();
+    return result(sec.text, maxTokens, { ...meta, outcome: sec.kind });
+  }
   const src = loadSource(store, file.path, file)!;
   const ob = sec.overBudget;
+  // A long function read by name, no budget given: its code from the top, and the exact range of the rest
+  // (a skeleton would only make the agent call again for the code).
+  if (!explicit && !isContainer(sym.kind)) return symbolHead(store, sym, file, src, ob, ctx, maxTokens, fresh);
+  sec.commit?.();
+  // Body over budget: skeleton + where to read in parts.
   let hint: string;
   if (isContainer(sym.kind)) {
     hint = `body ~${ob.tokens} tok > maxTokens ${maxTokens}; read a member with kopt_read ${file.path}:<L> or raise maxTokens`;
+  } else if (ob.tokens + 60 <= READ_CAP) {
+    // One more call returns it all: never suggest several part reads when one fits.
+    hint = `body ~${ob.tokens} tok > maxTokens ${maxTokens}; pass maxTokens ${roundUp(ob.tokens + 60)} to read it whole`;
   } else {
-    const parts = subRanges(src, ob.start, ob.end, Math.max(150, Math.floor(maxTokens * 0.85)), 6);
+    // Too big for one call: parts as large as a call allows.
+    const parts = subRanges(src, ob.start, ob.end, Math.floor(READ_CAP * 0.9), 4);
     const last = parts[parts.length - 1];
     const list = parts.map(([a, b], i) => (i === 0 ? `${file.path}:${a}-${b}` : `${a}-${b}`)).join(', ');
     const rest = last && last[1] < ob.end ? ', …' : '';
-    hint = `body ~${ob.tokens} tok > maxTokens ${maxTokens}; raise maxTokens to ~${ob.tokens + 60} or read in parts: ${list}${rest}`;
+    hint = `body ~${ob.tokens} tok > maxTokens ${maxTokens}; read it in parts with maxTokens ${READ_CAP}: ${list}${rest}`;
   }
   // Rebuild the skeleton with exactly what the hint leaves.
   const loc = locate(store, src, sym);
   const sk = skeletonSection(store, sym, file, src, loc, Math.max(1, maxTokens - estimateTokens(hint) - 1));
   return result(`${sk.text}\n${hint}`, maxTokens, { ...meta, outcome: 'skeleton-over-budget' });
+}
+
+/** First part of an over-budget function body, verbatim, then the range of the rest in as few calls as possible. */
+function symbolHead(store: Store, sym: SymbolRow, file: FileRow, src: Source, ob: { tokens: number; start: number; end: number }, ctx: ToolContext, maxTokens: number, fresh: boolean): ToolResult {
+  const meta = { resolved: 'symbol', mode: 'body', outcome: 'body-head' };
+  const handle = h(sym.id);
+  const restHint = (from: number) => {
+    const rest = estimateTokens(sliceLines(src, from, ob.end)) + 40;
+    if (rest <= READ_CAP) return `next: kopt_read ${file.path}:${from}-${ob.end}${rest > maxTokens ? ` with maxTokens ${roundUp(rest)}` : ''} (rest of ${handle}, ~${rest - 40} tok)`;
+    const parts = subRanges(src, from, ob.end, Math.floor(READ_CAP * 0.9), 3);
+    const list = parts.map(([a, b2], i) => (i === 0 ? `${file.path}:${a}-${b2}` : `${a}-${b2}`)).join(', ');
+    const last = parts[parts.length - 1];
+    return `next: kopt_read ${list}${last && last[1] < ob.end ? ', …' : ''} with maxTokens ${READ_CAP} (rest of ${handle}, ~${rest - 40} tok)`;
+  };
+  const head = `${file.path}:${ob.start}-${ob.end} ${handle} (~${ob.tokens} tok; first part below)`;
+  const reserve = estimateTokens(head) + estimateTokens(restHint(ob.start + 1)) + 4;
+  const fit = fitRange(src, ob.start, ob.end, Math.max(1, maxTokens - reserve));
+  if (fit.end < ob.start) return result(`${head}\n${restHint(ob.start)}`, maxTokens, meta);
+  const body = sliceLines(src, ob.start, fit.end);
+  const key = `range:${file.path}:${ob.start}-${fit.end}`;
+  const digest = sha1(body);
+  if (!fresh) {
+    const shown = alreadyShown(ctx, key, file.path, ob.start, fit.end, src, digest);
+    if (shown !== false) return result(`${unchangedLine(`${file.path}:${ob.start}-${fit.end}`, handle, shown)}\n${restHint(fit.end + 1)}`, maxTokens, { ...meta, outcome: 'unchanged' });
+  }
+  commitRange(ctx, key, digest, file.path, ob.start, fit.end);
+  return result(`${head}\n${body}\n${restHint(fit.end + 1)}`, maxTokens, meta);
 }
 
 function readRange(store: Store, path: string, file: FileRow | undefined, start: number, end: number, ctx: ToolContext, maxTokens: number, fresh: boolean): ToolResult {
@@ -404,7 +486,12 @@ function readRange(store: Store, path: string, file: FileRow | undefined, start:
     if (shown !== false) return message(unchangedLine(loc, undefined, shown), maxTokens, { resolved: 'range', outcome: 'unchanged' });
   }
   commitRange(ctx, key, digest, path, start, fit.end);
-  const hint = fit.end < e ? `\nnext: kopt_read ${path}:${fit.end + 1}-${e}` : '';
+  let hint = '';
+  if (fit.end < e) {
+    const rest = estimateTokens(sliceLines(src, fit.end + 1, e)) + 40;
+    // The rest fits one call: say how, so the agent does not page through the range.
+    hint = `\nnext: kopt_read ${path}:${fit.end + 1}-${e}${rest <= READ_CAP && rest > maxTokens ? ` with maxTokens ${roundUp(rest)}` : ''}`;
+  }
   return result(`${loc}\n${body}${hint}`, maxTokens, { resolved: 'range', outcome: 'body', cut: fit.end < e });
 }
 
@@ -420,25 +507,28 @@ function fitRange(src: Source, start: number, end: number, maxTokens: number): {
   return { end };
 }
 
-function readFile(store: Store, path: string, file: FileRow | undefined, mode: ReadMode | undefined, ctx: ToolContext, maxTokens: number, fresh: boolean): ToolResult {
+function readFile(store: Store, path: string, file: FileRow | undefined, mode: ReadMode | undefined, ctx: ToolContext, b: ReadBudgets, fresh: boolean): ToolResult {
+  const maxTokens = b.range;
   const src = loadSource(store, path, file);
   if (!src) return message(`${path}: source not available`, maxTokens);
   const n = src.lines.length;
   const meta = { resolved: 'file', mode: mode ?? 'auto' };
   if (mode === 'card') return result(fileCard(store, path, file, src), maxTokens, meta);
   const fullTokens = estimateTokens(src.text);
-  const wantBody = mode === 'body' || (mode === undefined && n <= FILE_BODY_MAX_LINES);
+  // Without a budget, a file that fits budgets.readFile comes verbatim (a skeleton would be followed by a re-read).
+  const bodyBudget = b.explicit ? maxTokens : b.file;
+  const wantBody = mode === 'body' || mode === undefined;
   if (wantBody) {
     const head = `${path}:1-${n}`;
-    if (estimateTokens(head) + fullTokens + 1 <= maxTokens) {
+    if (estimateTokens(head) + fullTokens + 1 <= bodyBudget) {
       const digest = sha1(sliceLines(src, 1, n));
       const key = `range:${path}:1-${n}`;
       if (!fresh) {
         const shown = alreadyShown(ctx, key, path, 1, n, src, digest);
-        if (shown !== false) return message(unchangedLine(head, undefined, shown), maxTokens, { ...meta, outcome: 'unchanged' });
+        if (shown !== false) return message(unchangedLine(head, undefined, shown), bodyBudget, { ...meta, outcome: 'unchanged' });
       }
       commitRange(ctx, key, digest, path, 1, n);
-      return result(`${head}\n${sliceLines(src, 1, n)}`, maxTokens, { ...meta, outcome: 'body' });
+      return result(`${head}\n${sliceLines(src, 1, n)}`, bodyBudget, { ...meta, outcome: 'body' });
     }
   }
   // Skeleton (explicit, default for long files, or body over budget).
@@ -448,9 +538,10 @@ function readFile(store: Store, path: string, file: FileRow | undefined, mode: R
     // Nothing structural to show: head of the file + where to continue.
     return readRange(store, path, file, 1, n, ctx, maxTokens, fresh);
   }
-  const bodyHint = wantBody ? `file ~${fullTokens} tok > maxTokens ${maxTokens}; ` : '';
+  const whole = fullTokens + 40 <= READ_CAP ? ` (or the whole file: mode body, maxTokens ${roundUp(fullTokens + 40)})` : '';
+  const bodyHint = wantBody ? `file ~${fullTokens} tok > maxTokens ${bodyBudget}; ` : '';
   const omitted = sk.omitted ? `${sk.omitted} entries omitted; ` : '';
-  const hint = `${bodyHint}${omitted}read parts with kopt_read ${path}:<start>-<end>`;
+  const hint = `${bodyHint}${omitted}read parts with kopt_read ${path}:<start>-<end>${whole}`;
   const text = [`${path}:1-${n} skeleton`, ...sk.lines, ...(sk.note ? [sk.note] : []), hint].join('\n');
   return result(text, maxTokens, { ...meta, outcome: 'skeleton', symbols: sk.symbols }, fullTokens);
 }

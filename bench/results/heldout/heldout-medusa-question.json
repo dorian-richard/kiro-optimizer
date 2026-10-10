@@ -1,0 +1,774 @@
+{
+  "meta": {
+    "label": "heldout-medusa-question",
+    "repo": {
+      "name": "medusa",
+      "url": "https://github.com/medusajs/medusa.git",
+      "tag": "v2.21.2",
+      "commit": "020565398e436a2bc65777a3b1ad347b4735d6df",
+      "language": "typescript",
+      "path": "bench/repos/medusa"
+    },
+    "repoRoot": "bench/repos/medusa",
+    "headCommit": "020565398e436a2bc65777a3b1ad347b4735d6df",
+    "date": "2026-10-09T20:18:22.564Z",
+    "input": "question",
+    "charsPerToken": 3,
+    "strategies": [
+      "native-naive",
+      "native-ranged",
+      "kopt-pack",
+      "kopt-hits+read",
+      "kirograph",
+      "codegraph"
+    ],
+    "grepLimits": {
+      "maxMatches": 100,
+      "maxChars": 10000,
+      "maxLineChars": 250
+    },
+    "readLimits": {
+      "naiveTopFiles": 3,
+      "naiveMaxLines": 2000,
+      "rangedMatches": 4,
+      "rangedContext": 60
+    },
+    "koptBudgets": {
+      "find": 700,
+      "pack": 2500,
+      "read": 3000
+    },
+    "index": {
+      "built": false,
+      "durationMs": 0,
+      "files": 11970,
+      "symbols": 40269,
+      "path": "<index-dir>/.kopt-medusa/index.db"
+    },
+    "notes": [
+      "kirograph: outputs loaded from bench/competitors/results/kirograph-medusa.jsonl",
+      "codegraph: outputs loaded from bench/competitors/results/codegraph-medusa.jsonl"
+    ],
+    "durationMs": 5150
+  },
+  "results": [
+    {
+      "taskId": "ho-md-explain-tax-inclusive",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 408838,
+      "chars": 1226507,
+      "toolCalls": 4,
+      "durationMs": 3220,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "packages/core/utils/src/totals/tax/index.ts"
+        ],
+        "symbolsMissed": [
+          "calculateAmountsWithTax",
+          "calculateTaxTotal"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "derive",
+          "chars": 9820,
+          "tokens": 3274
+        },
+        {
+          "tool": "read_file",
+          "args": ".yarn/plugins/@yarnpkg/plugin-interactive-tools.cjs",
+          "chars": 1093181,
+          "tokens": 364394
+        },
+        {
+          "tool": "read_file",
+          "args": "www/apps/book/public/llms-full.txt",
+          "chars": 73690,
+          "tokens": 24564
+        },
+        {
+          "tool": "read_file",
+          "args": "www/utils/generated/typedoc-json-output/0-types.json",
+          "chars": 49816,
+          "tokens": 16606
+        }
+      ]
+    },
+    {
+      "taskId": "ho-md-explain-tax-inclusive",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 124257,
+      "chars": 372766,
+      "toolCalls": 4,
+      "durationMs": 39,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "packages/core/utils/src/totals/tax/index.ts"
+        ],
+        "symbolsMissed": [
+          "calculateAmountsWithTax",
+          "calculateTaxTotal"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "derive",
+          "chars": 9820,
+          "tokens": 3274
+        },
+        {
+          "tool": "read_file",
+          "args": ".yarn/plugins/@yarnpkg/plugin-interactive-tools.cjs:1-168",
+          "chars": 356339,
+          "tokens": 118780
+        },
+        {
+          "tool": "read_file",
+          "args": "packages/core/utils/src/modules-sdk/joiner-config-builder.ts:284-404",
+          "chars": 3394,
+          "tokens": 1132
+        },
+        {
+          "tool": "read_file",
+          "args": "www/utils/generated/typedoc-json-output/0-types.json:414682-414802",
+          "chars": 3213,
+          "tokens": 1071
+        }
+      ]
+    },
+    {
+      "taskId": "ho-md-explain-tax-inclusive",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 1145,
+      "chars": 3433,
+      "toolCalls": 1,
+      "durationMs": 89,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.5,
+        "defRecall": 0,
+        "filesMissed": [
+          "packages/core/utils/src/totals/tax/index.ts"
+        ],
+        "symbolsMissed": [
+          "calculateTaxTotal"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"When a price already includes tax, how does Medusa derive the price without tax that the store API returns?\"",
+          "chars": 3433,
+          "tokens": 1145
+        }
+      ]
+    },
+    {
+      "taskId": "ho-md-explain-tax-inclusive",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 1606,
+      "chars": 4817,
+      "toolCalls": 3,
+      "durationMs": 53,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.5,
+        "defRecall": 0,
+        "filesMissed": [
+          "packages/core/utils/src/totals/tax/index.ts"
+        ],
+        "symbolsMissed": [
+          "calculateTaxTotal"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"When a price already includes tax, how does Medusa derive the price without tax that the store API returns?\"",
+          "chars": 2028,
+          "tokens": 676
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#m9d",
+          "chars": 2247,
+          "tokens": 749
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#m9e",
+          "chars": 542,
+          "tokens": 181
+        }
+      ]
+    },
+    {
+      "taskId": "ho-md-explain-tax-inclusive",
+      "kind": "explain",
+      "strategy": "kirograph",
+      "skipped": "no kirograph result line for this task",
+      "tokens": 0,
+      "chars": 0,
+      "toolCalls": 0,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "packages/core/utils/src/totals/tax/index.ts"
+        ],
+        "symbolsMissed": [
+          "calculateAmountsWithTax",
+          "calculateTaxTotal"
+        ],
+        "found": false
+      },
+      "calls": []
+    },
+    {
+      "taskId": "ho-md-explain-tax-inclusive",
+      "kind": "explain",
+      "strategy": "codegraph",
+      "skipped": "no codegraph result line for this task",
+      "tokens": 0,
+      "chars": 0,
+      "toolCalls": 0,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "packages/core/utils/src/totals/tax/index.ts"
+        ],
+        "symbolsMissed": [
+          "calculateAmountsWithTax",
+          "calculateTaxTotal"
+        ],
+        "found": false
+      },
+      "calls": []
+    },
+    {
+      "taskId": "ho-md-usage-amounts-with-tax",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 28316,
+      "chars": 84944,
+      "toolCalls": 4,
+      "durationMs": 1628,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "wrapProductsWithTaxPrices"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "calculateAmountsWithTax",
+          "chars": 2318,
+          "tokens": 773
+        },
+        {
+          "tool": "read_file",
+          "args": "www/apps/book/public/llms-full.txt",
+          "chars": 73690,
+          "tokens": 24564
+        },
+        {
+          "tool": "read_file",
+          "args": "www/apps/resources/app/commerce-modules/product/guides/price-with-taxes/page.mdx",
+          "chars": 5897,
+          "tokens": 1966
+        },
+        {
+          "tool": "read_file",
+          "args": "packages/medusa/src/api/store/product-variants/helpers.ts",
+          "chars": 3039,
+          "tokens": 1013
+        }
+      ]
+    },
+    {
+      "taskId": "ho-md-usage-amounts-with-tax",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 4407,
+      "chars": 13216,
+      "toolCalls": 5,
+      "durationMs": 18,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "wrapVariantsWithTaxPrices",
+          "wrapProductsWithTaxPrices"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "calculateAmountsWithTax",
+          "chars": 2318,
+          "tokens": 773
+        },
+        {
+          "tool": "read_file",
+          "args": "packages/core/utils/src/totals/tax/index.ts:1-63",
+          "chars": 1410,
+          "tokens": 470
+        },
+        {
+          "tool": "read_file",
+          "args": "www/apps/book/public/llms-full.txt:47685-47805",
+          "chars": 4198,
+          "tokens": 1400
+        },
+        {
+          "tool": "read_file",
+          "args": "www/apps/book/public/llms-full.txt:74187-74307",
+          "chars": 3031,
+          "tokens": 1011
+        },
+        {
+          "tool": "read_file",
+          "args": "www/apps/resources/app/commerce-modules/product/guides/price-with-taxes/page.mdx:155-218",
+          "chars": 2259,
+          "tokens": 753
+        }
+      ]
+    },
+    {
+      "taskId": "ho-md-usage-amounts-with-tax",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 1006,
+      "chars": 3018,
+      "toolCalls": 1,
+      "durationMs": 39,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"Which store API code calls calculateAmountsWithTax?\"",
+          "chars": 3018,
+          "tokens": 1006
+        }
+      ]
+    },
+    {
+      "taskId": "ho-md-usage-amounts-with-tax",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 690,
+      "chars": 2065,
+      "toolCalls": 3,
+      "durationMs": 19,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [
+          "packages/medusa/src/api/store/products/helpers.ts"
+        ],
+        "symbolsMissed": [
+          "wrapProductsWithTaxPrices"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"Which store API code calls calculateAmountsWithTax?\"",
+          "chars": 686,
+          "tokens": 229
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#jdc",
+          "chars": 694,
+          "tokens": 232
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#jdb",
+          "chars": 685,
+          "tokens": 229
+        }
+      ]
+    },
+    {
+      "taskId": "ho-md-usage-amounts-with-tax",
+      "kind": "usage",
+      "strategy": "kirograph",
+      "skipped": "no kirograph result line for this task",
+      "tokens": 0,
+      "chars": 0,
+      "toolCalls": 0,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "packages/medusa/src/api/store/product-variants/helpers.ts",
+          "packages/medusa/src/api/store/products/helpers.ts"
+        ],
+        "symbolsMissed": [
+          "wrapVariantsWithTaxPrices",
+          "wrapProductsWithTaxPrices"
+        ],
+        "found": false
+      },
+      "calls": []
+    },
+    {
+      "taskId": "ho-md-usage-amounts-with-tax",
+      "kind": "usage",
+      "strategy": "codegraph",
+      "skipped": "no codegraph result line for this task",
+      "tokens": 0,
+      "chars": 0,
+      "toolCalls": 0,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "packages/medusa/src/api/store/product-variants/helpers.ts",
+          "packages/medusa/src/api/store/products/helpers.ts"
+        ],
+        "symbolsMissed": [
+          "wrapVariantsWithTaxPrices",
+          "wrapProductsWithTaxPrices"
+        ],
+        "found": false
+      },
+      "calls": []
+    }
+  ],
+  "aggregates": [
+    {
+      "strategy": "native-naive",
+      "tasks": 2,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 218577,
+      "meanTokens": 218577,
+      "p90Tokens": 408838,
+      "totalTokens": 437154,
+      "totalChars": 1311451,
+      "meanToolCalls": 4,
+      "meanFileRecall": 0.5,
+      "meanSymbolRecall": 0.25,
+      "meanDefRecall": 0.25,
+      "found": 0,
+      "foundRate": 0,
+      "tokensPerFound": null
+    },
+    {
+      "strategy": "native-ranged",
+      "tasks": 2,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 64332,
+      "meanTokens": 64332,
+      "p90Tokens": 124257,
+      "totalTokens": 128664,
+      "totalChars": 385982,
+      "meanToolCalls": 4.5,
+      "meanFileRecall": 0.5,
+      "meanSymbolRecall": 0,
+      "meanDefRecall": 0,
+      "found": 0,
+      "foundRate": 0,
+      "tokensPerFound": null
+    },
+    {
+      "strategy": "kopt-pack",
+      "tasks": 2,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 1075.5,
+      "meanTokens": 1076,
+      "p90Tokens": 1145,
+      "totalTokens": 2151,
+      "totalChars": 6451,
+      "meanToolCalls": 1,
+      "meanFileRecall": 0.5,
+      "meanSymbolRecall": 0.75,
+      "meanDefRecall": 0.25,
+      "found": 1,
+      "foundRate": 0.5,
+      "tokensPerFound": 2151
+    },
+    {
+      "strategy": "kopt-hits+read",
+      "tasks": 2,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 1148,
+      "meanTokens": 1148,
+      "p90Tokens": 1606,
+      "totalTokens": 2296,
+      "totalChars": 6882,
+      "meanToolCalls": 3,
+      "meanFileRecall": 0.25,
+      "meanSymbolRecall": 0.5,
+      "meanDefRecall": 0.25,
+      "found": 0,
+      "foundRate": 0,
+      "tokensPerFound": null
+    },
+    {
+      "strategy": "kirograph",
+      "tasks": 0,
+      "skipped": 2,
+      "errors": 0,
+      "medianTokens": 0,
+      "meanTokens": 0,
+      "p90Tokens": 0,
+      "totalTokens": 0,
+      "totalChars": 0,
+      "meanToolCalls": 0,
+      "meanFileRecall": 0,
+      "meanSymbolRecall": 0,
+      "meanDefRecall": 0,
+      "found": 0,
+      "foundRate": 0,
+      "tokensPerFound": null
+    },
+    {
+      "strategy": "codegraph",
+      "tasks": 0,
+      "skipped": 2,
+      "errors": 0,
+      "medianTokens": 0,
+      "meanTokens": 0,
+      "p90Tokens": 0,
+      "totalTokens": 0,
+      "totalChars": 0,
+      "meanToolCalls": 0,
+      "meanFileRecall": 0,
+      "meanSymbolRecall": 0,
+      "meanDefRecall": 0,
+      "found": 0,
+      "foundRate": 0,
+      "tokensPerFound": null
+    }
+  ],
+  "paired": [
+    {
+      "a": "native-naive",
+      "b": "kopt-pack",
+      "nRun": 2,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 1,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-pack",
+      "nRun": 2,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 1,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-naive",
+      "b": "kopt-hits+read",
+      "nRun": 2,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-hits+read",
+      "nRun": 2,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "kirograph",
+      "b": "kopt-pack",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "codegraph",
+      "b": "kopt-pack",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "kirograph",
+      "b": "kopt-hits+read",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "codegraph",
+      "b": "kopt-hits+read",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-ranged",
+      "b": "kirograph",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-ranged",
+      "b": "codegraph",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-naive",
+      "b": "native-ranged",
+      "nRun": 2,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    }
+  ],
+  "byKind": [
+    {
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 408838
+    },
+    {
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 124257
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 1145
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 1606
+    },
+    {
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 28316
+    },
+    {
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 4407
+    },
+    {
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tasks": 1,
+      "found": 1,
+      "medianTokens": 1006
+    },
+    {
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 690
+    }
+  ]
+}

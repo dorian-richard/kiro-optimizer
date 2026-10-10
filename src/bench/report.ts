@@ -3,6 +3,7 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { BenchResult, StrategyName, TaskStrategyResult } from './types.js';
+import { writePortable } from './portable.js';
 
 const pct = (x: number) => `${Math.round(x * 100)}%`;
 const num = (x: number) => Math.round(x).toLocaleString('en-US');
@@ -122,7 +123,7 @@ export function renderMarkdown(res: BenchResult): string {
   out.push(`- native-naive: top ${m.readLimits.naiveTopFiles} files by visible match count, whole file capped at ${m.readLimits.naiveMaxLines} lines.`);
   out.push(`- native-ranged: ±${m.readLimits.rangedContext} lines around the best ${m.readLimits.rangedMatches} matches (overlaps merged).`);
   if (m.koptBudgets) out.push(`- kopt budgets: find ${m.koptBudgets.find}, pack ${m.koptBudgets.pack}, read ${m.koptBudgets.read} tokens.`);
-  if (m.index) out.push(`- index: ${m.index.built ? 'built' : 'reused'} in ${num(m.index.durationMs)} ms${m.index.files !== undefined ? `, ${num(m.index.files)} files, ${num(m.index.symbols ?? 0)} symbols` : ''}.`);
+  if (m.index) out.push(`- index: ${m.index.built ? `built in ${num(m.index.durationMs)} ms` : 'reused'}${m.index.files !== undefined ? `, ${num(m.index.files)} files, ${num(m.index.symbols ?? 0)} symbols` : ''}.`);
   for (const n of m.notes) out.push(`- ${n}`);
   out.push(`- run duration: ${num(m.durationMs)} ms.`);
   out.push('');
@@ -135,9 +136,9 @@ export function writeResults(res: BenchResult, outDir: string): string[] {
   const safe = res.meta.label.replace(/[^\w.-]+/g, '_');
   const md = join(outDir, `${safe}.md`);
   const json = join(outDir, `${safe}.json`);
-  writeFileSync(md, renderMarkdown(res));
+  writePortable(md, renderMarkdown(res));
   const slim = { ...res, results: res.results.map(({ output: _o, ...r }) => r) };
-  writeFileSync(json, JSON.stringify(slim, null, 2) + '\n');
+  writePortable(json, JSON.stringify(slim, null, 2) + '\n');
   const written = [md, json];
   if (res.results.some((r) => r.output !== undefined)) {
     const raw = join(outDir, `${safe}.raw.json`);

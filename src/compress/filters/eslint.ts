@@ -30,10 +30,18 @@ function compressEslint(inp: FilterInput): string | undefined {
   const summary = lastMatch(lines, SUMMARY_RE);
   const fixable = lines.find((l) => FIXABLE_RE.test(l));
   if (!diags.length && !summary) return exitCode === 0 ? 'eslint: no problems' : undefined;
+  return layoutEslint(diags, maxTokens, summary?.[0], fixable?.trim());
+}
+
+/**
+ * Problems (message ending with `(rule)`) -> summary line, errors grouped by file and, when there are errors,
+ * warnings counted by rule instead of listed. Shared with the JSON formatter (`eslint -f json`).
+ */
+export function layoutEslint(diags: Diag[], maxTokens: number, summary?: string, fixable?: string): string {
   const errors = diags.filter((d) => d.severity === 'error');
   const warnings = diags.filter((d) => d.severity === 'warning');
-  const head: string[] = [summary ? summary[0] : `✖ ${plural(diags.length, 'problem')} (${plural(errors.length, 'error')}, ${plural(warnings.length, 'warning')})`];
-  if (fixable) head.push(fixable.trim());
+  const head: string[] = [summary ?? `✖ ${plural(diags.length, 'problem')} (${plural(errors.length, 'error')}, ${plural(warnings.length, 'warning')})`];
+  if (fixable) head.push(fixable);
   let shown = diags;
   if (errors.length && warnings.length) {
     const byRule = new Map<string, number>();

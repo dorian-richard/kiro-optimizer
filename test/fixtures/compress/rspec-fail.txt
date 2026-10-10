@@ -1,0 +1,400 @@
+Randomized with seed 41587
+
+Cart::Order
+  caches discount when refund is expired
+  paginates refund when batch is expired
+  handles payload when payload is valid
+  computes address when invoice is valid
+  rejects refund when address is valid
+  validates currency when item is missing
+
+Orders::Address
+  creates address when batch is empty
+  formats total when refund is missing
+  lists item when page is valid
+  validates timeout when rounding is valid
+  creates currency when address is empty
+  handles rounding when item is valid
+
+Refunds::Address
+  caches payload when token is empty
+  computes discount when batch is expired
+  creates discount when token is valid
+  retries invoice when payload is valid
+  caches page when refund is missing
+  updates address when discount is missing
+
+Payments::Timeout
+  serializes total when discount is empty
+  creates total when discount is expired
+  validates invoice when rounding is expired
+  creates rounding when address is valid
+  updates timeout when currency is valid
+  updates page when rounding is expired
+
+Invoices::Address
+  computes token when page is empty
+  caches address when invoice is empty
+  paginates address when payload is expired
+  caches batch when refund is valid
+  handles invoice when page is valid
+  retries discount when page is valid
+
+Customers::Discount
+  creates refund when order is missing
+  handles address when page is valid
+  computes rounding when refund is empty
+  lists customer when refund is empty
+  formats order when address is empty
+  paginates rounding when customer is valid
+
+Catalog::Token
+  retries page when rounding is missing
+  updates total when token is valid
+  formats discount when address is valid
+  computes batch when token is empty
+  validates refund when discount is empty
+  caches invoice when order is empty
+
+Inventory::Item
+  serializes item when item is empty
+  computes rounding when customer is missing
+  #total applies the discount (FAILED - 1)
+  validates timeout when address is valid
+  deletes batch when currency is expired
+  rejects invoice when payload is missing
+
+Shipping::Order
+  handles customer when total is expired
+  deletes discount when refund is expired
+  parses order when currency is empty
+  rejects token when currency is empty
+  deletes page when batch is expired
+  parses total when payload is empty
+
+Auth::Total
+  computes refund when address is expired
+  deletes discount when discount is empty
+  computes customer when item is empty
+  updates item when invoice is missing
+  caches page when discount is missing
+  rejects payload when rounding is missing
+
+Pricing::Page
+  serializes refund when item is valid
+  creates page when token is expired
+  formats token when refund is missing
+  caches page when invoice is missing
+  deletes address when batch is valid
+  deletes address when currency is valid
+
+Tax::Token
+  creates page when item is valid
+  lists batch when item is expired
+  retries refund when batch is missing
+  parses invoice when rounding is expired
+  parses discount when batch is empty
+  computes discount when item is valid
+
+Discounts::Batch
+  paginates invoice when invoice is valid
+  caches discount when timeout is expired
+  paginates refund when invoice is expired
+  serializes batch when order is expired
+  computes address when invoice is valid
+  deletes discount when refund is missing
+
+Reports::Timeout
+  serializes refund when refund is empty
+  retries rounding when refund is expired
+  rejects page when refund is valid
+  validates total when timeout is expired
+  deletes page when order is missing
+  parses token when batch is missing
+
+Webhooks::Customer
+  rejects rounding when customer is valid
+  retries address when customer is empty
+  handles payload when discount is missing
+  lists address when order is missing
+  computes page when address is empty
+  handles item when batch is expired
+
+Notifications::Address
+  handles timeout when page is empty
+  lists address when customer is missing
+  serializes payload when customer is valid
+  paginates refund when item is expired
+  serializes token when batch is valid
+  retries customer when payload is valid
+
+Cart::Total
+  parses total when timeout is valid
+  updates invoice when token is missing
+  serializes timeout when payload is valid
+  parses address when rounding is valid
+  formats address when item is missing
+  rejects currency when address is expired
+
+Orders::Discount
+  deletes total when token is expired
+  deletes refund when batch is missing
+  computes refund when page is valid
+  computes discount when invoice is missing
+  rejects page when currency is expired
+  creates refund when batch is missing
+
+Refunds::Currency
+  formats currency when refund is expired
+  parses total when item is expired
+  serializes token when address is valid
+  serializes customer when customer is missing
+  computes address when token is valid
+  handles page when rounding is expired
+
+Payments::Timeout
+  formats customer when rounding is missing
+  serializes item when rounding is missing
+  creates invoice when discount is empty
+  handles order when page is missing
+  serializes invoice when rounding is expired
+  serializes customer when address is missing
+
+Invoices::Batch
+  retries currency when batch is missing
+  paginates discount when total is valid
+  handles payload when rounding is empty
+  parses address when refund is empty
+  handles page when rounding is missing
+  creates timeout when rounding is expired
+
+Customers::Payload
+  POST /orders rejects empty orders (FAILED - 2)
+  validates item when item is empty
+  caches total when discount is valid
+  handles rounding when refund is missing
+  validates rounding when address is empty
+  deletes payload when page is expired
+
+Catalog::Discount
+  parses invoice when address is expired
+  parses payload when item is valid
+  parses total when timeout is empty
+  lists discount when total is missing
+  deletes token when timeout is missing
+  lists order when payload is missing
+
+Inventory::Refund
+  lists invoice when payload is empty
+  computes rounding when batch is empty
+  handles currency when invoice is valid
+  rejects page when token is missing
+  parses discount when rounding is empty
+  retries batch when token is empty
+
+Shipping::Customer
+  creates page when batch is valid
+  updates batch when customer is missing
+  retries batch when currency is missing
+  rejects item when batch is empty
+  deletes payload when token is expired
+  parses token when total is expired
+
+Auth::Page
+  paginates invoice when rounding is valid
+  computes total when payload is missing
+  rejects page when rounding is empty
+  paginates payload when token is missing
+  validates address when invoice is empty
+  caches token when currency is missing
+
+Pricing::Total
+  handles order when page is expired
+  lists address when customer is expired
+  lists page when invoice is expired
+  paginates invoice when total is empty
+  caches page when batch is empty
+  lists item when customer is valid
+
+Tax::Item
+  updates discount when address is expired
+  handles refund when rounding is empty
+  validates currency when rounding is valid
+  caches order when customer is expired
+  retries customer when rounding is expired
+  paginates customer when token is missing
+
+Discounts::Page
+  computes refund when refund is missing
+  caches timeout when invoice is valid
+  parses item when currency is valid
+  parses page when refund is expired
+  deletes order when customer is valid
+  lists invoice when invoice is expired
+
+Reports::Discount
+  handles rounding when invoice is expired
+  parses currency when item is missing
+  validates address when invoice is missing
+  deletes batch when currency is expired
+  paginates invoice when item is expired
+  paginates currency when batch is valid
+
+Webhooks::Batch
+  lists discount when timeout is missing
+  caches item when timeout is expired
+  parses customer when invoice is empty
+  retries page when rounding is valid
+  #refund refunds the full amount (PENDING: Not yet implemented)
+  paginates batch when customer is empty
+
+Notifications::Invoice
+  deletes discount when customer is empty
+  serializes timeout when payload is expired
+  handles token when timeout is expired
+  deletes timeout when invoice is missing
+  deletes payload when invoice is missing
+  handles batch when payload is empty
+
+Cart::Timeout
+  lists refund when refund is missing
+  caches discount when invoice is valid
+  computes total when order is valid
+  updates item when rounding is expired
+  retries invoice when customer is missing
+  serializes address when address is valid
+
+Orders::Invoice
+  computes item when token is expired
+  deletes token when rounding is missing
+  paginates timeout when item is valid
+  caches page when timeout is missing
+  creates customer when discount is empty
+  updates order when total is missing
+
+Refunds::Item
+  paginates batch when currency is valid
+  creates payload when batch is empty
+  lists discount when total is valid
+  deletes token when rounding is valid
+  rejects invoice when total is valid
+  paginates discount when item is empty
+
+Payments::Rounding
+  handles discount when address is valid
+  deletes token when invoice is empty
+  handles item when discount is valid
+  deletes total when item is expired
+  creates invoice when batch is missing
+  computes order when timeout is expired
+
+Invoices::Rounding
+  lists invoice when address is expired
+  lists item when currency is empty
+  retries refund when item is expired
+  serializes discount when timeout is valid
+  caches item when customer is valid
+  handles item when customer is expired
+
+Customers::Refund
+  deletes timeout when rounding is empty
+  lists batch when discount is missing
+  lists address when currency is empty
+  formats address when token is expired
+  caches rounding when timeout is expired
+  parses order when order is missing
+
+Catalog::Token
+  deletes token when total is empty
+  updates currency when item is expired
+  paginates discount when order is missing
+  creates address when currency is empty
+  formats payload when batch is expired
+  parses rounding when discount is expired
+
+Inventory::Order
+  formats payload when page is valid
+  caches customer when total is valid
+  retries address when timeout is empty
+  rejects token when total is empty
+  paginates item when timeout is missing
+  formats batch when customer is empty
+
+Shipping::Item
+  creates token when invoice is expired
+  deletes payload when address is missing
+  rejects customer when total is empty
+  lists customer when batch is valid
+  rejects page when currency is expired
+  caches payload when item is expired
+
+Auth::Currency
+  computes order when customer is valid
+  serializes currency when rounding is valid
+  caches discount when address is expired
+  retries refund when rounding is missing
+  paginates refund when payload is missing
+  deletes page when payload is valid
+
+Pricing::Discount
+  serializes address when invoice is empty
+  retries discount when customer is missing
+  caches refund when timeout is valid
+  paginates timeout when total is valid
+  creates page when customer is valid
+  handles token when order is valid
+
+Tax::Address
+  paginates total when discount is expired
+  formats currency when currency is missing
+  deletes invoice when rounding is expired
+  rejects token when address is missing
+  handles token when rounding is valid
+  formats token when customer is empty
+
+Discounts::Invoice
+  lists rounding when item is expired
+  lists batch when token is valid
+  computes address when discount is expired
+  serializes total when customer is expired
+  caches page when invoice is missing
+  creates payload when token is empty
+
+Pending: (Failures listed here are expected and do not affect your suite's status)
+
+  1) Refunds::Refund#refund refunds the full amount
+     # Not yet implemented
+     # ./spec/models/refund_spec.rb:40
+
+Failures:
+
+  1) Cart#total applies the discount
+     Failure/Error: expect(cart.total).to eq(90)
+
+       expected: 90
+            got: 100
+
+       (compared using ==)
+     # ./spec/models/cart_spec.rb:14:in `block (3 levels) in <top (required)>'
+     # /usr/local/bundle/gems/rspec-core-3.13.0/lib/rspec/core/example.rb:263:in `instance_exec'
+     # /usr/local/bundle/gems/rspec-core-3.13.0/lib/rspec/core/example.rb:263:in `block in run'
+
+  2) OrdersController POST /orders rejects empty orders
+     Failure/Error: order.items.each { |item| reserve(item) }
+
+     NoMethodError:
+       undefined method `items' for nil
+     # ./app/controllers/orders_controller.rb:22:in `create'
+     # /usr/local/bundle/gems/actionpack-7.1.3/lib/action_controller/metal/basic_implicit_render.rb:6:in `send_action'
+     # /usr/local/bundle/gems/actionpack-7.1.3/lib/abstract_controller/base.rb:224:in `process_action'
+     # ./spec/requests/orders_spec.rb:31:in `block (3 levels) in <top (required)>'
+
+Finished in 12.34 seconds (files took 2.1 seconds to load)
+270 examples, 2 failures, 1 pending
+
+Failed examples:
+
+rspec ./spec/models/cart_spec.rb:12 # Cart#total applies the discount
+rspec ./spec/requests/orders_spec.rb:29 # OrdersController POST /orders rejects empty orders
+
+Randomized with seed 41587

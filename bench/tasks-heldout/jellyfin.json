@@ -1,0 +1,55 @@
+{
+  "repo": {
+    "name": "jellyfin",
+    "url": "https://github.com/jellyfin/jellyfin.git",
+    "tag": "v10.11.11",
+    "commit": "1fbd8739292cce610231be93daf43368733edf63",
+    "language": "c_sharp",
+    "path": "bench/repos/jellyfin"
+  },
+  "notes": "Held-out tasks (round 2), written after v0.2's tuning and before any kopt measurement on them; not derived from bench/results/failures.md. Gold read in the code with git grep and sed only. Re-check with `kopt bench bench/tasks-heldout/jellyfin.json --verify`.",
+  "tasks": [
+    {
+      "id": "ho-jf-locate-remote-bitrate",
+      "kind": "locate",
+      "lang": "en",
+      "question": "Where does Jellyfin cap the streaming bitrate for clients that are outside the local network?",
+      "search": "remote client bitrate limit outside local network streaming",
+      "gold": {
+        "files": [
+          "Jellyfin.Api/Helpers/MediaInfoHelper.cs"
+        ],
+        "symbols": [
+          {
+            "name": "GetMaxBitrate",
+            "file": "Jellyfin.Api/Helpers/MediaInfoHelper.cs",
+            "line": 495,
+            "kind": "method"
+          }
+        ]
+      },
+      "verifiedBy": "Read MediaInfoHelper.GetMaxBitrate: the user's RemoteClientBitrateLimit (else the server's) caps the client bitrate when the IP is not in the local network."
+    },
+    {
+      "id": "ho-jf-explain-stream-copy",
+      "kind": "explain",
+      "lang": "en",
+      "question": "How does Jellyfin decide whether a video stream can be copied as is instead of being transcoded?",
+      "search": "video stream copy instead of transcoding codec profile level decide",
+      "gold": {
+        "files": [
+          "MediaBrowser.Controller/MediaEncoding/EncodingHelper.cs"
+        ],
+        "symbols": [
+          {
+            "name": "CanStreamCopyVideo",
+            "file": "MediaBrowser.Controller/MediaEncoding/EncodingHelper.cs",
+            "line": 2339,
+            "kind": "method"
+          }
+        ]
+      },
+      "verifiedBy": "Read EncodingHelper.CanStreamCopyVideo: returns false unless the request allows video stream copy, then rejects interlaced streams that need deinterlacing, anamorphic streams when non-anamorphic is required, burned-in subtitles, unsupported codecs, profiles and video range types (and further limits below)."
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 import type { Node } from 'web-tree-sitter';
-import { baseTypeName, Ex, isUpperStart, Vars, type Scope } from '../extract.js';
+import { baseTypeName, declaredType, Ex, isConstName, isUpperStart, Vars, type Scope } from '../extract.js';
 import type { SymbolKind } from '../../core/types.js';
 
 const TYPE_NODES = ['type_identifier'];
@@ -47,7 +47,7 @@ function prescanFields(body: Node | null, vars: Vars): void {
   for (const m of body.namedChildren) {
     if (!m) continue;
     if (m.type === 'field_declaration' || m.type === 'constant_declaration') {
-      const t = baseTypeName(m.childForFieldName('type')?.text ?? '');
+      const t = declaredType(m.childForFieldName('type')?.text);
       for (const d of m.childrenForFieldName('declarator')) {
         const n = d?.childForFieldName('name');
         if (n) vars.set(n.text, t);
@@ -66,7 +66,7 @@ function params(ex: Ex, list: Node | null, scope: Scope, inner: Scope): void {
       const typeNode = p.childForFieldName('type') ?? p.namedChildren.find((c) => c && /type|identifier$/.test(c.type) && c.type !== 'identifier') ?? null;
       const nameNode = p.childForFieldName('name') ?? p.namedChildren.find((c) => c?.type === 'variable_declarator')?.childForFieldName('name') ?? null;
       if (typeNode) {
-        if (nameNode) inner.vars.set(nameNode.text, baseTypeName(typeNode.text));
+        if (nameNode) inner.vars.set(nameNode.text, declaredType(typeNode.text));
         ex.typeRefs(typeNode, scope, TYPE_NODES);
       }
       annotationRefs(ex, p, inner);
@@ -109,7 +109,7 @@ function typeDecl(ex: Ex, node: Node, scope: Scope, kind: SymbolKind): void {
       const pt = p.childForFieldName('type');
       if (!pn) continue;
       ex.addSymbol({ name: pn.text, kind: 'field', node: p, scope: inner, exported: true });
-      inner.vars.set(pn.text, baseTypeName(pt?.text ?? ''));
+      inner.vars.set(pn.text, declaredType(pt?.text));
       if (pt) ex.typeRefs(pt, inner, TYPE_NODES);
     }
   }
@@ -158,8 +158,9 @@ function field(ex: Ex, node: Node, scope: Scope): void {
     for (const d of declarators) {
       const n = d?.childForFieldName('name');
       const v = d?.childForFieldName('value');
-      if (n) scope.vars.set(n.text, localType(typeNode, v));
+      // value first: `var x = repo.find(id)` types x from the callee's declared result
       if (v) ex.visit(ex, v, scope);
+      if (n) scope.vars.set(n.text, localType(typeNode, v) ?? ex.valueHint(v));
     }
     return;
   }
@@ -183,8 +184,9 @@ function field(ex: Ex, node: Node, scope: Scope): void {
 }
 
 function localType(typeNode: Node | null, value: Node | null | undefined): string | undefined {
-  const t = typeNode ? baseTypeName(typeNode.text) : undefined;
+  const t = typeNode ? declaredType(typeNode.text) : undefined;
   if (t) return t;
+  // `var x = new Foo()`
   if (value?.type === 'object_creation_expression') return baseTypeName(value.childForFieldName('type')?.text ?? '');
   return undefined;
 }
@@ -250,11 +252,12 @@ export function visitJava(ex: Ex, node: Node, scope: Scope): void {
     case 'method_invocation': {
       const n = node.childForFieldName('name');
       const obj = node.childForFieldName('object');
-      if (n) {
-        const q = obj?.text;
-        ex.addRef(scope, n.text, 'call', n, q, ex.receiverHint(q, scope));
+      const ref = n ? ex.addRef(scope, n.text, 'call', n, obj?.text, ex.receiverHint(obj?.text, scope)) : undefined;
+      ex.noteCall(node, ref);
+      if (obj) {
+        ex.visit(ex, obj, scope);
+        ex.chainHint(ref, obj);
       }
-      if (obj) ex.visit(ex, obj, scope);
       const args = node.childForFieldName('arguments');
       if (args) ex.visitChildren(args, scope);
       return;
@@ -262,7 +265,7 @@ export function visitJava(ex: Ex, node: Node, scope: Scope): void {
     case 'object_creation_expression': {
       const typeNode = node.childForFieldName('type');
       const name = typeNode ? baseTypeName(typeNode.text) : undefined;
-      if (name && typeNode) ex.addRef(scope, name, 'new', typeNode);
+      if (name && typeNode) ex.noteCall(node, ex.addRef(scope, name, 'new', typeNode));
       const args = node.childForFieldName('arguments');
       if (args) ex.visitChildren(args, scope);
       for (const c of node.namedChildren) if (c?.type === 'class_body') ex.visitChildren(c, { ...scope, local: true });
@@ -277,10 +280,17 @@ export function visitJava(ex: Ex, node: Node, scope: Scope): void {
       }
       return;
     }
+    case 'field_access': {
+      // `obj.field`, `this.x = v`; a capitalized member (`Outer.Inner`, `java.util.List`) names a type, not a field
+      const f = node.childForFieldName('field');
+      const o = node.childForFieldName('object');
+      ex.memberRef(scope, node, f && isUpperStart(f.text) && !isConstName(f.text) ? null : f, o);
+      return;
+    }
     case 'enhanced_for_statement': {
       const ty = node.childForFieldName('type');
       const n = node.childForFieldName('name');
-      if (ty && n) scope.vars.set(n.text, baseTypeName(ty.text));
+      if (ty && n) scope.vars.set(n.text, declaredType(ty.text));
       ex.visitChildren(node, scope);
       return;
     }

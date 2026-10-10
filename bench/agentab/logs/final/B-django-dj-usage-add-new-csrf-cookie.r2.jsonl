@@ -1,0 +1,3 @@
+{"arm":"B","repo":"django","task":"dj-usage-add-new-csrf-cookie","rep":2,"ts":"2026-10-09T23:23:45.253Z","ms":570,"cmd":"kopt refs \"_add_new_csrf_cookie\"","kopt":true,"koptSub":"refs","chars":1085,"tokens":362,"lines":11,"truncated":false,"exit":0}
+{"arm":"B","repo":"django","task":"dj-usage-add-new-csrf-cookie","rep":2,"ts":"2026-10-09T23:23:50.297Z","ms":7,"cmd":"sed -n \"80,125p;395,415p\" django/middleware/csrf.py","kopt":false,"chars":2529,"tokens":843,"lines":68,"truncated":false,"exit":0}
+{"arm":"B","repo":"django","task":"dj-usage-add-new-csrf-cookie","rep":2,"ts":"2026-10-09T23:23:56.866Z","ms":375,"cmd":"kopt refs \"#2a1\"","kopt":true,"koptSub":"refs","chars":2541,"tokens":847,"lines":27,"truncated":false,"exit":0}

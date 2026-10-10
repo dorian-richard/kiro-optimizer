@@ -1,0 +1,118 @@
+{
+  "label": "kirograph",
+  "tool": "kirograph",
+  "package": "kirograph",
+  "version": "1.4.0",
+  "mode": "default",
+  "repo": {
+    "name": "laravel",
+    "url": "https://github.com/laravel/framework.git",
+    "tag": "v13.35.0",
+    "commit": "a413a9da94884e5e9d58f4e6612884f712827804",
+    "language": "php",
+    "path": "bench/repos/laravel"
+  },
+  "headCommit": "a413a9da94884e5e9d58f4e6612884f712827804",
+  "commitMatchesTasks": true,
+  "date": "2026-10-09T13:04:27.762Z",
+  "image": "kopt-bench/kirograph:1.4.0",
+  "imageId": "sha256:bc769b34b739a6d6b3ed1f2954ed9df3e387e6c6dcfc597528ca16d232dac57e",
+  "engine": "docker",
+  "limits": "memory=3g cpus=8",
+  "cgroupMemory": {
+    "maxBytes": 3221225472,
+    "peakBytes": 920862720,
+    "oomKills": 0
+  },
+  "container": {
+    "node": "v22.23.3",
+    "arch": "arm64",
+    "platform": "linux",
+    "cpus": 10,
+    "memBytes": 8214851584,
+    "network": "none"
+  },
+  "primaryTool": "kirograph_context",
+  "toolArgsExample": {
+    "task": "<input>"
+  },
+  "serverCommand": {
+    "command": "kirograph",
+    "args": [
+      "serve",
+      "--mcp",
+      "--path",
+      "/work/<repo>"
+    ]
+  },
+  "oneSessionPerTask": true,
+  "indexOk": true,
+  "indexMs": 249079,
+  "indexSteps": [
+    {
+      "command": "kirograph init /work/laravel",
+      "ms": 605,
+      "exit": 0,
+      "signal": null,
+      "oomKills": 0
+    },
+    {
+      "command": "kirograph index /work/laravel",
+      "ms": 248474,
+      "exit": 0,
+      "signal": null,
+      "oomKills": 0
+    }
+  ],
+  "copyMs": 6471,
+  "indexDirs": [
+    "<repo>/.kirograph"
+  ],
+  "indexSizeBytes": 67424098,
+  "modelBytes": 0,
+  "indexStatus": "Graph\n  Files      3138\n  Symbols    51403\n  Edges      42046\n  Frameworks laravel, docker-compose\n\n  By kind\n  ┌───────────┬──────────────────┐\n  │ method    │ 32013            │\n  ├───────────┼──────────────────┤\n  │ import    │ 14785            │\n  ├───────────┼──────────────────┤\n  │ class     │ 4120             │\n  ├───────────┼──────────────────┤\n  │ interface │ 214              │\n  ├───────────┼──────────────────┤\n  │ enum      │ 134              │\n  ├───────────┼──────────────────┤\n  │ function  │ 130              │\n  ├───────────┼──────────────────┤\n  │ constant  │ 7                │\n  └───────────┴──────────────────┘\n\n  By language\n  ┌────────────┬──────────────────┐\n  │ php        │ 3122             │\n  ├────────────┼──────────────────┤\n  │ yaml       │ 8                │\n  ├────────────┼──────────────────┤\n  │ javascript │ 3                │\n  ├────────────┼──────────────────┤\n  │ bash       │ 2                │\n  ├────────────┼──────────────────┤\n  │ css        │ 2                │\n  ├────────────┼──────────────────┤\n  │ sql        │ 1                │\n  └────────────┴──────────────────┘\n\n  Sync\n  Status     idle\n  Pending    50 files pending\n  ⚠ Index may be stale. Run `kirograph sync` to update.\n\n  Semantic Search\n  Status     disabled",
+  "surface": {
+    "serverInfo": {
+      "name": "kirograph",
+      "version": "0.1.0"
+    },
+    "toolCount": 7,
+    "toolNames": [
+      "kirograph_search",
+      "kirograph_context",
+      "kirograph_node",
+      "kirograph_gain",
+      "kirograph_read",
+      "kirograph_retrieve",
+      "kirograph_budget"
+    ],
+    "toolsChars": 4418,
+    "toolsEstTokens": 1473,
+    "instructionsChars": 0,
+    "instructionsEstTokens": 0,
+    "primaryToolListed": true,
+    "file": "kirograph.surface.json"
+  },
+  "inputs": {
+    "search": {
+      "file": "kirograph-laravel.jsonl",
+      "tasks": 12,
+      "failures": 0,
+      "queryMsMedian": 70,
+      "queryMsP90": 101,
+      "startupMsMedian": 206
+    },
+    "question": {
+      "file": "kirograph-laravel-question.jsonl",
+      "tasks": 12,
+      "failures": 10,
+      "queryMsMedian": 21,
+      "queryMsP90": 67,
+      "startupMsMedian": 196
+    }
+  },
+  "charsPerToken": 3,
+  "errors": [
+    "10/12 question queries failed or returned isError"
+  ]
+}

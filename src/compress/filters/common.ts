@@ -83,13 +83,119 @@ export function shortenAgainst(name: string, ref: string): string {
 
 function renderGroup(first: Block, others: string[]): string {
   const lines = [first.title, ...first.lines.map((l) => capLine(l))];
-  if (others.length) lines.push(`  same error in ${others.length} more: ${joinWithin(others.map((o) => shortenAgainst(o, first.title)), 300)}`);
+  // `FAIL a › x` / `FAIL b › y`: the status word is implied by "same error"
+  const status = /^(?:FAIL|FAILED|ERROR) /.exec(first.title)?.[0];
+  const names = others.map((o) => shortenAgainst(o, first.title)).map((n) => (status && n.startsWith(status) ? n.slice(status.length) : n));
+  if (others.length) lines.push(`  same error in ${others.length} more: ${joinWithin(names, 300)}`);
   return lines.join('\n');
 }
 
+/** A failing test's block title: `FAIL a.test.ts > suite > name`, `FAILED tests/x.py::test_y`, `--- FAIL: TestX`... */
+const TEST_TITLE_RE = /^(?:FAIL|FAILED|ERROR|ERRORED|--- FAIL:)\s+/;
+
 /**
- * Render blocks (merged by key) greedily within `budget` tokens. A single block never takes more than ~half
- * of the budget so one huge failure cannot hide all the others. Returns rendered sections.
+ * The file (or class) a failing test belongs to and its name within it: `FAIL test/a.test.ts > suite > name` ->
+ * [test/a.test.ts, suite > name]; `FAILED tests/x.py::test_y` -> [tests/x.py, test_y]; `FAILED com.acme.FooTest.bar`
+ * -> [com.acme.FooTest, bar]. Titles without such a structure (`--- FAIL: TestX`) have no file.
+ */
+export function splitTestTitle(title: string): { file: string; name: string } {
+  const t = title.replace(TEST_TITLE_RE, '').replace(/\s+/g, ' ').trim();
+  let best = -1;
+  let sepLen = 0;
+  for (const sep of [' > ', ' › ', '::']) {
+    const i = t.indexOf(sep);
+    if (i > 0 && (best < 0 || i < best)) {
+      best = i;
+      sepLen = sep.length;
+    }
+  }
+  if (best > 0) return { file: t.slice(0, best), name: t.slice(best + sepLen) };
+  const fq = /^([A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*)+)\.([\w$]+(?:\(.*\))?)$/.exec(t);
+  if (fq) return { file: fq[1], name: fq[2] };
+  return { file: '', name: t };
+}
+
+/** Share of the budget the list of failing tests may take when not every failure fits in detail. */
+const OVERVIEW_SHARE = 0.5;
+/** Characters kept per test name in that list, longest first: shortened until the list fits its share. */
+const OVERVIEW_NAME_CHARS = [120, 80, 50, 36];
+
+/**
+ * Every failing test under its file, one line per distinct failure: `  test/a.test.ts:` then `    suite > name`
+ * lines (a file with one failure keeps it on its own line). Tests that failed with the same error share a line
+ * (`a · b · c (same error)`). Names are shortened, then the list is cut (`+k more`), only when it would not fit
+ * `maxTokens`. `groups`: titles of the tests that failed with the same error, one array per error.
+ */
+export function failureOverview(groups: string[][], maxTokens: number, noun = 'failures'): string {
+  const byFile = new Map<string, { names: string[] }[]>();
+  let total = 0;
+  for (const g of groups) {
+    if (!g.length) continue;
+    total += g.length;
+    const first = splitTestTitle(g[0]);
+    const names = g.map((t, k) => {
+      const x = splitTestTitle(t);
+      return k && x.file !== first.file ? `${x.file ? `${x.file} > ` : ''}${x.name}` : x.name;
+    });
+    const arr = byFile.get(first.file) ?? [];
+    arr.push({ names });
+    byFile.set(first.file, arr);
+  }
+  const head = `${total} ${noun}${byFile.size > 1 ? ` in ${byFile.size} files` : ''}:`;
+  type Line = { line: string; tests: number };
+  /** Lines per file; `tests`: how many tests a line names (a file line alone names none). */
+  const render = (cap: number): Line[][] =>
+    [...byFile].map(([file, entries]) => {
+      let prev = '';
+      const items = entries.map((e) => {
+        const short = e.names.map((n) => {
+          const out = capName(prev ? shortenAgainst(n, prev) : n, cap);
+          prev = n;
+          return out;
+        });
+        return { text: short.length > 1 ? `${short.join(' · ')} (same error)` : short[0], tests: e.names.length };
+      });
+      if (!file) return items.map((i) => ({ line: `  ${i.text}`, tests: i.tests }));
+      if (items.length === 1) return [{ line: `  ${file}: ${items[0].text}`, tests: items[0].tests }];
+      return [{ line: `  ${file}:`, tests: 0 }, ...items.map((i) => ({ line: `    ${i.text}`, tests: i.tests }))];
+    });
+  const join = (lines: Line[][]) => [head, ...lines.flat().map((l) => l.line)].join('\n');
+  let lines = render(OVERVIEW_NAME_CHARS[0]);
+  for (const cap of OVERVIEW_NAME_CHARS.slice(1)) {
+    if (estimateTokens(join(lines)) <= maxTokens) break;
+    lines = render(cap);
+  }
+  if (estimateTokens(join(lines)) <= maxTokens) return join(lines);
+  // Still too long: whole lines from the start, then how many tests were left out.
+  const maxChars = tokensToChars(maxTokens) - 14;
+  const out = [head];
+  let used = head.length;
+  let shown = 0;
+  let lastWasFile = false;
+  for (const { line, tests } of lines.flat()) {
+    const text = capLine(line, 300);
+    if (used + text.length + 1 > maxChars) {
+      if (lastWasFile) out.pop(); // a file line without any of its tests says nothing
+      out.push(`  +${total - shown} more`);
+      return out.join('\n');
+    }
+    out.push(text);
+    used += text.length + 1;
+    lastWasFile = tests === 0;
+    shown += tests;
+  }
+  return out.join('\n');
+}
+
+function capName(name: string, max: number): string {
+  return name.length <= max ? name : `${name.slice(0, max - 1)}…`;
+}
+
+/**
+ * Render blocks (merged by key) within `budget` tokens. When they all fit, every block is shown in full. Otherwise
+ * a list of every failing test comes first (grouped by file, so a shared cause shows), then as many failures in
+ * detail as the rest of the budget holds, in file order; a block longer than half of that room is cut. Blocks that
+ * are not failing tests (compiler diagnostics) left out are named on a last `+N more` line.
  */
 export function renderBlocks(blocks: Block[], budget: number, noun = 'failures'): string[] {
   const groups: { first: Block; others: string[] }[] = [];
@@ -106,33 +212,63 @@ export function renderBlocks(blocks: Block[], budget: number, noun = 'failures')
     groups.push({ first: b, others: [] });
   }
   if (!groups.length) return [];
-  const reserve = groups.length > 1 ? Math.min(70, Math.floor(budget * 0.15)) : 0;
-  const avail = Math.max(20, budget - reserve);
-  const perBlock = Math.max(60, Math.floor(avail * (groups.length > 1 ? 0.5 : 1)));
+  // failing tests in file order (stable: the tools already print them file by file, mostly)
+  const isTest = (g: { first: Block }) => TEST_TITLE_RE.test(g.first.title);
+  const fileRank = new Map<string, number>();
+  for (const g of groups) if (isTest(g)) {
+    const f = splitTestTitle(g.first.title).file;
+    if (!fileRank.has(f)) fileRank.set(f, fileRank.size);
+  }
+  const order = groups.map((g, i) => ({ g, i, rank: isTest(g) ? fileRank.get(splitTestTitle(g.first.title).file)! : -1 }));
+  const tests = order.filter((o) => o.rank >= 0).sort((a, b) => a.rank - b.rank || a.i - b.i);
+  let k = 0;
+  const sorted = order.map((o) => (o.rank >= 0 ? tests[k++].g : o.g));
+  const full = sorted.map((g) => renderGroup(g.first, g.others));
+  const sizes = full.map((t) => estimateTokens(t) + 1);
+  if (sizes.reduce((a, b) => a + b, 0) <= budget) return full;
+
   const out: string[] = [];
+  const testGroups = sorted.filter(isTest).map((g) => [g.first.title, ...g.others]);
+  const testCount = testGroups.reduce((n, g) => n + g.length, 0);
+  let left = budget;
+  if (testCount > 1) {
+    const overview = failureOverview(testGroups, Math.max(30, Math.floor(budget * OVERVIEW_SHARE)), noun);
+    out.push(overview);
+    left -= estimateTokens(overview) + 1;
+  }
+  const reserve = sorted.some((g) => !isTest(g)) ? Math.min(70, Math.floor(budget * 0.15)) : 0;
+  const avail = Math.max(20, left - reserve);
+  const perBlock = Math.max(60, Math.floor(avail * (sorted.length > 1 ? 0.5 : 1)));
+  const skipped: { first: Block; others: string[] }[] = [];
   let used = 0;
-  let i = 0;
-  for (; i < groups.length; i++) {
-    let text = renderGroup(groups[i].first, groups[i].others);
-    let t = estimateTokens(text) + 1;
+  let details = 0;
+  for (let i = 0; i < sorted.length; i++) {
+    let text = full[i];
+    let t = sizes[i];
     if (t > perBlock) {
       text = truncateLines(text, perBlock, (n) => `  … ${n} more lines`).text;
       t = estimateTokens(text) + 1;
     }
     if (used + t > avail) {
-      if (out.length) break;
+      if (details) {
+        // a smaller failure further down may still fit: keep going
+        skipped.push(sorted[i]);
+        continue;
+      }
       text = truncateLines(text, avail, (n) => `  … ${n} more lines`).text;
       t = estimateTokens(text) + 1;
     }
     out.push(text);
     used += t;
+    details++;
   }
-  if (i < groups.length) {
-    const rest = groups.slice(i);
-    const full = rest.flatMap((g) => [g.first.title, ...g.others]).map((n) => n.replace(/\s+/g, ' ').trim());
-    const names = full.map((n, k) => (k === 0 ? n : shortenAgainst(n, full[0])));
-    const room = tokensToChars(Math.max(20, budget - used)) - 30;
-    out.push(`+${names.length} more ${noun}: ${joinWithin(names, Math.max(40, Math.min(room, 600)))}`);
+  // failing tests left out are already named in the overview; other blocks (diagnostics) are named here
+  const rest = testCount > 1 ? skipped.filter((g) => !isTest(g)) : skipped;
+  if (rest.length) {
+    const names = rest.flatMap((g) => [g.first.title, ...g.others]).map((n) => n.replace(/\s+/g, ' ').trim());
+    const shortNames = names.map((n, j) => (j === 0 ? n : shortenAgainst(n, names[0])));
+    const room = tokensToChars(Math.max(20, left - used)) - 30;
+    out.push(`+${shortNames.length} more ${noun}: ${joinWithin(shortNames, Math.max(40, Math.min(room, 600)))}`);
   }
   return out;
 }
@@ -167,13 +303,16 @@ export function diagBlocks(diags: Diag[], perFile = 8): Block[] {
     stats.set(sig(d), s);
   }
   const common = new Set([...stats].filter(([, s]) => s.n >= 3 && s.files.size >= 2).map(([k]) => k));
-  const locsBySig = new Map<string, string[]>();
+  // Locations of a hoisted message, grouped by file: `a.ts:3:1, 9:4; b.ts:7:2` (the path is not repeated).
+  const locsBySig = new Map<string, Map<string, string[]>>();
   for (const d of diags) {
     const k = sig(d);
     if (!common.has(k)) continue;
-    const arr = locsBySig.get(k) ?? [];
-    arr.push(pos(d) ? `${d.file}:${pos(d)}` : d.file);
-    locsBySig.set(k, arr);
+    const byFile = locsBySig.get(k) ?? new Map<string, string[]>();
+    const arr = byFile.get(d.file) ?? [];
+    if (pos(d)) arr.push(pos(d));
+    byFile.set(d.file, arr);
+    locsBySig.set(k, byFile);
   }
   const blocks: Block[] = [];
   const commonDone = new Set<string>();
@@ -181,11 +320,11 @@ export function diagBlocks(diags: Diag[], perFile = 8): Block[] {
     const k = sig(d);
     if (!common.has(k) || commonDone.has(k)) continue;
     commonDone.add(k);
-    const locs = locsBySig.get(k)!;
+    const locs = [...locsBySig.get(k)!].map(([file, positions]) => (positions.length ? `${file}:${positions.join(', ')}` : file));
     const s = stats.get(k)!;
     blocks.push({
       title: `${d.severity === 'warning' ? 'warning ' : ''}${d.code ? `${d.code} ` : ''}${d.message} (x${s.n} in ${s.files.size} files)`,
-      lines: [`  at ${joinWithin(locs, 260)}`, ...(d.extra ?? []).slice(0, 3).map((e) => `  ${e.trim()}`)],
+      lines: [`  at ${joinWithin(locs, 260, '; ')}`, ...(d.extra ?? []).slice(0, 3).map((e) => `  ${e.trim()}`)],
     });
   }
   const byFile = new Map<string, Diag[]>();
@@ -202,6 +341,14 @@ export function diagBlocks(diags: Diag[], perFile = 8): Block[] {
       const m = merged.get(k);
       if (m) m.positions.push(pos(d));
       else merged.set(k, { d, positions: [pos(d)] });
+    }
+    // A file with a single diagnostic: one line, `path:line:col: message` (no per-file header)
+    if (ds.length === 1) {
+      const d = ds[0];
+      const where = pos(d) ? `${file}:${pos(d)}` : file;
+      const sev = d.severity === 'warning' ? 'warning ' : '';
+      blocks.push({ title: `${where}: ${sev}${d.code ? `${d.code} ` : ''}${d.message}`.trimEnd(), lines: (d.extra ?? []).slice(0, 4).map((e) => `  ${e.trim()}`) });
+      continue;
     }
     const errors = ds.filter((d) => d.severity === 'error').length;
     const warnings = ds.length - errors;
@@ -245,7 +392,7 @@ const LIB_FRAME_RE = new RegExp(
     String.raw`[\\/]pkg[\\/]mod[\\/]`,
     String.raw`\.cargo[\\/]registry`,
     String.raw`[\\/]rustc[\\/][0-9a-f]{8,}`,
-    String.raw`^\s*at\s+(?:app\/\/)?(?:java|javax|jdk|sun|com\.sun|org\.junit|junit|org\.opentest4j|org\.apache|org\.gradle|worker\.org\.gradle|org\.springframework|org\.mockito|org\.assertj|org\.hamcrest|kotlin|kotlinx|scala|org\.testng|net\.bytebuddy|com\.fasterxml|io\.netty|reactor|org\.hibernate|groovy|org\.codehaus|com\.intellij|org\.jetbrains|io\.mockk|io\.kotest|org\.spockframework)[.\/$]`,
+    String.raw`^\s*at\s+(?:app\/\/)?(?:java|javax|jdk|sun|com\.sun|org\.junit|junit|org\.opentest4j|org\.apache|org\.gradle|worker\.org\.gradle|org\.springframework|org\.mockito|org\.assertj|org\.hamcrest|kotlin|kotlinx|scala|org\.testng|net\.bytebuddy|com\.fasterxml|io\.netty|reactor|org\.hibernate|groovy|org\.codehaus|com\.intellij|org\.jetbrains|io\.mockk|io\.kotest|org\.spockframework|org\.scalatest|munit|org\.specs2|zio|cats\.effect|akka|org\.apache\.pekko|sbt)[.\/$]`,
     String.raw`java\.base[@\/]`,
     String.raw`^\s*at\s+(?:System|Microsoft|Xunit|NUnit|Castle|Moq|FluentAssertions)\.`,
     String.raw`^\s*at\s+(?:process\.processTicksAndRejections|new Promise|Promise\.|Generator\.next|async Promise\.all)`,

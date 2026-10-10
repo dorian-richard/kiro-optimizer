@@ -3,7 +3,7 @@
     "name": "codegraph",
     "version": "1.6.2"
   },
-  "startupMs": 212,
+  "startupMs": 384,
   "toolCount": 1,
   "toolNames": [
     "codegraph_explore"

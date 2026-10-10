@@ -1,0 +1,211 @@
+{
+  "repo": "laravel",
+  "language": "php",
+  "repoRoot": "bench/repos/laravel",
+  "headCommit": "a413a9da94884e5e9d58f4e6612884f712827804",
+  "date": "2026-10-09T22:38:42.477Z",
+  "index": {
+    "built": true,
+    "durationMs": 4359,
+    "files": 3114,
+    "symbols": 40979,
+    "refs": 193174,
+    "path": "<index-dir>/.kopt-laravel/index.db"
+  },
+  "files": {
+    "indexed": 3114,
+    "skipped": 2,
+    "skippedByReason": {
+      "minified": 2
+    },
+    "indexedByLang": {
+      "javascript": 3,
+      "php": 3111
+    }
+  },
+  "langs": [
+    {
+      "lang": "php",
+      "files": 3111,
+      "lines": 574326,
+      "symbols": 40979,
+      "symbolsPerKloc": 71.35,
+      "byKind": {
+        "method": {
+          "count": 30497,
+          "perKloc": 53.1
+        },
+        "field": {
+          "count": 4660,
+          "perKloc": 8.11
+        },
+        "class": {
+          "count": 4120,
+          "perKloc": 7.17
+        },
+        "constructor": {
+          "count": 935,
+          "perKloc": 1.63
+        },
+        "trait": {
+          "count": 215,
+          "perKloc": 0.37
+        },
+        "interface": {
+          "count": 214,
+          "perKloc": 0.37
+        },
+        "enum": {
+          "count": 134,
+          "perKloc": 0.23
+        },
+        "function": {
+          "count": 130,
+          "perKloc": 0.23
+        },
+        "constant": {
+          "count": 74,
+          "perKloc": 0.13
+        }
+      },
+      "refs": 193137,
+      "refsResolved": 107098,
+      "resolvedRate": 0.5545,
+      "refsWithCandidate": 149371,
+      "resolvedOfCandidates": 0.717,
+      "refsByKind": {
+        "call": {
+          "total": 127871,
+          "resolved": 58688
+        },
+        "read": {
+          "total": 16163,
+          "resolved": 11932
+        },
+        "new": {
+          "total": 14133,
+          "resolved": 11266
+        },
+        "import": {
+          "total": 13957,
+          "resolved": 9268
+        },
+        "type_ref": {
+          "total": 11937,
+          "resolved": 8957
+        },
+        "write": {
+          "total": 4373,
+          "resolved": 3592
+        },
+        "inherit": {
+          "total": 3868,
+          "resolved": 2804
+        },
+        "implement": {
+          "total": 835,
+          "resolved": 591
+        }
+      },
+      "parse": {
+        "sampledFiles": 1000,
+        "sampledLines": 186785,
+        "filesWithErrors": 3,
+        "errorNodes": 3,
+        "missingNodes": 0,
+        "errorFileRate": 0.003,
+        "errorsPerKloc": 0.016,
+        "parseFailures": 0,
+        "worst": [
+          {
+            "path": "tests/Foundation/Fixtures/bad-syntax-strategy.php",
+            "errors": 1,
+            "firstErrorLine": 3
+          },
+          {
+            "path": "tests/Http/Fixtures/Enums.php",
+            "errors": 1,
+            "firstErrorLine": 13
+          },
+          {
+            "path": "tests/Notifications/NotificationChannelManagerTest.php",
+            "errors": 1,
+            "firstErrorLine": 754
+          }
+        ]
+      },
+      "precision": {
+        "sampled": 30,
+        "nameOk": 30,
+        "startOk": 30,
+        "endOk": 30,
+        "signatureOk": 30,
+        "allOk": 30,
+        "rate": 1,
+        "failures": []
+      }
+    },
+    {
+      "lang": "javascript",
+      "files": 3,
+      "lines": 123,
+      "symbols": 0,
+      "symbolsPerKloc": 0,
+      "byKind": {},
+      "refs": 37,
+      "refsResolved": 0,
+      "resolvedRate": 0,
+      "refsWithCandidate": 10,
+      "resolvedOfCandidates": 0,
+      "refsByKind": {
+        "call": {
+          "total": 16,
+          "resolved": 0
+        },
+        "import": {
+          "total": 11,
+          "resolved": 0
+        },
+        "write": {
+          "total": 7,
+          "resolved": 0
+        },
+        "read": {
+          "total": 2,
+          "resolved": 0
+        },
+        "new": {
+          "total": 1,
+          "resolved": 0
+        }
+      },
+      "parse": {
+        "sampledFiles": 0,
+        "sampledLines": 0,
+        "filesWithErrors": 0,
+        "errorNodes": 0,
+        "missingNodes": 0,
+        "errorFileRate": 0,
+        "errorsPerKloc": 0,
+        "parseFailures": 0,
+        "worst": []
+      },
+      "precision": {
+        "sampled": 0,
+        "nameOk": 0,
+        "startOk": 0,
+        "endOk": 0,
+        "signatureOk": 0,
+        "allOk": 0,
+        "rate": 0,
+        "failures": []
+      }
+    }
+  ],
+  "settings": {
+    "parseSamplePerLang": 1000,
+    "precisionSamplePerLang": 30,
+    "seed": "laravel"
+  },
+  "durationMs": 1297
+}

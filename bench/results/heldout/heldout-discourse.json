@@ -1,0 +1,739 @@
+{
+  "meta": {
+    "label": "heldout-discourse",
+    "repo": {
+      "name": "discourse",
+      "url": "https://github.com/discourse/discourse.git",
+      "tag": "v2026.9.0",
+      "commit": "343b20f97ef5f6bd70826ee0e993ba348b210fd5",
+      "language": "ruby",
+      "path": "bench/repos/discourse"
+    },
+    "repoRoot": "bench/repos/discourse",
+    "headCommit": "343b20f97ef5f6bd70826ee0e993ba348b210fd5",
+    "date": "2026-10-09T20:17:54.878Z",
+    "input": "search",
+    "charsPerToken": 3,
+    "strategies": [
+      "native-naive",
+      "native-ranged",
+      "kopt-pack",
+      "kopt-hits+read",
+      "kirograph",
+      "codegraph"
+    ],
+    "grepLimits": {
+      "maxMatches": 100,
+      "maxChars": 10000,
+      "maxLineChars": 250
+    },
+    "readLimits": {
+      "naiveTopFiles": 3,
+      "naiveMaxLines": 2000,
+      "rangedMatches": 4,
+      "rangedContext": 60
+    },
+    "koptBudgets": {
+      "find": 700,
+      "pack": 2500,
+      "read": 3000
+    },
+    "index": {
+      "built": false,
+      "durationMs": 0,
+      "files": 15517,
+      "symbols": 82698,
+      "path": "<index-dir>/.kopt-discourse/index.db"
+    },
+    "notes": [
+      "kirograph: outputs loaded from bench/competitors/results/kirograph-discourse.jsonl",
+      "codegraph: outputs loaded from bench/competitors/results/codegraph-discourse.jsonl"
+    ],
+    "durationMs": 6264
+  },
+  "results": [
+    {
+      "taskId": "ho-ds-explain-tl2-promotion",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 6229,
+      "chars": 18686,
+      "toolCalls": 2,
+      "durationMs": 2981,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/promotion.rb"
+        ],
+        "symbolsMissed": [
+          "review_tl1",
+          "tl2_met?"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "requirements",
+          "chars": 9956,
+          "tokens": 3319
+        },
+        {
+          "tool": "read_file",
+          "args": "frontend/discourse/admin/templates/admin-user/tl3-requirements.gjs",
+          "chars": 8730,
+          "tokens": 2910
+        }
+      ]
+    },
+    {
+      "taskId": "ho-ds-explain-tl2-promotion",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 6086,
+      "chars": 18255,
+      "toolCalls": 2,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/promotion.rb"
+        ],
+        "symbolsMissed": [
+          "review_tl1",
+          "tl2_met?"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "requirements",
+          "chars": 9956,
+          "tokens": 3319
+        },
+        {
+          "tool": "read_file",
+          "args": "frontend/discourse/admin/templates/admin-user/tl3-requirements.gjs:1-206",
+          "chars": 8299,
+          "tokens": 2767
+        }
+      ]
+    },
+    {
+      "taskId": "ho-ds-explain-tl2-promotion",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 901,
+      "chars": 2701,
+      "toolCalls": 1,
+      "durationMs": 74,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/promotion.rb"
+        ],
+        "symbolsMissed": [
+          "review_tl1",
+          "tl2_met?"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"promote trust level member requirements topics read likes days visited\"",
+          "chars": 2701,
+          "tokens": 901
+        }
+      ]
+    },
+    {
+      "taskId": "ho-ds-explain-tl2-promotion",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 540,
+      "chars": 1618,
+      "toolCalls": 3,
+      "durationMs": 60,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/promotion.rb"
+        ],
+        "symbolsMissed": [
+          "review_tl1",
+          "tl2_met?"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"promote trust level member requirements topics read likes days visited\"",
+          "chars": 1327,
+          "tokens": 443
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#8pv",
+          "chars": 168,
+          "tokens": 56
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#8px",
+          "chars": 123,
+          "tokens": 41
+        }
+      ]
+    },
+    {
+      "taskId": "ho-ds-explain-tl2-promotion",
+      "kind": "explain",
+      "strategy": "kirograph",
+      "skipped": "no kirograph result line for this task",
+      "tokens": 0,
+      "chars": 0,
+      "toolCalls": 0,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/promotion.rb"
+        ],
+        "symbolsMissed": [
+          "review_tl1",
+          "tl2_met?"
+        ],
+        "found": false
+      },
+      "calls": []
+    },
+    {
+      "taskId": "ho-ds-explain-tl2-promotion",
+      "kind": "explain",
+      "strategy": "codegraph",
+      "skipped": "no codegraph result line for this task",
+      "tokens": 0,
+      "chars": 0,
+      "toolCalls": 0,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/promotion.rb"
+        ],
+        "symbolsMissed": [
+          "review_tl1",
+          "tl2_met?"
+        ],
+        "found": false
+      },
+      "calls": []
+    },
+    {
+      "taskId": "ho-ds-locate-email-related-post",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 12934,
+      "chars": 38800,
+      "toolCalls": 4,
+      "durationMs": 2913,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/email/receiver.rb"
+        ],
+        "symbolsMissed": [
+          "find_related_post",
+          "extract_reply_message_ids"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "related",
+          "chars": 10046,
+          "tokens": 3349
+        },
+        {
+          "tool": "read_file",
+          "args": "frontend/discourse/admin/components/admin-report-related-items.gjs",
+          "chars": 4343,
+          "tokens": 1448
+        },
+        {
+          "tool": "read_file",
+          "args": "plugins/discourse-solved/assets/javascripts/discourse/components/solved-admin-report-related-items.gjs",
+          "chars": 4464,
+          "tokens": 1488
+        },
+        {
+          "tool": "read_file",
+          "args": "app/models/report.rb",
+          "chars": 19947,
+          "tokens": 6649
+        }
+      ]
+    },
+    {
+      "taskId": "ho-ds-locate-email-related-post",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 6279,
+      "chars": 18836,
+      "toolCalls": 3,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/email/receiver.rb"
+        ],
+        "symbolsMissed": [
+          "find_related_post",
+          "extract_reply_message_ids"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "related",
+          "chars": 10046,
+          "tokens": 3349
+        },
+        {
+          "tool": "read_file",
+          "args": "frontend/discourse/admin/components/admin-report-related-items.gjs:1-134",
+          "chars": 4326,
+          "tokens": 1442
+        },
+        {
+          "tool": "read_file",
+          "args": "plugins/discourse-solved/assets/javascripts/discourse/components/solved-admin-report-related-items.gjs:1-129",
+          "chars": 4464,
+          "tokens": 1488
+        }
+      ]
+    },
+    {
+      "taskId": "ho-ds-locate-email-related-post",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1382,
+      "chars": 4145,
+      "toolCalls": 1,
+      "durationMs": 104,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"incoming email in-reply-to references headers related post message id\"",
+          "chars": 4145,
+          "tokens": 1382
+        }
+      ]
+    },
+    {
+      "taskId": "ho-ds-locate-email-related-post",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 2324,
+      "chars": 6969,
+      "toolCalls": 3,
+      "durationMs": 81,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"incoming email in-reply-to references headers related post message id\"",
+          "chars": 1938,
+          "tokens": 646
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#qj6",
+          "chars": 754,
+          "tokens": 252
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#qj2",
+          "chars": 4277,
+          "tokens": 1426
+        }
+      ]
+    },
+    {
+      "taskId": "ho-ds-locate-email-related-post",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "skipped": "no kirograph result line for this task",
+      "tokens": 0,
+      "chars": 0,
+      "toolCalls": 0,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/email/receiver.rb"
+        ],
+        "symbolsMissed": [
+          "find_related_post",
+          "extract_reply_message_ids"
+        ],
+        "found": false
+      },
+      "calls": []
+    },
+    {
+      "taskId": "ho-ds-locate-email-related-post",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "skipped": "no codegraph result line for this task",
+      "tokens": 0,
+      "chars": 0,
+      "toolCalls": 0,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/email/receiver.rb"
+        ],
+        "symbolsMissed": [
+          "find_related_post",
+          "extract_reply_message_ids"
+        ],
+        "found": false
+      },
+      "calls": []
+    }
+  ],
+  "aggregates": [
+    {
+      "strategy": "native-naive",
+      "tasks": 2,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 9581.5,
+      "meanTokens": 9582,
+      "p90Tokens": 12934,
+      "totalTokens": 19163,
+      "totalChars": 57486,
+      "meanToolCalls": 3,
+      "meanFileRecall": 0,
+      "meanSymbolRecall": 0,
+      "meanDefRecall": 0,
+      "found": 0,
+      "foundRate": 0,
+      "tokensPerFound": null
+    },
+    {
+      "strategy": "native-ranged",
+      "tasks": 2,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 6182.5,
+      "meanTokens": 6183,
+      "p90Tokens": 6279,
+      "totalTokens": 12365,
+      "totalChars": 37091,
+      "meanToolCalls": 2.5,
+      "meanFileRecall": 0,
+      "meanSymbolRecall": 0,
+      "meanDefRecall": 0,
+      "found": 0,
+      "foundRate": 0,
+      "tokensPerFound": null
+    },
+    {
+      "strategy": "kopt-pack",
+      "tasks": 2,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 1141.5,
+      "meanTokens": 1142,
+      "p90Tokens": 1382,
+      "totalTokens": 2283,
+      "totalChars": 6846,
+      "meanToolCalls": 1,
+      "meanFileRecall": 0.5,
+      "meanSymbolRecall": 0.5,
+      "meanDefRecall": 0.25,
+      "found": 1,
+      "foundRate": 0.5,
+      "tokensPerFound": 2283
+    },
+    {
+      "strategy": "kopt-hits+read",
+      "tasks": 2,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 1432,
+      "meanTokens": 1432,
+      "p90Tokens": 2324,
+      "totalTokens": 2864,
+      "totalChars": 8587,
+      "meanToolCalls": 3,
+      "meanFileRecall": 0.5,
+      "meanSymbolRecall": 0.5,
+      "meanDefRecall": 0.5,
+      "found": 1,
+      "foundRate": 0.5,
+      "tokensPerFound": 2864
+    },
+    {
+      "strategy": "kirograph",
+      "tasks": 0,
+      "skipped": 2,
+      "errors": 0,
+      "medianTokens": 0,
+      "meanTokens": 0,
+      "p90Tokens": 0,
+      "totalTokens": 0,
+      "totalChars": 0,
+      "meanToolCalls": 0,
+      "meanFileRecall": 0,
+      "meanSymbolRecall": 0,
+      "meanDefRecall": 0,
+      "found": 0,
+      "foundRate": 0,
+      "tokensPerFound": null
+    },
+    {
+      "strategy": "codegraph",
+      "tasks": 0,
+      "skipped": 2,
+      "errors": 0,
+      "medianTokens": 0,
+      "meanTokens": 0,
+      "p90Tokens": 0,
+      "totalTokens": 0,
+      "totalChars": 0,
+      "meanToolCalls": 0,
+      "meanFileRecall": 0,
+      "meanSymbolRecall": 0,
+      "meanDefRecall": 0,
+      "found": 0,
+      "foundRate": 0,
+      "tokensPerFound": null
+    }
+  ],
+  "paired": [
+    {
+      "a": "native-naive",
+      "b": "kopt-pack",
+      "nRun": 2,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 1,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-pack",
+      "nRun": 2,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 1,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-naive",
+      "b": "kopt-hits+read",
+      "nRun": 2,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 1,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-hits+read",
+      "nRun": 2,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 1,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "kirograph",
+      "b": "kopt-pack",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "codegraph",
+      "b": "kopt-pack",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "kirograph",
+      "b": "kopt-hits+read",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "codegraph",
+      "b": "kopt-hits+read",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-ranged",
+      "b": "kirograph",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-ranged",
+      "b": "codegraph",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-naive",
+      "b": "native-ranged",
+      "nRun": 2,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    }
+  ],
+  "byKind": [
+    {
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 12934
+    },
+    {
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 6279
+    },
+    {
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tasks": 1,
+      "found": 1,
+      "medianTokens": 1382
+    },
+    {
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tasks": 1,
+      "found": 1,
+      "medianTokens": 2324
+    },
+    {
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 6229
+    },
+    {
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 6086
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 901
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 540
+    }
+  ]
+}

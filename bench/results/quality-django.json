@@ -1,0 +1,213 @@
+{
+  "repo": "django",
+  "language": "python",
+  "repoRoot": "bench/repos/django",
+  "headCommit": "2212534bae393714e1e51db2341d4fd5545e19f6",
+  "date": "2026-10-09T22:21:22.623Z",
+  "index": {
+    "built": true,
+    "durationMs": 6778,
+    "files": 2964,
+    "symbols": 51183,
+    "refs": 231792,
+    "path": "<index-dir>/.kopt-django/index.db"
+  },
+  "files": {
+    "indexed": 2964,
+    "skipped": 0,
+    "skippedByReason": {},
+    "indexedByLang": {
+      "javascript": 45,
+      "python": 2919
+    }
+  },
+  "langs": [
+    {
+      "lang": "python",
+      "files": 2919,
+      "lines": 524516,
+      "symbols": 51098,
+      "symbolsPerKloc": 97.42,
+      "byKind": {
+        "method": {
+          "count": 28127,
+          "perKloc": 53.62
+        },
+        "field": {
+          "count": 9596,
+          "perKloc": 18.29
+        },
+        "class": {
+          "count": 8135,
+          "perKloc": 15.51
+        },
+        "constant": {
+          "count": 2378,
+          "perKloc": 4.53
+        },
+        "function": {
+          "count": 1970,
+          "perKloc": 3.76
+        },
+        "constructor": {
+          "count": 892,
+          "perKloc": 1.7
+        }
+      },
+      "refs": 230214,
+      "refsResolved": 102251,
+      "resolvedRate": 0.4442,
+      "refsWithCandidate": 171998,
+      "resolvedOfCandidates": 0.5945,
+      "refsByKind": {
+        "call": {
+          "total": 113680,
+          "resolved": 44660
+        },
+        "read": {
+          "total": 60205,
+          "resolved": 14722
+        },
+        "new": {
+          "total": 24138,
+          "resolved": 20607
+        },
+        "import": {
+          "total": 17663,
+          "resolved": 14236
+        },
+        "inherit": {
+          "total": 7561,
+          "resolved": 7181
+        },
+        "write": {
+          "total": 6959,
+          "resolved": 839
+        },
+        "type_ref": {
+          "total": 8,
+          "resolved": 6
+        }
+      },
+      "parse": {
+        "sampledFiles": 1000,
+        "sampledLines": 203404,
+        "filesWithErrors": 0,
+        "errorNodes": 0,
+        "missingNodes": 0,
+        "errorFileRate": 0,
+        "errorsPerKloc": 0,
+        "parseFailures": 0,
+        "worst": []
+      },
+      "precision": {
+        "sampled": 30,
+        "nameOk": 30,
+        "startOk": 30,
+        "endOk": 30,
+        "signatureOk": 30,
+        "allOk": 30,
+        "rate": 1,
+        "failures": []
+      }
+    },
+    {
+      "lang": "javascript",
+      "files": 45,
+      "lines": 5946,
+      "symbols": 85,
+      "symbolsPerKloc": 14.3,
+      "byKind": {
+        "function": {
+          "count": 39,
+          "perKloc": 6.56
+        },
+        "constant": {
+          "count": 22,
+          "perKloc": 3.7
+        },
+        "method": {
+          "count": 20,
+          "perKloc": 3.36
+        },
+        "class": {
+          "count": 2,
+          "perKloc": 0.34
+        },
+        "constructor": {
+          "count": 2,
+          "perKloc": 0.34
+        }
+      },
+      "refs": 1578,
+      "refsResolved": 92,
+      "resolvedRate": 0.0583,
+      "refsWithCandidate": 533,
+      "resolvedOfCandidates": 0.1726,
+      "refsByKind": {
+        "call": {
+          "total": 990,
+          "resolved": 85
+        },
+        "read": {
+          "total": 334,
+          "resolved": 0
+        },
+        "write": {
+          "total": 204,
+          "resolved": 0
+        },
+        "new": {
+          "total": 37,
+          "resolved": 3
+        },
+        "import": {
+          "total": 12,
+          "resolved": 4
+        },
+        "inherit": {
+          "total": 1,
+          "resolved": 0
+        }
+      },
+      "parse": {
+        "sampledFiles": 45,
+        "sampledLines": 5991,
+        "filesWithErrors": 2,
+        "errorNodes": 11,
+        "missingNodes": 2,
+        "errorFileRate": 0.0444,
+        "errorsPerKloc": 2.17,
+        "parseFailures": 0,
+        "worst": [
+          {
+            "path": "django/views/templates/i18n_catalog.js",
+            "errors": 12,
+            "firstErrorLine": 1
+          },
+          {
+            "path": "tests/i18n/commands/javascript.js",
+            "errors": 1,
+            "firstErrorLine": 23
+          }
+        ]
+      },
+      "precision": {
+        "sampled": 30,
+        "nameOk": 30,
+        "startOk": 30,
+        "endOk": 30,
+        "signatureOk": 30,
+        "allOk": 30,
+        "rate": 1,
+        "failures": []
+      }
+    }
+  ],
+  "settings": {
+    "parseSamplePerLang": 1000,
+    "precisionSamplePerLang": 30,
+    "seed": "django"
+  },
+  "durationMs": 2115
+}

@@ -2,10 +2,13 @@
 
 import { statSync } from 'node:fs';
 import { resolve as resolvePath, sep } from 'node:path';
+import type { ExtractedSymbol } from '../core/types.js';
 import type { FileRow, SymbolRow } from '../store/schema.js';
 import { parseSymbolHandle, type Store } from '../store/store.js';
+import { denyReason, deniedMessage } from './access.js';
 import { SYM_COLS, type SymRow, isTestPath, kindPrior, normalizeRel } from './common.js';
-import { NameMatch, nameLookup } from './search.js';
+import { NameMatch, nameLookup, splitQualified } from './search.js';
+import { type Source, bestExtracted, currentExtraction, loadSource, overloadOrdinal } from './source.js';
 
 export interface SymbolCandidate {
   symbol: SymbolRow;
@@ -13,7 +16,13 @@ export interface SymbolCandidate {
 }
 
 export type ResolvedTarget =
-  | { kind: 'symbol'; symbol: SymbolRow; file: FileRow }
+  | {
+      kind: 'symbol';
+      symbol: SymbolRow;
+      file: FileRow;
+      /** One line to show with the answer when the target was not found as written (a substitute was picked). */
+      note?: string;
+    }
   | { kind: 'range'; path: string; file?: FileRow; start: number; end: number }
   | { kind: 'file'; path: string; file?: FileRow }
   | { kind: 'dir'; path: string }
@@ -24,7 +33,7 @@ export type ResolvedTarget =
       candidates: SymbolCandidate[];
       total: number;
     }
-  | { kind: 'none'; query: string; message: string };
+  | { kind: 'none'; query: string; message: string; /** Refused by the access rules (access.ts). */ denied?: boolean };
 
 const INNERMOST_SQL = `SELECT * FROM symbols WHERE file_id = ? AND start_line <= ? AND end_line >= ?
   ORDER BY (start_line = ?) DESC, (end_line - start_line) ASC, id LIMIT 1`;
@@ -63,6 +72,9 @@ function asFile(store: Store, rel: string): { file?: FileRow; kind: DiskKind } {
 
 const FILE_EXT_RE =
   /\.(java|kt|kts|scala|groovy|ts|tsx|mts|cts|js|jsx|mjs|cjs|py|pyi|go|rs|cs|php|rb|swift|c|h|cc|cpp|hpp|m|vue|svelte|md|mdx|json|ya?ml|toml|xml|html?|css|scss|less|sql|sh|bash|gradle|properties|txt|ini|cfg|conf|proto|graphql|tf|hcl)$/i;
+
+/** Backslash-separated qualified name (PHP namespaces), optionally ending with `::member` / `->member` / `.member`. */
+const NS_NAME_RE = /^\\?[A-Za-z_][\w]*(?:\\[A-Za-z_]\w*)+(?:(?:::|->|\.)[A-Za-z_$][\w$]*)?$/;
 
 function looksLikePath(s: string): boolean {
   return s.includes('/') || FILE_EXT_RE.test(s);
@@ -114,8 +126,53 @@ export function symbolsForName(store: Store, name: string): SymRow[] {
   return hits.filter((x) => tier(x.match) === bestTier).map((x) => x.row);
 }
 
-function innermostAt(store: Store, file: FileRow, line: number): SymbolRow | undefined {
-  return store.prepare(INNERMOST_SQL).get(file.id, line, line, line) as SymbolRow | undefined;
+/**
+ * Refusal for a path-like target that leaves the project, lies in .git or is git/kiro-ignored (see access.ts).
+ * Names (no separator, no extension) are not paths and pass.
+ */
+function guard(store: Store, rel: string, maybeName: boolean): ResolvedTarget | undefined {
+  if (maybeName && !looksLikePath(rel) && !/^[./]/.test(rel)) return undefined;
+  const reason = denyReason(store.root, rel, onDisk(store, rel) === 'dir');
+  return reason ? { kind: 'none', query: rel, message: deniedMessage(rel, reason), denied: true } : undefined;
+}
+
+interface SymbolAt {
+  symbol: SymbolRow;
+  /** Current line range of the symbol. */
+  start: number;
+  end: number;
+}
+
+function innermostAt(store: Store, file: FileRow, line: number): SymbolAt | undefined {
+  const symbol = store.prepare(INNERMOST_SQL).get(file.id, line, line, line) as SymbolRow | undefined;
+  return symbol && { symbol, start: symbol.start_line, end: symbol.end_line };
+}
+
+/**
+ * Innermost symbol covering `line` in the current text of a changed file, from a fresh parse (the first call
+ * schedules it and gets undefined: the caller falls back to a window around the line). The parsed symbol is
+ * mapped back to its indexed row, so the handle stays valid.
+ */
+function currentSymbolAt(store: Store, src: Source, file: FileRow, line: number): SymbolAt | undefined {
+  const ef = currentExtraction(store, src);
+  if (!ef) return undefined;
+  // Same preference as INNERMOST_SQL: a declaration starting on the line, else the smallest enclosing symbol.
+  const better = (a: ExtractedSymbol, b: ExtractedSymbol) =>
+    (a.startLine === line) !== (b.startLine === line) ? a.startLine === line : a.endLine - a.startLine < b.endLine - b.startLine;
+  let best: ExtractedSymbol | undefined;
+  for (const s of ef.symbols) {
+    if (s.startLine > line || s.endLine < line) continue;
+    if (!best || better(s, best)) best = s;
+  }
+  if (!best) return undefined;
+  const rows = fileSymbols(store, file.id);
+  // The indexed row whose fresh counterpart is `best` (same matching rules as locate()).
+  for (const r of rows) {
+    if (r.name !== best.name || r.kind !== best.kind) continue;
+    const m = bestExtracted(ef.symbols, r, overloadOrdinal(store, r));
+    if (m === best) return { symbol: r, start: best.startLine, end: best.endLine };
+  }
+  return undefined;
 }
 
 /** Resolve a target string (handle, qualified name, name, path, path:range) to symbols/files. */
@@ -135,6 +192,8 @@ export function resolveTarget(store: Store, target: string): ResolvedTarget {
   const m = /^(.+?)(?::|#L)(\d+)(?:\s*-\s*L?(\d+))?$/.exec(raw.replace(/^(.+?:\d+):\d+$/, '$1'));
   if (m) {
     const rel = normalizeRel(m[1], store.root);
+    const denied = guard(store, rel, false);
+    if (denied) return denied;
     const f = asFile(store, rel);
     if (f.kind === 'file') {
       let a = parseInt(m[2], 10);
@@ -144,8 +203,10 @@ export function resolveTarget(store: Store, target: string): ResolvedTarget {
       if (b !== undefined) return { kind: 'range', path: rel, file: f.file, start: a, end: b };
       // A single line: the declaration starting there or the (small) enclosing symbol, else a window.
       if (f.file) {
-        const s = innermostAt(store, f.file, a);
-        if (s && (s.start_line === a || s.end_line - s.start_line < MAX_ENCLOSING_LINES)) return { kind: 'symbol', symbol: s, file: f.file };
+        // Compiler errors and stack traces cite current lines: on a changed file, map through a fresh parse.
+        const src = loadSource(store, rel, f.file);
+        const s = src?.stale ? currentSymbolAt(store, src, f.file, a) : innermostAt(store, f.file, a);
+        if (s && (s.start === a || s.end - s.start < MAX_ENCLOSING_LINES)) return { kind: 'symbol', symbol: s.symbol, file: f.file };
       }
       return { kind: 'range', path: rel, file: f.file, start: Math.max(1, a - 20), end: a + 20 };
     }
@@ -153,6 +214,14 @@ export function resolveTarget(store: Store, target: string): ResolvedTarget {
 
   const rel = normalizeRel(raw, store.root);
   if (rel === '') return { kind: 'dir', path: '' };
+  // A PHP-style qualified name (`Illuminate\Image\Image::resolveDriver`) is not a Windows path unless one exists.
+  if (NS_NAME_RE.test(raw) && !FILE_EXT_RE.test(raw) && !asFile(store, rel).kind) {
+    const rows = symbolsForName(store, raw);
+    if (rows.length) return pickCandidates(store, raw, rows);
+    return qualifiedFallback(store, raw) ?? { kind: 'none', query: raw, message: `no symbol matches "${raw}"` };
+  }
+  const denied = guard(store, rel, true);
+  if (denied) return denied;
   const f = asFile(store, rel);
   if (f.kind === 'file') return { kind: 'file', path: rel, file: f.file };
   if (f.kind === 'dir') return { kind: 'dir', path: rel.replace(/\/+$/, '') };
@@ -172,8 +241,40 @@ export function resolveTarget(store: Store, target: string): ResolvedTarget {
   }
 
   const rows = symbolsForName(store, raw);
-  if (!rows.length) return { kind: 'none', query: raw, message: `no symbol matches "${raw}"` };
-  return pickCandidates(store, raw, rows);
+  if (rows.length) return pickCandidates(store, raw, rows);
+  return qualifiedFallback(store, raw) ?? { kind: 'none', query: raw, message: `no symbol matches "${raw}"` };
+}
+
+/**
+ * A qualified name that matched nothing as written: namespace / package / module qualifiers (`Illuminate\Image\`,
+ * `crate::scheduler::`, `org.acme.`) are dropped down to the trailing `Type.member`, candidates that sit under those
+ * qualifiers win; failing that, a member name declared exactly once is the answer (with a note).
+ */
+function qualifiedFallback(store: Store, raw: string): ResolvedTarget | undefined {
+  const segs = splitQualified(raw.replace(/^\$/, ''));
+  if (segs.length < 2 || segs.some((x) => !/^[A-Za-z_$][\w$]*[!?]?$/.test(x))) return undefined;
+  const last = segs[segs.length - 1];
+  if (segs.length > 2) {
+    const tail = `${segs[segs.length - 2]}.${last}`;
+    let rows = symbolsForName(store, tail);
+    if (rows.length > 1) {
+      // the dropped qualifiers name the namespace / package / folder of the right candidate
+      const quals = segs.slice(0, -2).map((x) => x.toLowerCase());
+      const score = (r: SymRow) => quals.filter((q) => r.qname.toLowerCase().split('.').includes(q) || r.path.toLowerCase().split('/').includes(q)).length;
+      const best = Math.max(...rows.map(score));
+      if (best > 0) rows = rows.filter((r) => score(r) === best);
+    }
+    if (rows.length) return pickCandidates(store, raw, rows);
+  }
+  const bare = symbolsForName(store, last).filter((r) => r.kind !== 'constructor');
+  if (bare.length !== 1) return undefined;
+  const c = toCandidate(store, bare[0]);
+  return { kind: 'symbol', ...c, note: `note: no symbol "${raw}"; this is the only ${last} in the index (${shortQname(bare[0].qname, last)})` };
+}
+
+function shortQname(qname: string, name: string): string {
+  const parts = qname.split('.');
+  return parts.length > 2 ? parts.slice(-2).join('.') : qname || name;
 }
 
 /** All symbol rows of a file, ordered by position. */

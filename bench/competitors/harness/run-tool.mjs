@@ -236,6 +236,28 @@ function runLong(cmd, argv, opts = {}) {
   });
 }
 
+/** cgroup v2 memory accounting of this container (null outside a cgroup v2 container). */
+function cgroupMemory() {
+  const read = (f) => {
+    try {
+      return readFileSync(join('/sys/fs/cgroup', f), 'utf8').trim();
+    } catch {
+      return null;
+    }
+  };
+  const events = read('memory.events');
+  if (events === null) return null;
+  const oomKills = Number(/^oom_kill (\d+)$/m.exec(events)?.[1] ?? 0);
+  const max = read('memory.max');
+  const peak = read('memory.peak');
+  return {
+    maxBytes: max && max !== 'max' ? Number(max) : null,
+    // includes page cache (the repo copy and the index files), so it overstates the tool's own heap
+    peakBytes: peak ? Number(peak) : null,
+    oomKills,
+  };
+}
+
 function median(xs) {
   if (!xs.length) return null;
   const s = [...xs].sort((a, b) => a - b);
@@ -338,10 +360,16 @@ async function main() {
       }
       continue;
     }
+    const oomBefore = cgroupMemory()?.oomKills ?? 0;
     const r = await runLong(step.cmd, step.args);
+    const oomAfter = cgroupMemory()?.oomKills ?? 0;
+    if (oomAfter > oomBefore) {
+      r.out += `\n[harness] the kernel OOM killer fired ${oomAfter - oomBefore} time(s) during this step (container memory limit ${cgroupMemory()?.maxBytes ?? '?'} bytes)`;
+      errors.push(`index step "${[step.cmd, ...step.args].join(' ')}": OOM-killed (container memory limit ${cgroupMemory()?.maxBytes ?? '?'} bytes)`);
+    }
     lastIndexOut = r.out;
     indexMs += r.ms;
-    indexSteps.push({ command: [step.cmd, ...step.args].join(' '), ms: r.ms, exit: r.status, signal: r.signal });
+    indexSteps.push({ command: [step.cmd, ...step.args].join(' '), ms: r.ms, exit: r.status, signal: r.signal, oomKills: oomAfter - oomBefore });
     if (r.status !== 0) {
       indexOk = false;
       errors.push(`index step "${[step.cmd, ...step.args].join(' ')}" failed (exit ${r.status}${r.signal ? `, ${r.signal}` : ''}${r.error ? `, ${r.error}` : ''}): ${tail(r.out, 1500)}`);
@@ -406,6 +434,7 @@ async function main() {
         toolCalls: 1,
         indexMs,
         queryMs: null,
+        durationMs: null, // = queryMs, the field name src/bench/competitors.ts reads
         // extra fields (not required by the scorer)
         kind: t.kind,
         inputField: field,
@@ -427,6 +456,7 @@ async function main() {
               timeout: QUERY_TIMEOUT_MS,
             });
             rec.queryMs = Math.round(now() - t0);
+            rec.durationMs = rec.queryMs;
             rec.output = textOf(res);
             rec.isError = Boolean(res?.isError);
             const nonText = (res?.content ?? []).filter((c) => c?.type !== 'text').map((c) => c?.type);
@@ -470,6 +500,11 @@ async function main() {
     headCommit,
     commitMatchesTasks: taskFile.repo?.commit ? headCommit === taskFile.repo.commit : null,
     date: new Date().toISOString(),
+    image: process.env.BENCH_IMAGE ?? null,
+    imageId: process.env.BENCH_IMAGE_ID ?? null,
+    engine: process.env.BENCH_ENGINE ?? 'buildkit',
+    limits: process.env.BENCH_LIMITS ?? null,
+    cgroupMemory: cgroupMemory(),
     container: {
       node: process.version,
       arch: process.arch,

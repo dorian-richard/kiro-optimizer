@@ -1,0 +1,763 @@
+{
+  "meta": {
+    "label": "heldout-spring-framework",
+    "repo": {
+      "name": "spring-framework",
+      "url": "https://github.com/spring-projects/spring-framework.git",
+      "tag": "v7.0.9",
+      "commit": "82a6b40b9366ec181ededdad282b307ee5381a52",
+      "language": "java",
+      "path": "bench/repos/spring-framework"
+    },
+    "repoRoot": "bench/repos/spring-framework",
+    "headCommit": "82a6b40b9366ec181ededdad282b307ee5381a52",
+    "date": "2026-10-09T20:18:30.248Z",
+    "input": "search",
+    "charsPerToken": 3,
+    "strategies": [
+      "native-naive",
+      "native-ranged",
+      "kopt-pack",
+      "kopt-hits+read",
+      "kirograph",
+      "codegraph"
+    ],
+    "grepLimits": {
+      "maxMatches": 100,
+      "maxChars": 10000,
+      "maxLineChars": 250
+    },
+    "readLimits": {
+      "naiveTopFiles": 3,
+      "naiveMaxLines": 2000,
+      "rangedMatches": 4,
+      "rangedContext": 60
+    },
+    "koptBudgets": {
+      "find": 700,
+      "pack": 2500,
+      "read": 3000
+    },
+    "index": {
+      "built": false,
+      "durationMs": 0,
+      "files": 9552,
+      "symbols": 138619,
+      "path": "<index-dir>/.kopt-spring-framework/index.db"
+    },
+    "notes": [
+      "kirograph: outputs loaded from bench/competitors/results/kirograph-spring-framework.jsonl",
+      "codegraph: outputs loaded from bench/competitors/results/codegraph-spring-framework.jsonl"
+    ],
+    "durationMs": 4026
+  },
+  "results": [
+    {
+      "taskId": "ho-sf-explain-rollback-rules",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 30330,
+      "chars": 90987,
+      "toolCalls": 4,
+      "durationMs": 1669,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.5,
+        "defRecall": 0,
+        "filesMissed": [
+          "spring-tx/src/main/java/org/springframework/transaction/interceptor/RuleBasedTransactionAttribute.java",
+          "spring-tx/src/main/java/org/springframework/transaction/interceptor/RollbackRuleAttribute.java"
+        ],
+        "symbolsMissed": [
+          "getDepth"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "noRollbackFor|decide",
+          "chars": 10029,
+          "tokens": 3343
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-tx/src/main/java/org/springframework/transaction/annotation/Transactional.java",
+          "chars": 15110,
+          "tokens": 5037
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-tx/src/main/java/org/springframework/transaction/config/TxAdviceBeanDefinitionParser.java",
+          "chars": 6792,
+          "tokens": 2264
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-tx/src/main/java/org/springframework/transaction/support/AbstractPlatformTransactionManager.java",
+          "chars": 59056,
+          "tokens": 19686
+        }
+      ]
+    },
+    {
+      "taskId": "ho-sf-explain-rollback-rules",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 10117,
+      "chars": 30349,
+      "toolCalls": 5,
+      "durationMs": 1,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.5,
+        "defRecall": 0,
+        "filesMissed": [
+          "spring-tx/src/main/java/org/springframework/transaction/interceptor/RuleBasedTransactionAttribute.java",
+          "spring-tx/src/main/java/org/springframework/transaction/interceptor/RollbackRuleAttribute.java"
+        ],
+        "symbolsMissed": [
+          "getDepth"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "noRollbackFor|decide",
+          "chars": 10029,
+          "tokens": 3343
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-tx/src/main/java/org/springframework/transaction/annotation/Transactional.java:1-115",
+          "chars": 6656,
+          "tokens": 2219
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-tx/src/main/java/org/springframework/transaction/annotation/Transactional.java:207-290",
+          "chars": 4475,
+          "tokens": 1492
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-tx/src/main/java/org/springframework/transaction/config/TxAdviceBeanDefinitionParser.java:92-160",
+          "chars": 3195,
+          "tokens": 1065
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-tx/src/main/java/org/springframework/transaction/support/AbstractPlatformTransactionManager.java:205-325",
+          "chars": 5994,
+          "tokens": 1998
+        }
+      ]
+    },
+    {
+      "taskId": "ho-sf-explain-rollback-rules",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 1307,
+      "chars": 3920,
+      "toolCalls": 1,
+      "durationMs": 159,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"transaction rollback rules exception commit noRollbackFor rollbackFor decide\"",
+          "chars": 3920,
+          "tokens": 1307
+        }
+      ]
+    },
+    {
+      "taskId": "ho-sf-explain-rollback-rules",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 762,
+      "chars": 2282,
+      "toolCalls": 3,
+      "durationMs": 53,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "rollbackOn"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"transaction rollback rules exception commit noRollbackFor rollbackFor decide\"",
+          "chars": 1970,
+          "tokens": 657
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#1zzs",
+          "chars": 157,
+          "tokens": 53
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#1zzq",
+          "chars": 155,
+          "tokens": 52
+        }
+      ]
+    },
+    {
+      "taskId": "ho-sf-explain-rollback-rules",
+      "kind": "explain",
+      "strategy": "kirograph",
+      "skipped": "no kirograph result line for this task",
+      "tokens": 0,
+      "chars": 0,
+      "toolCalls": 0,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "spring-tx/src/main/java/org/springframework/transaction/interceptor/RuleBasedTransactionAttribute.java",
+          "spring-tx/src/main/java/org/springframework/transaction/interceptor/RollbackRuleAttribute.java"
+        ],
+        "symbolsMissed": [
+          "rollbackOn",
+          "getDepth"
+        ],
+        "found": false
+      },
+      "calls": []
+    },
+    {
+      "taskId": "ho-sf-explain-rollback-rules",
+      "kind": "explain",
+      "strategy": "codegraph",
+      "skipped": "no codegraph result line for this task",
+      "tokens": 0,
+      "chars": 0,
+      "toolCalls": 0,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "spring-tx/src/main/java/org/springframework/transaction/interceptor/RuleBasedTransactionAttribute.java",
+          "spring-tx/src/main/java/org/springframework/transaction/interceptor/RollbackRuleAttribute.java"
+        ],
+        "symbolsMissed": [
+          "rollbackOn",
+          "getDepth"
+        ],
+        "found": false
+      },
+      "calls": []
+    },
+    {
+      "taskId": "ho-sf-locate-response-converter",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 17919,
+      "chars": 53756,
+      "toolCalls": 4,
+      "durationMs": 1523,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "producible",
+          "chars": 9899,
+          "tokens": 3300
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-webmvc/src/main/java/org/springframework/web/servlet/mvc/method/annotation/AbstractMessageConverterMethodProcessor.java",
+          "chars": 22617,
+          "tokens": 7539
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-webflux/src/main/java/org/springframework/web/reactive/result/HandlerResultHandlerSupport.java",
+          "chars": 6630,
+          "tokens": 2210
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-webflux/src/main/java/org/springframework/web/reactive/result/method/RequestMappingInfoHandlerMapping.java",
+          "chars": 14610,
+          "tokens": 4870
+        }
+      ]
+    },
+    {
+      "taskId": "ho-sf-locate-response-converter",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 7655,
+      "chars": 22961,
+      "toolCalls": 4,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "writeWithMessageConverters"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "producible",
+          "chars": 9899,
+          "tokens": 3300
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-webflux/src/main/java/org/springframework/web/reactive/result/HandlerResultHandlerSupport.java:58-201",
+          "chars": 4586,
+          "tokens": 1529
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-webflux/src/main/java/org/springframework/web/reactive/result/method/RequestMappingInfoHandlerMapping.java:243-363",
+          "chars": 3931,
+          "tokens": 1311
+        },
+        {
+          "tool": "read_file",
+          "args": "spring-webmvc/src/main/java/org/springframework/web/servlet/mvc/method/annotation/AbstractMessageConverterMethodProcessor.java:346-466",
+          "chars": 4545,
+          "tokens": 1515
+        }
+      ]
+    },
+    {
+      "taskId": "ho-sf-locate-response-converter",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1421,
+      "chars": 4261,
+      "toolCalls": 1,
+      "durationMs": 413,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"response body message converter accept header producible media type write\"",
+          "chars": 4261,
+          "tokens": 1421
+        }
+      ]
+    },
+    {
+      "taskId": "ho-sf-locate-response-converter",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 3048,
+      "chars": 9141,
+      "toolCalls": 3,
+      "durationMs": 128,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "getMostSpecificMediaType"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"response body message converter accept header producible media type write\"",
+          "chars": 2033,
+          "tokens": 678
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#2esc",
+          "chars": 486,
+          "tokens": 162
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#2q15",
+          "chars": 6622,
+          "tokens": 2208
+        }
+      ]
+    },
+    {
+      "taskId": "ho-sf-locate-response-converter",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "skipped": "no kirograph result line for this task",
+      "tokens": 0,
+      "chars": 0,
+      "toolCalls": 0,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "spring-webmvc/src/main/java/org/springframework/web/servlet/mvc/method/annotation/AbstractMessageConverterMethodProcessor.java"
+        ],
+        "symbolsMissed": [
+          "writeWithMessageConverters",
+          "getMostSpecificMediaType"
+        ],
+        "found": false
+      },
+      "calls": []
+    },
+    {
+      "taskId": "ho-sf-locate-response-converter",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "skipped": "no codegraph result line for this task",
+      "tokens": 0,
+      "chars": 0,
+      "toolCalls": 0,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "spring-webmvc/src/main/java/org/springframework/web/servlet/mvc/method/annotation/AbstractMessageConverterMethodProcessor.java"
+        ],
+        "symbolsMissed": [
+          "writeWithMessageConverters",
+          "getMostSpecificMediaType"
+        ],
+        "found": false
+      },
+      "calls": []
+    }
+  ],
+  "aggregates": [
+    {
+      "strategy": "native-naive",
+      "tasks": 2,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 24124.5,
+      "meanTokens": 24125,
+      "p90Tokens": 30330,
+      "totalTokens": 48249,
+      "totalChars": 144743,
+      "meanToolCalls": 4,
+      "meanFileRecall": 0.5,
+      "meanSymbolRecall": 0.75,
+      "meanDefRecall": 0.5,
+      "found": 1,
+      "foundRate": 0.5,
+      "tokensPerFound": 48249
+    },
+    {
+      "strategy": "native-ranged",
+      "tasks": 2,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 8886,
+      "meanTokens": 8886,
+      "p90Tokens": 10117,
+      "totalTokens": 17772,
+      "totalChars": 53310,
+      "meanToolCalls": 4.5,
+      "meanFileRecall": 0.5,
+      "meanSymbolRecall": 0.5,
+      "meanDefRecall": 0,
+      "found": 0,
+      "foundRate": 0,
+      "tokensPerFound": null
+    },
+    {
+      "strategy": "kopt-pack",
+      "tasks": 2,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 1364,
+      "meanTokens": 1364,
+      "p90Tokens": 1421,
+      "totalTokens": 2728,
+      "totalChars": 8181,
+      "meanToolCalls": 1,
+      "meanFileRecall": 1,
+      "meanSymbolRecall": 1,
+      "meanDefRecall": 0.25,
+      "found": 2,
+      "foundRate": 1,
+      "tokensPerFound": 1364
+    },
+    {
+      "strategy": "kopt-hits+read",
+      "tasks": 2,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 1905,
+      "meanTokens": 1905,
+      "p90Tokens": 3048,
+      "totalTokens": 3810,
+      "totalChars": 11423,
+      "meanToolCalls": 3,
+      "meanFileRecall": 1,
+      "meanSymbolRecall": 0.5,
+      "meanDefRecall": 0.25,
+      "found": 0,
+      "foundRate": 0,
+      "tokensPerFound": null
+    },
+    {
+      "strategy": "kirograph",
+      "tasks": 0,
+      "skipped": 2,
+      "errors": 0,
+      "medianTokens": 0,
+      "meanTokens": 0,
+      "p90Tokens": 0,
+      "totalTokens": 0,
+      "totalChars": 0,
+      "meanToolCalls": 0,
+      "meanFileRecall": 0,
+      "meanSymbolRecall": 0,
+      "meanDefRecall": 0,
+      "found": 0,
+      "foundRate": 0,
+      "tokensPerFound": null
+    },
+    {
+      "strategy": "codegraph",
+      "tasks": 0,
+      "skipped": 2,
+      "errors": 0,
+      "medianTokens": 0,
+      "meanTokens": 0,
+      "p90Tokens": 0,
+      "totalTokens": 0,
+      "totalChars": 0,
+      "meanToolCalls": 0,
+      "meanFileRecall": 0,
+      "meanSymbolRecall": 0,
+      "meanDefRecall": 0,
+      "found": 0,
+      "foundRate": 0,
+      "tokensPerFound": null
+    }
+  ],
+  "paired": [
+    {
+      "a": "native-naive",
+      "b": "kopt-pack",
+      "nRun": 2,
+      "nBoth": 1,
+      "onlyA": 0,
+      "onlyB": 1,
+      "medianRatio": 0.07930130029577544,
+      "geoMeanRatio": 0.07930130029577545,
+      "bCheaper": 1
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-pack",
+      "nRun": 2,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 2,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-naive",
+      "b": "kopt-hits+read",
+      "nRun": 2,
+      "nBoth": 0,
+      "onlyA": 1,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-hits+read",
+      "nRun": 2,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "kirograph",
+      "b": "kopt-pack",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "codegraph",
+      "b": "kopt-pack",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "kirograph",
+      "b": "kopt-hits+read",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "codegraph",
+      "b": "kopt-hits+read",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-ranged",
+      "b": "kirograph",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-ranged",
+      "b": "codegraph",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-naive",
+      "b": "native-ranged",
+      "nRun": 2,
+      "nBoth": 0,
+      "onlyA": 1,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    }
+  ],
+  "byKind": [
+    {
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tasks": 1,
+      "found": 1,
+      "medianTokens": 17919
+    },
+    {
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 7655
+    },
+    {
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tasks": 1,
+      "found": 1,
+      "medianTokens": 1421
+    },
+    {
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 3048
+    },
+    {
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 30330
+    },
+    {
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 10117
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tasks": 1,
+      "found": 1,
+      "medianTokens": 1307
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 762
+    }
+  ]
+}

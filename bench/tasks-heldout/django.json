@@ -1,0 +1,76 @@
+{
+  "repo": {
+    "name": "django",
+    "url": "https://github.com/django/django.git",
+    "tag": "6.1.2",
+    "commit": "2212534bae393714e1e51db2341d4fd5545e19f6",
+    "language": "python",
+    "path": "bench/repos/django"
+  },
+  "notes": "Held-out tasks (round 2), written after v0.2's tuning and before any kopt measurement on them; not derived from bench/results/failures.md. Gold read in the code with git grep and sed only. Re-check with `kopt bench bench/tasks-heldout/django.json --verify`.",
+  "tasks": [
+    {
+      "id": "ho-dj-explain-bulk-batches",
+      "kind": "explain",
+      "lang": "en",
+      "question": "How does QuerySet.bulk_create split a large list of objects into several INSERT statements?",
+      "search": "bulk create split objects batches insert batch size",
+      "gold": {
+        "files": [
+          "django/db/models/query.py",
+          "django/db/backends/base/operations.py"
+        ],
+        "symbols": [
+          {
+            "name": "_batched_insert",
+            "file": "django/db/models/query.py",
+            "line": 2171,
+            "kind": "method"
+          },
+          {
+            "name": "bulk_batch_size",
+            "file": "django/db/backends/base/operations.py",
+            "line": 80,
+            "kind": "method"
+          }
+        ]
+      },
+      "verifiedBy": "Read QuerySet._batched_insert: batch_size is capped by connection.ops.bulk_batch_size(fields, objs), objs are sliced into batches inserted inside one atomic block."
+    },
+    {
+      "id": "ho-dj-usage-validate-password",
+      "kind": "usage",
+      "lang": "en",
+      "question": "Which code calls django.contrib.auth.password_validation.validate_password?",
+      "search": "validate_password",
+      "gold": {
+        "files": [
+          "django/contrib/auth/forms.py",
+          "django/contrib/auth/management/commands/changepassword.py",
+          "django/contrib/auth/management/commands/createsuperuser.py"
+        ],
+        "symbols": [
+          {
+            "name": "validate_password_for_user",
+            "file": "django/contrib/auth/forms.py",
+            "line": 123,
+            "kind": "method"
+          },
+          {
+            "name": "handle",
+            "file": "django/contrib/auth/management/commands/changepassword.py",
+            "line": 39,
+            "kind": "method"
+          },
+          {
+            "name": "handle",
+            "file": "django/contrib/auth/management/commands/createsuperuser.py",
+            "line": 92,
+            "kind": "method"
+          }
+        ]
+      },
+      "verifiedBy": "git grep 'validate_password(' over django/: forms.py SetPasswordMixin.validate_password_for_user (L127), changepassword Command.handle (L67), createsuperuser Command.handle (L185)."
+    }
+  ]
+}

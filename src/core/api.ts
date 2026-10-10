@@ -14,6 +14,11 @@ export interface FindParams {
   limit?: number;
   maxTokens?: number;
   fresh?: boolean;
+  /**
+   * Internal (prompt pointers, not exposed to the model): `performance.now()` time by which the answer is needed.
+   * Close to it, the full-text step is skipped and only name lookups answer.
+   */
+  deadline?: number;
 }
 
 export interface ReadParams {

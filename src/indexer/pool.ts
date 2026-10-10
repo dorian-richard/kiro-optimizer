@@ -10,7 +10,7 @@
 // absolute file URL; from dist/ it is worker.js with the parent's Node flags.
 
 import { createRequire } from 'node:module';
-import { availableParallelism } from 'node:os';
+import { availableParallelism, totalmem } from 'node:os';
 import { pathToFileURL } from 'node:url';
 import { Worker } from 'node:worker_threads';
 import { prepareFile, type PrepJob, type Prepared } from './prepare.js';
@@ -171,21 +171,29 @@ const MIN_FILES_FOR_WORKERS = 150;
 const FILES_PER_WORKER = 100;
 
 export interface PreparerOptions {
-  /** Worker count override (default: KOPT_INDEX_WORKERS, else up to 6). */
+  /** Worker count override (default: KOPT_INDEX_WORKERS, else defaultWorkers()). */
   workers?: number;
   /** Worker entry override (tests). */
   script?: URL;
 }
 
+/**
+ * Parse workers by default: up to 4 (cores - 1), 2 on machines with less than 12 GB of memory. The main thread's
+ * database writes are the bottleneck of a first build (6 workers kept only 1.2-2.6 cores busy on a 33k-file Java
+ * repository), while each worker holds 100-150 MB of parser memory until the parse ends.
+ */
+export function defaultWorkers(cores = availableParallelism(), memBytes = totalmem()): number {
+  return Math.max(0, Math.min(memBytes < 12 * 2 ** 30 ? 2 : 4, cores - 1));
+}
+
 export function createPreparer(fileCount: number, opts: PreparerOptions = {}): Preparer {
   const env = process.env.KOPT_INDEX_WORKERS;
-  // measured on spring-framework (9.6k files): 6 workers ~2.1x faster than in-process, more adds memory only
   const max =
     opts.workers !== undefined
       ? Math.max(0, opts.workers | 0)
       : env !== undefined && env !== ''
         ? Math.max(0, Number(env) | 0)
-        : Math.min(6, Math.max(0, availableParallelism() - 1));
+        : defaultWorkers();
   if (max <= 1 || fileCount < MIN_FILES_FOR_WORKERS) return new InlinePreparer();
   const n = Math.max(1, Math.min(max, Math.ceil(fileCount / FILES_PER_WORKER)));
   try {

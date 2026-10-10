@@ -22,6 +22,7 @@ import type {
   PrecisionStats,
   QualityReport,
 } from './types.js';
+import { writePortable } from './portable.js';
 
 // ---------------------------------------------------------------------------------------------------------
 // Seeded randomness
@@ -1008,7 +1009,7 @@ export function renderQualityMarkdown(q: QualityReport): string {
     `${q.language ? `Primary language \`${q.language}\` · ` : ''}${q.headCommit ? `commit \`${q.headCommit.slice(0, 12)}\` · ` : ''}` +
       `${num(q.files.indexed)} files indexed, ${num(q.files.skipped)} skipped` +
       `${q.files.skipped ? ` (${Object.entries(q.files.skippedByReason).map(([k, v]) => `${k} ${v}`).join(', ')})` : ''} · ` +
-      `index ${q.index.built ? 'built' : 'reused'}${q.index.durationMs !== null ? ` in ${num(q.index.durationMs)} ms` : ''} · ${q.date}`,
+      `index ${q.index.built ? `built in ${q.index.durationMs !== null ? num(q.index.durationMs) : '?'} ms` : `reused${q.index.durationMs !== null ? ` (build took ${num(q.index.durationMs)} ms)` : ''}`} · ${q.date}`,
   );
   out.push('');
   out.push('## Per language');
@@ -1088,7 +1089,7 @@ export function writeQuality(q: QualityReport, outDir: string): string[] {
   const safe = q.repo.replace(/[^\w.-]+/g, '_');
   const mdPath = join(outDir, `quality-${safe}.md`);
   const jsonPath = join(outDir, `quality-${safe}.json`);
-  writeFileSync(mdPath, renderQualityMarkdown(q));
-  writeFileSync(jsonPath, JSON.stringify(q, null, 2) + '\n');
+  writePortable(mdPath, renderQualityMarkdown(q));
+  writePortable(jsonPath, JSON.stringify(q, null, 2) + '\n');
   return [mdPath, jsonPath];
 }

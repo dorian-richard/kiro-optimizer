@@ -36,7 +36,8 @@ export const CONTAINER_KINDS: ReadonlySet<SymbolKind> = new Set([
   'class', 'interface', 'enum', 'record', 'struct', 'trait', 'module', 'namespace',
 ]);
 
-export type RefKind = 'call' | 'new' | 'inherit' | 'implement' | 'import' | 'type_ref';
+/** `read` / `write`: a member access that is not a call (`obj.field`, `this.x = v`, `x.count++`). */
+export type RefKind = 'call' | 'new' | 'inherit' | 'implement' | 'import' | 'type_ref' | 'read' | 'write';
 
 /** A symbol as produced by the parser for one file (before persistence). */
 export interface ExtractedSymbol {

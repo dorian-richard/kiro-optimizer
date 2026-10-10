@@ -1,0 +1,321 @@
+{
+  "repo": "webpack",
+  "language": "javascript",
+  "repoRoot": "bench/repos/webpack",
+  "headCommit": "5a106753839fd7e1b86138c3a5f6b348341147a7",
+  "date": "2026-10-09T22:37:27.043Z",
+  "index": {
+    "built": true,
+    "durationMs": 4951,
+    "files": 14902,
+    "symbols": 22575,
+    "refs": 128969,
+    "path": "<index-dir>/.kopt-webpack/index.db"
+  },
+  "files": {
+    "indexed": 14902,
+    "skipped": 50,
+    "skippedByReason": {
+      "binary": 9,
+      "minified": 41
+    },
+    "indexedByLang": {
+      "javascript": 14792,
+      "tsx": 1,
+      "typescript": 109
+    }
+  },
+  "langs": [
+    {
+      "lang": "javascript",
+      "files": 14792,
+      "lines": 564724,
+      "symbols": 15376,
+      "symbolsPerKloc": 27.23,
+      "byKind": {
+        "function": {
+          "count": 5592,
+          "perKloc": 9.9
+        },
+        "constant": {
+          "count": 3940,
+          "perKloc": 6.98
+        },
+        "method": {
+          "count": 3571,
+          "perKloc": 6.32
+        },
+        "class": {
+          "count": 1135,
+          "perKloc": 2.01
+        },
+        "constructor": {
+          "count": 738,
+          "perKloc": 1.31
+        },
+        "property": {
+          "count": 309,
+          "perKloc": 0.55
+        },
+        "field": {
+          "count": 91,
+          "perKloc": 0.16
+        }
+      },
+      "refs": 122384,
+      "refsResolved": 24818,
+      "resolvedRate": 0.2028,
+      "refsWithCandidate": 77485,
+      "resolvedOfCandidates": 0.3201,
+      "refsByKind": {
+        "call": {
+          "total": 72610,
+          "resolved": 14860
+        },
+        "read": {
+          "total": 28813,
+          "resolved": 2915
+        },
+        "import": {
+          "total": 8102,
+          "resolved": 3601
+        },
+        "write": {
+          "total": 7256,
+          "resolved": 1436
+        },
+        "new": {
+          "total": 5186,
+          "resolved": 1656
+        },
+        "inherit": {
+          "total": 417,
+          "resolved": 350
+        }
+      },
+      "parse": {
+        "sampledFiles": 1000,
+        "sampledLines": 32331,
+        "filesWithErrors": 19,
+        "errorNodes": 37,
+        "missingNodes": 1,
+        "errorFileRate": 0.019,
+        "errorsPerKloc": 1.175,
+        "parseFailures": 0,
+        "worst": [
+          {
+            "path": "test/hotCases/worker/remove-add-worker/compute.js",
+            "errors": 7,
+            "firstErrorLine": 3
+          },
+          {
+            "path": "test/hotCases/numeric-ids/add-remove-chunks/module.js",
+            "errors": 4,
+            "firstErrorLine": 3
+          },
+          {
+            "path": "test/hotCases/runtime/dispose-removed-module/module.js",
+            "errors": 4,
+            "firstErrorLine": 3
+          },
+          {
+            "path": "test/hotCases/concat/reload-external/a.js",
+            "errors": 3,
+            "firstErrorLine": 3
+          },
+          {
+            "path": "test/hotCases/concat/reload-external/b.js",
+            "errors": 3,
+            "firstErrorLine": 3
+          },
+          {
+            "path": "test/hotCases/errors/unaccepted-ignored/c.js",
+            "errors": 3,
+            "firstErrorLine": 3
+          },
+          {
+            "path": "test/configCases/externals/import-attributes/re-export.js",
+            "errors": 2,
+            "firstErrorLine": 1
+          },
+          {
+            "path": "test/configCases/asset-modules/type-text-js/fixture.js",
+            "errors": 1,
+            "firstErrorLine": 4
+          }
+        ]
+      },
+      "precision": {
+        "sampled": 30,
+        "nameOk": 30,
+        "startOk": 30,
+        "endOk": 30,
+        "signatureOk": 30,
+        "allOk": 30,
+        "rate": 1,
+        "failures": []
+      }
+    },
+    {
+      "lang": "typescript",
+      "files": 109,
+      "lines": 34120,
+      "symbols": 7199,
+      "symbolsPerKloc": 210.99,
+      "byKind": {
+        "property": {
+          "count": 3136,
+          "perKloc": 91.91
+        },
+        "method": {
+          "count": 1581,
+          "perKloc": 46.34
+        },
+        "field": {
+          "count": 897,
+          "perKloc": 26.29
+        },
+        "interface": {
+          "count": 578,
+          "perKloc": 16.94
+        },
+        "constant": {
+          "count": 356,
+          "perKloc": 10.43
+        },
+        "type": {
+          "count": 273,
+          "perKloc": 8
+        },
+        "class": {
+          "count": 251,
+          "perKloc": 7.36
+        },
+        "namespace": {
+          "count": 63,
+          "perKloc": 1.85
+        },
+        "function": {
+          "count": 61,
+          "perKloc": 1.79
+        },
+        "enum": {
+          "count": 2,
+          "perKloc": 0.06
+        },
+        "constructor": {
+          "count": 1,
+          "perKloc": 0.03
+        }
+      },
+      "refs": 6580,
+      "refsResolved": 4020,
+      "resolvedRate": 0.6109,
+      "refsWithCandidate": 4269,
+      "resolvedOfCandidates": 0.9417,
+      "refsByKind": {
+        "type_ref": {
+          "total": 6134,
+          "resolved": 3897
+        },
+        "call": {
+          "total": 176,
+          "resolved": 25
+        },
+        "import": {
+          "total": 160,
+          "resolved": 11
+        },
+        "inherit": {
+          "total": 85,
+          "resolved": 80
+        },
+        "read": {
+          "total": 24,
+          "resolved": 6
+        },
+        "new": {
+          "total": 1,
+          "resolved": 1
+        }
+      },
+      "parse": {
+        "sampledFiles": 109,
+        "sampledLines": 34229,
+        "filesWithErrors": 1,
+        "errorNodes": 1,
+        "missingNodes": 2,
+        "errorFileRate": 0.0092,
+        "errorsPerKloc": 0.088,
+        "parseFailures": 0,
+        "worst": [
+          {
+            "path": "declarations.d.ts",
+            "errors": 3,
+            "firstErrorLine": 208
+          }
+        ]
+      },
+      "precision": {
+        "sampled": 30,
+        "nameOk": 30,
+        "startOk": 30,
+        "endOk": 30,
+        "signatureOk": 30,
+        "allOk": 30,
+        "rate": 1,
+        "failures": []
+      }
+    },
+    {
+      "lang": "tsx",
+      "files": 1,
+      "lines": 8,
+      "symbols": 0,
+      "symbolsPerKloc": 0,
+      "byKind": {},
+      "refs": 5,
+      "refsResolved": 0,
+      "resolvedRate": 0,
+      "refsWithCandidate": 2,
+      "resolvedOfCandidates": 0,
+      "refsByKind": {
+        "call": {
+          "total": 4,
+          "resolved": 0
+        },
+        "import": {
+          "total": 1,
+          "resolved": 0
+        }
+      },
+      "parse": {
+        "sampledFiles": 0,
+        "sampledLines": 0,
+        "filesWithErrors": 0,
+        "errorNodes": 0,
+        "missingNodes": 0,
+        "errorFileRate": 0,
+        "errorsPerKloc": 0,
+        "parseFailures": 0,
+        "worst": []
+      },
+      "precision": {
+        "sampled": 0,
+        "nameOk": 0,
+        "startOk": 0,
+        "endOk": 0,
+        "signatureOk": 0,
+        "allOk": 0,
+        "rate": 0,
+        "failures": []
+      }
+    }
+  ],
+  "settings": {
+    "parseSamplePerLang": 1000,
+    "precisionSamplePerLang": 30,
+    "seed": "webpack"
+  },
+  "durationMs": 1760
+}

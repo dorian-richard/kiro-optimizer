@@ -1,7 +1,11 @@
 // Parser-agnostic extraction state + helpers shared by the per-language visitors in ./langs/.
 //
 // Design notes:
-// - One recursive pass over named nodes per file. Declarations create symbols only outside function
+// - One pass over named nodes per file. Visitors recurse through `ex.visit` / `ex.visitChildren`, which bound
+//   the JS stack: below MAX_VISIT_DEPTH nested visits a subtree is queued and visited later from the top
+//   (`drain`), so pathological nesting (a 2,000-term `a + b + ...` chain is 2,000 levels deep, because
+//   tree-sitter builds binary expressions left-deep) cannot overflow the stack and lose the whole file.
+// - Declarations create symbols only outside function
 //   bodies (`scope.local`): locals, closures and anonymous classes never become symbols, but their calls
 //   are still attributed to the enclosing symbol.
 // - Receivers are typed cheaply (params, fields, typed locals, `new X()` initializers, imports) so the
@@ -36,6 +40,10 @@ const PRIMITIVES = new Set([
   'self', 'this', 'Integer', 'Void', 'Character',
 ]);
 
+function isSpace(c: number): boolean {
+  return c === 32 || c === 10 || c === 13 || c === 9;
+}
+
 export function isUpperStart(name: string): boolean {
   const c = name.charCodeAt(0);
   return c >= 65 && c <= 90;
@@ -51,9 +59,20 @@ export function isConstName(name: string): boolean {
  * `Optional[int]` -> `Optional`. Undefined for primitives, arrays/slices (`Order[]`, `[]Entry`: the value is
  * a collection, not an Order) and non-identifiers.
  */
+/** `Map<String, List<Foo>>[]` -> `Map[]`: type arguments removed (arrays inside them are not the value's). */
+function withoutTypeArgs(t: string): string {
+  let out = t;
+  for (let i = 0; i < 6 && out.includes('<'); i++) {
+    const next = out.replace(/<[^<>]*>/g, '');
+    if (next === out) break;
+    out = next;
+  }
+  return out;
+}
+
 export function baseTypeName(text: string): string | undefined {
   let t = text.trim();
-  if (t.startsWith('[') || /\[\s*\]/.test(t)) return undefined;
+  if (t.startsWith('[') || /\[\s*\]/.test(withoutTypeArgs(t))) return undefined;
   const lt = t.indexOf('<');
   if (lt > 0) t = t.slice(0, lt);
   const br = t.indexOf('[');
@@ -63,6 +82,43 @@ export function baseTypeName(text: string): string | undefined {
   if (sep >= 0) t = t.slice(sep + 1);
   if (!IDENT_RE.test(t) || PRIMITIVES.has(t)) return undefined;
   return t;
+}
+
+/**
+ * Type recorded for a variable declared with a type that is never a repository type (primitives, strings,
+ * arrays): a call on it is a library call, so name-based fallbacks must not link it to repository code.
+ */
+export const BUILTIN = '#builtin';
+/** Resolution hint for such a receiver (the resolver leaves the call unresolved). */
+export const EXTERNAL_HINT = 'X:';
+/**
+ * Prefix of a variable "type" that is a resolution hint rather than a type name: a local initialized from a call
+ * (`x := svc.Load()`, `var x = repo.find()`) carries that call's `C:` hint, so a call on `x` is typed from the
+ * callee's declared return type.
+ */
+export const HINT_VAR = '\u0002';
+
+const BUILTIN_TYPES = new Set([
+  'void', 'int', 'long', 'short', 'byte', 'char', 'boolean', 'bool', 'float', 'double', 'string', 'String', 'decimal',
+  'uint', 'ulong', 'ushort', 'sbyte', 'nint', 'nuint', 'number', 'bigint', 'symbol', 'Unit', 'Int', 'Long', 'Boolean',
+  'Double', 'Float', 'Char', 'Byte', 'Short', 'Integer', 'Void', 'Character', 'str', 'bytes', 'rune', 'int8', 'int16',
+  'int32', 'int64', 'uint8', 'uint16', 'uint32', 'uint64', 'float32', 'float64', 'complex64', 'complex128', 'uintptr',
+  'CharSequence', 'StringBuilder', 'StringBuffer',
+]);
+
+/**
+ * Type to record for a declared variable: the simple type name, BUILTIN for primitives, strings and arrays,
+ * undefined when the declaration says nothing usable (`var`, `Object`, `any`, function types...).
+ */
+export function declaredType(text: string | null | undefined): string | undefined {
+  if (!text) return undefined;
+  const t = baseTypeName(text);
+  if (t) return BUILTIN_TYPES.has(t) ? BUILTIN : t;
+  const s = text.trim().replace(/[?!]+$/, '').replace(/^[&*\s]+/, '').replace(/^(?:const|readonly|mut|final)\s+/, '');
+  if (!s) return undefined;
+  if (s.startsWith('[') || /\[\s*\]/.test(withoutTypeArgs(s))) return BUILTIN;
+  const base = s.replace(/<.*$/, '').replace(/^.*[.:\\]/, '');
+  return BUILTIN_TYPES.has(base) ? BUILTIN : undefined;
 }
 
 export class Vars {
@@ -123,6 +179,81 @@ export interface SymbolSpec {
 
 export type Visitor = (ex: Ex, node: Node, scope: Scope) => void;
 
+/**
+ * Nested visits before a subtree is deferred to the top-level loop. Each level costs a handful of JS frames
+ * (visit -> language visitor -> helper -> visitChildren); 256 levels stay far below Node's default stack and
+ * far above the nesting of real code, so deferral only kicks in on generated or degenerate expressions.
+ */
+export const MAX_VISIT_DEPTH = 256;
+
+const TYPE_SYMBOL_KINDS = new Set(['class', 'struct', 'record', 'interface', 'trait', 'enum', 'type']);
+
+/** Expression wrappers between a call and the call made on its result (`(f())`, `f()!!`, `f()?`, `await f()`). */
+const CHAIN_WRAPPERS = new Set(['parenthesized_expression', 'non_null_assertion_expression', 'postfix_expression', 'try_expression', 'await_expression']);
+
+/** Member names a read ref can carry: identifiers, plus TS `#private` names (symbols keep their `#`). */
+const MEMBER_NAME_RE = /^#?[A-Za-z_$][\w$]*$/;
+
+/**
+ * Property names read on nearly every kind of object (`x.length`, `res.data`, `e.message`): a read of one of them
+ * through a receiver of unknown type could be any of thousands of declarations, so it is only recorded when the
+ * receiver is typed or is `this` / `self` (writes are always recorded).
+ */
+const GENERIC_READS = new Set(
+  (
+    'length size id name data type value values status message key keys code title items params options children ' +
+    'props body error errors result fields metadata description count state index label text url path config ' +
+    'context headers query request response env default prototype constructor current target parent next prev ' +
+    'first last total x y width height left right top bottom start end min max ok err args arguments this super class'
+  ).split(' '),
+);
+const SELF_RECEIVER = /^(?:this|self|\$this|super|base|static|parent|Self)$/;
+/** JVM package paths used as receivers (`java.util.Locale.ROOT`): never a field of repository code. */
+const JVM_PACKAGE = /^(?:java|javax|jakarta|org|com|net|io|kotlin|scala|android|sun|jdk)(?:\.[a-z_]\w*)*$/;
+
+/** Assignment-like parents and the field that holds their target (null: the operand itself, `x.n++`). */
+const WRITE_PARENTS: Record<string, string | null> = {
+  assignment_expression: 'left',
+  augmented_assignment_expression: 'left',
+  assignment: 'left',
+  augmented_assignment: 'left',
+  compound_assignment_expr: 'left',
+  assignment_statement: 'left',
+  update_expression: null,
+  inc_statement: null,
+  dec_statement: null,
+};
+/** Unary parents that write their operand only with these operators (C# `x.N++`, Kotlin `x.n--`; not `!x.y`, `x!!`). */
+const UNARY_WRITE = new Set(['postfix_unary_expression', 'prefix_unary_expression', 'postfix_expression', 'prefix_expression']);
+
+/**
+ * True when `node` (a member access) is the target of an assignment, a compound assignment or an increment:
+ * `this.x = v`, `x.total += n`, `s.count++`, Go `a, s.f = ...`, Scala `x.y += 1`.
+ */
+export function isAssignTarget(node: Node): boolean {
+  let child: Node = node;
+  let parent = node.parent;
+  // Go: `a.b = 1` puts the targets in an expression_list (the statement's `left` field)
+  if (parent?.type === 'expression_list' && parent.parent?.type === 'assignment_statement') {
+    child = parent;
+    parent = parent.parent;
+  }
+  if (!parent) return false;
+  if (parent.type in WRITE_PARENTS) {
+    const field = WRITE_PARENTS[parent.type];
+    if (field === null) return true;
+    const target = parent.childForFieldName(field) ?? parent.namedChildren[0];
+    return target?.id === child.id;
+  }
+  if (UNARY_WRITE.has(parent.type)) return /^\s*(?:\+\+|--)|(?:\+\+|--)\s*$/.test(parent.text.replace(child.text, ''));
+  // Scala: `x.y += 1` is an infix expression whose operator ends with `=`
+  if (parent.type === 'infix_expression' && parent.namedChildren[0]?.id === child.id) {
+    const op = parent.childForFieldName('operator')?.text ?? parent.namedChildren[1]?.text ?? '';
+    return /^[^=!<>:]?=$|^[^=!<>:]{2,}=$/.test(op);
+  }
+  return false;
+}
+
 /** Context the pure extractor cannot infer from one file alone (supplied by the indexer). */
 export interface ExtractOptions {
   /** Dotted module name of a Python file, computed from the package layout (`__init__.py` dirs). */
@@ -141,20 +272,47 @@ export class Ex {
   /** Field types per container symbol index (for `this.x.f()` receivers). */
   readonly classVars = new Map<number, Vars>();
   private readonly importSet = new Set<string>();
-  private readonly refKeys = new Set<string>();
+  private readonly refKeys = new Map<string, IxRef>();
+  /** Ref made for a call / instantiation node (node id), so an outer call on its result can point at it. */
+  private readonly callRefs = new Map<number, IxRef>();
   private readonly bodies: Array<[number, number, number]> = [];
   private lineStarts?: number[];
   private byteLineStarts?: number[];
   private readonly ascii: boolean;
-  visit!: Visitor;
+  private depth = 0;
+  private readonly deferred: Array<[Node, Scope]> = [];
+  /** Visits one node with the language visitor (depth-bounded, see MAX_VISIT_DEPTH). */
+  readonly visit: Visitor;
 
-  constructor(readonly path: string, readonly lang: Lang, readonly text: string, readonly options: ExtractOptions = {}) {
+  constructor(readonly path: string, readonly lang: Lang, readonly text: string, readonly options: ExtractOptions = {}, visitor?: Visitor) {
     // eslint-disable-next-line no-control-regex
     this.ascii = !/[^\x00-\x7f]/.test(text);
+    const lv: Visitor = visitor ?? (() => {});
+    this.visit = (ex, node, scope) => {
+      if (this.depth >= MAX_VISIT_DEPTH) {
+        this.deferred.push([node, scope]);
+        return;
+      }
+      this.depth++;
+      try {
+        lv(ex, node, scope);
+      } finally {
+        this.depth--;
+      }
+    };
   }
 
   visitChildren(node: Node, scope: Scope): void {
     for (const c of node.namedChildren) if (c) this.visit(this, c, scope);
+  }
+
+  /** Visits the subtrees deferred by the depth bound, each from the top of the stack (FIFO, so roughly in source order). */
+  drain(): void {
+    for (let i = 0; i < this.deferred.length; i++) {
+      const [node, scope] = this.deferred[i];
+      this.visit(this, node, scope);
+    }
+    this.deferred.length = 0;
   }
 
   addImport(spec: string): void {
@@ -169,13 +327,20 @@ export class Ex {
     const parent = s.scope.sym;
     const qname = s.qname ?? (s.scope.q ? `${s.scope.q}.${s.name}` : s.name);
     const start = node.startIndex;
-    const end = node.endIndex;
+    let end = node.endIndex;
+    let endRow = node.endPosition.row;
+    // Layout-sensitive grammars (Scala 3 indented blocks) end a node where the next token starts: trailing
+    // blank lines would make the symbol run into the next declaration's line.
+    if (end > start && isSpace(this.text.charCodeAt(end - 1))) {
+      while (end > start && isSpace(this.text.charCodeAt(end - 1))) end--;
+      endRow = this.rowOf(Math.max(start, end - 1));
+    }
     const sym: ExtractedSymbol = {
       name: s.name,
       qualifiedName: qname,
       kind: s.kind,
       startLine: node.startPosition.row + 1,
-      endLine: node.endPosition.row + 1,
+      endLine: endRow + 1,
       startByte: this.byteOffset(start),
       endByte: this.byteOffset(end),
       signature: this.signature(s.sigStart ?? start, s.sigEnd ?? end, s.value, s.sigPrefix),
@@ -211,8 +376,9 @@ export class Ex {
     };
   }
 
-  addRef(scope: Scope, name: string, kind: RefKind, at: Node, qualifier?: string, hint?: string): void {
-    if (!name || name.length > 128) return;
+  /** Adds a ref (or returns the existing one with the same key). */
+  addRef(scope: Scope, name: string, kind: RefKind, at: Node, qualifier?: string, hint?: string): IxRef | undefined {
+    if (!name || name.length > 128) return undefined;
     let q = qualifier;
     if (q !== undefined) {
       if (q.length > MAX_QUALIFIER * 2 || /\s/.test(q)) q = q.replace(/\s+/g, ' ');
@@ -222,13 +388,79 @@ export class Ex {
     // One ref per (enclosing symbol, kind, name, qualifier): callers lists stay short and the refs table
     // stays proportional to distinct relations rather than raw call sites.
     const key = `${scope.sym ?? -1}\u0000${kind}\u0000${name}\u0000${q ?? ''}`;
-    if (this.refKeys.has(key)) return;
-    this.refKeys.add(key);
+    const seen = this.refKeys.get(key);
+    if (seen) return seen;
     const ref: IxRef = { name, kind, line: at.startPosition.row + 1 };
     if (scope.sym !== undefined) ref.fromSymbol = scope.sym;
     if (q !== undefined) ref.qualifier = q;
     if (hint) ref.hint = hint;
+    this.refKeys.set(key, ref);
     this.refs.push(ref);
+    return ref;
+  }
+
+  /**
+   * A member read or write that is not a call (`obj.field`, `this.x = v`, `x.count++`): one `read` / `write` ref
+   * named after the member, qualified and typed like a call receiver (receiver hints, call-chain hints), then
+   * the receiver is visited. Call visitors record callees themselves and never come through here.
+   */
+  memberRef(scope: Scope, node: Node, nameNode: Node | null | undefined, object: Node | null | undefined, kind?: 'read' | 'write'): IxRef | undefined {
+    let ref: IxRef | undefined;
+    const name = nameNode?.type === 'variable_name' ? nameNode.text.replace(/^\$/, '') : nameNode?.text;
+    if (nameNode && name && MEMBER_NAME_RE.test(name)) {
+      const q = object ? object.text : undefined;
+      const k = kind ?? (isAssignTarget(node) ? 'write' : 'read');
+      const hint = this.receiverHint(q, scope);
+      const jvm = q !== undefined && (this.lang === 'java' || this.lang === 'kotlin' || this.lang === 'scala') && JVM_PACKAGE.test(q);
+      const generic = k === 'read' && !hint && GENERIC_READS.has(name) && !(q !== undefined && SELF_RECEIVER.test(q));
+      if (!jvm && !generic) ref = this.addRef(scope, name, k, nameNode, q, hint);
+    } else if (nameNode && nameNode.namedChildCount) {
+      // computed member name (PHP `$this->{$this->getKeyName()}`): the calls in it still count
+      this.visit(this, nameNode, scope);
+    }
+    if (object) {
+      this.visit(this, object, scope);
+      this.chainHint(ref, object);
+    }
+    return ref;
+  }
+
+  /** Resolution hint for a value of declared type `t` (see typeHint), public for struct literal fields. */
+  hintForType(t: string): string {
+    return this.typeHint(t);
+  }
+
+  /** Records the ref made for a call or instantiation node. */
+  noteCall(node: Node, ref: IxRef | undefined): void {
+    if (ref) this.callRefs.set(node.id, ref);
+  }
+
+  /**
+   * Receiver of `outer` is the result of another call (`getContext().fire()`, `NewPolicy().Transport()`,
+   * `new Foo().bar()`): call after visiting the receiver. The hint names the inner call's ref (`C:<name>`
+   * + `\u0001<qualifier>`) so the resolver can type the receiver from that call's declared return type, or
+   * gives the type directly for an instantiation.
+   */
+  chainHint(outer: IxRef | undefined, receiver: Node | null | undefined): void {
+    if (!outer || outer.hint || !receiver) return;
+    let n: Node | null = receiver;
+    for (let i = 0; n && i < 4 && CHAIN_WRAPPERS.has(n.type) && n.namedChildCount >= 1; i++) n = n.namedChildren[0];
+    const inner = n ? this.callRefs.get(n.id) : undefined;
+    if (!inner || inner === outer) return;
+    outer.hint = inner.kind === 'new' ? `T:${inner.name}` : `C:${inner.name}\u0001${inner.qualifier ?? ''}`;
+  }
+
+  /**
+   * Variable "type" for a local initialized with `value` when the declaration names no type: the hint of the call
+   * or instantiation `value` is (see HINT_VAR), else undefined. Call after visiting `value`.
+   */
+  valueHint(value: Node | null | undefined): string | undefined {
+    let n: Node | null | undefined = value;
+    for (let i = 0; n && i < 4 && CHAIN_WRAPPERS.has(n.type) && n.namedChildCount >= 1; i++) n = n.namedChildren[0];
+    const ref = n ? this.callRefs.get(n.id) : undefined;
+    if (!ref) return undefined;
+    if (ref.kind === 'new') return ref.name;
+    return `${HINT_VAR}C:${ref.name}\u0001${ref.qualifier ?? ''}`;
   }
 
   /** type_ref for every type name found under `node` (dedup per symbol via addRef). */
@@ -257,20 +489,55 @@ export class Ex {
     const m = /^(?:this|self|\$this)\s*(?:\.|->)\s*([A-Za-z_$][\w$]*)$/.exec(q);
     if (m) {
       const t = scope.cls !== undefined ? this.classVars.get(scope.cls)?.own(m[1]) : undefined;
-      return t ? `T:${t}` : undefined;
+      return t ? this.typeHint(t) : undefined;
     }
     if (!IDENT_RE.test(q)) {
       // Dotted module path used as a qualifier (Python `os.path.join`, Java `java.util.List.of`).
       const mod = this.moduleAlias.get(q);
-      return mod !== undefined ? `M:${mod}` : undefined;
+      if (mod !== undefined) return `M:${mod}`;
+      // A field of a typed variable (`s.policy` with `s *server`): the field's declared type, when that type is
+      // declared earlier in this file (Go receivers, Java/C# locals of a same-file class).
+      const fm = /^([A-Za-z_$][\w$]*)\s*(?:\.|->)\s*([A-Za-z_$][\w$]*)$/.exec(q);
+      if (fm && !this.moduleAlias.has(fm[1])) {
+        const owner = scope.vars.get(fm[1]);
+        const idx = owner && !owner.startsWith(HINT_VAR) && owner !== BUILTIN ? this.typeIndex(owner) : undefined;
+        const ft = idx !== undefined ? this.classVars.get(idx)?.own(fm[2]) : undefined;
+        if (ft) return this.typeHint(ft);
+      }
+      return undefined;
     }
     const t = scope.vars.get(q);
-    if (t) return `T:${t}`;
+    if (t) return this.typeHint(t);
     const mod = this.moduleAlias.get(q);
     if (mod !== undefined) return `M:${mod}`;
     const imp = this.importAlias.get(q);
     if (imp) return isUpperStart(imp.name) ? `T:${imp.name}` : `M:${joinModule(imp.spec, imp.name, this.lang)}`;
     if (isUpperStart(q) && this.lang !== 'go') return `T:${q}`;
+    return undefined;
+  }
+
+  /**
+   * Hint for a receiver of recorded type `t`: `X:` for builtins, the stored hint of a call-initialized local, `Q:` +
+   * package + name for a Go type qualified by an imported package (`*policy.Policy`), else `T:` + the type name.
+   */
+  private typeHint(t: string): string {
+    if (t === BUILTIN) return EXTERNAL_HINT;
+    if (t.startsWith(HINT_VAR)) return t.slice(1);
+    const dot = t.indexOf('.');
+    if (dot > 0) {
+      const mod = this.moduleAlias.get(t.slice(0, dot));
+      const name = t.slice(dot + 1);
+      return mod !== undefined ? `Q:${mod}\u0001${name}` : `T:${name}`;
+    }
+    return `T:${t}`;
+  }
+
+  /** Index of the top-level type declared in this file under `name` (types declared so far). */
+  private typeIndex(name: string): number | undefined {
+    for (let i = 0; i < this.symbols.length; i++) {
+      const s = this.symbols[i];
+      if (s.name === name && s.parent === undefined && TYPE_SYMBOL_KINDS.has(s.kind) && this.classVars.has(i)) return i;
+    }
     return undefined;
   }
 
@@ -353,6 +620,19 @@ export class Ex {
       else hi = mid - 1;
     }
     return this.byteLineStarts[lo] + Buffer.byteLength(this.text.slice(ls[lo], index), 'utf8');
+  }
+
+  /** 0-based row of a string index. */
+  private rowOf(index: number): number {
+    const ls = this.getLineStarts();
+    let lo = 0;
+    let hi = ls.length - 1;
+    while (lo < hi) {
+      const mid = (lo + hi + 1) >> 1;
+      if (ls[mid] <= index) lo = mid;
+      else hi = mid - 1;
+    }
+    return lo;
   }
 
   private getLineStarts(): number[] {

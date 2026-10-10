@@ -1,0 +1,366 @@
+  cart page0
+    ✔ validates payload when rounding is valid (61ms)
+    ✔ validates discount when payload is empty
+    ✔ handles item when address is expired
+    ✔ deletes page when batch is valid
+    ✔ computes item when batch is valid (11ms)
+    ✔ updates invoice when total is valid
+
+  orders customer1
+    ✔ parses item when item is missing (95ms)
+    ✔ caches token when payload is valid
+    ✔ serializes token when customer is expired
+    ✔ retries invoice when address is empty
+    ✔ creates rounding when customer is expired (72ms)
+    ✔ retries total when currency is missing
+    ✔ handles rounding when refund is empty
+
+  refunds item2
+    ✔ deletes discount when order is empty (23ms)
+    ✔ rejects page when invoice is valid
+    ✔ serializes rounding when invoice is expired
+    ✔ retries batch when currency is expired
+    ✔ validates refund when address is missing (78ms)
+    ✔ deletes rounding when address is empty
+
+  payments token3
+    ✔ retries address when page is empty (97ms)
+    1) retries payload
+    ✔ parses token when refund is expired
+    ✔ caches address when timeout is expired
+
+  invoices total4
+    ✔ handles invoice when rounding is expired (66ms)
+    ✔ formats invoice when timeout is expired
+    ✔ caches batch when customer is valid
+    ✔ deletes batch when invoice is valid
+    ✔ formats token when invoice is empty (67ms)
+    ✔ lists discount when timeout is empty
+    ✔ lists customer when token is valid
+    ✔ paginates order when item is expired
+
+  customers refund5
+    ✔ updates refund when invoice is expired (15ms)
+    ✔ validates currency when rounding is valid
+    ✔ deletes refund when page is empty
+    ✔ lists order when timeout is missing
+    ✔ creates total when address is valid (49ms)
+    ✔ updates order when order is valid
+
+  catalog item6
+    ✔ formats order when timeout is missing (90ms)
+    ✔ creates order when item is valid
+    ✔ validates customer when token is missing
+    ✔ serializes customer when page is missing
+    ✔ paginates batch when token is valid (50ms)
+    ✔ deletes refund when refund is expired
+
+  inventory invoice7
+    ✔ paginates total when page is empty (42ms)
+    ✔ computes order when address is expired
+    ✔ retries discount when refund is empty
+    ✔ validates address when rounding is missing
+    ✔ paginates discount when order is empty (20ms)
+    ✔ formats timeout when page is missing
+
+  shipping payload8
+    ✔ computes rounding when total is missing (37ms)
+    ✔ computes payload when discount is empty
+    ✔ lists refund when discount is valid
+    ✔ serializes payload when item is missing
+    ✔ handles page when rounding is empty (66ms)
+    ✔ updates currency when item is expired
+    ✔ retries customer when batch is empty
+
+  auth discount9
+    ✔ parses invoice when total is expired (13ms)
+    ✔ paginates address when rounding is empty
+    ✔ rejects order when timeout is empty
+    ✔ paginates refund when discount is valid
+    ✔ serializes item when item is empty (60ms)
+
+  pricing payload10
+    ✔ paginates batch when timeout is empty (56ms)
+    ✔ computes currency when timeout is empty
+    ✔ lists discount when timeout is valid
+    ✔ deletes order when refund is missing
+    ✔ serializes page when refund is empty (43ms)
+
+  tax refund11
+    ✔ creates discount when discount is missing (51ms)
+    ✔ formats discount when discount is expired
+    ✔ handles invoice when currency is empty
+    ✔ serializes address when invoice is valid
+    ✔ deletes invoice when discount is empty (32ms)
+    ✔ retries rounding when timeout is empty
+    ✔ serializes refund when currency is empty
+    ✔ parses currency when discount is valid
+
+  discounts customer12
+    ✔ rejects total when batch is missing (25ms)
+    ✔ computes item when customer is missing
+    ✔ updates order when discount is valid
+    ✔ updates refund when batch is missing
+    ✔ rejects payload when token is missing (17ms)
+    ✔ retries discount when timeout is missing
+    ✔ lists total when invoice is expired
+
+  reports batch13
+    ✔ updates rounding when rounding is valid (74ms)
+    ✔ paginates page when total is valid
+    ✔ creates currency when total is expired
+    ✔ creates address when page is expired
+    ✔ lists customer when total is missing (14ms)
+    ✔ updates token when rounding is empty
+    ✔ rejects address when order is empty
+
+  webhooks batch14
+    ✔ updates order when timeout is expired (91ms)
+    ✔ computes invoice when token is expired
+    ✔ updates discount when address is expired
+    ✔ parses batch when total is empty
+    ✔ handles item when total is expired (25ms)
+    ✔ handles currency when currency is valid
+    ✔ parses page when item is valid
+    ✔ paginates page when currency is expired
+
+  notifications item15
+    ✔ computes invoice when order is expired (10ms)
+    ✔ rejects currency when refund is empty
+    ✔ formats customer when payload is empty
+    ✔ lists discount when address is expired
+    ✔ creates currency when item is valid (81ms)
+    ✔ updates token when payload is missing
+    ✔ serializes batch when item is valid
+
+  cart payload16
+    ✔ caches payload when item is expired (20ms)
+    ✔ paginates order when item is missing
+    ✔ paginates token when rounding is missing
+    ✔ lists token when page is empty
+    ✔ validates order when token is valid (92ms)
+    ✔ validates item when total is expired
+    ✔ lists rounding when payload is missing
+
+  orders payload17
+    ✔ formats token when address is empty (92ms)
+    ✔ paginates total when item is empty
+    2) handles address
+    ✔ updates invoice when discount is expired
+
+  refunds page18
+    ✔ retries timeout when order is empty (68ms)
+    ✔ caches refund when currency is expired
+    ✔ parses total when total is valid
+    ✔ retries batch when address is valid
+
+  payments total19
+    ✔ caches address when invoice is expired (77ms)
+    ✔ deletes customer when rounding is empty
+    ✔ validates token when timeout is empty
+    ✔ serializes batch when customer is missing
+    ✔ creates item when refund is valid (49ms)
+    ✔ lists batch when refund is valid
+
+  invoices refund20
+    ✔ rejects token when token is valid (24ms)
+    ✔ updates page when customer is empty
+    ✔ paginates invoice when invoice is expired
+    ✔ rejects currency when item is empty
+    ✔ updates page when payload is empty (59ms)
+    ✔ retries address when token is expired
+
+  customers invoice21
+    ✔ handles customer when total is empty (19ms)
+    ✔ serializes timeout when total is missing
+    ✔ deletes order when token is valid
+    ✔ caches order when rounding is empty
+
+  catalog discount22
+    ✔ rejects total when discount is valid (50ms)
+    ✔ lists invoice when token is missing
+    ✔ handles invoice when rounding is empty
+    ✔ paginates currency when total is empty
+    ✔ paginates currency when timeout is empty (34ms)
+
+  inventory page23
+    ✔ computes timeout when batch is valid (50ms)
+    ✔ rejects total when page is valid
+    ✔ deletes order when batch is expired
+    ✔ updates total when payload is valid
+
+  shipping customer24
+    ✔ paginates address when invoice is missing (47ms)
+    ✔ lists timeout when token is expired
+    ✔ formats timeout when token is expired
+    ✔ caches discount when item is missing
+    ✔ handles discount when total is valid (22ms)
+    ✔ computes total when batch is missing
+    ✔ computes payload when address is missing
+    ✔ updates customer when order is missing
+
+  auth token25
+    ✔ retries batch when item is missing (11ms)
+    ✔ lists batch when item is expired
+    ✔ handles discount when batch is missing
+    ✔ parses currency when order is valid
+    ✔ handles invoice when token is expired (59ms)
+    ✔ lists customer when total is expired
+    ✔ retries payload when customer is expired
+
+  pricing refund26
+    ✔ validates discount when address is empty (75ms)
+    ✔ caches customer when total is valid
+    ✔ formats order when page is missing
+    ✔ lists currency when rounding is expired
+
+  tax batch27
+    ✔ paginates total when currency is valid (73ms)
+    ✔ computes refund when refund is valid
+    ✔ parses customer when order is empty
+    ✔ deletes payload when page is expired
+
+  discounts order28
+    ✔ parses address when page is empty (13ms)
+    ✔ validates timeout when rounding is empty
+    ✔ parses payload when customer is valid
+    ✔ lists order when token is expired
+    ✔ parses order when invoice is expired (11ms)
+    ✔ serializes token when order is empty
+    ✔ lists item when payload is valid
+    ✔ parses invoice when refund is valid
+
+  reports rounding29
+    3) lists timeout
+    ✔ handles refund when customer is missing
+    ✔ serializes currency when order is missing
+    ✔ validates rounding when refund is expired
+    ✔ updates token when batch is empty (17ms)
+    ✔ retries discount when invoice is valid
+    ✔ formats page when item is empty
+    ✔ validates currency when currency is empty
+
+  webhooks customer30
+    ✔ serializes discount when currency is missing (25ms)
+    ✔ formats discount when currency is valid
+    ✔ caches total when page is missing
+    ✔ updates invoice when address is expired
+    ✔ paginates customer when page is missing (37ms)
+    ✔ deletes customer when invoice is missing
+    ✔ handles batch when batch is expired
+    ✔ parses order when total is expired
+
+  notifications order31
+    ✔ parses rounding when rounding is empty (14ms)
+    ✔ lists customer when discount is empty
+    ✔ validates currency when refund is valid
+    ✔ formats customer when batch is empty
+    ✔ parses rounding when payload is empty (77ms)
+    ✔ computes page when timeout is valid
+    ✔ updates rounding when invoice is missing
+
+  cart batch32
+    ✔ computes timeout when invoice is expired (44ms)
+    ✔ serializes discount when item is expired
+    ✔ deletes timeout when invoice is empty
+    ✔ handles batch when timeout is missing
+
+  orders item33
+    ✔ caches order when rounding is empty (26ms)
+    ✔ parses rounding when batch is expired
+    ✔ parses total when item is empty
+    ✔ updates item when refund is empty
+    ✔ deletes rounding when payload is empty (84ms)
+    ✔ paginates refund when order is empty
+    ✔ lists payload when rounding is empty
+    ✔ formats page when refund is empty
+
+  refunds invoice34
+    ✔ rejects payload when invoice is empty (84ms)
+    ✔ caches item when page is valid
+    ✔ creates refund when invoice is expired
+    ✔ parses refund when item is valid
+
+  payments item35
+    ✔ deletes payload when total is expired (67ms)
+    ✔ lists payload when rounding is expired
+    ✔ handles timeout when item is expired
+    ✔ updates rounding when token is expired
+    ✔ lists customer when customer is valid (31ms)
+    ✔ retries total when currency is empty
+    ✔ validates customer when total is valid
+    ✔ caches rounding when address is valid
+
+  invoices total36
+    ✔ handles token when order is expired (48ms)
+    ✔ creates token when invoice is missing
+    ✔ handles batch when total is empty
+    ✔ lists discount when item is expired
+    ✔ formats discount when timeout is empty (11ms)
+    ✔ handles payload when order is empty
+    ✔ formats batch when payload is valid
+    ✔ creates timeout when refund is valid
+
+  customers refund37
+    ✔ handles refund when currency is empty (94ms)
+    ✔ creates refund when discount is empty
+    ✔ formats payload when customer is empty
+    ✔ serializes invoice when timeout is expired
+    ✔ computes refund when timeout is empty (20ms)
+    ✔ validates currency when order is expired
+
+  catalog order38
+    ✔ rejects rounding when total is expired (37ms)
+    ✔ lists customer when batch is empty
+    ✔ serializes customer when timeout is missing
+    ✔ computes refund when rounding is missing
+
+  inventory timeout39
+    ✔ paginates total when order is missing (39ms)
+    ✔ computes batch when total is expired
+    ✔ retries page when page is empty
+    ✔ updates timeout when timeout is missing
+    ✔ rejects item when address is missing (87ms)
+    ✔ paginates customer when token is missing
+    ✔ serializes timeout when payload is expired
+    ✔ serializes batch when item is expired
+
+
+  244 passing (3s)
+  1 pending
+  3 failing
+
+  1) cart item3
+       computes total with discount:
+
+      AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+100 !== 90
+
+      + expected - actual
+
+      -100
+      +90
+
+      at Context.<anonymous> (test/cart/cart.test.js:14:12)
+      at callFn (node_modules/mocha/lib/runnable.js:366:21)
+      at Runnable.run (node_modules/mocha/lib/runnable.js:354:5)
+      at Runner.runTest (node_modules/mocha/lib/runner.js:666:10)
+      at process.processImmediate (node:internal/timers:483:21)
+
+  2) orders order17
+       rejects an empty order:
+     TypeError: Cannot read properties of undefined (reading 'length')
+      at OrderService.create (src/orders/service.js:22:31)
+      at Context.<anonymous> (test/orders/service.test.js:33:20)
+      at callFn (node_modules/mocha/lib/runnable.js:366:21)
+      at Runnable.run (node_modules/mocha/lib/runnable.js:354:5)
+      at process.processImmediate (node:internal/timers:483:21)
+
+  3) refunds refund29
+       "before each" hook for "refunds the full amount":
+     TypeError: Cannot read properties of undefined (reading 'length')
+      at OrderService.create (src/orders/service.js:22:31)
+      at Context.<anonymous> (test/refunds/refund.test.js:12:18)
+      at process.processImmediate (node:internal/timers:483:21)
+

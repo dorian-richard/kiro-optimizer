@@ -1,0 +1,67 @@
+{
+  "repo": {
+    "name": "discourse",
+    "url": "https://github.com/discourse/discourse.git",
+    "tag": "v2026.9.0",
+    "commit": "343b20f97ef5f6bd70826ee0e993ba348b210fd5",
+    "language": "ruby",
+    "path": "bench/repos/discourse"
+  },
+  "notes": "Held-out tasks (round 2), written after v0.2's tuning and before any kopt measurement on them; not derived from bench/results/failures.md. Gold read in the code with git grep and sed only. Re-check with `kopt bench bench/tasks-heldout/discourse.json --verify`.",
+  "tasks": [
+    {
+      "id": "ho-ds-explain-tl2-promotion",
+      "kind": "explain",
+      "lang": "en",
+      "question": "What does a basic user need to do to be promoted to member (trust level 2), and where is that promotion applied?",
+      "search": "promote trust level member requirements topics read likes days visited",
+      "gold": {
+        "files": [
+          "lib/promotion.rb"
+        ],
+        "symbols": [
+          {
+            "name": "review_tl1",
+            "file": "lib/promotion.rb",
+            "line": 40,
+            "kind": "method"
+          },
+          {
+            "name": "tl2_met?",
+            "file": "lib/promotion.rb",
+            "line": 105,
+            "kind": "method"
+          }
+        ]
+      },
+      "verifiedBy": "Read lib/promotion.rb: review dispatches to review_tl1 for TL1 users, which promotes when Promotion.tl2_met? (topics entered, posts read, time read, days visited, likes, replies vs SiteSetting.tl2_requires_*)."
+    },
+    {
+      "id": "ho-ds-locate-email-related-post",
+      "kind": "locate",
+      "lang": "en",
+      "question": "When an incoming email carries no reply key, how does Discourse find the post it replies to from its In-Reply-To and References headers?",
+      "search": "incoming email in-reply-to references headers related post message id",
+      "gold": {
+        "files": [
+          "lib/email/receiver.rb"
+        ],
+        "symbols": [
+          {
+            "name": "find_related_post",
+            "file": "lib/email/receiver.rb",
+            "line": 1256,
+            "kind": "method"
+          },
+          {
+            "name": "extract_reply_message_ids",
+            "file": "lib/email/receiver.rb",
+            "line": 1271,
+            "kind": "method"
+          }
+        ]
+      },
+      "verifiedBy": "Read Email::Receiver#find_related_post: extract_reply_message_ids collects In-Reply-To and References ids (up to 5) and Email::MessageIdService.find_post_from_message_ids maps them to a post."
+    }
+  ]
+}

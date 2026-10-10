@@ -1,5 +1,5 @@
 import type { Node } from 'web-tree-sitter';
-import { baseTypeName, Ex, isUpperStart, Vars, type Scope } from '../extract.js';
+import { baseTypeName, declaredType, Ex, isUpperStart, Vars, type Scope } from '../extract.js';
 import type { SymbolKind } from '../../core/types.js';
 
 const TYPE_NODES = ['identifier', 'qualified_name', 'generic_name'];
@@ -62,7 +62,7 @@ function params(ex: Ex, list: Node | null, inner: Scope): void {
     if (p?.type !== 'parameter') continue;
     const ty = typeField(p);
     const n = p.childForFieldName('name');
-    if (n && ty) inner.vars.set(n.text, baseTypeName(ty.text));
+    if (n && ty) inner.vars.set(n.text, declaredType(ty.text));
     typeRefs(ex, ty, inner);
   }
 }
@@ -72,7 +72,7 @@ function prescan(body: Node | null, vars: Vars): void {
     if (!m) continue;
     if (m.type === 'field_declaration' || m.type === 'event_field_declaration') {
       const vd = m.namedChildren.find((c) => c?.type === 'variable_declaration');
-      const t = baseTypeName(vd ? typeField(vd)?.text ?? '' : '');
+      const t = declaredType(vd ? typeField(vd)?.text : undefined);
       for (const d of vd?.namedChildren ?? []) {
         if (d?.type !== 'variable_declarator') continue;
         const n = d.childForFieldName('name') ?? d.namedChildren.find((c) => c?.type === 'identifier');
@@ -80,7 +80,7 @@ function prescan(body: Node | null, vars: Vars): void {
       }
     } else if (m.type === 'property_declaration') {
       const n = m.childForFieldName('name');
-      if (n) vars.set(n.text, baseTypeName(typeField(m)?.text ?? ''));
+      if (n) vars.set(n.text, declaredType(typeField(m)?.text));
     }
   }
 }
@@ -123,7 +123,7 @@ function typeDecl(ex: Ex, node: Node, scope: Scope, kind: SymbolKind): void {
       const pn = p.childForFieldName('name');
       if (!pn) continue;
       ex.addSymbol({ name: pn.text, kind: 'property', node: p, scope: inner, exported: true });
-      inner.vars.set(pn.text, baseTypeName(typeField(p)?.text ?? ''));
+      inner.vars.set(pn.text, declaredType(typeField(p)?.text));
       typeRefs(ex, typeField(p), inner);
     }
   }
@@ -214,7 +214,7 @@ function localDecl(ex: Ex, node: Node, scope: Scope): void {
   const vd = node.namedChildren.find((c) => c?.type === 'variable_declaration');
   if (!vd) return ex.visitChildren(node, scope);
   const ty = typeField(vd);
-  const declared = ty ? baseTypeName(ty.text) : undefined;
+  const declared = ty ? declaredType(ty.text) : undefined;
   for (const d of vd.namedChildren) {
     if (d?.type !== 'variable_declarator') continue;
     const n = d.childForFieldName('name') ?? d.namedChildren.find((c) => c?.type === 'identifier');
@@ -222,8 +222,22 @@ function localDecl(ex: Ex, node: Node, scope: Scope): void {
     let t = declared;
     const v = value?.namedChildren[0];
     if (!t && v?.type === 'object_creation_expression') t = baseTypeName(v.childForFieldName('type')?.text ?? '');
-    if (n) scope.vars.set(n.text, t);
+    // value first: `var x = repo.Find(id)` types x from the callee's declared result
     if (value) ex.visit(ex, value, scope);
+    if (n) scope.vars.set(n.text, t ?? (ty && !/^var$/.test(ty.text.trim()) ? undefined : ex.valueHint(v)));
+  }
+}
+
+/** Object initializer `new Foo { Bar = 1 }`: a write of Foo.Bar for each `Name = value`, then the values. */
+function initializerWrites(ex: Ex, init: Node, scope: Scope, typeName: string): void {
+  for (const a of init.namedChildren) {
+    if (!a) continue;
+    const left = a.type === 'assignment_expression' ? a.childForFieldName('left') : null;
+    if (left?.type === 'identifier') {
+      ex.addRef(scope, left.text, 'write', left, typeName, `T:${typeName}`);
+      const right = a.childForFieldName('right');
+      if (right) ex.visit(ex, right, scope);
+    } else ex.visit(ex, a, scope);
   }
 }
 
@@ -290,16 +304,17 @@ export function visitCSharp(ex: Ex, node: Node, scope: Scope): void {
       if (f) {
         if (f.type === 'identifier' || f.type === 'generic_name') {
           const name = f.type === 'generic_name' ? f.namedChildren[0]?.text : f.text;
-          if (name) ex.addRef(scope, name, 'call', f);
+          if (name) ex.noteCall(node, ex.addRef(scope, name, 'call', f));
         } else if (f.type === 'member_access_expression') {
           const name = f.childForFieldName('name');
           const obj = f.childForFieldName('expression');
           const nm = name?.type === 'generic_name' ? name.namedChildren[0]?.text : name?.text;
-          if (name && nm) {
-            const q = obj?.text;
-            ex.addRef(scope, nm, 'call', name, q, ex.receiverHint(q, scope));
+          const ref = name && nm ? ex.addRef(scope, nm, 'call', name, obj?.text, ex.receiverHint(obj?.text, scope)) : undefined;
+          ex.noteCall(node, ref);
+          if (obj) {
+            ex.visit(ex, obj, scope);
+            ex.chainHint(ref, obj);
           }
-          if (obj) ex.visit(ex, obj, scope);
         } else ex.visit(ex, f, scope);
       }
       const args = node.childForFieldName('arguments') ?? node.namedChildren.find((c) => c?.type === 'argument_list');
@@ -309,10 +324,18 @@ export function visitCSharp(ex: Ex, node: Node, scope: Scope): void {
     case 'object_creation_expression': {
       const ty = node.childForFieldName('type');
       const name = ty ? baseTypeName(ty.text) : undefined;
-      if (ty && name) ex.addRef(scope, name, 'new', ty);
-      for (const c of node.namedChildren) if (c && c !== ty) ex.visit(ex, c, scope);
+      if (ty && name) ex.noteCall(node, ex.addRef(scope, name, 'new', ty));
+      for (const c of node.namedChildren) {
+        if (!c || c === ty) continue;
+        if (c.type === 'initializer_expression' && name) initializerWrites(ex, c, scope, name);
+        else ex.visit(ex, c, scope);
+      }
       return;
     }
+    case 'member_access_expression':
+      // `obj.Field`, `this.x = v`, `Color.Red` (invocations record their callee themselves)
+      ex.memberRef(scope, node, node.childForFieldName('name'), node.childForFieldName('expression'));
+      return;
     case 'attribute_list':
       return;
     default:

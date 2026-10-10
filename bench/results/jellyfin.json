@@ -1,0 +1,3056 @@
+{
+  "meta": {
+    "label": "jellyfin",
+    "repo": {
+      "name": "jellyfin",
+      "url": "https://github.com/jellyfin/jellyfin.git",
+      "tag": "v10.11.11",
+      "commit": "1fbd8739292cce610231be93daf43368733edf63",
+      "language": "c_sharp",
+      "path": "bench/repos/jellyfin"
+    },
+    "repoRoot": "bench/repos/jellyfin",
+    "headCommit": "1fbd8739292cce610231be93daf43368733edf63",
+    "date": "2026-10-09T22:37:56.163Z",
+    "input": "search",
+    "charsPerToken": 3,
+    "strategies": [
+      "native-naive",
+      "native-ranged",
+      "kopt-pack",
+      "kopt-hits+read",
+      "kirograph",
+      "codegraph"
+    ],
+    "grepLimits": {
+      "maxMatches": 100,
+      "maxChars": 10000,
+      "maxLineChars": 250
+    },
+    "readLimits": {
+      "naiveTopFiles": 3,
+      "naiveMaxLines": 2000,
+      "rangedMatches": 4,
+      "rangedContext": 60
+    },
+    "koptBudgets": {
+      "find": 700,
+      "pack": 2500,
+      "read": 3000
+    },
+    "index": {
+      "built": false,
+      "durationMs": 0,
+      "files": 1922,
+      "symbols": 17980,
+      "path": "<index-dir>/.kopt-jellyfin/index.db"
+    },
+    "notes": [
+      "kirograph: outputs loaded from bench/competitors/results/kirograph-jellyfin.jsonl",
+      "codegraph: outputs loaded from bench/competitors/results/codegraph-jellyfin.jsonl"
+    ],
+    "durationMs": 3257
+  },
+  "results": [
+    {
+      "taskId": "jf-locate-lockout",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 26362,
+      "chars": 79082,
+      "toolCalls": 4,
+      "durationMs": 398,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [
+          "Jellyfin.Data/Events/Users/UserLockedOutEventArgs.cs"
+        ],
+        "symbolsMissed": [],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "lockout",
+          "chars": 7627,
+          "tokens": 2543
+        },
+        {
+          "tool": "read_file",
+          "args": "Jellyfin.Server.Implementations/Users/UserManager.cs",
+          "chars": 53515,
+          "tokens": 17839
+        },
+        {
+          "tool": "read_file",
+          "args": "Jellyfin.Server/Migrations/Routines/MigrateUserDb.cs",
+          "chars": 11220,
+          "tokens": 3740
+        },
+        {
+          "tool": "read_file",
+          "args": "MediaBrowser.Model/Users/UserPolicy.cs",
+          "chars": 6720,
+          "tokens": 2240
+        }
+      ]
+    },
+    {
+      "taskId": "jf-locate-lockout",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 9261,
+      "chars": 27781,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [
+          "Jellyfin.Data/Events/Users/UserLockedOutEventArgs.cs"
+        ],
+        "symbolsMissed": [],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "lockout",
+          "chars": 7627,
+          "tokens": 2543
+        },
+        {
+          "tool": "read_file",
+          "args": "Jellyfin.Server.Implementations/Users/UserManager.cs:397-517",
+          "chars": 8244,
+          "tokens": 2748
+        },
+        {
+          "tool": "read_file",
+          "args": "Jellyfin.Server.Implementations/Users/UserManager.cs:577-697",
+          "chars": 5409,
+          "tokens": 1803
+        },
+        {
+          "tool": "read_file",
+          "args": "MediaBrowser.Model/Users/UserPolicy.cs:114-200",
+          "chars": 2718,
+          "tokens": 906
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Jellyfin.Database/Jellyfin.Database.Implementations/Entities/User.cs:96-216",
+          "chars": 3783,
+          "tokens": 1261
+        }
+      ]
+    },
+    {
+      "taskId": "jf-locate-lockout",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1441,
+      "chars": 4322,
+      "toolCalls": 1,
+      "durationMs": 25,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "Jellyfin.Server.Implementations/Users/UserManager.cs",
+          "Jellyfin.Data/Events/Users/UserLockedOutEventArgs.cs"
+        ],
+        "symbolsMissed": [
+          "AuthenticateUser",
+          "UserLockedOutEventArgs"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"user disabled too many failed login attempts lockout event\"",
+          "chars": 4322,
+          "tokens": 1441
+        }
+      ]
+    },
+    {
+      "taskId": "jf-locate-lockout",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 4540,
+      "chars": 13615,
+      "toolCalls": 3,
+      "durationMs": 27,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "Jellyfin.Server.Implementations/Users/UserManager.cs",
+          "Jellyfin.Data/Events/Users/UserLockedOutEventArgs.cs"
+        ],
+        "symbolsMissed": [
+          "AuthenticateUser",
+          "UserLockedOutEventArgs"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"user disabled too many failed login attempts lockout event\"",
+          "chars": 1855,
+          "tokens": 619
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#bw8",
+          "chars": 146,
+          "tokens": 49
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#bvv",
+          "chars": 11614,
+          "tokens": 3872
+        }
+      ]
+    },
+    {
+      "taskId": "jf-locate-lockout",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tokens": 868,
+      "chars": 2604,
+      "toolCalls": 1,
+      "durationMs": 187,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "Jellyfin.Server.Implementations/Users/UserManager.cs",
+          "Jellyfin.Data/Events/Users/UserLockedOutEventArgs.cs"
+        ],
+        "symbolsMissed": [
+          "AuthenticateUser",
+          "UserLockedOutEventArgs"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "user disabled too many failed login attempts lockout event",
+          "chars": 2604,
+          "tokens": 868
+        }
+      ]
+    },
+    {
+      "taskId": "jf-locate-lockout",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tokens": 6840,
+      "chars": 20520,
+      "toolCalls": 1,
+      "durationMs": 650,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "AuthenticateUser"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "user disabled too many failed login attempts lockout event",
+          "chars": 20520,
+          "tokens": 6840
+        }
+      ]
+    },
+    {
+      "taskId": "jf-locate-auth-header",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 69370,
+      "chars": 208108,
+      "toolCalls": 4,
+      "durationMs": 307,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "GetAuthorizationDictionary",
+          "GetAuthorization",
+          "GetParts"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "legacy",
+          "chars": 9941,
+          "tokens": 3314
+        },
+        {
+          "tool": "read_file",
+          "args": "MediaBrowser.Controller/MediaEncoding/EncodingHelper.cs",
+          "chars": 86669,
+          "tokens": 28890
+        },
+        {
+          "tool": "read_file",
+          "args": "Jellyfin.Api/Controllers/UserLibraryController.cs",
+          "chars": 27852,
+          "tokens": 9284
+        },
+        {
+          "tool": "read_file",
+          "args": "Jellyfin.Api/Controllers/ImageController.cs",
+          "chars": 83646,
+          "tokens": 27882
+        }
+      ]
+    },
+    {
+      "taskId": "jf-locate-auth-header",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 8871,
+      "chars": 26612,
+      "toolCalls": 3,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "GetAuthorizationDictionary",
+          "GetAuthorization",
+          "GetParts"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "legacy",
+          "chars": 9941,
+          "tokens": 3314
+        },
+        {
+          "tool": "read_file",
+          "args": "Jellyfin.Api/Controllers/UserLibraryController.cs:53-354",
+          "chars": 11673,
+          "tokens": 3891
+        },
+        {
+          "tool": "read_file",
+          "args": "MediaBrowser.Controller/MediaEncoding/EncodingHelper.cs:65-185",
+          "chars": 4998,
+          "tokens": 1666
+        }
+      ]
+    },
+    {
+      "taskId": "jf-locate-auth-header",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1298,
+      "chars": 3892,
+      "toolCalls": 1,
+      "durationMs": 38,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"authorization header parse MediaBrowser client token legacy\"",
+          "chars": 3892,
+          "tokens": 1298
+        }
+      ]
+    },
+    {
+      "taskId": "jf-locate-auth-header",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 1349,
+      "chars": 4044,
+      "toolCalls": 3,
+      "durationMs": 23,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.3333333333333333,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "GetAuthorizationDictionary",
+          "GetParts"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"authorization header parse MediaBrowser client token legacy\"",
+          "chars": 2058,
+          "tokens": 686
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#1c7",
+          "chars": 1871,
+          "tokens": 624
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#1cb",
+          "chars": 115,
+          "tokens": 39
+        }
+      ]
+    },
+    {
+      "taskId": "jf-locate-auth-header",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tokens": 949,
+      "chars": 2847,
+      "toolCalls": 1,
+      "durationMs": 85,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "GetAuthorizationDictionary",
+          "GetAuthorization",
+          "GetParts"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "authorization header parse MediaBrowser client token legacy",
+          "chars": 2847,
+          "tokens": 949
+        }
+      ]
+    },
+    {
+      "taskId": "jf-locate-auth-header",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tokens": 8316,
+      "chars": 24947,
+      "toolCalls": 1,
+      "durationMs": 294,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "Jellyfin.Server.Implementations/Security/AuthorizationContext.cs"
+        ],
+        "symbolsMissed": [
+          "GetAuthorizationDictionary",
+          "GetAuthorization",
+          "GetParts"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "authorization header parse MediaBrowser client token legacy",
+          "chars": 24947,
+          "tokens": 8316
+        }
+      ]
+    },
+    {
+      "taskId": "jf-locate-password-migration",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 10102,
+      "chars": 30304,
+      "toolCalls": 4,
+      "durationMs": 348,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "Authenticate"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "verify|iterations",
+          "chars": 8654,
+          "tokens": 2885
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/Jellyfin.Model.Tests/Cryptography/PasswordHashTests.cs",
+          "chars": 7898,
+          "tokens": 2633
+        },
+        {
+          "tool": "read_file",
+          "args": "Emby.Server.Implementations/Cryptography/CryptographyProvider.cs",
+          "chars": 2682,
+          "tokens": 894
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/Jellyfin.LiveTv.Tests/HdHomerunManagerTests.cs",
+          "chars": 11070,
+          "tokens": 3690
+        }
+      ]
+    },
+    {
+      "taskId": "jf-locate-password-migration",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 6532,
+      "chars": 19594,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "Authenticate"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "verify|iterations",
+          "chars": 8654,
+          "tokens": 2885
+        },
+        {
+          "tool": "read_file",
+          "args": "Emby.Server.Implementations/Cryptography/CryptographyProvider.cs:1-79",
+          "chars": 2682,
+          "tokens": 894
+        },
+        {
+          "tool": "read_file",
+          "args": "MediaBrowser.Model/Cryptography/Constants.cs:1-24",
+          "chars": 651,
+          "tokens": 217
+        },
+        {
+          "tool": "read_file",
+          "args": "src/Jellyfin.LiveTv/TunerHosts/HdHomerun/HdHomerunManager.cs:229-349",
+          "chars": 3794,
+          "tokens": 1265
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/Jellyfin.LiveTv.Tests/HdHomerunManagerTests.cs:216-327",
+          "chars": 3813,
+          "tokens": 1271
+        }
+      ]
+    },
+    {
+      "taskId": "jf-locate-password-migration",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1332,
+      "chars": 3996,
+      "toolCalls": 1,
+      "durationMs": 22,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"password hash verify login migrate old hash iterations\"",
+          "chars": 3996,
+          "tokens": 1332
+        }
+      ]
+    },
+    {
+      "taskId": "jf-locate-password-migration",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 1271,
+      "chars": 3810,
+      "toolCalls": 3,
+      "durationMs": 19,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [
+          "Jellyfin.Server.Implementations/Users/DefaultAuthenticationProvider.cs"
+        ],
+        "symbolsMissed": [
+          "Authenticate"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"password hash verify login migrate old hash iterations\"",
+          "chars": 1931,
+          "tokens": 644
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#1w",
+          "chars": 1167,
+          "tokens": 389
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#1v",
+          "chars": 712,
+          "tokens": 238
+        }
+      ]
+    },
+    {
+      "taskId": "jf-locate-password-migration",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tokens": 235,
+      "chars": 704,
+      "toolCalls": 1,
+      "durationMs": 187,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "Jellyfin.Server.Implementations/Users/DefaultAuthenticationProvider.cs",
+          "Emby.Server.Implementations/Cryptography/CryptographyProvider.cs"
+        ],
+        "symbolsMissed": [
+          "Authenticate",
+          "Verify"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "password hash verify login migrate old hash iterations",
+          "chars": 704,
+          "tokens": 235
+        }
+      ]
+    },
+    {
+      "taskId": "jf-locate-password-migration",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tokens": 7281,
+      "chars": 21842,
+      "toolCalls": 1,
+      "durationMs": 98,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "password hash verify login migrate old hash iterations",
+          "chars": 21842,
+          "tokens": 7281
+        }
+      ]
+    },
+    {
+      "taskId": "jf-locate-media-segments",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 4551,
+      "chars": 13650,
+      "toolCalls": 4,
+      "durationMs": 223,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "GetProviderId"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "MediaSegmentManager",
+          "chars": 4122,
+          "tokens": 1374
+        },
+        {
+          "tool": "read_file",
+          "args": "Emby.Server.Implementations/Library/ExternalDataManager.cs",
+          "chars": 3019,
+          "tokens": 1007
+        },
+        {
+          "tool": "read_file",
+          "args": "Emby.Server.Implementations/ScheduledTasks/Tasks/MediaSegmentExtractionTask.cs",
+          "chars": 4104,
+          "tokens": 1368
+        },
+        {
+          "tool": "read_file",
+          "args": "Jellyfin.Api/Controllers/MediaSegmentsController.cs",
+          "chars": 2405,
+          "tokens": 802
+        }
+      ]
+    },
+    {
+      "taskId": "jf-locate-media-segments",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 5391,
+      "chars": 16168,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "MediaSegmentManager",
+          "chars": 4122,
+          "tokens": 1374
+        },
+        {
+          "tool": "read_file",
+          "args": "Emby.Server.Implementations/Library/ExternalDataManager.cs:1-78",
+          "chars": 3019,
+          "tokens": 1007
+        },
+        {
+          "tool": "read_file",
+          "args": "Emby.Server.Implementations/ScheduledTasks/Tasks/MediaSegmentExtractionTask.cs:1-86",
+          "chars": 3049,
+          "tokens": 1017
+        },
+        {
+          "tool": "read_file",
+          "args": "Jellyfin.Api/Controllers/MediaSegmentsController.cs:1-63",
+          "chars": 2405,
+          "tokens": 802
+        },
+        {
+          "tool": "read_file",
+          "args": "Jellyfin.Server.Implementations/MediaSegments/MediaSegmentManager.cs:1-88",
+          "chars": 3573,
+          "tokens": 1191
+        }
+      ]
+    },
+    {
+      "taskId": "jf-locate-media-segments",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1250,
+      "chars": 3749,
+      "toolCalls": 1,
+      "durationMs": 24,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"MediaSegmentManager segment providers order library\"",
+          "chars": 3749,
+          "tokens": 1250
+        }
+      ]
+    },
+    {
+      "taskId": "jf-locate-media-segments",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 4203,
+      "chars": 12605,
+      "toolCalls": 3,
+      "durationMs": 23,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"MediaSegmentManager segment providers order library\"",
+          "chars": 2032,
+          "tokens": 678
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#nr",
+          "chars": 10438,
+          "tokens": 3480
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#nw",
+          "chars": 135,
+          "tokens": 45
+        }
+      ]
+    },
+    {
+      "taskId": "jf-locate-media-segments",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tokens": 1198,
+      "chars": 3592,
+      "toolCalls": 1,
+      "durationMs": 113,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "RunSegmentPluginProviders"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "MediaSegmentManager segment providers order library",
+          "chars": 3592,
+          "tokens": 1198
+        }
+      ]
+    },
+    {
+      "taskId": "jf-locate-media-segments",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tokens": 8320,
+      "chars": 24959,
+      "toolCalls": 1,
+      "durationMs": 206,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "MediaSegmentManager segment providers order library",
+          "chars": 24959,
+          "tokens": 8320
+        }
+      ]
+    },
+    {
+      "taskId": "jf-explain-quick-connect",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 11452,
+      "chars": 34350,
+      "toolCalls": 4,
+      "durationMs": 329,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "secret",
+          "chars": 7781,
+          "tokens": 2594
+        },
+        {
+          "tool": "read_file",
+          "args": ".github/workflows/ci-openapi.yml",
+          "chars": 13042,
+          "tokens": 4348
+        },
+        {
+          "tool": "read_file",
+          "args": "Emby.Server.Implementations/QuickConnect/QuickConnectManager.cs",
+          "chars": 8515,
+          "tokens": 2839
+        },
+        {
+          "tool": "read_file",
+          "args": "Jellyfin.Api/Controllers/QuickConnectController.cs",
+          "chars": 5012,
+          "tokens": 1671
+        }
+      ]
+    },
+    {
+      "taskId": "jf-explain-quick-connect",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 6798,
+      "chars": 20390,
+      "toolCalls": 3,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "secret",
+          "chars": 7781,
+          "tokens": 2594
+        },
+        {
+          "tool": "read_file",
+          "args": "Emby.Server.Implementations/QuickConnect/QuickConnectManager.cs:1-232",
+          "chars": 8515,
+          "tokens": 2839
+        },
+        {
+          "tool": "read_file",
+          "args": "Jellyfin.Api/Controllers/QuickConnectController.cs:28-130",
+          "chars": 4094,
+          "tokens": 1365
+        }
+      ]
+    },
+    {
+      "taskId": "jf-explain-quick-connect",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 1378,
+      "chars": 4132,
+      "toolCalls": 1,
+      "durationMs": 30,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"quick connect code device authorize user session secret\"",
+          "chars": 4132,
+          "tokens": 1378
+        }
+      ]
+    },
+    {
+      "taskId": "jf-explain-quick-connect",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 1119,
+      "chars": 3354,
+      "toolCalls": 3,
+      "durationMs": 26,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"quick connect code device authorize user session secret\"",
+          "chars": 2046,
+          "tokens": 682
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#34b",
+          "chars": 673,
+          "tokens": 225
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#34a",
+          "chars": 635,
+          "tokens": 212
+        }
+      ]
+    },
+    {
+      "taskId": "jf-explain-quick-connect",
+      "kind": "explain",
+      "strategy": "kirograph",
+      "tokens": 952,
+      "chars": 2854,
+      "toolCalls": 1,
+      "durationMs": 110,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "Emby.Server.Implementations/QuickConnect/QuickConnectManager.cs"
+        ],
+        "symbolsMissed": [
+          "TryConnect",
+          "CheckRequestStatus",
+          "AuthorizeRequest",
+          "GetAuthorizedRequest"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "quick connect code device authorize user session secret",
+          "chars": 2854,
+          "tokens": 952
+        }
+      ]
+    },
+    {
+      "taskId": "jf-explain-quick-connect",
+      "kind": "explain",
+      "strategy": "codegraph",
+      "tokens": 8318,
+      "chars": 24953,
+      "toolCalls": 1,
+      "durationMs": 201,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "quick connect code device authorize user session secret",
+          "chars": 24953,
+          "tokens": 8318
+        }
+      ]
+    },
+    {
+      "taskId": "jf-explain-trickplay",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 14336,
+      "chars": 43004,
+      "toolCalls": 4,
+      "durationMs": 385,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "widths|tiles",
+          "chars": 5107,
+          "tokens": 1703
+        },
+        {
+          "tool": "read_file",
+          "args": "Jellyfin.Server.Implementations/Trickplay/TrickplayManager.cs",
+          "chars": 28560,
+          "tokens": 9520
+        },
+        {
+          "tool": "read_file",
+          "args": "Jellyfin.Api/Controllers/TrickplayController.cs",
+          "chars": 4135,
+          "tokens": 1379
+        },
+        {
+          "tool": "read_file",
+          "args": "MediaBrowser.Controller/Trickplay/ITrickplayManager.cs",
+          "chars": 5202,
+          "tokens": 1734
+        }
+      ]
+    },
+    {
+      "taskId": "jf-explain-trickplay",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 8468,
+      "chars": 25401,
+      "toolCalls": 4,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "RefreshTrickplayDataAsync",
+          "CanGenerateTrickplay"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "widths|tiles",
+          "chars": 5107,
+          "tokens": 1703
+        },
+        {
+          "tool": "read_file",
+          "args": "Jellyfin.Api/Helpers/DynamicHlsHelper.cs:578-698",
+          "chars": 4974,
+          "tokens": 1658
+        },
+        {
+          "tool": "read_file",
+          "args": "Jellyfin.Server.Implementations/Trickplay/TrickplayManager.cs:218-452",
+          "chars": 10262,
+          "tokens": 3421
+        },
+        {
+          "tool": "read_file",
+          "args": "Jellyfin.Server.Implementations/Trickplay/TrickplayManager.cs:567-687",
+          "chars": 5058,
+          "tokens": 1686
+        }
+      ]
+    },
+    {
+      "taskId": "jf-explain-trickplay",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 1443,
+      "chars": 4327,
+      "toolCalls": 1,
+      "durationMs": 30,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"trickplay images generate video widths interval tiles\"",
+          "chars": 4327,
+          "tokens": 1443
+        }
+      ]
+    },
+    {
+      "taskId": "jf-explain-trickplay",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 1129,
+      "chars": 3382,
+      "toolCalls": 3,
+      "durationMs": 24,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "RefreshTrickplayDataAsync",
+          "RefreshTrickplayDataInternal"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"trickplay images generate video widths interval tiles\"",
+          "chars": 2077,
+          "tokens": 693
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#60k",
+          "chars": 1141,
+          "tokens": 381
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#3k6",
+          "chars": 164,
+          "tokens": 55
+        }
+      ]
+    },
+    {
+      "taskId": "jf-explain-trickplay",
+      "kind": "explain",
+      "strategy": "kirograph",
+      "tokens": 1245,
+      "chars": 3735,
+      "toolCalls": 1,
+      "durationMs": 112,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "RefreshTrickplayDataAsync",
+          "RefreshTrickplayDataInternal",
+          "CreateTiles",
+          "CanGenerateTrickplay"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "trickplay images generate video widths interval tiles",
+          "chars": 3735,
+          "tokens": 1245
+        }
+      ]
+    },
+    {
+      "taskId": "jf-explain-trickplay",
+      "kind": "explain",
+      "strategy": "codegraph",
+      "tokens": 8326,
+      "chars": 24976,
+      "toolCalls": 1,
+      "durationMs": 145,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0.25,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "RefreshTrickplayDataInternal",
+          "CreateTiles"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "trickplay images generate video widths interval tiles",
+          "chars": 24976,
+          "tokens": 8326
+        }
+      ]
+    },
+    {
+      "taskId": "jf-explain-syncplay-wait",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 23693,
+      "chars": 71077,
+      "toolCalls": 4,
+      "durationMs": 376,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "buffering",
+          "chars": 6744,
+          "tokens": 2248
+        },
+        {
+          "tool": "read_file",
+          "args": "MediaBrowser.Controller/SyncPlay/GroupStates/WaitingGroupState.cs",
+          "chars": 31001,
+          "tokens": 10334
+        },
+        {
+          "tool": "read_file",
+          "args": "Emby.Server.Implementations/SyncPlay/Group.cs",
+          "chars": 24522,
+          "tokens": 8174
+        },
+        {
+          "tool": "read_file",
+          "args": "MediaBrowser.Controller/SyncPlay/IGroupStateContext.cs",
+          "chars": 8810,
+          "tokens": 2937
+        }
+      ]
+    },
+    {
+      "taskId": "jf-explain-syncplay-wait",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 7801,
+      "chars": 23400,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "buffering",
+          "chars": 6744,
+          "tokens": 2248
+        },
+        {
+          "tool": "read_file",
+          "args": "Emby.Server.Implementations/SyncPlay/Group.cs:397-517",
+          "chars": 3674,
+          "tokens": 1225
+        },
+        {
+          "tool": "read_file",
+          "args": "Jellyfin.Api/Controllers/SyncPlayController.cs:239-359",
+          "chars": 5778,
+          "tokens": 1926
+        },
+        {
+          "tool": "read_file",
+          "args": "MediaBrowser.Controller/SyncPlay/GroupMember.cs:1-61",
+          "chars": 1846,
+          "tokens": 616
+        },
+        {
+          "tool": "read_file",
+          "args": "MediaBrowser.Controller/SyncPlay/IGroupStateContext.cs:59-179",
+          "chars": 5358,
+          "tokens": 1786
+        }
+      ]
+    },
+    {
+      "taskId": "jf-explain-syncplay-wait",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 1299,
+      "chars": 3895,
+      "toolCalls": 1,
+      "durationMs": 33,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0.75,
+        "defRecall": 0.5,
+        "filesMissed": [
+          "Emby.Server.Implementations/SyncPlay/Group.cs"
+        ],
+        "symbolsMissed": [
+          "SetBuffering"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"syncplay group waiting buffering members ready resume playback\"",
+          "chars": 3895,
+          "tokens": 1299
+        }
+      ]
+    },
+    {
+      "taskId": "jf-explain-syncplay-wait",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 2087,
+      "chars": 6258,
+      "toolCalls": 3,
+      "durationMs": 21,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0.5,
+        "defRecall": 0.25,
+        "filesMissed": [
+          "Emby.Server.Implementations/SyncPlay/Group.cs"
+        ],
+        "symbolsMissed": [
+          "SetBuffering",
+          "IsBuffering"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"syncplay group waiting buffering members ready resume playback\"",
+          "chars": 2047,
+          "tokens": 683
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#bk3",
+          "chars": 2103,
+          "tokens": 701
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#1hs",
+          "chars": 2108,
+          "tokens": 703
+        }
+      ]
+    },
+    {
+      "taskId": "jf-explain-syncplay-wait",
+      "kind": "explain",
+      "strategy": "kirograph",
+      "tokens": 286,
+      "chars": 856,
+      "toolCalls": 1,
+      "durationMs": 106,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "MediaBrowser.Controller/SyncPlay/GroupStates/WaitingGroupState.cs",
+          "Emby.Server.Implementations/SyncPlay/Group.cs"
+        ],
+        "symbolsMissed": [
+          "WaitingGroupState",
+          "HandleRequest",
+          "SetBuffering",
+          "IsBuffering"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "syncplay group waiting buffering members ready resume playback",
+          "chars": 856,
+          "tokens": 286
+        }
+      ]
+    },
+    {
+      "taskId": "jf-explain-syncplay-wait",
+      "kind": "explain",
+      "strategy": "codegraph",
+      "tokens": 8330,
+      "chars": 24988,
+      "toolCalls": 1,
+      "durationMs": 176,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "SetBuffering",
+          "IsBuffering"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "syncplay group waiting buffering members ready resume playback",
+          "chars": 24988,
+          "tokens": 8330
+        }
+      ]
+    },
+    {
+      "taskId": "jf-usage-refresh-trickplay",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 13026,
+      "chars": 39076,
+      "toolCalls": 4,
+      "durationMs": 52,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "ExecuteAsync"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "RefreshTrickplayDataAsync",
+          "chars": 960,
+          "tokens": 320
+        },
+        {
+          "tool": "read_file",
+          "args": "MediaBrowser.Providers/Trickplay/TrickplayProvider.cs",
+          "chars": 4354,
+          "tokens": 1452
+        },
+        {
+          "tool": "read_file",
+          "args": "Jellyfin.Server.Implementations/Trickplay/TrickplayManager.cs",
+          "chars": 28560,
+          "tokens": 9520
+        },
+        {
+          "tool": "read_file",
+          "args": "MediaBrowser.Controller/Trickplay/ITrickplayManager.cs",
+          "chars": 5202,
+          "tokens": 1734
+        }
+      ]
+    },
+    {
+      "taskId": "jf-usage-refresh-trickplay",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 5027,
+      "chars": 15078,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "RefreshTrickplayDataAsync",
+          "chars": 960,
+          "tokens": 320
+        },
+        {
+          "tool": "read_file",
+          "args": "Jellyfin.Server.Implementations/Trickplay/TrickplayManager.cs:79-199",
+          "chars": 5434,
+          "tokens": 1812
+        },
+        {
+          "tool": "read_file",
+          "args": "MediaBrowser.Controller/Trickplay/ITrickplayManager.cs:1-84",
+          "chars": 3681,
+          "tokens": 1227
+        },
+        {
+          "tool": "read_file",
+          "args": "MediaBrowser.Providers/Trickplay/TrickplayImagesTask.cs:42-119",
+          "chars": 2361,
+          "tokens": 787
+        },
+        {
+          "tool": "read_file",
+          "args": "MediaBrowser.Providers/Trickplay/TrickplayProvider.cs:51-122",
+          "chars": 2642,
+          "tokens": 881
+        }
+      ]
+    },
+    {
+      "taskId": "jf-usage-refresh-trickplay",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 730,
+      "chars": 2189,
+      "toolCalls": 1,
+      "durationMs": 18,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"RefreshTrickplayDataAsync\"",
+          "chars": 2189,
+          "tokens": 730
+        }
+      ]
+    },
+    {
+      "taskId": "jf-usage-refresh-trickplay",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 1605,
+      "chars": 4812,
+      "toolCalls": 3,
+      "durationMs": 17,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "MediaBrowser.Providers/Trickplay/TrickplayImagesTask.cs",
+          "MediaBrowser.Providers/Trickplay/TrickplayProvider.cs"
+        ],
+        "symbolsMissed": [
+          "ExecuteAsync",
+          "FetchInternal"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"RefreshTrickplayDataAsync\"",
+          "chars": 911,
+          "tokens": 304
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#77v",
+          "chars": 196,
+          "tokens": 66
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#amn",
+          "chars": 3705,
+          "tokens": 1235
+        }
+      ]
+    },
+    {
+      "taskId": "jf-usage-refresh-trickplay",
+      "kind": "usage",
+      "strategy": "kirograph",
+      "tokens": 861,
+      "chars": 2583,
+      "toolCalls": 1,
+      "durationMs": 93,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "MediaBrowser.Providers/Trickplay/TrickplayImagesTask.cs",
+          "MediaBrowser.Providers/Trickplay/TrickplayProvider.cs"
+        ],
+        "symbolsMissed": [
+          "ExecuteAsync",
+          "FetchInternal"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "RefreshTrickplayDataAsync",
+          "chars": 2583,
+          "tokens": 861
+        }
+      ]
+    },
+    {
+      "taskId": "jf-usage-refresh-trickplay",
+      "kind": "usage",
+      "strategy": "codegraph",
+      "tokens": 8316,
+      "chars": 24947,
+      "toolCalls": 1,
+      "durationMs": 71,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "RefreshTrickplayDataAsync",
+          "chars": 24947,
+          "tokens": 8316
+        }
+      ]
+    },
+    {
+      "taskId": "jf-usage-authorization-info",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 5295,
+      "chars": 15882,
+      "toolCalls": 4,
+      "durationMs": 52,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "InitiateQuickConnect",
+          "AuthenticateUserByName"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "GetAuthorizationInfo",
+          "chars": 1509,
+          "tokens": 503
+        },
+        {
+          "tool": "read_file",
+          "args": "Jellyfin.Server.Implementations/Security/AuthorizationContext.cs",
+          "chars": 12304,
+          "tokens": 4102
+        },
+        {
+          "tool": "read_file",
+          "args": "MediaBrowser.Controller/Net/IAuthorizationContext.cs",
+          "chars": 881,
+          "tokens": 294
+        },
+        {
+          "tool": "read_file",
+          "args": "Emby.Server.Implementations/HttpServer/Security/AuthService.cs",
+          "chars": 1188,
+          "tokens": 396
+        }
+      ]
+    },
+    {
+      "taskId": "jf-usage-authorization-info",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 4124,
+      "chars": 12367,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.75,
+        "defRecall": 0.75,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "AuthenticateUserByName"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "GetAuthorizationInfo",
+          "chars": 1509,
+          "tokens": 503
+        },
+        {
+          "tool": "read_file",
+          "args": "Emby.Server.Implementations/HttpServer/Security/AuthService.cs:1-44",
+          "chars": 1188,
+          "tokens": 396
+        },
+        {
+          "tool": "read_file",
+          "args": "Jellyfin.Api/Controllers/QuickConnectController.cs:1-119",
+          "chars": 4750,
+          "tokens": 1584
+        },
+        {
+          "tool": "read_file",
+          "args": "Jellyfin.Server.Implementations/Security/AuthorizationContext.cs:1-103",
+          "chars": 4039,
+          "tokens": 1347
+        },
+        {
+          "tool": "read_file",
+          "args": "MediaBrowser.Controller/Net/IAuthorizationContext.cs:1-26",
+          "chars": 881,
+          "tokens": 294
+        }
+      ]
+    },
+    {
+      "taskId": "jf-usage-authorization-info",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 748,
+      "chars": 2243,
+      "toolCalls": 1,
+      "durationMs": 16,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.25,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"GetAuthorizationInfo\"",
+          "chars": 2243,
+          "tokens": 748
+        }
+      ]
+    },
+    {
+      "taskId": "jf-usage-authorization-info",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 461,
+      "chars": 1379,
+      "toolCalls": 3,
+      "durationMs": 15,
+      "recall": {
+        "fileRecall": 0.25,
+        "symbolRecall": 0.25,
+        "defRecall": 0,
+        "filesMissed": [
+          "Emby.Server.Implementations/HttpServer/Security/AuthService.cs",
+          "Jellyfin.Api/Controllers/QuickConnectController.cs",
+          "Jellyfin.Api/Controllers/UserController.cs"
+        ],
+        "symbolsMissed": [
+          "Authenticate",
+          "InitiateQuickConnect",
+          "AuthenticateUserByName"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"GetAuthorizationInfo\"",
+          "chars": 1089,
+          "tokens": 363
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#6ze",
+          "chars": 145,
+          "tokens": 49
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#6zf",
+          "chars": 145,
+          "tokens": 49
+        }
+      ]
+    },
+    {
+      "taskId": "jf-usage-authorization-info",
+      "kind": "usage",
+      "strategy": "kirograph",
+      "tokens": 1259,
+      "chars": 3775,
+      "toolCalls": 1,
+      "durationMs": 134,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "Emby.Server.Implementations/HttpServer/Security/AuthService.cs",
+          "Jellyfin.Api/Controllers/QuickConnectController.cs",
+          "Jellyfin.Api/Controllers/UserController.cs",
+          "Jellyfin.Server.Implementations/Security/AuthorizationContext.cs"
+        ],
+        "symbolsMissed": [
+          "Authenticate",
+          "InitiateQuickConnect",
+          "AuthenticateUserByName",
+          "GetAuthorization"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "GetAuthorizationInfo",
+          "chars": 3775,
+          "tokens": 1259
+        }
+      ]
+    },
+    {
+      "taskId": "jf-usage-authorization-info",
+      "kind": "usage",
+      "strategy": "codegraph",
+      "tokens": 8332,
+      "chars": 24994,
+      "toolCalls": 1,
+      "durationMs": 64,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "GetAuthorizationInfo",
+          "chars": 24994,
+          "tokens": 8332
+        }
+      ]
+    },
+    {
+      "taskId": "jf-usage-create-backup",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 18684,
+      "chars": 56049,
+      "toolCalls": 4,
+      "durationMs": 54,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "CreateBackupAsync",
+          "chars": 648,
+          "tokens": 216
+        },
+        {
+          "tool": "read_file",
+          "args": "Jellyfin.Api/Controllers/BackupController.cs",
+          "chars": 5095,
+          "tokens": 1699
+        },
+        {
+          "tool": "read_file",
+          "args": "Jellyfin.Server.Implementations/FullSystemBackup/BackupService.cs",
+          "chars": 26753,
+          "tokens": 8918
+        },
+        {
+          "tool": "read_file",
+          "args": "Jellyfin.Server/Migrations/JellyfinMigrationService.cs",
+          "chars": 23553,
+          "tokens": 7851
+        }
+      ]
+    },
+    {
+      "taskId": "jf-usage-create-backup",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 6441,
+      "chars": 19318,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "PrepareSystemForMigration"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "CreateBackupAsync",
+          "chars": 648,
+          "tokens": 216
+        },
+        {
+          "tool": "read_file",
+          "args": "Jellyfin.Api/Controllers/BackupController.cs:1-107",
+          "chars": 4574,
+          "tokens": 1525
+        },
+        {
+          "tool": "read_file",
+          "args": "Jellyfin.Server.Implementations/FullSystemBackup/BackupService.cs:204-324",
+          "chars": 5819,
+          "tokens": 1940
+        },
+        {
+          "tool": "read_file",
+          "args": "Jellyfin.Server/Migrations/JellyfinMigrationService.cs:336-456",
+          "chars": 6283,
+          "tokens": 2095
+        },
+        {
+          "tool": "read_file",
+          "args": "MediaBrowser.Controller/SystemBackupService/IBackupService.cs:1-49",
+          "chars": 1994,
+          "tokens": 665
+        }
+      ]
+    },
+    {
+      "taskId": "jf-usage-create-backup",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 716,
+      "chars": 2146,
+      "toolCalls": 1,
+      "durationMs": 14,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"CreateBackupAsync\"",
+          "chars": 2146,
+          "tokens": 716
+        }
+      ]
+    },
+    {
+      "taskId": "jf-usage-create-backup",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 433,
+      "chars": 1293,
+      "toolCalls": 3,
+      "durationMs": 16,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "Jellyfin.Server/Migrations/JellyfinMigrationService.cs"
+        ],
+        "symbolsMissed": [
+          "CreateBackup",
+          "PrepareSystemForMigration"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"CreateBackupAsync\"",
+          "chars": 1021,
+          "tokens": 341
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#blm",
+          "chars": 151,
+          "tokens": 51
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#blp",
+          "chars": 121,
+          "tokens": 41
+        }
+      ]
+    },
+    {
+      "taskId": "jf-usage-create-backup",
+      "kind": "usage",
+      "strategy": "kirograph",
+      "tokens": 81,
+      "chars": 242,
+      "toolCalls": 1,
+      "durationMs": 110,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "Jellyfin.Api/Controllers/BackupController.cs",
+          "Jellyfin.Server/Migrations/JellyfinMigrationService.cs"
+        ],
+        "symbolsMissed": [
+          "CreateBackup",
+          "PrepareSystemForMigration"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "CreateBackupAsync",
+          "chars": 242,
+          "tokens": 81
+        }
+      ]
+    },
+    {
+      "taskId": "jf-usage-create-backup",
+      "kind": "usage",
+      "strategy": "codegraph",
+      "tokens": 7471,
+      "chars": 22413,
+      "toolCalls": 1,
+      "durationMs": 62,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "CreateBackupAsync",
+          "chars": 22413,
+          "tokens": 7471
+        }
+      ]
+    },
+    {
+      "taskId": "jf-impact-trickplay-resolutions",
+      "kind": "impact",
+      "strategy": "native-naive",
+      "tokens": 24149,
+      "chars": 72446,
+      "toolCalls": 4,
+      "durationMs": 56,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "GetTrickplayResolutions",
+          "chars": 1098,
+          "tokens": 366
+        },
+        {
+          "tool": "read_file",
+          "args": "Jellyfin.Server.Implementations/Trickplay/TrickplayManager.cs",
+          "chars": 28560,
+          "tokens": 9520
+        },
+        {
+          "tool": "read_file",
+          "args": "Jellyfin.Api/Helpers/DynamicHlsHelper.cs",
+          "chars": 37586,
+          "tokens": 12529
+        },
+        {
+          "tool": "read_file",
+          "args": "MediaBrowser.Controller/Trickplay/ITrickplayManager.cs",
+          "chars": 5202,
+          "tokens": 1734
+        }
+      ]
+    },
+    {
+      "taskId": "jf-impact-trickplay-resolutions",
+      "kind": "impact",
+      "strategy": "native-ranged",
+      "tokens": 6623,
+      "chars": 19868,
+      "toolCalls": 4,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.8333333333333334,
+        "defRecall": 0.8333333333333334,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "GetMasterPlaylistInternal"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "GetTrickplayResolutions",
+          "chars": 1098,
+          "tokens": 366
+        },
+        {
+          "tool": "read_file",
+          "args": "Jellyfin.Api/Helpers/DynamicHlsHelper.cs:259-379",
+          "chars": 5744,
+          "tokens": 1915
+        },
+        {
+          "tool": "read_file",
+          "args": "Jellyfin.Server.Implementations/Trickplay/TrickplayManager.cs:29-149",
+          "chars": 5580,
+          "tokens": 1860
+        },
+        {
+          "tool": "read_file",
+          "args": "Jellyfin.Server.Implementations/Trickplay/TrickplayManager.cs:435-633",
+          "chars": 7446,
+          "tokens": 2482
+        }
+      ]
+    },
+    {
+      "taskId": "jf-impact-trickplay-resolutions",
+      "kind": "impact",
+      "strategy": "kopt-pack",
+      "tokens": 733,
+      "chars": 2197,
+      "toolCalls": 1,
+      "durationMs": 8,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.16666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"GetTrickplayResolutions\"",
+          "chars": 2197,
+          "tokens": 733
+        }
+      ]
+    },
+    {
+      "taskId": "jf-impact-trickplay-resolutions",
+      "kind": "impact",
+      "strategy": "kopt-hits+read",
+      "tokens": 708,
+      "chars": 2121,
+      "toolCalls": 3,
+      "durationMs": 7,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0.16666666666666666,
+        "filesMissed": [
+          "Jellyfin.Api/Helpers/DynamicHlsHelper.cs"
+        ],
+        "symbolsMissed": [
+          "MoveGeneratedTrickplayDataAsync",
+          "GetMasterPlaylistInternal"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"GetTrickplayResolutions\"",
+          "chars": 762,
+          "tokens": 254
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#amr",
+          "chars": 806,
+          "tokens": 269
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#amz",
+          "chars": 553,
+          "tokens": 185
+        }
+      ]
+    },
+    {
+      "taskId": "jf-impact-trickplay-resolutions",
+      "kind": "impact",
+      "strategy": "kirograph",
+      "tokens": 141,
+      "chars": 422,
+      "toolCalls": 1,
+      "durationMs": 150,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.3333333333333333,
+        "defRecall": 0,
+        "filesMissed": [
+          "Jellyfin.Server.Implementations/Trickplay/TrickplayManager.cs",
+          "Jellyfin.Api/Helpers/DynamicHlsHelper.cs"
+        ],
+        "symbolsMissed": [
+          "MoveGeneratedTrickplayDataAsync",
+          "GetTrickplayTilePathAsync",
+          "GetHlsPlaylist",
+          "GetMasterPlaylistInternal"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "GetTrickplayResolutions",
+          "chars": 422,
+          "tokens": 141
+        }
+      ]
+    },
+    {
+      "taskId": "jf-impact-trickplay-resolutions",
+      "kind": "impact",
+      "strategy": "codegraph",
+      "tokens": 8305,
+      "chars": 24913,
+      "toolCalls": 1,
+      "durationMs": 83,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.8333333333333334,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "GetTrickplayResolutions",
+          "chars": 24913,
+          "tokens": 8305
+        }
+      ]
+    },
+    {
+      "taskId": "jf-impact-dot-ignore",
+      "kind": "impact",
+      "strategy": "native-naive",
+      "tokens": 10400,
+      "chars": 31196,
+      "toolCalls": 4,
+      "durationMs": 113,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "ReportFileSystemChanged",
+          "FindExtras"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "DotIgnoreIgnoreRule|IsIgnored",
+          "chars": 1734,
+          "tokens": 578
+        },
+        {
+          "tool": "read_file",
+          "args": "Emby.Server.Implementations/Library/DotIgnoreIgnoreRule.cs",
+          "chars": 5143,
+          "tokens": 1715
+        },
+        {
+          "tool": "read_file",
+          "args": "tests/Jellyfin.Server.Implementations.Tests/Library/DotIgnoreIgnoreRuleTest.cs",
+          "chars": 3772,
+          "tokens": 1258
+        },
+        {
+          "tool": "read_file",
+          "args": "Emby.Server.Implementations/Library/Resolvers/Movies/MovieResolver.cs",
+          "chars": 20547,
+          "tokens": 6849
+        }
+      ]
+    },
+    {
+      "taskId": "jf-impact-dot-ignore",
+      "kind": "impact",
+      "strategy": "native-ranged",
+      "tokens": 5854,
+      "chars": 17557,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "DotIgnoreIgnoreRule|IsIgnored",
+          "chars": 1734,
+          "tokens": 578
+        },
+        {
+          "tool": "read_file",
+          "args": "Emby.Server.Implementations/IO/LibraryMonitor.cs:296-416",
+          "chars": 4301,
+          "tokens": 1434
+        },
+        {
+          "tool": "read_file",
+          "args": "Emby.Server.Implementations/Library/DotIgnoreIgnoreRule.cs:1-74",
+          "chars": 2608,
+          "tokens": 870
+        },
+        {
+          "tool": "read_file",
+          "args": "Emby.Server.Implementations/Library/LibraryManager.cs:2776-2896",
+          "chars": 4711,
+          "tokens": 1571
+        },
+        {
+          "tool": "read_file",
+          "args": "Emby.Server.Implementations/Library/Resolvers/Movies/MovieResolver.cs:1-121",
+          "chars": 4203,
+          "tokens": 1401
+        }
+      ]
+    },
+    {
+      "taskId": "jf-impact-dot-ignore",
+      "kind": "impact",
+      "strategy": "kopt-pack",
+      "tokens": 1317,
+      "chars": 3949,
+      "toolCalls": 1,
+      "durationMs": 13,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"DotIgnoreIgnoreRule IsIgnored\"",
+          "chars": 3949,
+          "tokens": 1317
+        }
+      ]
+    },
+    {
+      "taskId": "jf-impact-dot-ignore",
+      "kind": "impact",
+      "strategy": "kopt-hits+read",
+      "tokens": 2357,
+      "chars": 7069,
+      "toolCalls": 3,
+      "durationMs": 14,
+      "recall": {
+        "fileRecall": 0.3333333333333333,
+        "symbolRecall": 0.5,
+        "defRecall": 0.5,
+        "filesMissed": [
+          "Emby.Server.Implementations/IO/LibraryMonitor.cs",
+          "Emby.Server.Implementations/Library/LibraryManager.cs"
+        ],
+        "symbolsMissed": [
+          "ReportFileSystemChanged",
+          "FindExtras"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"DotIgnoreIgnoreRule IsIgnored\"",
+          "chars": 1174,
+          "tokens": 392
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#9tl",
+          "chars": 1029,
+          "tokens": 343
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#9th",
+          "chars": 4866,
+          "tokens": 1622
+        }
+      ]
+    },
+    {
+      "taskId": "jf-impact-dot-ignore",
+      "kind": "impact",
+      "strategy": "kirograph",
+      "tokens": 236,
+      "chars": 708,
+      "toolCalls": 1,
+      "durationMs": 216,
+      "recall": {
+        "fileRecall": 0.3333333333333333,
+        "symbolRecall": 0.25,
+        "defRecall": 0,
+        "filesMissed": [
+          "Emby.Server.Implementations/IO/LibraryMonitor.cs",
+          "Emby.Server.Implementations/Library/LibraryManager.cs"
+        ],
+        "symbolsMissed": [
+          "ShouldIgnore",
+          "ReportFileSystemChanged",
+          "FindExtras"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "DotIgnoreIgnoreRule IsIgnored",
+          "chars": 708,
+          "tokens": 236
+        }
+      ]
+    },
+    {
+      "taskId": "jf-impact-dot-ignore",
+      "kind": "impact",
+      "strategy": "codegraph",
+      "tokens": 8306,
+      "chars": 24918,
+      "toolCalls": 1,
+      "durationMs": 78,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "DotIgnoreIgnoreRule IsIgnored",
+          "chars": 24918,
+          "tokens": 8306
+        }
+      ]
+    }
+  ],
+  "aggregates": [
+    {
+      "strategy": "native-naive",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 13681,
+      "meanTokens": 19285,
+      "p90Tokens": 26362,
+      "totalTokens": 231420,
+      "totalChars": 694224,
+      "meanToolCalls": 4,
+      "meanFileRecall": 0.9583333333333334,
+      "meanSymbolRecall": 0.7083333333333334,
+      "meanDefRecall": 0.625,
+      "found": 5,
+      "foundRate": 0.4166666666666667,
+      "tokensPerFound": 46284
+    },
+    {
+      "strategy": "native-ranged",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 6577.5,
+      "meanTokens": 6766,
+      "p90Tokens": 8871,
+      "totalTokens": 81191,
+      "totalChars": 243534,
+      "meanToolCalls": 4.5,
+      "meanFileRecall": 0.9583333333333334,
+      "meanSymbolRecall": 0.7569444444444445,
+      "meanDefRecall": 0.6319444444444444,
+      "found": 5,
+      "foundRate": 0.4166666666666667,
+      "tokensPerFound": 16238
+    },
+    {
+      "strategy": "kopt-pack",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 1298.5,
+      "meanTokens": 1140,
+      "p90Tokens": 1441,
+      "totalTokens": 13685,
+      "totalChars": 41037,
+      "meanToolCalls": 1,
+      "meanFileRecall": 0.875,
+      "meanSymbolRecall": 0.8958333333333334,
+      "meanDefRecall": 0.3263888888888889,
+      "found": 10,
+      "foundRate": 0.8333333333333334,
+      "tokensPerFound": 1369
+    },
+    {
+      "strategy": "kopt-hits+read",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 1310,
+      "meanTokens": 1772,
+      "p90Tokens": 4203,
+      "totalTokens": 21262,
+      "totalChars": 63742,
+      "meanToolCalls": 3,
+      "meanFileRecall": 0.548611111111111,
+      "meanSymbolRecall": 0.4375,
+      "meanDefRecall": 0.31249999999999994,
+      "found": 2,
+      "foundRate": 0.16666666666666666,
+      "tokensPerFound": 10631
+    },
+    {
+      "strategy": "kirograph",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 864.5,
+      "meanTokens": 693,
+      "p90Tokens": 1245,
+      "totalTokens": 8311,
+      "totalChars": 24922,
+      "meanToolCalls": 1,
+      "meanFileRecall": 0.2777777777777778,
+      "meanSymbolRecall": 0.09027777777777778,
+      "meanDefRecall": 0,
+      "found": 0,
+      "foundRate": 0,
+      "tokensPerFound": null
+    },
+    {
+      "strategy": "codegraph",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 8316,
+      "meanTokens": 8038,
+      "p90Tokens": 8330,
+      "totalTokens": 96461,
+      "totalChars": 289370,
+      "meanToolCalls": 1,
+      "meanFileRecall": 0.9166666666666666,
+      "meanSymbolRecall": 0.7916666666666666,
+      "meanDefRecall": 0.46527777777777773,
+      "found": 8,
+      "foundRate": 0.6666666666666666,
+      "tokensPerFound": 12058
+    }
+  ],
+  "paired": [
+    {
+      "a": "native-naive",
+      "b": "kopt-pack",
+      "nRun": 12,
+      "nBoth": 4,
+      "onlyA": 1,
+      "onlyB": 6,
+      "medianRatio": 0.06948862525852907,
+      "geoMeanRatio": 0.061265157024036135,
+      "bCheaper": 4
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-pack",
+      "nRun": 12,
+      "nBoth": 4,
+      "onlyA": 1,
+      "onlyB": 6,
+      "medianRatio": 0.21384052746476911,
+      "geoMeanRatio": 0.19795384535582827,
+      "bCheaper": 4
+    },
+    {
+      "a": "native-naive",
+      "b": "kopt-hits+read",
+      "nRun": 12,
+      "nBoth": 1,
+      "onlyA": 4,
+      "onlyB": 1,
+      "medianRatio": 0.09771219001047853,
+      "geoMeanRatio": 0.09771219001047851,
+      "bCheaper": 1
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-hits+read",
+      "nRun": 12,
+      "nBoth": 2,
+      "onlyA": 3,
+      "onlyB": 0,
+      "medianRatio": 0.47211997931238736,
+      "geoMeanRatio": 0.35823621877395295,
+      "bCheaper": 2
+    },
+    {
+      "a": "kirograph",
+      "b": "kopt-pack",
+      "nRun": 12,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 10,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "codegraph",
+      "b": "kopt-pack",
+      "nRun": 12,
+      "nBoth": 8,
+      "onlyA": 0,
+      "onlyB": 2,
+      "medianRatio": 0.12303881096650639,
+      "geoMeanRatio": 0.12170205771341294,
+      "bCheaper": 8
+    },
+    {
+      "a": "kirograph",
+      "b": "kopt-hits+read",
+      "nRun": 12,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 2,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "codegraph",
+      "b": "kopt-hits+read",
+      "nRun": 12,
+      "nBoth": 2,
+      "onlyA": 6,
+      "onlyB": 0,
+      "medianRatio": 0.3198478999435885,
+      "geoMeanRatio": 0.26068954682838125,
+      "bCheaper": 2
+    },
+    {
+      "a": "native-ranged",
+      "b": "kirograph",
+      "nRun": 12,
+      "nBoth": 0,
+      "onlyA": 5,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-ranged",
+      "b": "codegraph",
+      "nRun": 12,
+      "nBoth": 4,
+      "onlyA": 1,
+      "onlyB": 4,
+      "medianRatio": 1.4810859144265864,
+      "geoMeanRatio": 1.4509723569091357,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-naive",
+      "b": "native-ranged",
+      "nRun": 12,
+      "nBoth": 2,
+      "onlyA": 3,
+      "onlyB": 3,
+      "medianRatio": 0.46143073468056334,
+      "geoMeanRatio": 0.442094408593242,
+      "bCheaper": 2
+    }
+  ],
+  "byKind": [
+    {
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tasks": 4,
+      "found": 0,
+      "medianTokens": 18232
+    },
+    {
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tasks": 4,
+      "found": 1,
+      "medianTokens": 7701.5
+    },
+    {
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tasks": 4,
+      "found": 3,
+      "medianTokens": 1315
+    },
+    {
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tasks": 4,
+      "found": 1,
+      "medianTokens": 2776
+    },
+    {
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tasks": 4,
+      "found": 0,
+      "medianTokens": 908.5
+    },
+    {
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tasks": 4,
+      "found": 2,
+      "medianTokens": 7798.5
+    },
+    {
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tasks": 3,
+      "found": 3,
+      "medianTokens": 14336
+    },
+    {
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tasks": 3,
+      "found": 2,
+      "medianTokens": 7801
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tasks": 3,
+      "found": 2,
+      "medianTokens": 1378
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tasks": 3,
+      "found": 1,
+      "medianTokens": 1129
+    },
+    {
+      "kind": "explain",
+      "strategy": "kirograph",
+      "tasks": 3,
+      "found": 0,
+      "medianTokens": 952
+    },
+    {
+      "kind": "explain",
+      "strategy": "codegraph",
+      "tasks": 3,
+      "found": 1,
+      "medianTokens": 8326
+    },
+    {
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tasks": 3,
+      "found": 1,
+      "medianTokens": 13026
+    },
+    {
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tasks": 3,
+      "found": 1,
+      "medianTokens": 5027
+    },
+    {
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tasks": 3,
+      "found": 3,
+      "medianTokens": 730
+    },
+    {
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tasks": 3,
+      "found": 0,
+      "medianTokens": 461
+    },
+    {
+      "kind": "usage",
+      "strategy": "kirograph",
+      "tasks": 3,
+      "found": 0,
+      "medianTokens": 861
+    },
+    {
+      "kind": "usage",
+      "strategy": "codegraph",
+      "tasks": 3,
+      "found": 3,
+      "medianTokens": 8316
+    },
+    {
+      "kind": "impact",
+      "strategy": "native-naive",
+      "tasks": 2,
+      "found": 1,
+      "medianTokens": 17274.5
+    },
+    {
+      "kind": "impact",
+      "strategy": "native-ranged",
+      "tasks": 2,
+      "found": 1,
+      "medianTokens": 6238.5
+    },
+    {
+      "kind": "impact",
+      "strategy": "kopt-pack",
+      "tasks": 2,
+      "found": 2,
+      "medianTokens": 1025
+    },
+    {
+      "kind": "impact",
+      "strategy": "kopt-hits+read",
+      "tasks": 2,
+      "found": 0,
+      "medianTokens": 1532.5
+    },
+    {
+      "kind": "impact",
+      "strategy": "kirograph",
+      "tasks": 2,
+      "found": 0,
+      "medianTokens": 188.5
+    },
+    {
+      "kind": "impact",
+      "strategy": "codegraph",
+      "tasks": 2,
+      "found": 2,
+      "medianTokens": 8305.5
+    }
+  ]
+}

@@ -32,8 +32,19 @@ interface Cursor {
 const SETTLE_MS = 15_000;
 const MAX_FILE_BYTES = 64 * 1024 * 1024;
 
-export function kiroHome(): string {
-  return process.env.KOPT_KIRO_HOME || join(homedir(), '.kiro');
+/** Kiro's user folder (`KOPT_KIRO_HOME`, else Kiro's own `KIRO_HOME`, else `~/.kiro`), as kiroHomeDir() resolves it. */
+export function kiroHome(env: NodeJS.ProcessEnv = process.env): string {
+  return kiroHomes(env)[0];
+}
+
+/**
+ * Folders whose `sessions/` hold credit records. Kiro CLI honours `KIRO_HOME`; Kiro IDE always writes under
+ * `~/.kiro`, so with a relocated CLI home both are read. `KOPT_KIRO_HOME` (tests) replaces both.
+ */
+export function kiroHomes(env: NodeJS.ProcessEnv = process.env): string[] {
+  if (env.KOPT_KIRO_HOME) return [env.KOPT_KIRO_HOME];
+  const def = join(homedir(), '.kiro');
+  return env.KIRO_HOME && env.KIRO_HOME !== def ? [env.KIRO_HOME, def] : [def];
 }
 
 function cursorPath(config: KoptConfig): string {
@@ -254,11 +265,11 @@ export function collectKiroCredits(config: KoptConfig): TelemetryEvent[] {
         ids: isObj(raw.ids) ? (raw.ids as Cursor['ids']) : {},
       };
       const now = Date.now();
-      const home = kiroHome();
-      const found = [
-        ...collectCli(join(home, 'sessions', 'cli'), cursor, now),
-        ...collectUnified(join(home, 'sessions'), cursor),
-      ];
+      const found: TelemetryEvent[] = [];
+      for (const home of kiroHomes()) {
+        for (const e of collectCli(join(home, 'sessions', 'cli'), cursor, now)) found.push(e);
+        for (const e of collectUnified(join(home, 'sessions'), cursor)) found.push(e);
+      }
       atomicWrite(path, JSON.stringify(cursor));
       return found;
     }, { timeoutMs: 2000, staleMs: 30_000, runUnlocked: false });

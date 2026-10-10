@@ -4,11 +4,12 @@
 import { spawnSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
+import { analyzeFailures, buildFailureReport, CAUSE_LABEL, FAILURE_CAUSES, writeFailures, type TaskFailure } from './failures.js';
 import { aggregate } from './metrics.js';
 import { loadLangsFile } from './langs.js';
 import { runQuality, writeQuality } from './quality.js';
 import { writeResults } from './report.js';
-import { BENCH_DIR, PROJECT_ROOT, gitHead, openKoptIndex, runBench } from './run.js';
+import { BENCH_DIR, PROJECT_ROOT, gitHead, openKoptIndex, repoIndexDir, runBench, taskInput } from './run.js';
 import { loadTaskFile, verifyTasks } from './tasks.js';
 import {
   ALL_STRATEGIES,
@@ -18,10 +19,12 @@ import {
   type LangRepo,
   type StrategyAggregate,
   type StrategyName,
+  type SummaryFailures,
   type SummaryRow,
   type SummaryStrategyCell,
   type TaskStrategyResult,
 } from './types.js';
+import { writePortable } from './portable.js';
 
 export interface AllOptions {
   /** Default bench/langs.json. */
@@ -34,10 +37,14 @@ export interface AllOptions {
   /** Default bench/results. */
   outDir?: string;
   rebuildIndex?: boolean;
+  /** Parent folder of the kopt indexes: `<indexDir>/.kopt-<repo>` (default `bench/repos/.kopt-<repo>`). */
+  indexDir?: string;
   /** Clone missing checkouts (`git clone --depth 1 --branch <tag>`). */
   clone?: boolean;
   /** Run the extraction-quality pass (default true). */
   quality?: boolean;
+  /** Run the failure analysis of kopt-pack (default true). */
+  failures?: boolean;
   parseSample?: number;
   precisionSample?: number;
   charsPerToken?: number;
@@ -83,6 +90,16 @@ function cloneRepo(r: LangRepo, root: string, log: (m: string) => void): void {
 
 const rel = (p: string) => relative(PROJECT_ROOT, p).split('\\').join('/');
 
+export function failureSummary(fs: TaskFailure[], tasks: number): SummaryFailures {
+  const byCause = Object.fromEntries(FAILURE_CAUSES.map((c) => [c, 0])) as SummaryFailures['byCause'];
+  const itemsByCause = { ...byCause };
+  for (const f of fs) {
+    byCause[f.cause]++;
+    for (const it of f.items) itemsByCause[it.cause]++;
+  }
+  return { strategy: 'kopt-pack', tasks, missed: fs.length, byCause, itemsByCause };
+}
+
 export async function runAll(o: AllOptions = {}): Promise<{ summary: BenchSummary; written: string[] }> {
   const log = o.onProgress ?? (() => {});
   const langsPath = resolve(o.langsPath ?? join(BENCH_DIR, 'langs.json'));
@@ -96,12 +113,14 @@ export async function runAll(o: AllOptions = {}): Promise<{ summary: BenchSummar
   const notes: string[] = [];
   const seen = new Set<StrategyName>();
   const written: string[] = [];
+  const allFailures: TaskFailure[] = [];
+  const failureRepos: Array<{ repo: string; language: string; tasks: number }> = [];
 
   for (const r of repos) {
     const t0 = Date.now();
     const row: SummaryRow = {
       repo: r.name, language: r.language, tag: r.tag, commit: r.commit, loc: r.loc, ok: false, verifyIssues: 0, tasks: 0,
-      index: null, quality: null, strategies: [], byKind: [], files: {}, durationMs: 0,
+      index: null, quality: null, strategies: [], byKind: [], failures: null, files: {}, durationMs: 0,
     };
     rows.push(row);
     const repoRoot = join(BENCH_DIR, 'repos', r.name);
@@ -122,7 +141,8 @@ export async function runAll(o: AllOptions = {}): Promise<{ summary: BenchSummar
       if (issues.length) notes.push(`${r.name}: ${issues.length} gold item(s) fail verification (first: ${issues[0].taskId}: ${issues[0].message})`);
 
       log(`${r.name}: index`);
-      const opened = await openKoptIndex(repoRoot, r.name, { rebuildIndex: o.rebuildIndex, needRetrieval: false, onProgress: log });
+      const indexDir = repoIndexDir(o.indexDir, r.name, true);
+      const opened = await openKoptIndex(repoRoot, r.name, { indexDir, rebuildIndex: o.rebuildIndex, needRetrieval: false, onProgress: log });
       if (opened.skip || !opened.store || !opened.index) {
         notes.push(`${r.name}: no kopt index (${opened.skip ?? 'unknown'})`);
       } else {
@@ -170,6 +190,7 @@ export async function runAll(o: AllOptions = {}): Promise<{ summary: BenchSummar
         repo: tf.repo,
         strategies: o.strategies,
         input,
+        indexDir,
         competitorsDir: o.competitorsDir,
         charsPerToken: o.charsPerToken,
         keepOutputs: o.keepOutputs,
@@ -182,6 +203,24 @@ export async function runAll(o: AllOptions = {}): Promise<{ summary: BenchSummar
       row.strategies = res.aggregates.map(summaryCell);
       row.byKind = res.byKind.map((k) => ({ kind: k.kind, strategy: k.strategy, tasks: k.tasks, found: k.found }));
       pooled.push(...res.results);
+      const pack = res.aggregates.find((a) => a.strategy === 'kopt-pack' && a.tasks > 0);
+      if (o.failures !== false && pack) {
+        log(`${r.name}: failure analysis`);
+        const fo = await openKoptIndex(repoRoot, r.name, { indexDir, onProgress: log });
+        if (fo.store && fo.retrieval) {
+          try {
+            const fs = await analyzeFailures({
+              repo: r.name, language: r.language, repoRoot, store: fo.store, config: fo.config, retrieval: fo.retrieval,
+              tasks: tf.tasks, results: res.results, input, inputOf: (t) => taskInput(t, input), onProgress: log,
+            });
+            allFailures.push(...fs);
+            failureRepos.push({ repo: r.name, language: r.language, tasks: pack.tasks });
+            row.failures = failureSummary(fs, pack.tasks);
+          } finally {
+            fo.store.close();
+          }
+        }
+      }
       row.ok = true;
     } catch (err) {
       row.error = (err as Error).message.split('\n')[0];
@@ -202,6 +241,14 @@ export async function runAll(o: AllOptions = {}): Promise<{ summary: BenchSummar
     totals: strategies.map((s) => summaryCell(aggregate(s, pooled))),
     notes,
   };
+  if (failureRepos.length) {
+    const report = buildFailureReport(allFailures, failureRepos, 'kopt-pack', input);
+    const label = input === 'search' ? 'failures' : `failures-${input}`;
+    const fw = writeFailures(report, outDir, label);
+    written.push(...fw);
+    summary.failuresFile = rel(fw[0]);
+    summary.failureTotals = failureSummary(allFailures, failureRepos.reduce((a, x) => a + x.tasks, 0));
+  }
   written.push(...writeSummary(summary, outDir));
   return { summary, written };
 }
@@ -301,6 +348,19 @@ export function renderSummaryMarkdown(s: BenchSummary): string {
     out.push('');
   }
 
+  const fr = okRows.filter((r) => r.failures);
+  if (fr.length) {
+    out.push('## Why kopt-pack misses (primary cause per missed task)');
+    out.push('');
+    const cell = (f: SummaryFailures | null | undefined, c: (typeof FAILURE_CAUSES)[number]) => (f && f.byCause[c] ? String(f.byCause[c]) : '·');
+    const rowsF = fr.map((r) => [r.language, r.repo, `${r.failures!.missed}/${r.failures!.tasks}`, ...FAILURE_CAUSES.map((c) => cell(r.failures, c))]);
+    if (s.failureTotals) rowsF.push(['**all**', '', `**${s.failureTotals.missed}/${s.failureTotals.tasks}**`, ...FAILURE_CAUSES.map((c) => `**${s.failureTotals!.byCause[c]}**`)]);
+    out.push(table(['language', 'repo', 'missed', ...FAILURE_CAUSES.map((c) => CAUSE_LABEL[c])], rowsF));
+    out.push('');
+    if (s.failuresFile) out.push(`Per-task evidence (query, what kopt returned, what was expected, mechanical checks): \`${s.failuresFile}\`.`);
+    out.push('');
+  }
+
   out.push('## Notes');
   out.push('');
   out.push('- `found` = every gold file path and every gold symbol name appears in the output. Gold items are verified by');
@@ -318,7 +378,7 @@ export function writeSummary(s: BenchSummary, outDir: string): string[] {
   mkdirSync(outDir, { recursive: true });
   const md = join(outDir, s.input === 'search' ? 'summary.md' : `summary-${s.input}.md`);
   const json = join(outDir, s.input === 'search' ? 'summary.json' : `summary-${s.input}.json`);
-  writeFileSync(md, renderSummaryMarkdown(s));
-  writeFileSync(json, JSON.stringify(s, null, 2) + '\n');
+  writePortable(md, renderSummaryMarkdown(s));
+  writePortable(json, JSON.stringify(s, null, 2) + '\n');
   return [md, json];
 }

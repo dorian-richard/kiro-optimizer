@@ -13,6 +13,8 @@
 //    also use the short names read / write / shell / glob / grep; Windows shell = execute_cmd.
 //  - Kiro IDE 0.12 tool ids also include edit_code, semantic_rename, smart_relocate (writes), read_code, grep_search,
 //    file_search, list_directory (never gated).
+//  - `code` (IDE 1.2.56 and kiro-cli 2.28) writes files too: rename_symbol, format_code / format, pattern_rewrite (the
+//    IDE files it under its write category).
 // Matching is case-insensitive on purpose: legacy IDE action names are camelCase (readFile, fsWrite...).
 
 const lc = (xs: string[]) => new Set(xs.map((x) => x.toLowerCase()));
@@ -27,6 +29,7 @@ export const SHELL_TOOLS = lc(['execute_bash', 'execute_pwsh', 'execute_cmd', 's
 export const WRITE_TOOLS = lc([
   'fs_write', 'fs_append', 'str_replace', 'delete_file', 'write', 'fsWrite', 'fsAppend', 'strReplace', 'deleteFile',
   'create', 'append', 'replace', 'edit', 'editCode', 'edit_code', 'semantic_rename', 'smart_relocate',
+  'code', 'pattern_rewrite', 'rename_symbol', 'format_code',
 ]);
 
 export type ToolClass = 'kopt' | 'read' | 'shell' | 'write' | 'other';

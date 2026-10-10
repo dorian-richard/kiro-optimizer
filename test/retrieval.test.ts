@@ -83,16 +83,31 @@ describe('find (hits)', () => {
 
   it('applies kinds and path filters (prefix and glob)', () => {
     const classes = find(s.store, { query: 'refund', kinds: ['class'] }, ctx);
-    for (const m of classes.text.matchAll(/^ {2}#\w+ \d+-\d+ (\w+) /gm)) expect(m[1]).toBe('class');
+    // "class" also means structs and records
+    for (const m of classes.text.matchAll(/^ {2}#\w+ \d+-\d+ (\w+) /gm)) expect(['class', 'record', 'struct']).toContain(m[1]);
+    // "function" also means methods and constructors
+    const fns = find(s.store, { query: 'refund', kinds: ['function'], limit: 30 }, ctx);
+    const fkinds = [...fns.text.matchAll(/^ {2}#\w+ \d+-\d+ (\w+) /gm)].map((m) => m[1]);
+    expect(fkinds).toContain('method');
+    for (const k of fkinds) expect(['function', 'method', 'constructor']).toContain(k);
     const web = find(s.store, { query: 'refund', path: 'web/' }, ctx);
     const paths = web.text.split('\n').slice(1).filter((l) => !l.startsWith(' '));
     expect(paths.length).toBeGreaterThan(0);
     for (const p of paths) expect(p.startsWith('web/')).toBe(true);
     const java = find(s.store, { query: 'refund', path: '**/*.java' }, ctx);
     for (const p of java.text.split('\n').slice(1).filter((l) => !l.startsWith(' '))) expect(p).toMatch(/\.java$/);
+    // A filter that leaves nothing: the unfiltered hits, with one line saying so (no "retry" round trip).
     const none = find(s.store, { query: 'refund', path: 'nope/' }, ctx);
-    expect(none.text).toMatch(/0 hits/);
-    expect(none.text).toMatch(/without path\/kinds filters/);
+    expect(none.text.split('\n')[1]).toBe('note: no hits with path nope/; showing hits without the path filter');
+    expect(hitHandles(none).length).toBeGreaterThan(0);
+    expectValid(none, ctx.config.budgets.find);
+    const both = find(s.store, { query: 'computeRefund', kinds: ['namespace'], path: `${J}/billing/` }, ctx);
+    expect(both.text.split('\n')[1]).toBe(`note: no hits with kinds namespace + path ${J}/billing/; showing hits without the kinds filter`);
+    expect(hitHandles(both)[0]).toBe(hd('RefundService.computeRefund'));
+    const packed = find(s.store, { query: 'computeRefund', mode: 'pack', kinds: ['namespace'] }, ctx);
+    expect(packed.text.split('\n')[1]).toBe('note: no hits with kinds namespace; showing hits without the kinds filter');
+    expectValid(packed, ctx.config.budgets.pack);
+    expect(find(s.store, { query: 'zzqqxx', path: 'nope/' }, ctx).text).toMatch(/0 hits/);
   });
 
   it('formats: header, path once per file, indented hits with docs', () => {
@@ -102,7 +117,7 @@ describe('find (hits)', () => {
     expect(Number(/~(\d+) tok/.exec(head)![1])).toBe(r.tokens);
     const pathLines = body.filter((l) => !l.startsWith(' '));
     expect(new Set(pathLines).size).toBe(pathLines.length);
-    for (const l of body.filter((x) => x.startsWith(' '))) expect(l).toMatch(/^ {2}#[0-9a-z]+ \d+-\d+ \w+ \S/);
+    for (const l of body.filter((x) => x.startsWith(' '))) expect(l).toMatch(/^ {2}(#[0-9a-z]+ \d+-\d+ \w+ \S|also: \S+ L\d+ #[0-9a-z]+)/);
     expect(r.text).toContain(`${RS}\n  ${hd('RefundService.computeRefund')} 19-27 method public BigDecimal computeRefund(Order order, RefundRequest request) — Computes the refund amount`);
   });
 
@@ -113,9 +128,11 @@ describe('find (hits)', () => {
     let cur = '';
     for (const l of groups) {
       if (!l.startsWith(' ')) cur = l;
-      else if (cur === LEGACY) count++;
+      else if (cur === LEGACY && l.startsWith('  #')) count++;
     }
     expect(count).toBeLessThanOrEqual(3);
+    // The rest of the file is named on one "also:" line under it.
+    expect(r.text).toMatch(new RegExp(`^${LEGACY}\\n(  #.*\\n){3}  also: step\\d+ L\\d+ #\\w+, `, 'm'));
     const targeted = find(s.store, { query: 'LegacyBillingEngine step', limit: 30, maxTokens: 3000 }, ctx);
     const n = targeted.text.split('\n').filter((l) => l.startsWith('  #')).length;
     expect(n).toBeGreaterThan(3);
@@ -167,8 +184,14 @@ describe('find (pack)', () => {
     expectValid(r, ctx.config.budgets.pack);
     expect(r.text.split('\n')[0]).toMatch(/^pack "compute refund amount" · \d+ hits · \d+ bodies · ~\d+ tok/);
     expect(r.text).toContain(`${RS}:19-27 ${hd('RefundService.computeRefund')}\n${lines(RS, 19, 27)}`);
-    expect(r.text).toMatch(new RegExp(`^callers of ${hd('RefundService.computeRefund')}: .*${hd('RefundService.approveRefund')} RefundService.approveRefund`, 'm'));
-    expect(r.text).toContain(`${hd('RefundController.preview')} RefundController.preview`);
+    // Callers carry their file path and line, one line per file, non-test files first.
+    // BillingJob.retry calls computeRefund through a cast the index could not type: not complete
+    expect(r.text).toContain(`callers of ${hd('RefundService.computeRefund')} RefundService.computeRefund · 4 refs in 3 files · 1 unresolved same-name ref:`);
+    expect(r.text).toContain(`  ${J}/api/RefundController.java: L25 in ${hd('RefundController.preview')} RefundController.preview (defined 23-26)`);
+    expect(r.text).toContain(`  ${RS}: L31 in ${hd('RefundService.approveRefund')} RefundService.approveRefund (defined 30-35)`);
+    // Callees of the packed body, grouped by target file.
+    expect(r.text).toContain(`callees of ${hd('RefundService.computeRefund')} RefundService.computeRefund:`);
+    expect(r.text).toContain(`  ${J}/billing/RefundPolicy.java: ${hd('RefundPolicy.maxRefundFor')} RefundPolicy.maxRefundFor`);
   });
 
   it('dedups bodies across calls; fresh resends', () => {
@@ -189,8 +212,21 @@ describe('find (pack)', () => {
     expect(long.text).not.toContain('acc = acc.add(step01(order));');
   });
 
-  it('respects the budget', () => {
-    for (const maxTokens of [40, 150, 400, 900, 2500]) expectValid(find(s.store, { query: 'refund approval ledger', mode: 'pack', maxTokens, fresh: true }, ctx), maxTokens);
+  it('packs a single identifier within a smaller default budget', () => {
+    ctx.config.budgets.pack = 1000;
+    const one = find(s.store, { query: 'LegacyBillingEngine', mode: 'pack' }, ctx);
+    expectValid(one, 600);
+    const words = find(s.store, { query: 'legacy billing engine reconcile', mode: 'pack', fresh: true }, ctx);
+    expect(words.tokens).toBeGreaterThan(600);
+    expectValid(words, 1000);
+  });
+
+  it('respects the budget, with a header that matches the text', () => {
+    for (const maxTokens of [40, 150, 400, 900, 2500]) {
+      const r = find(s.store, { query: 'refund approval ledger', mode: 'pack', maxTokens, fresh: true }, ctx);
+      expectValid(r, maxTokens);
+      if (maxTokens >= 150) expect(Number(/~(\d+) tok/.exec(r.text.split('\n')[0])![1]), String(maxTokens)).toBe(r.tokens);
+    }
   });
 });
 
@@ -248,16 +284,25 @@ describe('read', () => {
   it('cuts long ranges at line boundaries with a continuation hint', () => {
     const r = read(s.store, { target: `${LEGACY}:1-278`, maxTokens: 300 }, ctx);
     expectValid(r, 300);
-    const m = /^next: kopt_read .*:(\d+)-278$/m.exec(r.text);
+    const m = /^next: kopt_read .*:(\d+)-278 with maxTokens \d+00$/m.exec(r.text);
     expect(m).not.toBeNull();
     const shown = /^\S+:1-(\d+)$/m.exec(r.text)!;
     expect(Number(m![1])).toBe(Number(shown[1]) + 1);
     expect(r.text).toContain(lines(LEGACY, 1, Number(shown[1])));
   });
 
-  it('returns short files verbatim and long files as skeletons with an exact baseline', () => {
+  it('returns files that fit budgets.readFile verbatim, longer ones as skeletons with an exact baseline', () => {
     const p = 'web/src/api/refunds.ts';
     expect(read(s.store, { target: p }, ctx).text).toBe(`${p}:1-18\n${lines(p, 1, 18)}`);
+    // 278 lines: one call returns it all (a skeleton would be followed by a re-read)
+    ctx.config.budgets.read = 400;
+    const whole = read(s.store, { target: LEGACY }, ctx);
+    expect(whole.text).toBe(`${LEGACY}:1-278\n${lines(LEGACY, 1, 278)}`);
+    expect(whole.tokens).toBeGreaterThan(1000);
+    expectValid(whole, ctx.config.budgets.readFile);
+    ctx = newToolContext(defaultConfig(s.root));
+    ctx.config.budgets.readFile = 1000;
+    ctx.config.budgets.read = 1000;
     const r = read(s.store, { target: LEGACY }, ctx);
     expect(r.text.split('\n')[0]).toBe(`${LEGACY}:1-278 skeleton`);
     expect(r.text).toContain('  L178 public BigDecimal reconcileAll(Order order)');
@@ -304,10 +349,42 @@ describe('read', () => {
     const r = read(s.store, { target: 'reconcileAll', maxTokens: 300 }, ctx);
     expectValid(r, 300);
     expect(r.text).toContain(`${hd('LegacyBillingEngine.reconcileAll')} skeleton`);
-    expect(r.text).toMatch(/body ~\d+ tok > maxTokens 300; raise maxTokens to ~\d+ or read in parts: \S+:178-\d+, \d+-\d+/);
+    // One call can return the whole body: the hint says how, never a list of part reads.
+    expect(r.text).toMatch(/body ~\d+ tok > maxTokens 300; pass maxTokens \d+00 to read it whole$/m);
+    expect(r.text).not.toMatch(/in parts/);
     const cls = read(s.store, { target: 'LegacyBillingEngine', maxTokens: 600 }, ctx);
     expectValid(cls, 600);
     expect(cls.text).toMatch(/read a member with kopt_read \S+LegacyBillingEngine\.java:<L>/);
+  });
+
+  it('returns a named function whole without maxTokens, up to budgets.readSymbol', () => {
+    ctx.config.budgets.read = 300;
+    const r = read(s.store, { target: 'reconcileAll' }, ctx);
+    expect(r.text.split('\n')[0]).toBe(`${LEGACY}:178-277 ${hd('LegacyBillingEngine.reconcileAll')}`);
+    expect(r.text).toContain(lines(LEGACY, 178, 277));
+    expect(r.text).not.toMatch(/skeleton|maxTokens/);
+    expectValid(r, ctx.config.budgets.readSymbol);
+    // the same through a line inside it
+    expect(read(s.store, { target: `${LEGACY}:200`, fresh: true }, ctx).text.split('\n')[0]).toBe(`${LEGACY}:178-277 ${hd('LegacyBillingEngine.reconcileAll')}`);
+  });
+
+  it('returns the first part of a function longer than budgets.readSymbol, then the range of the rest', () => {
+    ctx.config.budgets.read = 300;
+    ctx.config.budgets.readSymbol = 600;
+    const r = read(s.store, { target: hd('LegacyBillingEngine.reconcileAll') }, ctx);
+    expectValid(r, 600);
+    const out = r.text.split('\n');
+    expect(out[0]).toMatch(new RegExp(`^${LEGACY.replace(/[/.]/g, '\\$&')}:178-277 ${hd('LegacyBillingEngine.reconcileAll')} \\(~\\d+ tok; first part below\\)$`));
+    expect(out[1]).toBe(lines(LEGACY, 178, 178));
+    const next = /^next: kopt_read \S+:(\d+)-277 with maxTokens \d+00 \(rest of #\w+, ~\d+ tok\)$/.exec(out[out.length - 1]);
+    expect(next).not.toBeNull();
+    const lastShown = 178 + out.length - 3;
+    expect(Number(next![1])).toBe(lastShown + 1);
+    expect(out[out.length - 2]).toBe(lines(LEGACY, lastShown, lastShown));
+    expect(r.text).not.toMatch(/skeleton/);
+    // the rest, read as the hint says, comes whole
+    const rest = read(s.store, { target: `${LEGACY}:${next![1]}-277`, maxTokens: 3000 }, ctx);
+    expect(rest.text).toBe(`${LEGACY}:${next![1]}-277\n${lines(LEGACY, Number(next![1]), 277)}`);
   });
 
   it('respects budgets for every target kind', () => {
@@ -330,7 +407,7 @@ describe('read', () => {
     expect(read(s.store, { target: 'web' }, ctx).text).toBe('web is a directory; use kopt_outline web');
     expect(read(s.store, { target: '' }, ctx).text).toMatch(/empty target/);
     expect(read(s.store, { target: 'Order', mode: 'zzz' as never }, ctx).text).toMatch(/unknown mode/);
-    expect(read(s.store, { target: '../../../../etc/passwd' }, ctx).text).toMatch(/no file/);
+    expect(read(s.store, { target: '../../../../etc/passwd' }, ctx).text).toBe('../../../../etc/passwd: not readable through kopt (outside the project)');
     expect(read(s.store, {} as never, ctx).text).toMatch(/empty target/);
   });
 
@@ -410,17 +487,52 @@ describe('outline', () => {
 });
 
 describe('refs', () => {
-  it('lists resolved usages grouped by file, then possible unresolved ones', () => {
+  it('lists one line per caller with the call line, the caller definition and the code, then possible ones', () => {
     const r = refs(s.store, { target: 'RefundService.computeRefund' }, ctx);
     const out = r.text.split('\n');
-    expect(out[0]).toMatch(new RegExp(`^refs ${hd('RefundService.computeRefund')} RefundService.computeRefund · 4 usages in 3 files · 1 possible · ~\\d+ tok$`));
-    expect(r.text).toContain(`${J}/api/RefundController.java: L25 in ${hd('RefundController.preview')} RefundController.preview`);
-    expect(r.text).toContain(`${RS}: L31 in ${hd('RefundService.approveRefund')} RefundService.approveRefund`);
+    expect(out[0]).toMatch(new RegExp(`^refs ${hd('RefundService.computeRefund')} RefundService.computeRefund · 4 usages in 3 files · incomplete · ~\\d+ tok$`));
+    expect(out[1]).toBe(
+      `${J}/api/RefundController.java:25 in ${hd('RefundController.preview')} RefundController.preview (defined 23-26): return refundService.computeRefund(order, request);`,
+    );
+    expect(out[2]).toBe(`${RS}:31 in ${hd('RefundService.approveRefund')} RefundService.approveRefund (defined 30-35): BigDecimal amount = computeRefund(order, request);`);
     expect(r.text).toContain('possible (unresolved refs named computeRefund):');
-    expect(r.text).toContain(`? ${J}/jobs/BillingJob.java: L21 in ${hd('BillingJob.retry')} BillingJob.retry`);
-    // Test files come after production files.
+    expect(r.text).toContain(`? ${J}/jobs/BillingJob.java:21 in ${hd('BillingJob.retry')} BillingJob.retry (defined 20-22): return ((com.acme.billing.RefundService) service).computeRefund(null, r);`);
+    // Test files come after production files; code lines are cut at 100 characters.
     expect(r.text.indexOf('RefundServiceTest.java')).toBeGreaterThan(r.text.indexOf('RefundController.java'));
     expect(r.text.indexOf('RefundServiceTest.java')).toBeLessThan(r.text.indexOf('possible ('));
+    for (const l of out) expect(l.split('): ').slice(1).join('): ').length).toBeLessThanOrEqual(100);
+  });
+
+  it('says whether the caller list is complete, and why not', () => {
+    const r = refs(s.store, { target: 'RefundService.computeRefund' }, ctx);
+    expect(r.text.split('\n').pop()).toBe('incomplete: 1 unresolved reference named computeRefund (receiver type unknown) may be calls to it (listed under possible)');
+    const one = refs(s.store, { target: 'RefundService.approveRefund' }, ctx);
+    expect(one.text.split('\n')[0]).toMatch(/ · complete · /);
+    expect(one.text.split('\n').pop()).toBe('complete: every reference to approveRefund in the index is resolved; the one function whose code names it is listed');
+    // functions whose code names the method without any reference the index could link
+    const total = refs(s.store, { target: 'Order.getTotal', maxTokens: 2000 }, ctx).text.split('\n').pop()!;
+    expect(total).toMatch(
+      new RegExp(`^incomplete: \\d+ functions name getTotal with no reference linked: ${LEGACY.replace(/[/.]/g, '\\$&')}:10 in ${hd('LegacyBillingEngine.step01')} LegacyBillingEngine\\.step01 \\(defined 10-15\\), `),
+    );
+    // depth 2 lists second-level callers with their declaration lines too
+    const impact = refs(s.store, { target: 'RefundService.computeRefund', depth: 2 }, ctx);
+    expect(impact.text).toMatch(new RegExp(`${hd('RefundController.refund')} RefundController\\.refund \\(defined 18-21\\)`));
+    expect(impact.text).toContain(`${J}/api/RefundController.java: L25 in ${hd('RefundController.preview')} RefundController.preview (defined 23-26)`);
+  });
+
+  it('lists the callers of a thin wrapper one level up, without repeating direct callers', () => {
+    const r = refs(s.store, { target: 'RefundService.approveRefund' }, ctx);
+    expect(r.text.split('\n')[0]).toMatch(/ · 1 usage in 1 file · \+1 via 1 wrapper · complete · /);
+    expect(r.text).toContain(`via wrapper ${hd('RefundController.refund')} RefundController.refund (${J}/api/RefundController.java:18-21) · 1 usage in 1 file:\n`);
+    expect(r.text).toContain(`  ${J}/jobs/BillingJob.java:16 in ${hd('BillingJob.run')} BillingJob.run (defined 14-18): controller.refund(r.orderId(), r);`);
+    // computeTax (3 lines) wraps getTotal, but its only caller already calls getTotal directly
+    const total = refs(s.store, { target: 'Order.getTotal' }, ctx);
+    expect(total.text).not.toContain(`via wrapper ${hd('InvoiceService.computeTax')}`);
+    expect(total.text).toContain(`via wrapper ${hd('RefundPolicy.maxRefundFor')} RefundPolicy.maxRefundFor`);
+    // a wrapper's callers come after the direct callers and only within the budget
+    const small = refs(s.store, { target: 'RefundService.approveRefund', maxTokens: 120 }, ctx);
+    expectValid(small, 120);
+    expect(small.text.split('\n').pop()).toMatch(/^complete: /);
   });
 
   it('lists callees with handles (out)', () => {
@@ -448,8 +560,8 @@ describe('refs', () => {
     expect(both.text).toMatch(/^in:$/m);
     expect(both.text).toMatch(/^out:$/m);
     const cls = refs(s.store, { target: 'RefundService' }, ctx);
-    expect(cls.text).toContain(`L9 new in ${hd('RefundServiceTest.service')}`);
-    expect(cls.text).toContain(`${J}/api/RefundController.java: L6 import`);
+    expect(cls.text).toContain(`:9 new in ${hd('RefundServiceTest.service')}`);
+    expect(cls.text).toContain(`${J}/api/RefundController.java:6 import (file level)`);
     const file = refs(s.store, { target: `${J}/billing/Order.java`, direction: 'both' }, ctx);
     expect(file.text.split('\n')[0]).toMatch(/· 6 using files · 0 imports/);
     expect(file.text).toContain(`${J}/billing/RefundPolicy.java (3 refs)`);
@@ -458,7 +570,23 @@ describe('refs', () => {
 
   it('groups repeated usages by caller', () => {
     const r = refs(s.store, { target: 'step01' }, ctx);
-    expect(r.text).toMatch(new RegExp(`L\\d+,L\\d+,L\\d+,L\\d+ in ${hd('LegacyBillingEngine.reconcileAll')} LegacyBillingEngine\\.reconcileAll`));
+    expect(r.text).toMatch(new RegExp(`:\\d+,\\d+,\\d+,\\d+ in ${hd('LegacyBillingEngine.reconcileAll')} LegacyBillingEngine\\.reconcileAll \\(defined \\d+-\\d+\\): `));
+  });
+
+  it('counts every line it drops and keeps the header exact, depth 2 and both directions included', () => {
+    // Result lines: section labels ("in:", "direct:", "possible (...):") are not results.
+    const results = (text: string) => text.split('\n').slice(1).filter((l) => !/^[^:]*:$|^possible \(.*\):$/.test(l)).length;
+    const full = refs(s.store, { target: 'RefundService.computeRefund', direction: 'both', depth: 2, maxTokens: 4000 }, ctx);
+    const fullLines = results(full.text);
+    for (let maxTokens = 80; maxTokens <= 340; maxTokens += 3) {
+      const r = refs(s.store, { target: 'RefundService.computeRefund', direction: 'both', depth: 2, maxTokens }, ctx);
+      expectValid(r, maxTokens);
+      const head = r.text.split('\n')[0];
+      expect(Number(/~(\d+) tok/.exec(head)![1]), String(maxTokens)).toBe(r.tokens);
+      const shown = results(r.text);
+      const more = Number(/\+(\d+) more/.exec(head)?.[1] ?? 0);
+      expect(shown + more, String(maxTokens)).toBeGreaterThanOrEqual(fullLines);
+    }
   });
 
   it('handles misses, ambiguity and budgets', () => {
@@ -503,5 +631,25 @@ describe('resolveTarget', () => {
     // Members are found through their (case-insensitive) qualifier, even for common names.
     expect(resolveTarget(s.store, 'order.getid')).toMatchObject({ kind: 'symbol', symbol: { id: s.ids['Order.getId'] } });
     expect(resolveTarget(s.store, 'ApiClient.get')).toMatchObject({ kind: 'symbol', symbol: { id: s.ids['ApiClient.get'] } });
+  });
+
+  it('drops namespace qualifiers down to Type.member (PHP \\, Rust ::, other packages)', () => {
+    const id = s.ids['RefundService.computeRefund'];
+    for (const q of ['com\\acme\\billing\\RefundService.computeRefund', '\\com\\acme\\billing\\RefundService::computeRefund', 'crate::billing::RefundService::computeRefund', 'org.other.RefundService.computeRefund']) {
+      const t = resolveTarget(s.store, q);
+      expect(t, q).toMatchObject({ kind: 'symbol', symbol: { id } });
+      expect((t as { note?: string }).note, q).toBeUndefined();
+    }
+    // a member declared once is the answer for an unknown qualifier, with a note
+    const once = resolveTarget(s.store, 'BillingFacade.computeRefund');
+    expect(once).toMatchObject({ kind: 'symbol', symbol: { id } });
+    expect((once as { note?: string }).note).toBe('note: no symbol "BillingFacade.computeRefund"; this is the only computeRefund in the index (RefundService.computeRefund)');
+    const r = read(s.store, { target: 'BillingFacade.computeRefund' }, ctx);
+    expect(r.text.split('\n')[0]).toBe(`${RS}:19-27 ${hd('RefundService.computeRefund')}`);
+    expect(r.text.split('\n').pop()).toMatch(/^note: no symbol "BillingFacade\.computeRefund"/);
+    const refsOut = refs(s.store, { target: 'acme\\billing\\RefundService.computeRefund' }, ctx);
+    expect(refsOut.text.split('\n')[0]).toMatch(new RegExp(`^refs ${hd('RefundService.computeRefund')} RefundService\\.computeRefund · `));
+    // a name declared several times is not guessed
+    expect(resolveTarget(s.store, 'Nope.validateRequest').kind).toBe('none');
   });
 });

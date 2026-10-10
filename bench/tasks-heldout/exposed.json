@@ -1,0 +1,62 @@
+{
+  "repo": {
+    "name": "exposed",
+    "url": "https://github.com/JetBrains/Exposed.git",
+    "tag": "1.5.0",
+    "commit": "84361204b6639cad5696506a26595c97afac3531",
+    "language": "kotlin",
+    "path": "bench/repos/exposed"
+  },
+  "notes": "Held-out tasks (round 2), written after v0.2's tuning and before any kopt measurement on them; not derived from bench/results/failures.md. Gold read in the code with git grep and sed only. Re-check with `kopt bench bench/tasks-heldout/exposed.json --verify`.",
+  "tasks": [
+    {
+      "id": "ho-ex-explain-tx-retry",
+      "kind": "explain",
+      "lang": "en",
+      "question": "When a JDBC transaction fails with an SQLException, how does Exposed retry it and how long does it wait between attempts?",
+      "search": "transaction retry attempts sqlexception wait delay between attempts",
+      "gold": {
+        "files": [
+          "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/transactions/Transactions.kt",
+          "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/JdbcTransaction.kt"
+        ],
+        "symbols": [
+          {
+            "name": "inTopLevelTransaction",
+            "file": "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/transactions/Transactions.kt",
+            "line": 191,
+            "kind": "function"
+          },
+          {
+            "name": "getRetryInterval",
+            "file": "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/JdbcTransaction.kt",
+            "line": 316,
+            "kind": "method"
+          }
+        ]
+      },
+      "verifiedBy": "Read inTopLevelTransaction: on SQLException it rolls back, counts attempts up to maxAttempts and sleeps a jittered delay growing with retryInterval * attempts; getRetryInterval spreads [minRetryDelay, maxRetryDelay] over maxAttempts + 1."
+    },
+    {
+      "id": "ho-ex-locate-pg-upsert",
+      "kind": "locate",
+      "lang": "en",
+      "question": "Where does Exposed build the PostgreSQL INSERT ... ON CONFLICT statement used for upsert?",
+      "search": "postgresql upsert insert on conflict statement",
+      "gold": {
+        "files": [
+          "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/vendors/PostgreSQL.kt"
+        ],
+        "symbols": [
+          {
+            "name": "upsert",
+            "file": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/vendors/PostgreSQL.kt",
+            "line": 288,
+            "kind": "method"
+          }
+        ]
+      },
+      "verifiedBy": "Read vendors/PostgreSQL.kt: the PostgreSQL function provider's upsert requires key columns and appends ON CONFLICT (keys) DO UPDATE SET ... with an optional WHERE."
+    }
+  ]
+}

@@ -8,8 +8,8 @@
 //  CLI V3    : `.kiro/hooks/*.json` + `~/.kiro/hooks/` (same harness as IDE 1.x); `--v3` or chat.agentEngine=v3.
 
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, writeFileSync } from 'node:fs';
 import { pathFor } from '../core/config.js';
+import { writePrivateFile } from '../telemetry/fsutil.js';
 import { cliCandidates, hostEnv, ideCandidates, isFile, kiroCliSettingsPath, readJsonFile, realpathOr, type HostEnv } from './paths.js';
 
 export type Surface = 'ide' | 'cli';
@@ -134,8 +134,7 @@ export function surfacesCachePath(userDir: string): string {
 
 export function writeSurfacesCache(userDir: string, s: Surfaces): void {
   try {
-    mkdirSync(userDir, { recursive: true });
-    writeFileSync(surfacesCachePath(userDir), JSON.stringify({ ...s, at: Date.now() }, null, 2) + '\n');
+    writePrivateFile(surfacesCachePath(userDir), JSON.stringify({ ...s, at: Date.now() }, null, 2) + '\n');
   } catch {
     // a cache
   }

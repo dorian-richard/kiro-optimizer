@@ -1,0 +1,101 @@
+{
+  "label": "codegraph",
+  "tool": "codegraph",
+  "package": "@colbymchenry/codegraph",
+  "version": "1.6.2",
+  "mode": "default",
+  "repo": {
+    "name": "discourse",
+    "url": "https://github.com/discourse/discourse.git",
+    "tag": "v2026.9.0",
+    "commit": "343b20f97ef5f6bd70826ee0e993ba348b210fd5",
+    "language": "ruby",
+    "path": "bench/repos/discourse"
+  },
+  "headCommit": "343b20f97ef5f6bd70826ee0e993ba348b210fd5",
+  "commitMatchesTasks": true,
+  "date": "2026-10-09T13:57:29.776Z",
+  "image": "kopt-bench/codegraph:1.6.2",
+  "imageId": "sha256:db8f2e822e3863b14f3c037bc692fb20915bf2e48a3083248d72d3938a716f5a",
+  "engine": "docker",
+  "limits": "memory=6g cpus=8",
+  "cgroupMemory": {
+    "maxBytes": 6442450944,
+    "peakBytes": 5428797440,
+    "oomKills": 0
+  },
+  "container": {
+    "node": "v22.23.3",
+    "arch": "arm64",
+    "platform": "linux",
+    "cpus": 10,
+    "memBytes": 8214851584,
+    "network": "none"
+  },
+  "primaryTool": "codegraph_explore",
+  "toolArgsExample": {
+    "query": "<input>"
+  },
+  "serverCommand": {
+    "command": "codegraph",
+    "args": [
+      "serve",
+      "--mcp"
+    ]
+  },
+  "oneSessionPerTask": true,
+  "indexOk": true,
+  "indexMs": 38236,
+  "indexSteps": [
+    {
+      "command": "codegraph init --yes /work/discourse",
+      "ms": 38236,
+      "exit": 0,
+      "signal": null,
+      "oomKills": 0
+    }
+  ],
+  "copyMs": 64165,
+  "indexDirs": [
+    "<repo>/.codegraph"
+  ],
+  "indexSizeBytes": 403615973,
+  "modelBytes": 0,
+  "indexStatus": "CodeGraph Status\n\nProject: /work/discourse\n\nIndex Statistics:\n  Files:     20,071\n  Nodes:     163,330\n  Edges:     300,093\n  DB Size:   384.92 MB\n  Backend:   node:sqlite — built-in (full WAL)\n  Journal:   wal\n\nNodes by Kind:\n  variable        52,169\n  method          50,160\n  file            15,605\n  import          14,112\n  class           9,572\n  function        6,672\n  module          5,958\n  property        5,169\n  constant        1,798\n  route           1,792\n  interface       211\n  type_alias      112\n\nFiles by Language:\n  ruby            12,112\n  yaml            4,465\n  javascript      3,330\n  typescript      159\n  xml             3\n  liquid          2\n\n✓ Index is up to date",
+  "surface": {
+    "serverInfo": {
+      "name": "codegraph",
+      "version": "1.6.2"
+    },
+    "toolCount": 1,
+    "toolNames": [
+      "codegraph_explore"
+    ],
+    "toolsChars": 1725,
+    "toolsEstTokens": 575,
+    "instructionsChars": 6718,
+    "instructionsEstTokens": 2240,
+    "primaryToolListed": true,
+    "file": "codegraph.surface.json"
+  },
+  "inputs": {
+    "search": {
+      "file": "codegraph-discourse.jsonl",
+      "tasks": 12,
+      "failures": 0,
+      "queryMsMedian": 555,
+      "queryMsP90": 848,
+      "startupMsMedian": 160
+    },
+    "question": {
+      "file": "codegraph-discourse-question.jsonl",
+      "tasks": 12,
+      "failures": 0,
+      "queryMsMedian": 997,
+      "queryMsP90": 1180,
+      "startupMsMedian": 155
+    }
+  },
+  "charsPerToken": 3,
+  "errors": []
+}

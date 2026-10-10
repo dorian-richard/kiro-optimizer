@@ -1,0 +1,3022 @@
+{
+  "meta": {
+    "label": "exposed",
+    "repo": {
+      "name": "exposed",
+      "url": "https://github.com/JetBrains/Exposed.git",
+      "tag": "1.5.0",
+      "commit": "84361204b6639cad5696506a26595c97afac3531",
+      "language": "kotlin",
+      "path": "bench/repos/exposed"
+    },
+    "repoRoot": "bench/repos/exposed",
+    "headCommit": "84361204b6639cad5696506a26595c97afac3531",
+    "date": "2026-10-09T22:38:28.346Z",
+    "input": "search",
+    "charsPerToken": 3,
+    "strategies": [
+      "native-naive",
+      "native-ranged",
+      "kopt-pack",
+      "kopt-hits+read",
+      "kirograph",
+      "codegraph"
+    ],
+    "grepLimits": {
+      "maxMatches": 100,
+      "maxChars": 10000,
+      "maxLineChars": 250
+    },
+    "readLimits": {
+      "naiveTopFiles": 3,
+      "naiveMaxLines": 2000,
+      "rangedMatches": 4,
+      "rangedContext": 60
+    },
+    "koptBudgets": {
+      "find": 700,
+      "pack": 2500,
+      "read": 3000
+    },
+    "index": {
+      "built": false,
+      "durationMs": 0,
+      "files": 864,
+      "symbols": 12962,
+      "path": "<index-dir>/.kopt-exposed/index.db"
+    },
+    "notes": [
+      "kirograph: outputs loaded from bench/competitors/results/kirograph-exposed.jsonl",
+      "codegraph: outputs loaded from bench/competitors/results/codegraph-exposed.jsonl"
+    ],
+    "durationMs": 11208
+  },
+  "results": [
+    {
+      "taskId": "ex-locate-retry",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 68380,
+      "chars": 205136,
+      "toolCalls": 4,
+      "durationMs": 1025,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "sqlexception",
+          "chars": 9978,
+          "tokens": 3326
+        },
+        {
+          "tool": "read_file",
+          "args": "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/transactions/Transactions.kt",
+          "chars": 19571,
+          "tokens": 6524
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/api/exposed-core/org.jetbrains.exposed.v1.exceptions/-exposed-s-q-l-exception/index.html",
+          "chars": 33523,
+          "tokens": 11175
+        },
+        {
+          "tool": "read_file",
+          "args": "CHANGELOG.md",
+          "chars": 142064,
+          "tokens": 47355
+        }
+      ]
+    },
+    {
+      "taskId": "ex-locate-retry",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 13960,
+      "chars": 41877,
+      "toolCalls": 4,
+      "durationMs": 1,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "sqlexception",
+          "chars": 9978,
+          "tokens": 3326
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/api/exposed-core/org.jetbrains.exposed.v1.exceptions/-exposed-s-q-l-exception/index.html:32-252",
+          "chars": 25184,
+          "tokens": 8395
+        },
+        {
+          "tool": "read_file",
+          "args": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/Exceptions.kt:1-77",
+          "chars": 2807,
+          "tokens": 936
+        },
+        {
+          "tool": "read_file",
+          "args": "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/transactions/Transactions.kt:365-465",
+          "chars": 3908,
+          "tokens": 1303
+        }
+      ]
+    },
+    {
+      "taskId": "ex-locate-retry",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1686,
+      "chars": 5056,
+      "toolCalls": 1,
+      "durationMs": 30,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"jdbc transaction retry sqlexception delay attempts\"",
+          "chars": 5056,
+          "tokens": 1686
+        }
+      ]
+    },
+    {
+      "taskId": "ex-locate-retry",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 784,
+      "chars": 2346,
+      "toolCalls": 3,
+      "durationMs": 26,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"jdbc transaction retry sqlexception delay attempts\"",
+          "chars": 2026,
+          "tokens": 676
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#qi",
+          "chars": 160,
+          "tokens": 54
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#qj",
+          "chars": 160,
+          "tokens": 54
+        }
+      ]
+    },
+    {
+      "taskId": "ex-locate-retry",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tokens": 1043,
+      "chars": 3128,
+      "toolCalls": 1,
+      "durationMs": 94,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/transactions/Transactions.kt",
+          "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/JdbcTransaction.kt"
+        ],
+        "symbolsMissed": [
+          "inTopLevelTransaction",
+          "getRetryInterval"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "jdbc transaction retry sqlexception delay attempts",
+          "chars": 3128,
+          "tokens": 1043
+        }
+      ]
+    },
+    {
+      "taskId": "ex-locate-retry",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tokens": 8297,
+      "chars": 24890,
+      "toolCalls": 1,
+      "durationMs": 1409,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "jdbc transaction retry sqlexception delay attempts",
+          "chars": 24890,
+          "tokens": 8297
+        }
+      ]
+    },
+    {
+      "taskId": "ex-locate-upsert-sql",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 27550,
+      "chars": 82648,
+      "toolCalls": 4,
+      "durationMs": 1606,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "conflict",
+          "chars": 10014,
+          "tokens": 3338
+        },
+        {
+          "tool": "read_file",
+          "args": "exposed-r2dbc-tests/src/test/kotlin/org/jetbrains/exposed/v1/r2dbc/sql/tests/postgresql/PostgresqlTests.kt",
+          "chars": 7128,
+          "tokens": 2376
+        },
+        {
+          "tool": "read_file",
+          "args": "exposed-tests/src/test/kotlin/org/jetbrains/exposed/v1/tests/shared/SuspendTransactionTests.kt",
+          "chars": 2758,
+          "tokens": 920
+        },
+        {
+          "tool": "read_file",
+          "args": "documentation-website/Writerside/topics/Migration-Guide-1-0-0.md",
+          "chars": 62748,
+          "tokens": 20916
+        }
+      ]
+    },
+    {
+      "taskId": "ex-locate-upsert-sql",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 18199,
+      "chars": 54594,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "conflict",
+          "chars": 10014,
+          "tokens": 3338
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/api/exposed-jdbc/org.jetbrains.exposed.v1.jdbc/batch-upsert.html:37-117",
+          "chars": 21875,
+          "tokens": 7292
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/api/exposed-jdbc/org.jetbrains.exposed.v1.jdbc/upsert.html:37-117",
+          "chars": 12475,
+          "tokens": 4159
+        },
+        {
+          "tool": "read_file",
+          "args": "documentation-website/Writerside/topics/Migration-Guide-1-0-0.md:668-788",
+          "chars": 6105,
+          "tokens": 2035
+        },
+        {
+          "tool": "read_file",
+          "args": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/vendors/PostgreSQL.kt:185-305",
+          "chars": 4125,
+          "tokens": 1375
+        }
+      ]
+    },
+    {
+      "taskId": "ex-locate-upsert-sql",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1373,
+      "chars": 4119,
+      "toolCalls": 1,
+      "durationMs": 32,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"upsert sql on conflict do update on duplicate key update dialect\"",
+          "chars": 4119,
+          "tokens": 1373
+        }
+      ]
+    },
+    {
+      "taskId": "ex-locate-upsert-sql",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 1278,
+      "chars": 3832,
+      "toolCalls": 3,
+      "durationMs": 26,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"upsert sql on conflict do update on duplicate key update dialect\"",
+          "chars": 2064,
+          "tokens": 688
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#56q",
+          "chars": 562,
+          "tokens": 188
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#2nk",
+          "chars": 1206,
+          "tokens": 402
+        }
+      ]
+    },
+    {
+      "taskId": "ex-locate-upsert-sql",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tokens": 4556,
+      "chars": 13668,
+      "toolCalls": 1,
+      "durationMs": 112,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "upsert sql on conflict do update on duplicate key update dialect",
+          "chars": 13668,
+          "tokens": 4556
+        }
+      ]
+    },
+    {
+      "taskId": "ex-locate-upsert-sql",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tokens": 8262,
+      "chars": 24785,
+      "toolCalls": 1,
+      "durationMs": 225,
+      "recall": {
+        "fileRecall": 0.3333333333333333,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [
+          "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/vendors/PostgreSQL.kt",
+          "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/vendors/MysqlDialect.kt"
+        ],
+        "symbolsMissed": [],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "upsert sql on conflict do update on duplicate key update dialect",
+          "chars": 24785,
+          "tokens": 8262
+        }
+      ]
+    },
+    {
+      "taskId": "ex-locate-lifecycle-flush",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 17187,
+      "chars": 51555,
+      "toolCalls": 4,
+      "durationMs": 1196,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.3333333333333333,
+        "defRecall": 0,
+        "filesMissed": [
+          "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityLifecycleInterceptor.kt",
+          "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityCache.kt"
+        ],
+        "symbolsMissed": [
+          "flushEntities",
+          "flushCache"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "EntityLifecycleInterceptor",
+          "chars": 9823,
+          "tokens": 3275
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/api/exposed-dao/org.jetbrains.exposed.v1.dao/-entity-lifecycle-interceptor/index.html",
+          "chars": 25801,
+          "tokens": 8601
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/api/exposed-dao/org.jetbrains.exposed.v1.dao/-entity-lifecycle-interceptor/-entity-lifecycle-interceptor.html",
+          "chars": 7372,
+          "tokens": 2458
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/api/exposed-dao/org.jetbrains.exposed.v1.dao/-entity-lifecycle-interceptor/after-execution.html",
+          "chars": 8559,
+          "tokens": 2853
+        }
+      ]
+    },
+    {
+      "taskId": "ex-locate-lifecycle-flush",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 13237,
+      "chars": 39703,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.3333333333333333,
+        "defRecall": 0,
+        "filesMissed": [
+          "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityLifecycleInterceptor.kt",
+          "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityCache.kt"
+        ],
+        "symbolsMissed": [
+          "flushEntities",
+          "flushCache"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "EntityLifecycleInterceptor",
+          "chars": 9823,
+          "tokens": 3275
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/api/exposed-dao/org.jetbrains.exposed.v1.dao/-entity-lifecycle-interceptor/-entity-lifecycle-interceptor.html:32-117",
+          "chars": 5590,
+          "tokens": 1864
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/api/exposed-dao/org.jetbrains.exposed.v1.dao/-entity-lifecycle-interceptor/after-execution.html:32-117",
+          "chars": 6789,
+          "tokens": 2263
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/api/exposed-dao/org.jetbrains.exposed.v1.dao/-entity-lifecycle-interceptor/before-commit.html:32-117",
+          "chars": 5944,
+          "tokens": 1982
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/api/exposed-dao/org.jetbrains.exposed.v1.dao/-entity-lifecycle-interceptor/index.html:32-152",
+          "chars": 11557,
+          "tokens": 3853
+        }
+      ]
+    },
+    {
+      "taskId": "ex-locate-lifecycle-flush",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1261,
+      "chars": 3781,
+      "toolCalls": 1,
+      "durationMs": 23,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 1,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [
+          "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityCache.kt"
+        ],
+        "symbolsMissed": [],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"EntityLifecycleInterceptor flush entity cache before statement execution\"",
+          "chars": 3781,
+          "tokens": 1261
+        }
+      ]
+    },
+    {
+      "taskId": "ex-locate-lifecycle-flush",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 2370,
+      "chars": 7108,
+      "toolCalls": 3,
+      "durationMs": 19,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 1,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [
+          "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityCache.kt"
+        ],
+        "symbolsMissed": [],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"EntityLifecycleInterceptor flush entity cache before statement execution\"",
+          "chars": 1928,
+          "tokens": 643
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#my",
+          "chars": 5028,
+          "tokens": 1676
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#n0",
+          "chars": 152,
+          "tokens": 51
+        }
+      ]
+    },
+    {
+      "taskId": "ex-locate-lifecycle-flush",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tokens": 994,
+      "chars": 2981,
+      "toolCalls": 1,
+      "durationMs": 68,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "beforeExecution",
+          "flushEntities",
+          "flushCache"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "EntityLifecycleInterceptor flush entity cache before statement execution",
+          "chars": 2981,
+          "tokens": 994
+        }
+      ]
+    },
+    {
+      "taskId": "ex-locate-lifecycle-flush",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tokens": 8327,
+      "chars": 24979,
+      "toolCalls": 1,
+      "durationMs": 224,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "EntityLifecycleInterceptor flush entity cache before statement execution",
+          "chars": 24979,
+          "tokens": 8327
+        }
+      ]
+    },
+    {
+      "taskId": "ex-locate-hashed-column",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 50160,
+      "chars": 150474,
+      "toolCalls": 4,
+      "durationMs": 1709,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.3333333333333333,
+        "defRecall": 0,
+        "filesMissed": [
+          "exposed-crypt/src/main/kotlin/org/jetbrains/exposed/v1/crypt/Tables.kt",
+          "exposed-crypt/src/main/kotlin/org/jetbrains/exposed/v1/crypt/HashingTransformer.kt",
+          "exposed-crypt/src/main/kotlin/org/jetbrains/exposed/v1/crypt/Hasher.kt"
+        ],
+        "symbolsMissed": [
+          "hashed",
+          "HashingTransformer"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "compare",
+          "chars": 9961,
+          "tokens": 3321
+        },
+        {
+          "tool": "read_file",
+          "args": "documentation-website/Writerside/topics/Migration-Guide-1-0-0.md",
+          "chars": 62748,
+          "tokens": 20916
+        },
+        {
+          "tool": "read_file",
+          "args": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/Function.kt",
+          "chars": 28372,
+          "tokens": 9458
+        },
+        {
+          "tool": "read_file",
+          "args": "documentation-website/Writerside/topics/Breaking-Changes.md",
+          "chars": 49393,
+          "tokens": 16465
+        }
+      ]
+    },
+    {
+      "taskId": "ex-locate-hashed-column",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 9849,
+      "chars": 29543,
+      "toolCalls": 4,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.3333333333333333,
+        "defRecall": 0,
+        "filesMissed": [
+          "exposed-crypt/src/main/kotlin/org/jetbrains/exposed/v1/crypt/Tables.kt",
+          "exposed-crypt/src/main/kotlin/org/jetbrains/exposed/v1/crypt/HashingTransformer.kt",
+          "exposed-crypt/src/main/kotlin/org/jetbrains/exposed/v1/crypt/Hasher.kt"
+        ],
+        "symbolsMissed": [
+          "hashed",
+          "HashingTransformer"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "compare",
+          "chars": 9961,
+          "tokens": 3321
+        },
+        {
+          "tool": "read_file",
+          "args": "documentation-website/Writerside/topics/Migration-Guide-1-0-0.md:48-269",
+          "chars": 10301,
+          "tokens": 3434
+        },
+        {
+          "tool": "read_file",
+          "args": "documentation-website/Writerside/topics/Migration-Guide-1-0-0.md:1016-1136",
+          "chars": 4598,
+          "tokens": 1533
+        },
+        {
+          "tool": "read_file",
+          "args": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/Function.kt:360-480",
+          "chars": 4683,
+          "tokens": 1561
+        }
+      ]
+    },
+    {
+      "taskId": "ex-locate-hashed-column",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1356,
+      "chars": 4068,
+      "toolCalls": 1,
+      "durationMs": 29,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"column one way password hash compare plain text\"",
+          "chars": 4068,
+          "tokens": 1356
+        }
+      ]
+    },
+    {
+      "taskId": "ex-locate-hashed-column",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 1063,
+      "chars": 3186,
+      "toolCalls": 3,
+      "durationMs": 28,
+      "recall": {
+        "fileRecall": 0.6666666666666666,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [
+          "exposed-crypt/src/main/kotlin/org/jetbrains/exposed/v1/crypt/HashingTransformer.kt"
+        ],
+        "symbolsMissed": [
+          "HashingTransformer"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"column one way password hash compare plain text\"",
+          "chars": 2054,
+          "tokens": 685
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#2qc",
+          "chars": 704,
+          "tokens": 235
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#2q9",
+          "chars": 428,
+          "tokens": 143
+        }
+      ]
+    },
+    {
+      "taskId": "ex-locate-hashed-column",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tokens": 948,
+      "chars": 2842,
+      "toolCalls": 1,
+      "durationMs": 66,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "exposed-crypt/src/main/kotlin/org/jetbrains/exposed/v1/crypt/Tables.kt",
+          "exposed-crypt/src/main/kotlin/org/jetbrains/exposed/v1/crypt/HashingTransformer.kt",
+          "exposed-crypt/src/main/kotlin/org/jetbrains/exposed/v1/crypt/Hasher.kt"
+        ],
+        "symbolsMissed": [
+          "hashed",
+          "HashingTransformer",
+          "matches"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "column one way password hash compare plain text",
+          "chars": 2842,
+          "tokens": 948
+        }
+      ]
+    },
+    {
+      "taskId": "ex-locate-hashed-column",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tokens": 8308,
+      "chars": 24922,
+      "toolCalls": 1,
+      "durationMs": 185,
+      "recall": {
+        "fileRecall": 0.6666666666666666,
+        "symbolRecall": 1,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [
+          "exposed-crypt/src/main/kotlin/org/jetbrains/exposed/v1/crypt/HashingTransformer.kt"
+        ],
+        "symbolsMissed": [],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "column one way password hash compare plain text",
+          "chars": 24922,
+          "tokens": 8308
+        }
+      ]
+    },
+    {
+      "taskId": "ex-explain-entity-flush",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 62999,
+      "chars": 188996,
+      "toolCalls": 4,
+      "durationMs": 1555,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 1,
+        "defRecall": 0.75,
+        "filesMissed": [
+          "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/SchemaUtils.kt"
+        ],
+        "symbolsMissed": [],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "flush",
+          "chars": 9951,
+          "tokens": 3317
+        },
+        {
+          "tool": "read_file",
+          "args": "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityCache.kt",
+          "chars": 15429,
+          "tokens": 5143
+        },
+        {
+          "tool": "read_file",
+          "args": "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/Entity.kt",
+          "chars": 21552,
+          "tokens": 7184
+        },
+        {
+          "tool": "read_file",
+          "args": "CHANGELOG.md",
+          "chars": 142064,
+          "tokens": 47355
+        }
+      ]
+    },
+    {
+      "taskId": "ex-explain-entity-flush",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 8290,
+      "chars": 24868,
+      "toolCalls": 3,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 1,
+        "defRecall": 0.75,
+        "filesMissed": [
+          "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/SchemaUtils.kt"
+        ],
+        "symbolsMissed": [],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "flush",
+          "chars": 9951,
+          "tokens": 3317
+        },
+        {
+          "tool": "read_file",
+          "args": "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityCache.kt:1-84",
+          "chars": 3977,
+          "tokens": 1326
+        },
+        {
+          "tool": "read_file",
+          "args": "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityCache.kt:92-356",
+          "chars": 10940,
+          "tokens": 3647
+        }
+      ]
+    },
+    {
+      "taskId": "ex-explain-entity-flush",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 1342,
+      "chars": 4025,
+      "toolCalls": 1,
+      "durationMs": 43,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0.75,
+        "defRecall": 0.5,
+        "filesMissed": [
+          "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/SchemaUtils.kt"
+        ],
+        "symbolsMissed": [
+          "sortTablesByReferences"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"entity cache flush inserts updates foreign key order tables\"",
+          "chars": 4025,
+          "tokens": 1342
+        }
+      ]
+    },
+    {
+      "taskId": "ex-explain-entity-flush",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 1079,
+      "chars": 3233,
+      "toolCalls": 3,
+      "durationMs": 34,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 1,
+        "defRecall": 0.25,
+        "filesMissed": [
+          "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/SchemaUtils.kt"
+        ],
+        "symbolsMissed": [],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"entity cache flush inserts updates foreign key order tables\"",
+          "chars": 2057,
+          "tokens": 686
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#2t2",
+          "chars": 262,
+          "tokens": 88
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#2st",
+          "chars": 914,
+          "tokens": 305
+        }
+      ]
+    },
+    {
+      "taskId": "ex-explain-entity-flush",
+      "kind": "explain",
+      "strategy": "kirograph",
+      "tokens": 990,
+      "chars": 2968,
+      "toolCalls": 1,
+      "durationMs": 70,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0.25,
+        "defRecall": 0,
+        "filesMissed": [
+          "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/SchemaUtils.kt"
+        ],
+        "symbolsMissed": [
+          "flushInserts",
+          "updateEntities",
+          "sortTablesByReferences"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "entity cache flush inserts updates foreign key order tables",
+          "chars": 2968,
+          "tokens": 990
+        }
+      ]
+    },
+    {
+      "taskId": "ex-explain-entity-flush",
+      "kind": "explain",
+      "strategy": "codegraph",
+      "tokens": 8324,
+      "chars": 24971,
+      "toolCalls": 1,
+      "durationMs": 241,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [
+          "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/SchemaUtils.kt"
+        ],
+        "symbolsMissed": [],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "entity cache flush inserts updates foreign key order tables",
+          "chars": 24971,
+          "tokens": 8324
+        }
+      ]
+    },
+    {
+      "taskId": "ex-explain-nested-tx",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 67535,
+      "chars": 202603,
+      "toolCalls": 4,
+      "durationMs": 1032,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "newTransaction",
+          "ThreadLocalTransaction",
+          "rollback",
+          "savepointName"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "useNestedTransactions",
+          "chars": 9867,
+          "tokens": 3289
+        },
+        {
+          "tool": "read_file",
+          "args": "exposed-core/api/exposed-core.api",
+          "chars": 177525,
+          "tokens": 59175
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/api/exposed-core/org.jetbrains.exposed.v1.core/-database-api/use-nested-transactions.html",
+          "chars": 7550,
+          "tokens": 2517
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/api/exposed-core/org.jetbrains.exposed.v1.core/-database-config/-builder/use-nested-transactions.html",
+          "chars": 7661,
+          "tokens": 2554
+        }
+      ]
+    },
+    {
+      "taskId": "ex-explain-nested-tx",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 10690,
+      "chars": 32065,
+      "toolCalls": 4,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "newTransaction",
+          "ThreadLocalTransaction",
+          "rollback",
+          "savepointName"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "useNestedTransactions",
+          "chars": 9867,
+          "tokens": 3289
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/api/exposed-core/org.jetbrains.exposed.v1.core/-database-api/use-nested-transactions.html:32-117",
+          "chars": 5773,
+          "tokens": 1925
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/api/exposed-core/org.jetbrains.exposed.v1.core/-database-config/-builder/use-nested-transactions.html:32-117",
+          "chars": 5845,
+          "tokens": 1949
+        },
+        {
+          "tool": "read_file",
+          "args": "exposed-core/api/exposed-core.api:556-745",
+          "chars": 10580,
+          "tokens": 3527
+        }
+      ]
+    },
+    {
+      "taskId": "ex-explain-nested-tx",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 1622,
+      "chars": 4864,
+      "toolCalls": 1,
+      "durationMs": 19,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "ThreadLocalTransaction",
+          "savepointName"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"nested transactions useNestedTransactions outer transaction savepoint rollback\"",
+          "chars": 4864,
+          "tokens": 1622
+        }
+      ]
+    },
+    {
+      "taskId": "ex-explain-nested-tx",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 746,
+      "chars": 2237,
+      "toolCalls": 3,
+      "durationMs": 18,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.25,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "newTransaction",
+          "ThreadLocalTransaction",
+          "savepointName"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"nested transactions useNestedTransactions outer transaction savepoint rollback\"",
+          "chars": 1974,
+          "tokens": 658
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#7lb",
+          "chars": 126,
+          "tokens": 42
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#7mf",
+          "chars": 137,
+          "tokens": 46
+        }
+      ]
+    },
+    {
+      "taskId": "ex-explain-nested-tx",
+      "kind": "explain",
+      "strategy": "kirograph",
+      "tokens": 1078,
+      "chars": 3234,
+      "toolCalls": 1,
+      "durationMs": 95,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.25,
+        "defRecall": 0,
+        "filesMissed": [
+          "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/transactions/TransactionManager.kt"
+        ],
+        "symbolsMissed": [
+          "newTransaction",
+          "ThreadLocalTransaction",
+          "savepointName"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "nested transactions useNestedTransactions outer transaction savepoint rollback",
+          "chars": 3234,
+          "tokens": 1078
+        }
+      ]
+    },
+    {
+      "taskId": "ex-explain-nested-tx",
+      "kind": "explain",
+      "strategy": "codegraph",
+      "tokens": 8316,
+      "chars": 24947,
+      "toolCalls": 1,
+      "durationMs": 217,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.75,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "nested transactions useNestedTransactions outer transaction savepoint rollback",
+          "chars": 24947,
+          "tokens": 8316
+        }
+      ]
+    },
+    {
+      "taskId": "ex-explain-table-order",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 12884,
+      "chars": 38645,
+      "toolCalls": 4,
+      "durationMs": 1445,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/TableDepthGraph.kt"
+        ],
+        "symbolsMissed": [
+          "TableDepthGraph",
+          "sorted",
+          "hasCycle"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "detection",
+          "chars": 2144,
+          "tokens": 715
+        },
+        {
+          "tool": "read_file",
+          "args": ".claude/skills/migrate-to-1.0/references/module-detection.md",
+          "chars": 3805,
+          "tokens": 1269
+        },
+        {
+          "tool": "read_file",
+          "args": "documentation-website/Writerside/topics/Migrations.md",
+          "chars": 21439,
+          "tokens": 7147
+        },
+        {
+          "tool": "read_file",
+          "args": ".claude/skills/migrate-to-1.0/SKILL.md",
+          "chars": 11257,
+          "tokens": 3753
+        }
+      ]
+    },
+    {
+      "taskId": "ex-explain-table-order",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 236185,
+      "chars": 708549,
+      "toolCalls": 5,
+      "durationMs": 2,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/TableDepthGraph.kt"
+        ],
+        "symbolsMissed": [
+          "TableDepthGraph",
+          "sorted",
+          "hasCycle"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "detection",
+          "chars": 2144,
+          "tokens": 715
+        },
+        {
+          "tool": "read_file",
+          "args": ".claude/skills/migrate-to-1.0/SKILL.md:1-89",
+          "chars": 5036,
+          "tokens": 1679
+        },
+        {
+          "tool": "read_file",
+          "args": ".claude/skills/migrate-to-1.0/references/module-detection.md:1-61",
+          "chars": 2563,
+          "tokens": 855
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/api/scripts/main.js:1-45",
+          "chars": 692045,
+          "tokens": 230682
+        },
+        {
+          "tool": "read_file",
+          "args": "documentation-website/Writerside/topics/Migrations.md:259-379",
+          "chars": 6761,
+          "tokens": 2254
+        }
+      ]
+    },
+    {
+      "taskId": "ex-explain-table-order",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 1373,
+      "chars": 4118,
+      "toolCalls": 1,
+      "durationMs": 40,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0,
+        "filesMissed": [
+          "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/TableDepthGraph.kt"
+        ],
+        "symbolsMissed": [
+          "sorted"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"tables order foreign key references create cycle detection graph\"",
+          "chars": 4118,
+          "tokens": 1373
+        }
+      ]
+    },
+    {
+      "taskId": "ex-explain-table-order",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 1028,
+      "chars": 3082,
+      "toolCalls": 3,
+      "durationMs": 34,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.3333333333333333,
+        "defRecall": 0,
+        "filesMissed": [
+          "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/TableDepthGraph.kt"
+        ],
+        "symbolsMissed": [
+          "TableDepthGraph",
+          "sorted"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"tables order foreign key references create cycle detection graph\"",
+          "chars": 2051,
+          "tokens": 684
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#c4",
+          "chars": 653,
+          "tokens": 218
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#c5",
+          "chars": 378,
+          "tokens": 126
+        }
+      ]
+    },
+    {
+      "taskId": "ex-explain-table-order",
+      "kind": "explain",
+      "strategy": "kirograph",
+      "tokens": 1157,
+      "chars": 3469,
+      "toolCalls": 1,
+      "durationMs": 70,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.3333333333333333,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "sorted",
+          "hasCycle"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "tables order foreign key references create cycle detection graph",
+          "chars": 3469,
+          "tokens": 1157
+        }
+      ]
+    },
+    {
+      "taskId": "ex-explain-table-order",
+      "kind": "explain",
+      "strategy": "codegraph",
+      "tokens": 7804,
+      "chars": 23411,
+      "toolCalls": 1,
+      "durationMs": 244,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "tables order foreign key references create cycle detection graph",
+          "chars": 23411,
+          "tokens": 7804
+        }
+      ]
+    },
+    {
+      "taskId": "ex-usage-sort-tables",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 9655,
+      "chars": 28960,
+      "toolCalls": 4,
+      "durationMs": 273,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "flush",
+          "createStatements",
+          "drop",
+          "tableConstraints",
+          "generateVersionedFiles"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "sortTablesByReferences",
+          "chars": 8239,
+          "tokens": 2747
+        },
+        {
+          "tool": "read_file",
+          "args": "exposed-tests/src/test/kotlin/org/jetbrains/exposed/v1/tests/shared/entities/SelfReferenceTest.kt",
+          "chars": 3953,
+          "tokens": 1318
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/api/exposed-jdbc/org.jetbrains.exposed.v1.jdbc/-schema-utils/sort-tables-by-references.html",
+          "chars": 8381,
+          "tokens": 2794
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/api/exposed-r2dbc/org.jetbrains.exposed.v1.r2dbc/-schema-utils/sort-tables-by-references.html",
+          "chars": 8387,
+          "tokens": 2796
+        }
+      ]
+    },
+    {
+      "taskId": "ex-usage-sort-tables",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 9468,
+      "chars": 28401,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.2,
+        "defRecall": 0.2,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "flush",
+          "drop",
+          "tableConstraints",
+          "generateVersionedFiles"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "sortTablesByReferences",
+          "chars": 8239,
+          "tokens": 2747
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/api/exposed-jdbc/org.jetbrains.exposed.v1.jdbc/-schema-utils/sort-tables-by-references.html:32-117",
+          "chars": 6603,
+          "tokens": 2201
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/api/exposed-r2dbc/org.jetbrains.exposed.v1.r2dbc/-schema-utils/sort-tables-by-references.html:32-117",
+          "chars": 6609,
+          "tokens": 2203
+        },
+        {
+          "tool": "read_file",
+          "args": "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/SchemaUtils.kt:1-78",
+          "chars": 3564,
+          "tokens": 1188
+        },
+        {
+          "tool": "read_file",
+          "args": "exposed-r2dbc/src/main/kotlin/org/jetbrains/exposed/v1/r2dbc/SchemaUtils.kt:1-76",
+          "chars": 3386,
+          "tokens": 1129
+        }
+      ]
+    },
+    {
+      "taskId": "ex-usage-sort-tables",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 1148,
+      "chars": 3442,
+      "toolCalls": 1,
+      "durationMs": 23,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"SchemaUtils sortTablesByReferences\"",
+          "chars": 3442,
+          "tokens": 1148
+        }
+      ]
+    },
+    {
+      "taskId": "ex-usage-sort-tables",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 1497,
+      "chars": 4488,
+      "toolCalls": 3,
+      "durationMs": 23,
+      "recall": {
+        "fileRecall": 0.25,
+        "symbolRecall": 0.4,
+        "defRecall": 0.4,
+        "filesMissed": [
+          "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityCache.kt",
+          "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/statements/jdbc/JdbcDatabaseMetadataImpl.kt",
+          "exposed-plugin-core/src/main/kotlin/org/jetbrains/exposed/v1/plugin/core/migration/MigrationGenerator.kt"
+        ],
+        "symbolsMissed": [
+          "flush",
+          "tableConstraints",
+          "generateVersionedFiles"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"SchemaUtils sortTablesByReferences\"",
+          "chars": 1767,
+          "tokens": 589
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#r9",
+          "chars": 236,
+          "tokens": 79
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#r8",
+          "chars": 2485,
+          "tokens": 829
+        }
+      ]
+    },
+    {
+      "taskId": "ex-usage-sort-tables",
+      "kind": "usage",
+      "strategy": "kirograph",
+      "tokens": 1131,
+      "chars": 3391,
+      "toolCalls": 1,
+      "durationMs": 46,
+      "recall": {
+        "fileRecall": 0.25,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityCache.kt",
+          "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/SchemaUtils.kt",
+          "exposed-plugin-core/src/main/kotlin/org/jetbrains/exposed/v1/plugin/core/migration/MigrationGenerator.kt"
+        ],
+        "symbolsMissed": [
+          "flush",
+          "createStatements",
+          "drop",
+          "tableConstraints",
+          "generateVersionedFiles"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "SchemaUtils sortTablesByReferences",
+          "chars": 3391,
+          "tokens": 1131
+        }
+      ]
+    },
+    {
+      "taskId": "ex-usage-sort-tables",
+      "kind": "usage",
+      "strategy": "codegraph",
+      "tokens": 8295,
+      "chars": 24884,
+      "toolCalls": 1,
+      "durationMs": 110,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.4,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "SchemaUtils sortTablesByReferences",
+          "chars": 24884,
+          "tokens": 8295
+        }
+      ]
+    },
+    {
+      "taskId": "ex-usage-entity-lifecycle",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 14632,
+      "chars": 43895,
+      "toolCalls": 4,
+      "durationMs": 157,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.8333333333333334,
+        "defRecall": 0.8333333333333334,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "setReference"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "executeAsPartOfEntityLifecycle",
+          "chars": 944,
+          "tokens": 315
+        },
+        {
+          "tool": "read_file",
+          "args": "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/Entity.kt",
+          "chars": 21552,
+          "tokens": 7184
+        },
+        {
+          "tool": "read_file",
+          "args": "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityCache.kt",
+          "chars": 15429,
+          "tokens": 5143
+        },
+        {
+          "tool": "read_file",
+          "args": "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityLifecycleInterceptor.kt",
+          "chars": 5970,
+          "tokens": 1990
+        }
+      ]
+    },
+    {
+      "taskId": "ex-usage-entity-lifecycle",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 5910,
+      "chars": 17727,
+      "toolCalls": 4,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.6666666666666666,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "updateEntities",
+          "setReference"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "executeAsPartOfEntityLifecycle",
+          "chars": 944,
+          "tokens": 315
+        },
+        {
+          "tool": "read_file",
+          "args": "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/Entity.kt:93-275",
+          "chars": 8162,
+          "tokens": 2721
+        },
+        {
+          "tool": "read_file",
+          "args": "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/Entity.kt:329-449",
+          "chars": 5562,
+          "tokens": 1854
+        },
+        {
+          "tool": "read_file",
+          "args": "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityLifecycleInterceptor.kt:1-74",
+          "chars": 3059,
+          "tokens": 1020
+        }
+      ]
+    },
+    {
+      "taskId": "ex-usage-entity-lifecycle",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 519,
+      "chars": 1557,
+      "toolCalls": 1,
+      "durationMs": 18,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"executeAsPartOfEntityLifecycle\"",
+          "chars": 1557,
+          "tokens": 519
+        }
+      ]
+    },
+    {
+      "taskId": "ex-usage-entity-lifecycle",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 382,
+      "chars": 1143,
+      "toolCalls": 3,
+      "durationMs": 19,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/Entity.kt",
+          "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityCache.kt",
+          "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/InnerTableLink.kt"
+        ],
+        "symbolsMissed": [
+          "getValue",
+          "delete",
+          "flush",
+          "updateEntities",
+          "flushInserts",
+          "setReference"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"executeAsPartOfEntityLifecycle\"",
+          "chars": 578,
+          "tokens": 193
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#mx",
+          "chars": 395,
+          "tokens": 132
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#mw",
+          "chars": 170,
+          "tokens": 57
+        }
+      ]
+    },
+    {
+      "taskId": "ex-usage-entity-lifecycle",
+      "kind": "usage",
+      "strategy": "kirograph",
+      "tokens": 2270,
+      "chars": 6810,
+      "toolCalls": 1,
+      "durationMs": 51,
+      "recall": {
+        "fileRecall": 0.3333333333333333,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/Entity.kt",
+          "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/InnerTableLink.kt"
+        ],
+        "symbolsMissed": [
+          "getValue",
+          "delete",
+          "flush",
+          "updateEntities",
+          "flushInserts",
+          "setReference"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "executeAsPartOfEntityLifecycle",
+          "chars": 6810,
+          "tokens": 2270
+        }
+      ]
+    },
+    {
+      "taskId": "ex-usage-entity-lifecycle",
+      "kind": "usage",
+      "strategy": "codegraph",
+      "tokens": 8330,
+      "chars": 24990,
+      "toolCalls": 1,
+      "durationMs": 59,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.16666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "executeAsPartOfEntityLifecycle",
+          "chars": 24990,
+          "tokens": 8330
+        }
+      ]
+    },
+    {
+      "taskId": "ex-usage-resolve-database",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 6765,
+      "chars": 20292,
+      "toolCalls": 2,
+      "durationMs": 134,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "resolveDatabaseOrThrow",
+          "chars": 721,
+          "tokens": 241
+        },
+        {
+          "tool": "read_file",
+          "args": "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/transactions/Transactions.kt",
+          "chars": 19571,
+          "tokens": 6524
+        }
+      ]
+    },
+    {
+      "taskId": "ex-usage-resolve-database",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 5466,
+      "chars": 16395,
+      "toolCalls": 2,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "resolveDatabaseOrThrow",
+          "chars": 721,
+          "tokens": 241
+        },
+        {
+          "tool": "read_file",
+          "args": "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/transactions/Transactions.kt:42-412",
+          "chars": 15674,
+          "tokens": 5225
+        }
+      ]
+    },
+    {
+      "taskId": "ex-usage-resolve-database",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 794,
+      "chars": 2382,
+      "toolCalls": 1,
+      "durationMs": 17,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"resolveDatabaseOrThrow\"",
+          "chars": 2382,
+          "tokens": 794
+        }
+      ]
+    },
+    {
+      "taskId": "ex-usage-resolve-database",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 658,
+      "chars": 1971,
+      "toolCalls": 3,
+      "durationMs": 17,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.75,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "inTopLevelSuspendTransaction"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"resolveDatabaseOrThrow\"",
+          "chars": 931,
+          "tokens": 311
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#5hc",
+          "chars": 507,
+          "tokens": 169
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#6a6",
+          "chars": 533,
+          "tokens": 178
+        }
+      ]
+    },
+    {
+      "taskId": "ex-usage-resolve-database",
+      "kind": "usage",
+      "strategy": "kirograph",
+      "tokens": 1121,
+      "chars": 3361,
+      "toolCalls": 1,
+      "durationMs": 47,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "transaction",
+          "inTopLevelTransaction",
+          "suspendTransaction",
+          "inTopLevelSuspendTransaction"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "resolveDatabaseOrThrow",
+          "chars": 3361,
+          "tokens": 1121
+        }
+      ]
+    },
+    {
+      "taskId": "ex-usage-resolve-database",
+      "kind": "usage",
+      "strategy": "codegraph",
+      "tokens": 8302,
+      "chars": 24904,
+      "toolCalls": 1,
+      "durationMs": 75,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "resolveDatabaseOrThrow",
+          "chars": 24904,
+          "tokens": 8302
+        }
+      ]
+    },
+    {
+      "taskId": "ex-impact-check-cycle",
+      "kind": "impact",
+      "strategy": "native-naive",
+      "tokens": 8626,
+      "chars": 25875,
+      "toolCalls": 4,
+      "durationMs": 287,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.3333333333333333,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "createStatement",
+          "dropStatement"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "TableUtils|checkCycle",
+          "chars": 6094,
+          "tokens": 2032
+        },
+        {
+          "tool": "read_file",
+          "args": "exposed-tests/src/test/kotlin/org/jetbrains/exposed/v1/tests/shared/entities/SelfReferenceTest.kt",
+          "chars": 3953,
+          "tokens": 1318
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/api/exposed-jdbc/org.jetbrains.exposed.v1.jdbc/-schema-utils/check-cycle.html",
+          "chars": 7911,
+          "tokens": 2637
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/api/exposed-r2dbc/org.jetbrains.exposed.v1.r2dbc/-schema-utils/check-cycle.html",
+          "chars": 7917,
+          "tokens": 2639
+        }
+      ]
+    },
+    {
+      "taskId": "ex-impact-check-cycle",
+      "kind": "impact",
+      "strategy": "native-ranged",
+      "tokens": 7876,
+      "chars": 23623,
+      "toolCalls": 4,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "TableUtils|checkCycle",
+          "chars": 6094,
+          "tokens": 2032
+        },
+        {
+          "tool": "read_file",
+          "args": "docs/api/exposed-jdbc/org.jetbrains.exposed.v1.jdbc/-schema-utils/check-cycle.html:32-117",
+          "chars": 6145,
+          "tokens": 2049
+        },
+        {
+          "tool": "read_file",
+          "args": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/SchemaUtilityApi.kt:594-659",
+          "chars": 2900,
+          "tokens": 967
+        },
+        {
+          "tool": "read_file",
+          "args": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/Table.kt:1828-2041",
+          "chars": 8484,
+          "tokens": 2828
+        }
+      ]
+    },
+    {
+      "taskId": "ex-impact-check-cycle",
+      "kind": "impact",
+      "strategy": "kopt-pack",
+      "tokens": 697,
+      "chars": 2089,
+      "toolCalls": 1,
+      "durationMs": 22,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"TableUtils checkCycle\"",
+          "chars": 2089,
+          "tokens": 697
+        }
+      ]
+    },
+    {
+      "taskId": "ex-impact-check-cycle",
+      "kind": "impact",
+      "strategy": "kopt-hits+read",
+      "tokens": 616,
+      "chars": 1845,
+      "toolCalls": 3,
+      "durationMs": 23,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0.3333333333333333,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [
+          "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/Table.kt"
+        ],
+        "symbolsMissed": [
+          "createStatement",
+          "dropStatement"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"TableUtils checkCycle\"",
+          "chars": 1119,
+          "tokens": 373
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#2f5",
+          "chars": 170,
+          "tokens": 57
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#2f4",
+          "chars": 556,
+          "tokens": 186
+        }
+      ]
+    },
+    {
+      "taskId": "ex-impact-check-cycle",
+      "kind": "impact",
+      "strategy": "kirograph",
+      "tokens": 987,
+      "chars": 2959,
+      "toolCalls": 1,
+      "durationMs": 45,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0.3333333333333333,
+        "defRecall": 0,
+        "filesMissed": [
+          "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/Table.kt"
+        ],
+        "symbolsMissed": [
+          "createStatement",
+          "dropStatement"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "TableUtils checkCycle",
+          "chars": 2959,
+          "tokens": 987
+        }
+      ]
+    },
+    {
+      "taskId": "ex-impact-check-cycle",
+      "kind": "impact",
+      "strategy": "codegraph",
+      "tokens": 8316,
+      "chars": 24948,
+      "toolCalls": 1,
+      "durationMs": 84,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "TableUtils checkCycle",
+          "chars": 24948,
+          "tokens": 8316
+        }
+      ]
+    },
+    {
+      "taskId": "ex-impact-upsert-alias",
+      "kind": "impact",
+      "strategy": "native-naive",
+      "tokens": 7920,
+      "chars": 23758,
+      "toolCalls": 3,
+      "durationMs": 123,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "isUpsertAliasSupported",
+          "chars": 641,
+          "tokens": 214
+        },
+        {
+          "tool": "read_file",
+          "args": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/vendors/MysqlDialect.kt",
+          "chars": 17088,
+          "tokens": 5696
+        },
+        {
+          "tool": "read_file",
+          "args": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/vendors/MariaDBDialect.kt",
+          "chars": 6029,
+          "tokens": 2010
+        }
+      ]
+    },
+    {
+      "taskId": "ex-impact-upsert-alias",
+      "kind": "impact",
+      "strategy": "native-ranged",
+      "tokens": 2959,
+      "chars": 8874,
+      "toolCalls": 3,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.75,
+        "defRecall": 0.75,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "upsert"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "isUpsertAliasSupported",
+          "chars": 641,
+          "tokens": 214
+        },
+        {
+          "tool": "read_file",
+          "args": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/vendors/MariaDBDialect.kt:42-162",
+          "chars": 4166,
+          "tokens": 1389
+        },
+        {
+          "tool": "read_file",
+          "args": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/vendors/MysqlDialect.kt:270-390",
+          "chars": 4067,
+          "tokens": 1356
+        }
+      ]
+    },
+    {
+      "taskId": "ex-impact-upsert-alias",
+      "kind": "impact",
+      "strategy": "kopt-pack",
+      "tokens": 455,
+      "chars": 1364,
+      "toolCalls": 1,
+      "durationMs": 15,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"isUpsertAliasSupported\"",
+          "chars": 1364,
+          "tokens": 455
+        }
+      ]
+    },
+    {
+      "taskId": "ex-impact-upsert-alias",
+      "kind": "impact",
+      "strategy": "kopt-hits+read",
+      "tokens": 424,
+      "chars": 1270,
+      "toolCalls": 3,
+      "durationMs": 17,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.75,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "insertValue"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"isUpsertAliasSupported\"",
+          "chars": 732,
+          "tokens": 244
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#2nn",
+          "chars": 359,
+          "tokens": 120
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#l4",
+          "chars": 179,
+          "tokens": 60
+        }
+      ]
+    },
+    {
+      "taskId": "ex-impact-upsert-alias",
+      "kind": "impact",
+      "strategy": "kirograph",
+      "tokens": 4523,
+      "chars": 13569,
+      "toolCalls": 1,
+      "durationMs": 60,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0.75,
+        "defRecall": 0.25,
+        "filesMissed": [
+          "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/vendors/MariaDBDialect.kt"
+        ],
+        "symbolsMissed": [
+          "insertValue"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "isUpsertAliasSupported",
+          "chars": 13569,
+          "tokens": 4523
+        }
+      ]
+    },
+    {
+      "taskId": "ex-impact-upsert-alias",
+      "kind": "impact",
+      "strategy": "codegraph",
+      "tokens": 8294,
+      "chars": 24882,
+      "toolCalls": 1,
+      "durationMs": 76,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "isUpsertAliasSupported",
+          "chars": 24882,
+          "tokens": 8294
+        }
+      ]
+    }
+  ],
+  "aggregates": [
+    {
+      "strategy": "native-naive",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 15909.5,
+      "meanTokens": 29524,
+      "p90Tokens": 67535,
+      "totalTokens": 354293,
+      "totalChars": 1062837,
+      "meanToolCalls": 3.75,
+      "meanFileRecall": 0.7083333333333334,
+      "meanSymbolRecall": 0.5694444444444444,
+      "meanDefRecall": 0.3680555555555556,
+      "found": 4,
+      "foundRate": 0.3333333333333333,
+      "tokensPerFound": 88573
+    },
+    {
+      "strategy": "native-ranged",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 9658.5,
+      "meanTokens": 28507,
+      "p90Tokens": 18199,
+      "totalTokens": 342089,
+      "totalChars": 1026219,
+      "meanToolCalls": 4,
+      "meanFileRecall": 0.7083333333333334,
+      "meanSymbolRecall": 0.6069444444444445,
+      "meanDefRecall": 0.4055555555555555,
+      "found": 4,
+      "foundRate": 0.3333333333333333,
+      "tokensPerFound": 85522
+    },
+    {
+      "strategy": "kopt-pack",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 1301.5,
+      "meanTokens": 1136,
+      "p90Tokens": 1622,
+      "totalTokens": 13626,
+      "totalChars": 40865,
+      "meanToolCalls": 1,
+      "meanFileRecall": 0.8333333333333334,
+      "meanSymbolRecall": 0.9097222222222223,
+      "meanDefRecall": 0.34722222222222215,
+      "found": 8,
+      "foundRate": 0.6666666666666666,
+      "tokensPerFound": 1703
+    },
+    {
+      "strategy": "kopt-hits+read",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 906,
+      "meanTokens": 994,
+      "p90Tokens": 1497,
+      "totalTokens": 11925,
+      "totalChars": 35741,
+      "meanToolCalls": 3,
+      "meanFileRecall": 0.6180555555555555,
+      "meanSymbolRecall": 0.623611111111111,
+      "meanDefRecall": 0.31805555555555554,
+      "found": 2,
+      "foundRate": 0.16666666666666666,
+      "tokensPerFound": 5963
+    },
+    {
+      "strategy": "kirograph",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 1099.5,
+      "meanTokens": 1733,
+      "p90Tokens": 4523,
+      "totalTokens": 20798,
+      "totalChars": 62380,
+      "meanToolCalls": 1,
+      "meanFileRecall": 0.5069444444444444,
+      "meanSymbolRecall": 0.24305555555555555,
+      "meanDefRecall": 0.10416666666666667,
+      "found": 1,
+      "foundRate": 0.08333333333333333,
+      "tokensPerFound": 20798
+    },
+    {
+      "strategy": "codegraph",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 8305,
+      "meanTokens": 8265,
+      "p90Tokens": 8327,
+      "totalTokens": 99175,
+      "totalChars": 297513,
+      "meanToolCalls": 1,
+      "meanFileRecall": 0.875,
+      "meanSymbolRecall": 1,
+      "meanDefRecall": 0.5541666666666667,
+      "found": 9,
+      "foundRate": 0.75,
+      "tokensPerFound": 11019
+    }
+  ],
+  "paired": [
+    {
+      "a": "native-naive",
+      "b": "kopt-pack",
+      "nRun": 12,
+      "nBoth": 4,
+      "onlyA": 0,
+      "onlyB": 4,
+      "medianRatio": 0.053643077783277426,
+      "geoMeanRatio": 0.0536511556463474,
+      "bCheaper": 4
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-pack",
+      "nRun": 12,
+      "nBoth": 4,
+      "onlyA": 0,
+      "onlyB": 4,
+      "medianRatio": 0.10463516890018787,
+      "geoMeanRatio": 0.10403231851308255,
+      "bCheaper": 4
+    },
+    {
+      "a": "native-naive",
+      "b": "kopt-hits+read",
+      "nRun": 12,
+      "nBoth": 2,
+      "onlyA": 2,
+      "onlyB": 0,
+      "medianRatio": 0.028926862748949105,
+      "geoMeanRatio": 0.02306206056988526,
+      "bCheaper": 2
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-hits+read",
+      "nRun": 12,
+      "nBoth": 2,
+      "onlyA": 2,
+      "onlyB": 0,
+      "medianRatio": 0.06319204855709348,
+      "geoMeanRatio": 0.06279961577466989,
+      "bCheaper": 2
+    },
+    {
+      "a": "kirograph",
+      "b": "kopt-pack",
+      "nRun": 12,
+      "nBoth": 1,
+      "onlyA": 0,
+      "onlyB": 7,
+      "medianRatio": 0.3013608428446005,
+      "geoMeanRatio": 0.3013608428446005,
+      "bCheaper": 1
+    },
+    {
+      "a": "codegraph",
+      "b": "kopt-pack",
+      "nRun": 12,
+      "nBoth": 6,
+      "onlyA": 3,
+      "onlyB": 2,
+      "medianRatio": 0.08972696936440613,
+      "geoMeanRatio": 0.0957483492243413,
+      "bCheaper": 6
+    },
+    {
+      "a": "kirograph",
+      "b": "kopt-hits+read",
+      "nRun": 12,
+      "nBoth": 1,
+      "onlyA": 0,
+      "onlyB": 1,
+      "medianRatio": 0.28050921861281825,
+      "geoMeanRatio": 0.28050921861281825,
+      "bCheaper": 1
+    },
+    {
+      "a": "codegraph",
+      "b": "kopt-hits+read",
+      "nRun": 12,
+      "nBoth": 1,
+      "onlyA": 8,
+      "onlyB": 1,
+      "medianRatio": 0.09449198505483909,
+      "geoMeanRatio": 0.09449198505483909,
+      "bCheaper": 1
+    },
+    {
+      "a": "native-ranged",
+      "b": "kirograph",
+      "nRun": 12,
+      "nBoth": 1,
+      "onlyA": 3,
+      "onlyB": 0,
+      "medianRatio": 0.25034342546293753,
+      "geoMeanRatio": 0.25034342546293753,
+      "bCheaper": 1
+    },
+    {
+      "a": "native-ranged",
+      "b": "codegraph",
+      "nRun": 12,
+      "nBoth": 3,
+      "onlyA": 1,
+      "onlyB": 6,
+      "medianRatio": 1.0558659217877095,
+      "geoMeanRatio": 0.9841301011019118,
+      "bCheaper": 1
+    },
+    {
+      "a": "native-naive",
+      "b": "native-ranged",
+      "nRun": 12,
+      "nBoth": 3,
+      "onlyA": 1,
+      "onlyB": 1,
+      "medianRatio": 0.6605807622504537,
+      "geoMeanRatio": 0.47763340158851253,
+      "bCheaper": 3
+    }
+  ],
+  "byKind": [
+    {
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tasks": 4,
+      "found": 2,
+      "medianTokens": 38855
+    },
+    {
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tasks": 4,
+      "found": 2,
+      "medianTokens": 13598.5
+    },
+    {
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tasks": 4,
+      "found": 3,
+      "medianTokens": 1364.5
+    },
+    {
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tasks": 4,
+      "found": 2,
+      "medianTokens": 1170.5
+    },
+    {
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tasks": 4,
+      "found": 1,
+      "medianTokens": 1018.5
+    },
+    {
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tasks": 4,
+      "found": 2,
+      "medianTokens": 8302.5
+    },
+    {
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tasks": 3,
+      "found": 0,
+      "medianTokens": 62999
+    },
+    {
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tasks": 3,
+      "found": 0,
+      "medianTokens": 10690
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tasks": 3,
+      "found": 0,
+      "medianTokens": 1373
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tasks": 3,
+      "found": 0,
+      "medianTokens": 1028
+    },
+    {
+      "kind": "explain",
+      "strategy": "kirograph",
+      "tasks": 3,
+      "found": 0,
+      "medianTokens": 1078
+    },
+    {
+      "kind": "explain",
+      "strategy": "codegraph",
+      "tasks": 3,
+      "found": 2,
+      "medianTokens": 8316
+    },
+    {
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tasks": 3,
+      "found": 1,
+      "medianTokens": 9655
+    },
+    {
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tasks": 3,
+      "found": 1,
+      "medianTokens": 5910
+    },
+    {
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tasks": 3,
+      "found": 3,
+      "medianTokens": 794
+    },
+    {
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tasks": 3,
+      "found": 0,
+      "medianTokens": 658
+    },
+    {
+      "kind": "usage",
+      "strategy": "kirograph",
+      "tasks": 3,
+      "found": 0,
+      "medianTokens": 1131
+    },
+    {
+      "kind": "usage",
+      "strategy": "codegraph",
+      "tasks": 3,
+      "found": 3,
+      "medianTokens": 8302
+    },
+    {
+      "kind": "impact",
+      "strategy": "native-naive",
+      "tasks": 2,
+      "found": 1,
+      "medianTokens": 8273
+    },
+    {
+      "kind": "impact",
+      "strategy": "native-ranged",
+      "tasks": 2,
+      "found": 1,
+      "medianTokens": 5417.5
+    },
+    {
+      "kind": "impact",
+      "strategy": "kopt-pack",
+      "tasks": 2,
+      "found": 2,
+      "medianTokens": 576
+    },
+    {
+      "kind": "impact",
+      "strategy": "kopt-hits+read",
+      "tasks": 2,
+      "found": 0,
+      "medianTokens": 520
+    },
+    {
+      "kind": "impact",
+      "strategy": "kirograph",
+      "tasks": 2,
+      "found": 0,
+      "medianTokens": 2755
+    },
+    {
+      "kind": "impact",
+      "strategy": "codegraph",
+      "tasks": 2,
+      "found": 2,
+      "medianTokens": 8305
+    }
+  ]
+}

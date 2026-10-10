@@ -1,0 +1,35 @@
+PHPUnit 10.5.2 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.3.0
+Configuration: /home/dev/shop/phpunit.xml
+
+...............................................................  63 / 400 ( 16%)
+...............F............................................... 126 / 400 ( 32%)
+............................................................... 189 / 400 ( 47%)
+........................................E...................... 252 / 400 ( 63%)
+..S............................................................ 315 / 400 ( 79%)
+............................................................... 378 / 400 ( 95%)
+......................                                         400 / 400 (100%)
+
+Time: 00:04.512, Memory: 38.00 MB
+
+There was 1 error:
+
+1) Tests\Unit\OrderServiceTest::testCreateRejectsEmptyCart
+TypeError: App\Services\OrderService::create(): Argument #1 ($items) must be of type array, null given, called in /home/dev/shop/tests/Unit/OrderServiceTest.php on line 41
+
+/home/dev/shop/app/Services/OrderService.php:22
+/home/dev/shop/tests/Unit/OrderServiceTest.php:41
+/home/dev/shop/vendor/phpunit/phpunit/src/Framework/TestCase.php:1188
+
+--
+
+There was 1 failure:
+
+1) Tests\Unit\CartTest::testTotalWithDiscount
+Failed asserting that 100 matches expected 90.
+
+/home/dev/shop/tests/Unit/CartTest.php:28
+
+FAILURES!
+Tests: 400, Assertions: 1132, Errors: 1, Failures: 1, Skipped: 1.

@@ -1,0 +1,3776 @@
+{
+  "schema": "kopt-bench-failures/1",
+  "date": "2026-10-09T22:39:50.626Z",
+  "strategy": "kopt-pack",
+  "input": "search",
+  "repos": [
+    {
+      "repo": "spring-framework",
+      "language": "java",
+      "tasks": 15,
+      "missed": 4,
+      "byCause": {
+        "ranking": 1,
+        "unresolved-refs": 0,
+        "extraction": 0,
+        "budget-format": 3,
+        "multi-step": 0
+      },
+      "itemsByCause": {
+        "ranking": 1,
+        "unresolved-refs": 0,
+        "extraction": 0,
+        "budget-format": 5,
+        "multi-step": 0
+      }
+    },
+    {
+      "repo": "django",
+      "language": "python",
+      "tasks": 15,
+      "missed": 2,
+      "byCause": {
+        "ranking": 1,
+        "unresolved-refs": 0,
+        "extraction": 0,
+        "budget-format": 0,
+        "multi-step": 1
+      },
+      "itemsByCause": {
+        "ranking": 1,
+        "unresolved-refs": 0,
+        "extraction": 0,
+        "budget-format": 0,
+        "multi-step": 1
+      }
+    },
+    {
+      "repo": "medusa",
+      "language": "typescript",
+      "tasks": 12,
+      "missed": 3,
+      "byCause": {
+        "ranking": 0,
+        "unresolved-refs": 1,
+        "extraction": 0,
+        "budget-format": 1,
+        "multi-step": 1
+      },
+      "itemsByCause": {
+        "ranking": 0,
+        "unresolved-refs": 1,
+        "extraction": 0,
+        "budget-format": 2,
+        "multi-step": 2
+      }
+    },
+    {
+      "repo": "webpack",
+      "language": "javascript",
+      "tasks": 12,
+      "missed": 1,
+      "byCause": {
+        "ranking": 0,
+        "unresolved-refs": 1,
+        "extraction": 0,
+        "budget-format": 0,
+        "multi-step": 0
+      },
+      "itemsByCause": {
+        "ranking": 0,
+        "unresolved-refs": 2,
+        "extraction": 0,
+        "budget-format": 0,
+        "multi-step": 0
+      }
+    },
+    {
+      "repo": "jellyfin",
+      "language": "c_sharp",
+      "tasks": 12,
+      "missed": 2,
+      "byCause": {
+        "ranking": 0,
+        "unresolved-refs": 0,
+        "extraction": 0,
+        "budget-format": 1,
+        "multi-step": 1
+      },
+      "itemsByCause": {
+        "ranking": 0,
+        "unresolved-refs": 0,
+        "extraction": 0,
+        "budget-format": 3,
+        "multi-step": 1
+      }
+    },
+    {
+      "repo": "gitea",
+      "language": "go",
+      "tasks": 12,
+      "missed": 1,
+      "byCause": {
+        "ranking": 0,
+        "unresolved-refs": 0,
+        "extraction": 0,
+        "budget-format": 0,
+        "multi-step": 1
+      },
+      "itemsByCause": {
+        "ranking": 0,
+        "unresolved-refs": 0,
+        "extraction": 0,
+        "budget-format": 0,
+        "multi-step": 2
+      }
+    },
+    {
+      "repo": "exposed",
+      "language": "kotlin",
+      "tasks": 12,
+      "missed": 4,
+      "byCause": {
+        "ranking": 1,
+        "unresolved-refs": 0,
+        "extraction": 0,
+        "budget-format": 0,
+        "multi-step": 3
+      },
+      "itemsByCause": {
+        "ranking": 1,
+        "unresolved-refs": 0,
+        "extraction": 0,
+        "budget-format": 3,
+        "multi-step": 3
+      }
+    },
+    {
+      "repo": "meilisearch",
+      "language": "rust",
+      "tasks": 12,
+      "missed": 5,
+      "byCause": {
+        "ranking": 0,
+        "unresolved-refs": 2,
+        "extraction": 1,
+        "budget-format": 2,
+        "multi-step": 0
+      },
+      "itemsByCause": {
+        "ranking": 0,
+        "unresolved-refs": 7,
+        "extraction": 2,
+        "budget-format": 5,
+        "multi-step": 0
+      }
+    },
+    {
+      "repo": "laravel",
+      "language": "php",
+      "tasks": 12,
+      "missed": 3,
+      "byCause": {
+        "ranking": 0,
+        "unresolved-refs": 0,
+        "extraction": 0,
+        "budget-format": 2,
+        "multi-step": 1
+      },
+      "itemsByCause": {
+        "ranking": 0,
+        "unresolved-refs": 0,
+        "extraction": 0,
+        "budget-format": 3,
+        "multi-step": 1
+      }
+    },
+    {
+      "repo": "discourse",
+      "language": "ruby",
+      "tasks": 12,
+      "missed": 1,
+      "byCause": {
+        "ranking": 1,
+        "unresolved-refs": 0,
+        "extraction": 0,
+        "budget-format": 0,
+        "multi-step": 0
+      },
+      "itemsByCause": {
+        "ranking": 1,
+        "unresolved-refs": 0,
+        "extraction": 0,
+        "budget-format": 0,
+        "multi-step": 0
+      }
+    },
+    {
+      "repo": "playframework",
+      "language": "scala",
+      "tasks": 12,
+      "missed": 4,
+      "byCause": {
+        "ranking": 2,
+        "unresolved-refs": 0,
+        "extraction": 1,
+        "budget-format": 0,
+        "multi-step": 1
+      },
+      "itemsByCause": {
+        "ranking": 2,
+        "unresolved-refs": 1,
+        "extraction": 1,
+        "budget-format": 0,
+        "multi-step": 1
+      }
+    }
+  ],
+  "byLanguage": {
+    "java": {
+      "ranking": 1,
+      "unresolved-refs": 0,
+      "extraction": 0,
+      "budget-format": 3,
+      "multi-step": 0
+    },
+    "python": {
+      "ranking": 1,
+      "unresolved-refs": 0,
+      "extraction": 0,
+      "budget-format": 0,
+      "multi-step": 1
+    },
+    "typescript": {
+      "ranking": 0,
+      "unresolved-refs": 1,
+      "extraction": 0,
+      "budget-format": 1,
+      "multi-step": 1
+    },
+    "javascript": {
+      "ranking": 0,
+      "unresolved-refs": 1,
+      "extraction": 0,
+      "budget-format": 0,
+      "multi-step": 0
+    },
+    "c_sharp": {
+      "ranking": 0,
+      "unresolved-refs": 0,
+      "extraction": 0,
+      "budget-format": 1,
+      "multi-step": 1
+    },
+    "go": {
+      "ranking": 0,
+      "unresolved-refs": 0,
+      "extraction": 0,
+      "budget-format": 0,
+      "multi-step": 1
+    },
+    "kotlin": {
+      "ranking": 1,
+      "unresolved-refs": 0,
+      "extraction": 0,
+      "budget-format": 0,
+      "multi-step": 3
+    },
+    "rust": {
+      "ranking": 0,
+      "unresolved-refs": 2,
+      "extraction": 1,
+      "budget-format": 2,
+      "multi-step": 0
+    },
+    "php": {
+      "ranking": 0,
+      "unresolved-refs": 0,
+      "extraction": 0,
+      "budget-format": 2,
+      "multi-step": 1
+    },
+    "ruby": {
+      "ranking": 1,
+      "unresolved-refs": 0,
+      "extraction": 0,
+      "budget-format": 0,
+      "multi-step": 0
+    },
+    "scala": {
+      "ranking": 2,
+      "unresolved-refs": 0,
+      "extraction": 1,
+      "budget-format": 0,
+      "multi-step": 1
+    }
+  },
+  "totals": {
+    "ranking": 6,
+    "unresolved-refs": 4,
+    "extraction": 2,
+    "budget-format": 9,
+    "multi-step": 9
+  },
+  "itemTotals": {
+    "ranking": 6,
+    "unresolved-refs": 11,
+    "extraction": 3,
+    "budget-format": 21,
+    "multi-step": 11
+  },
+  "failures": [
+    {
+      "repo": "spring-framework",
+      "language": "java",
+      "taskId": "sf-locate-retry-loop",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "query": "retry loop back off attempts timeout exceeded",
+      "tokens": 1327,
+      "header": "pack \"retry loop back off attempts timeout exceeded\" · 12 hits · 2 bodies · ~1327 tok · +47 more (raise limit or narrow query)",
+      "topHits": [
+        {
+          "path": "spring-core/src/main/java/org/springframework/util/backoff/FixedBackOff.java",
+          "lines": "29-150",
+          "kind": "class",
+          "text": "public class FixedBackOff implements BackOff"
+        },
+        {
+          "path": "spring-core/src/main/java/org/springframework/util/backoff/BackOffExecution.java",
+          "lines": "43-43",
+          "kind": "method",
+          "text": "long nextBackOff()"
+        },
+        {
+          "path": "spring-core/src/main/java/org/springframework/core/retry/RetryPolicy.java",
+          "lines": "221-225",
+          "kind": "method",
+          "text": "public Builder backOff(BackOff backOff)"
+        },
+        {
+          "path": "spring-core/src/main/java/org/springframework/core/retry/RetryPolicy.java",
+          "lines": "83-85",
+          "kind": "method",
+          "text": "default BackOff getBackOff()"
+        },
+        {
+          "path": "spring-core/src/main/java/org/springframework/core/retry/RetryPolicy.java",
+          "lines": "356-360",
+          "kind": "method",
+          "text": "public Builder timeout(Duration timeout)"
+        },
+        {
+          "path": "spring-core/src/main/java/org/springframework/util/backoff/ExponentialBackOff.java",
+          "lines": "63-339",
+          "kind": "class",
+          "text": "public class ExponentialBackOff implements BackOff"
+        }
+      ],
+      "callers": "callers of #ulr FixedBackOff (+3 related decls) · 32 refs in 7 files · complete:",
+      "expected": {
+        "files": [
+          "spring-core/src/main/java/org/springframework/core/retry/RetryTemplate.java"
+        ],
+        "symbols": [
+          "RetryTemplate",
+          "execute",
+          "checkIfTimeoutExceeded"
+        ]
+      },
+      "missed": {
+        "files": [],
+        "symbols": [
+          "execute"
+        ]
+      },
+      "targets": [],
+      "preferred": {
+        "name": "org.springframework.util.backoff.FixedBackOff",
+        "path": "spring-core/src/main/java/org/springframework/util/backoff/FixedBackOff.java",
+        "lines": "29-150",
+        "kind": "class",
+        "coverage": 0.57,
+        "fixture": false
+      },
+      "items": [
+        {
+          "item": "symbol",
+          "name": "execute",
+          "file": "spring-core/src/main/java/org/springframework/core/retry/RetryTemplate.java",
+          "line": 126,
+          "indexed": true,
+          "extracted": true,
+          "rank": 111,
+          "rankShown": 52,
+          "coverage": 0.14,
+          "nameShown": false,
+          "inBiggerPack": true,
+          "cause": "budget-format",
+          "why": "shown with a 4x budget (rank 111, after diversification 52)"
+        }
+      ],
+      "cause": "budget-format",
+      "causes": [
+        "budget-format"
+      ]
+    },
+    {
+      "repo": "spring-framework",
+      "language": "java",
+      "taskId": "sf-locate-api-version",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "query": "api version request resolve parse validate handler mapping",
+      "tokens": 1480,
+      "header": "pack \"api version request resolve parse validate handler mapping\" · 12 hits · 1 body · ~1480 tok · +127 more (raise limit or narrow query)",
+      "topHits": [
+        {
+          "path": "spring-webflux/src/main/java/org/springframework/web/reactive/accept/ApiVersionStrategy.java",
+          "lines": "91-116",
+          "kind": "method",
+          "text": "default Mono<Comparable<?>> resolveParseAndValidateApiVersion(ServerWebExchange exchange)"
+        },
+        {
+          "path": "spring-webflux/src/main/java/org/springframework/web/reactive/accept/ApiVersionStrategy.java",
+          "lines": "125-142",
+          "kind": "method",
+          "text": "@Deprecated(since = \"7.0.3\", forRemoval = true) default @Nullable Comparable<?> resolveParseAndValidateVersio…"
+        },
+        {
+          "path": "spring-web/src/main/java/org/springframework/web/accept/ApiVersionStrategy.java",
+          "lines": "71-87",
+          "kind": "method",
+          "text": "default @Nullable Comparable<?> resolveParseAndValidateVersion(HttpServletRequest request)"
+        },
+        {
+          "path": "spring-webflux/src/main/java/org/springframework/web/reactive/config/WebFluxConfigurationSupport.java",
+          "lines": "136-155",
+          "kind": "method",
+          "text": "@Bean public RequestMappingHandlerMapping requestMappingHandlerMapping( @Qualifier(\"webFluxContentTypeResolve…"
+        },
+        {
+          "path": "spring-web/src/main/java/org/springframework/web/accept/ApiVersionHolder.java",
+          "lines": "36-84",
+          "kind": "class",
+          "text": "public final class ApiVersionHolder"
+        },
+        {
+          "path": "spring-webmvc/src/main/java/org/springframework/web/servlet/config/annotation/WebMvcConfigurationSupport.java",
+          "lines": "267-287",
+          "kind": "method",
+          "text": "@Bean public RequestMappingHandlerMapping requestMappingHandlerMapping( @Qualifier(\"mvcContentNegotiationMana…"
+        }
+      ],
+      "callers": "callers of #2p36 ApiVersionStrategy.resolveParseAndValidateApiVersion · 2 refs in 2 files · complete:",
+      "expected": {
+        "files": [
+          "spring-web/src/main/java/org/springframework/web/accept/ApiVersionStrategy.java",
+          "spring-web/src/main/java/org/springframework/web/accept/DefaultApiVersionStrategy.java",
+          "spring-webmvc/src/main/java/org/springframework/web/servlet/handler/AbstractHandlerMapping.java"
+        ],
+        "symbols": [
+          "resolveParseAndValidateVersion",
+          "DefaultApiVersionStrategy",
+          "validateVersion",
+          "initApiVersion"
+        ]
+      },
+      "missed": {
+        "files": [
+          "spring-webmvc/src/main/java/org/springframework/web/servlet/handler/AbstractHandlerMapping.java"
+        ],
+        "symbols": []
+      },
+      "targets": [],
+      "preferred": {
+        "name": "org.springframework.web.reactive.accept.ApiVersionStrategy.resolveParseAndValidateApiVersion",
+        "path": "spring-webflux/src/main/java/org/springframework/web/reactive/accept/ApiVersionStrategy.java",
+        "lines": "91-116",
+        "kind": "method",
+        "coverage": 0.75,
+        "fixture": false
+      },
+      "items": [
+        {
+          "item": "symbol",
+          "name": "initApiVersion",
+          "file": "spring-webmvc/src/main/java/org/springframework/web/servlet/handler/AbstractHandlerMapping.java",
+          "line": 593,
+          "indexed": true,
+          "extracted": true,
+          "rank": 14,
+          "rankShown": 14,
+          "coverage": 0.63,
+          "nameShown": false,
+          "inBiggerPack": true,
+          "cause": "budget-format",
+          "why": "shown with a 4x budget (rank 14, after diversification 14)"
+        }
+      ],
+      "cause": "budget-format",
+      "causes": [
+        "budget-format"
+      ]
+    },
+    {
+      "repo": "spring-framework",
+      "language": "java",
+      "taskId": "sf-explain-retryable",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "query": "Retryable annotation retry interceptor retry policy",
+      "tokens": 1352,
+      "header": "pack \"Retryable annotation retry interceptor retry policy\" · 12 hits · 1 body · ~1352 tok · +47 more (raise limit or narrow query)",
+      "topHits": [
+        {
+          "path": "spring-context/src/main/java/org/springframework/resilience/annotation/Retryable.java",
+          "lines": "55-297",
+          "kind": "interface",
+          "text": "@Target({ElementType.TYPE, ElementType.METHOD}) @Retention(RetentionPolicy.RUNTIME) @Documented @Reflective p…"
+        },
+        {
+          "path": "spring-context/src/main/java/org/springframework/resilience/annotation/RetryAnnotationBeanPostProcessor.java",
+          "lines": "55-178",
+          "kind": "class",
+          "text": "@SuppressWarnings(\"serial\") public class RetryAnnotationBeanPostProcessor extends AbstractBeanFactoryAwareAdv…"
+        },
+        {
+          "path": "spring-context/src/main/java/org/springframework/resilience/annotation/RetryAnnotationBeanPostProcessor.java",
+          "lines": "84-176",
+          "kind": "class",
+          "text": "private class RetryAnnotationInterceptor extends AbstractRetryInterceptor"
+        },
+        {
+          "path": "spring-core/src/main/java/org/springframework/core/retry/RetryListener.java",
+          "lines": "109-110",
+          "kind": "method",
+          "text": "default void onRetryPolicyExhaustion(RetryPolicy retryPolicy, Retryable<?> retryable, RetryException exceptio…"
+        },
+        {
+          "path": "spring-core/src/main/java/org/springframework/core/retry/RetryListener.java",
+          "lines": "137-138",
+          "kind": "method",
+          "text": "default void onRetryPolicyTimeout(RetryPolicy retryPolicy, Retryable<?> retryable, RetryException exception)"
+        },
+        {
+          "path": "spring-core/src/main/java/org/springframework/core/retry/RetryListener.java",
+          "lines": "51-52",
+          "kind": "method",
+          "text": "default void onRetryableExecution(RetryPolicy retryPolicy, Retryable<?> retryable, RetryState retryState)"
+        }
+      ],
+      "callers": "callers of #ctc Retryable · 45 refs in 3 files · 8 unresolved same-name refs:",
+      "expected": {
+        "files": [
+          "spring-context/src/main/java/org/springframework/resilience/annotation/RetryAnnotationBeanPostProcessor.java",
+          "spring-context/src/main/java/org/springframework/resilience/retry/AbstractRetryInterceptor.java",
+          "spring-core/src/main/java/org/springframework/core/retry/RetryTemplate.java"
+        ],
+        "symbols": [
+          "RetryAnnotationBeanPostProcessor",
+          "getRetrySpec",
+          "AbstractRetryInterceptor",
+          "RetryTemplate"
+        ]
+      },
+      "missed": {
+        "files": [
+          "spring-context/src/main/java/org/springframework/resilience/retry/AbstractRetryInterceptor.java",
+          "spring-core/src/main/java/org/springframework/core/retry/RetryTemplate.java"
+        ],
+        "symbols": [
+          "RetryTemplate"
+        ]
+      },
+      "targets": [],
+      "preferred": {
+        "name": "org.springframework.resilience.annotation.Retryable",
+        "path": "spring-context/src/main/java/org/springframework/resilience/annotation/Retryable.java",
+        "lines": "55-297",
+        "kind": "interface",
+        "coverage": 0.8,
+        "fixture": false
+      },
+      "items": [
+        {
+          "item": "symbol",
+          "name": "AbstractRetryInterceptor",
+          "file": "spring-context/src/main/java/org/springframework/resilience/retry/AbstractRetryInterceptor.java",
+          "line": 57,
+          "indexed": true,
+          "extracted": true,
+          "rank": 30,
+          "rankShown": 25,
+          "coverage": 0.4,
+          "nameShown": false,
+          "inBiggerPack": true,
+          "cause": "budget-format",
+          "why": "shown with a 4x budget (rank 30, after diversification 25)"
+        },
+        {
+          "item": "symbol",
+          "name": "RetryTemplate",
+          "file": "spring-core/src/main/java/org/springframework/core/retry/RetryTemplate.java",
+          "line": 56,
+          "indexed": true,
+          "extracted": true,
+          "rank": 17,
+          "rankShown": 17,
+          "coverage": 0.6,
+          "nameShown": false,
+          "inBiggerPack": true,
+          "cause": "budget-format",
+          "why": "shown with a 4x budget (rank 17, after diversification 17)"
+        }
+      ],
+      "cause": "budget-format",
+      "causes": [
+        "budget-format"
+      ]
+    },
+    {
+      "repo": "spring-framework",
+      "language": "java",
+      "taskId": "sf-explain-config-full-lite",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "query": "configuration class full lite proxyBeanMethods enhance cglib",
+      "tokens": 1317,
+      "header": "pack \"configuration class full lite proxyBeanMethods enhance cglib\" · 12 hits · 3 bodies · ~1317 tok",
+      "topHits": [
+        {
+          "path": "spring-context/src/main/java/org/springframework/context/annotation/Configuration.java",
+          "lines": "477-477",
+          "kind": "method",
+          "text": "boolean proxyBeanMethods() default true"
+        },
+        {
+          "path": "spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassEnhancer.java",
+          "lines": "78-617",
+          "kind": "class",
+          "text": "class ConfigurationClassEnhancer"
+        },
+        {
+          "path": "spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassEnhancer.java",
+          "lines": "572-614",
+          "kind": "method",
+          "text": "private Object createCglibProxyForFactoryBean(Object factoryBean, ConfigurableBeanFactory beanFactory, String…"
+        },
+        {
+          "path": "spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassEnhancer.java",
+          "lines": "102-140",
+          "kind": "method",
+          "text": "public Class<?> enhance(Class<?> configClass, @Nullable ClassLoader classLoader)"
+        },
+        {
+          "path": "spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassEnhancer.java",
+          "lines": "227-228",
+          "kind": "interface",
+          "text": "ConfigurationClassEnhancer.EnhancedConfiguration"
+        },
+        {
+          "path": "spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassEnhancer.java",
+          "lines": "342-615",
+          "kind": "class",
+          "text": "ConfigurationClassEnhancer.BeanMethodInterceptor"
+        }
+      ],
+      "callers": "callers of #r1f ConfigurationClass (+5 related decls) · 102 refs in 8 files · complete:",
+      "expected": {
+        "files": [
+          "spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassUtils.java",
+          "spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassPostProcessor.java",
+          "spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassEnhancer.java"
+        ],
+        "symbols": [
+          "checkConfigurationClassCandidate",
+          "enhanceConfigurationClasses",
+          "ConfigurationClassEnhancer",
+          "enhance"
+        ]
+      },
+      "missed": {
+        "files": [
+          "spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassUtils.java",
+          "spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassPostProcessor.java"
+        ],
+        "symbols": [
+          "checkConfigurationClassCandidate",
+          "enhanceConfigurationClasses"
+        ]
+      },
+      "targets": [],
+      "preferred": {
+        "name": "org.springframework.context.annotation.Configuration.proxyBeanMethods",
+        "path": "spring-context/src/main/java/org/springframework/context/annotation/Configuration.java",
+        "lines": "477-477",
+        "kind": "method",
+        "coverage": 0.56,
+        "fixture": false
+      },
+      "items": [
+        {
+          "item": "symbol",
+          "name": "checkConfigurationClassCandidate",
+          "file": "spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassUtils.java",
+          "line": 106,
+          "indexed": true,
+          "extracted": true,
+          "rank": 423,
+          "rankShown": null,
+          "coverage": 0.22,
+          "nameShown": false,
+          "inBiggerPack": false,
+          "cause": "ranking",
+          "why": "ranked 423 of 514 candidates (pack lists 12 pointers; below the weak-tail cut: score 14% of the top); query words cover 22% of it; top candidate org.springframework.context.annotation.Configuration.proxyBeanMethods covers 56%; query word(s) \"class\" dropped as stopwords although part of the name",
+          "stopwordsInName": [
+            "class"
+          ]
+        },
+        {
+          "item": "symbol",
+          "name": "enhanceConfigurationClasses",
+          "file": "spring-context/src/main/java/org/springframework/context/annotation/ConfigurationClassPostProcessor.java",
+          "line": 514,
+          "indexed": true,
+          "extracted": true,
+          "rank": 15,
+          "rankShown": 15,
+          "coverage": 0.33,
+          "nameShown": false,
+          "inBiggerPack": true,
+          "cause": "budget-format",
+          "why": "shown with a 4x budget (rank 15, after diversification 15)"
+        }
+      ],
+      "cause": "ranking",
+      "causes": [
+        "ranking",
+        "budget-format"
+      ]
+    },
+    {
+      "repo": "django",
+      "language": "python",
+      "taskId": "dj-explain-password-upgrade",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "query": "check password hasher must update iterations rehash",
+      "tokens": 1246,
+      "header": "pack \"check password hasher must update iterations rehash\" · 12 hits · 5 bodies · ~1246 tok · +33 more (raise limit or narrow query)",
+      "topHits": [
+        {
+          "path": "django/contrib/auth/hashers.py",
+          "lines": "361-364",
+          "kind": "method",
+          "text": "def must_update(self, encoded)"
+        },
+        {
+          "path": "django/contrib/auth/hashers.py",
+          "lines": "297-298",
+          "kind": "method",
+          "text": "def must_update(self, encoded)"
+        },
+        {
+          "path": "django/contrib/auth/hashers.py",
+          "lines": "75-86",
+          "kind": "function",
+          "text": "def check_password(password, encoded, setter=None, preferred=\"default\")"
+        },
+        {
+          "path": "django/contrib/auth/hashers.py",
+          "lines": "316-370",
+          "kind": "class",
+          "text": "class PBKDF2PasswordHasher(BasePasswordHasher)"
+        },
+        {
+          "path": "django/contrib/auth/hashers.py",
+          "lines": "209-313",
+          "kind": "class",
+          "text": "class BasePasswordHasher"
+        },
+        {
+          "path": "django/contrib/auth/hashers.py",
+          "lines": "89-97",
+          "kind": "function",
+          "text": "async def acheck_password(password, encoded, setter=None, preferred=\"default\")"
+        }
+      ],
+      "callers": "callers of #at7 PBKDF2PasswordHasher.must_update (+1 related decl) · 5 refs in 2 files · complete:",
+      "expected": {
+        "files": [
+          "django/contrib/auth/hashers.py"
+        ],
+        "symbols": [
+          "check_password",
+          "verify_password",
+          "identify_hasher",
+          "must_update"
+        ]
+      },
+      "missed": {
+        "files": [],
+        "symbols": [
+          "identify_hasher"
+        ]
+      },
+      "targets": [],
+      "preferred": {
+        "name": "django.contrib.auth.hashers.PBKDF2PasswordHasher.must_update",
+        "path": "django/contrib/auth/hashers.py",
+        "lines": "361-364",
+        "kind": "method",
+        "coverage": 0.57,
+        "fixture": false
+      },
+      "items": [
+        {
+          "item": "symbol",
+          "name": "identify_hasher",
+          "file": "django/contrib/auth/hashers.py",
+          "line": 172,
+          "indexed": true,
+          "extracted": true,
+          "rank": 29,
+          "rankShown": null,
+          "coverage": 0.29,
+          "nameShown": false,
+          "inBiggerPack": false,
+          "cause": "multi-step",
+          "why": "query words cover 29% of it; reachable in one hop from shown #asb verify_password (the shown symbol references it)",
+          "linkedTo": "#asb verify_password"
+        }
+      ],
+      "cause": "multi-step",
+      "causes": [
+        "multi-step"
+      ]
+    },
+    {
+      "repo": "django",
+      "language": "python",
+      "taskId": "dj-explain-autoreload-stat",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "query": "autoreload reloader detect file changes without watchman",
+      "tokens": 1291,
+      "header": "pack \"autoreload reloader detect file changes without watchman\" · 12 hits · 5 bodies · ~1291 tok · +20 more (raise limit or narrow query)",
+      "topHits": [
+        {
+          "path": "django/utils/autoreload.py",
+          "lines": "448-655",
+          "kind": "class",
+          "text": "class WatchmanReloader(BaseReloader)"
+        },
+        {
+          "path": "django/utils/autoreload.py",
+          "lines": "386-390",
+          "kind": "method",
+          "text": "def notify_file_changed(self, path)"
+        },
+        {
+          "path": "django/utils/autoreload.py",
+          "lines": "658-664",
+          "kind": "function",
+          "text": "def get_reloader()"
+        },
+        {
+          "path": "django/utils/autoreload.py",
+          "lines": "444-445",
+          "kind": "class",
+          "text": "class WatchmanUnavailable(RuntimeError)"
+        },
+        {
+          "path": "django/utils/autoreload.py",
+          "lines": "295-398",
+          "kind": "class",
+          "text": "class BaseReloader"
+        },
+        {
+          "path": "django/utils/autoreload.py",
+          "lines": "401-441",
+          "kind": "class",
+          "text": "class StatReloader(BaseReloader)"
+        }
+      ],
+      "callers": "callers of #5wl WatchmanReloader (+1 related decl) · 12 refs in 2 files · complete:",
+      "expected": {
+        "files": [
+          "django/utils/autoreload.py"
+        ],
+        "symbols": [
+          "get_reloader",
+          "StatReloader",
+          "tick",
+          "snapshot_files"
+        ]
+      },
+      "missed": {
+        "files": [],
+        "symbols": [
+          "snapshot_files"
+        ]
+      },
+      "targets": [],
+      "preferred": {
+        "name": "django.utils.autoreload.WatchmanReloader",
+        "path": "django/utils/autoreload.py",
+        "lines": "448-655",
+        "kind": "class",
+        "coverage": 0.5,
+        "fixture": false
+      },
+      "items": [
+        {
+          "item": "symbol",
+          "name": "snapshot_files",
+          "file": "django/utils/autoreload.py",
+          "line": 425,
+          "indexed": true,
+          "extracted": true,
+          "rank": null,
+          "rankShown": null,
+          "coverage": 0.33,
+          "nameShown": false,
+          "inBiggerPack": false,
+          "cause": "ranking",
+          "why": "not a candidate at all (no FTS/name match); query words cover 33% of it"
+        }
+      ],
+      "cause": "ranking",
+      "causes": [
+        "ranking"
+      ]
+    },
+    {
+      "repo": "medusa",
+      "language": "typescript",
+      "taskId": "md-explain-compensation",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "query": "workflow transaction step permanent failure compensate rollback",
+      "tokens": 1373,
+      "header": "pack \"workflow transaction step permanent failure compensate roll…\" · 12 hits · 4 bodies · ~1373 tok · +88 more (raise limit or narrow query)",
+      "topHits": [
+        {
+          "path": "packages/core/workflows-sdk/src/utils/composer/helpers/step-response.ts",
+          "lines": "120-128",
+          "kind": "method",
+          "text": "static permanentFailure( message = \"Permanent failure\", compensateInput?: unknown ): never"
+        },
+        {
+          "path": "packages/core/orchestration/src/transaction/errors.ts",
+          "lines": "17-30",
+          "kind": "class",
+          "text": "export class PermanentStepFailureError extends BaseStepErrror"
+        },
+        {
+          "path": "packages/core/orchestration/src/transaction/errors.ts",
+          "lines": "18-25",
+          "kind": "method",
+          "text": "static isPermanentStepFailureError( error: Error ): error is PermanentStepFailureError"
+        },
+        {
+          "path": "packages/core/orchestration/src/workflow/local-workflow.ts",
+          "lines": "496-525",
+          "kind": "method",
+          "text": "async registerStepFailure( idempotencyKey: string, error?: Error | any, context?: Context, subscribe?: Distri…"
+        },
+        {
+          "path": "packages/admin/dashboard/src/routes/workflow-executions/types.ts",
+          "lines": "6-6",
+          "kind": "constant",
+          "text": "PERMANENT_FAILURE = \"permanent_failure\""
+        },
+        {
+          "path": "packages/admin/dashboard/src/routes/workflow-executions/types.ts",
+          "lines": "1-7",
+          "kind": "enum",
+          "text": "TransactionStepStatus"
+        }
+      ],
+      "callers": "callers of #iwn StepResponse.permanentFailure · 1 ref in 1 file · complete:",
+      "expected": {
+        "files": [
+          "packages/core/orchestration/src/transaction/transaction-orchestrator.ts"
+        ],
+        "symbols": [
+          "setStepFailure",
+          "checkAllSteps",
+          "flagStepsToRevert",
+          "getCompensationSteps"
+        ]
+      },
+      "missed": {
+        "files": [],
+        "symbols": [
+          "checkAllSteps",
+          "flagStepsToRevert",
+          "getCompensationSteps"
+        ]
+      },
+      "targets": [],
+      "preferred": {
+        "name": "StepResponse.permanentFailure",
+        "path": "packages/core/workflows-sdk/src/utils/composer/helpers/step-response.ts",
+        "lines": "120-128",
+        "kind": "method",
+        "coverage": 0.71,
+        "fixture": false
+      },
+      "items": [
+        {
+          "item": "symbol",
+          "name": "checkAllSteps",
+          "file": "packages/core/orchestration/src/transaction/transaction-orchestrator.ts",
+          "line": 324,
+          "indexed": true,
+          "extracted": true,
+          "rank": 101,
+          "rankShown": null,
+          "coverage": 0.29,
+          "nameShown": false,
+          "inBiggerPack": false,
+          "cause": "multi-step",
+          "why": "query words cover 29% of it; reachable in one hop from shown #8g7 computeCurrentTransactionState (it references the shown symbol)",
+          "linkedTo": "#8g7 computeCurrentTransactionState"
+        },
+        {
+          "item": "symbol",
+          "name": "flagStepsToRevert",
+          "file": "packages/core/orchestration/src/transaction/transaction-orchestrator.ts",
+          "line": 523,
+          "indexed": true,
+          "extracted": true,
+          "rank": 97,
+          "rankShown": null,
+          "coverage": 0.29,
+          "nameShown": false,
+          "inBiggerPack": true,
+          "cause": "budget-format",
+          "why": "shown with a 4x budget (rank 97, after diversification none)"
+        },
+        {
+          "item": "symbol",
+          "name": "getCompensationSteps",
+          "file": "packages/core/orchestration/src/transaction/transaction-orchestrator.ts",
+          "line": 191,
+          "indexed": true,
+          "extracted": true,
+          "rank": 105,
+          "rankShown": null,
+          "coverage": 0.29,
+          "nameShown": false,
+          "inBiggerPack": false,
+          "cause": "multi-step",
+          "why": "query words cover 29% of it; reachable in one hop from shown #8g7 computeCurrentTransactionState (the shown symbol references it)",
+          "linkedTo": "#8g7 computeCurrentTransactionState"
+        }
+      ],
+      "cause": "multi-step",
+      "causes": [
+        "multi-step",
+        "budget-format"
+      ]
+    },
+    {
+      "repo": "medusa",
+      "language": "typescript",
+      "taskId": "md-explain-price-lists",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "query": "pricing calculated price original price price list sale override",
+      "tokens": 1386,
+      "header": "pack \"pricing calculated price original price price list sale ove…\" · 12 hits · 3 bodies · ~1386 tok · +209 more (raise limit or narrow query)",
+      "topHits": [
+        {
+          "path": "packages/core/types/src/pricing/common/price-list.ts",
+          "lines": "24-24",
+          "kind": "type",
+          "text": "export type PriceListType = \"sale\" | \"override\""
+        },
+        {
+          "path": "packages/core/types/src/pricing/common/price-set.ts",
+          "lines": "141-141",
+          "kind": "property",
+          "text": "is_original_price_price_list?: boolean"
+        },
+        {
+          "path": "packages/core/types/src/pricing/common/price-set.ts",
+          "lines": "188-209",
+          "kind": "property",
+          "text": "original_price?: { /** * The ID of the price selected as the original price. */ id: string | null /** * The I…"
+        },
+        {
+          "path": "packages/core/types/src/pricing/common/price-set.ts",
+          "lines": "117-210",
+          "kind": "interface",
+          "text": "export interface CalculatedPriceSet"
+        },
+        {
+          "path": "packages/core/core-flows/src/cart/utils/prepare-line-item-data.ts",
+          "lines": "62-69",
+          "kind": "property",
+          "text": "calculated_price: { calculated_price: { price_list_type: string } is_calculated_price_tax_inclusive: boolean …"
+        },
+        {
+          "path": "packages/modules/pricing/src/services/pricing-module.ts",
+          "lines": "391-569",
+          "kind": "method",
+          "text": "async calculatePrices( pricingFilters: PricingFilters, pricingContext: PricingContext = { context: {} }, @Med…"
+        }
+      ],
+      "callers": "callers of #fk1 PriceListType · 7 refs in 3 files · 1 unresolved same-name ref:",
+      "expected": {
+        "files": [
+          "packages/modules/pricing/src/services/pricing-module.ts",
+          "packages/modules/pricing/src/repositories/pricing.ts"
+        ],
+        "symbols": [
+          "calculatePrices",
+          "calculatePrices",
+          "PricingModuleService"
+        ]
+      },
+      "missed": {
+        "files": [
+          "packages/modules/pricing/src/repositories/pricing.ts"
+        ],
+        "symbols": []
+      },
+      "targets": [],
+      "preferred": {
+        "name": "PriceListType",
+        "path": "packages/core/types/src/pricing/common/price-list.ts",
+        "lines": "24-24",
+        "kind": "type",
+        "coverage": 0.71,
+        "fixture": false
+      },
+      "items": [
+        {
+          "item": "symbol",
+          "name": "calculatePrices",
+          "file": "packages/modules/pricing/src/repositories/pricing.ts",
+          "line": 66,
+          "indexed": true,
+          "extracted": true,
+          "rank": 19,
+          "rankShown": 19,
+          "coverage": 0.43,
+          "nameShown": false,
+          "inBiggerPack": true,
+          "cause": "budget-format",
+          "why": "shown with a 4x budget (rank 19, after diversification 19)"
+        }
+      ],
+      "cause": "budget-format",
+      "causes": [
+        "budget-format"
+      ]
+    },
+    {
+      "repo": "medusa",
+      "language": "typescript",
+      "taskId": "md-impact-budget-exceeded",
+      "kind": "impact",
+      "strategy": "kopt-pack",
+      "query": "computeActionForBudgetExceeded campaign budget",
+      "tokens": 865,
+      "header": "pack \"computeActionForBudgetExceeded campaign budget\" · 4 hits · 2 bodies · ~865 tok",
+      "topHits": [
+        {
+          "path": "packages/modules/promotion/src/utils/compute-actions/usage.ts",
+          "lines": "27-60",
+          "kind": "function",
+          "text": "export function computeActionForBudgetExceeded( promotion: PromotionDTO | InferEntityType<typeof Promotion>, …"
+        },
+        {
+          "path": "packages/core/types/src/promotion/common/compute-actions.ts",
+          "lines": "33-43",
+          "kind": "interface",
+          "text": "export interface CampaignBudgetExceededAction"
+        },
+        {
+          "path": "packages/core/types/src/promotion/common/compute-actions.ts",
+          "lines": "37-37",
+          "kind": "property",
+          "text": "action: \"campaignBudgetExceeded\""
+        },
+        {
+          "path": "packages/core/utils/src/promotion/index.ts",
+          "lines": "51-51",
+          "kind": "constant",
+          "text": "CAMPAIGN_BUDGET_EXCEEDED = \"campaignBudgetExceeded\""
+        }
+      ],
+      "callers": "callers of #pk8 computeActionForBudgetExceeded · 6 refs in 3 files · 1 unresolved same-name ref:",
+      "expected": {
+        "files": [
+          "packages/modules/promotion/src/utils/compute-actions/usage.ts",
+          "packages/modules/promotion/src/services/promotion-module.ts",
+          "packages/modules/promotion/src/utils/compute-actions/buy-get.ts",
+          "packages/modules/promotion/src/utils/compute-actions/line-items.ts",
+          "packages/modules/promotion/src/utils/compute-actions/shipping-methods.ts"
+        ],
+        "symbols": [
+          "computeActionForBudgetExceeded",
+          "computeActions",
+          "applyPromotionToTargetItems",
+          "applyPromotionToItems",
+          "applyPromotionToShippingMethods"
+        ]
+      },
+      "missed": {
+        "files": [
+          "packages/modules/promotion/src/services/promotion-module.ts"
+        ],
+        "symbols": [
+          "computeActions"
+        ]
+      },
+      "targets": [
+        "computeActionForBudgetExceeded"
+      ],
+      "preferred": {
+        "name": "computeActionForBudgetExceeded",
+        "path": "packages/modules/promotion/src/utils/compute-actions/usage.ts",
+        "lines": "27-60",
+        "kind": "function",
+        "coverage": 1,
+        "fixture": false
+      },
+      "items": [
+        {
+          "item": "symbol",
+          "name": "computeActions",
+          "file": "packages/modules/promotion/src/services/promotion-module.ts",
+          "line": 697,
+          "indexed": true,
+          "extracted": true,
+          "rank": 10,
+          "rankShown": null,
+          "coverage": 0.33,
+          "nameShown": false,
+          "inBiggerPack": false,
+          "cause": "unresolved-refs",
+          "why": "1 reference(s) to computeActionForBudgetExceeded in computeActions (line 906) but none resolved, so no callers edge",
+          "refs": {
+            "targets": [
+              "computeActionForBudgetExceeded"
+            ],
+            "callSites": [
+              906
+            ],
+            "extracted": 1,
+            "resolved": 0,
+            "attributedElsewhere": 0
+          }
+        }
+      ],
+      "cause": "unresolved-refs",
+      "causes": [
+        "unresolved-refs"
+      ]
+    },
+    {
+      "repo": "webpack",
+      "language": "javascript",
+      "taskId": "wp-usage-implicit-type-fallback",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "query": "implicitTypeLoaderFallback",
+      "tokens": 781,
+      "header": "pack \"implicitTypeLoaderFallback\" · 12 hits · 1 body · ~781 tok · +30 more (raise limit or narrow query)",
+      "topHits": [
+        {
+          "path": "lib/util/implicitTypeLoaderFallback.js",
+          "lines": "30-62",
+          "kind": "function",
+          "text": "module.exports = (normalModuleFactory, pluginName, test, type) =>"
+        },
+        {
+          "path": "types.d.ts",
+          "lines": "16537-16539",
+          "kind": "interface",
+          "text": "interface Loader"
+        },
+        {
+          "path": "types.d.ts",
+          "lines": "16605-16610",
+          "kind": "interface",
+          "text": "LoaderItem"
+        },
+        {
+          "path": "lib/javascript/syntax.js",
+          "lines": "6531-6546",
+          "kind": "method",
+          "text": "_tryModuleFallback()"
+        },
+        {
+          "path": "lib/container/FallbackModule.js",
+          "lines": "146-148",
+          "kind": "method",
+          "text": "getSourceTypes()"
+        },
+        {
+          "path": "lib/container/FallbackModule.js",
+          "lines": "49-209",
+          "kind": "class",
+          "text": "class FallbackModule extends Module"
+        }
+      ],
+      "callers": "callers of #78m exports: none found",
+      "expected": {
+        "files": [
+          "lib/css/CssModulesPlugin.js",
+          "lib/html/HtmlModulesPlugin.js"
+        ],
+        "symbols": [
+          "CssModulesPlugin",
+          "HtmlModulesPlugin"
+        ]
+      },
+      "missed": {
+        "files": [
+          "lib/css/CssModulesPlugin.js",
+          "lib/html/HtmlModulesPlugin.js"
+        ],
+        "symbols": [
+          "CssModulesPlugin",
+          "HtmlModulesPlugin"
+        ]
+      },
+      "targets": [
+        "implicitTypeLoaderFallback"
+      ],
+      "preferred": {
+        "name": "exports",
+        "path": "lib/util/implicitTypeLoaderFallback.js",
+        "lines": "30-62",
+        "kind": "function",
+        "coverage": 1,
+        "fixture": false
+      },
+      "items": [
+        {
+          "item": "symbol",
+          "name": "CssModulesPlugin",
+          "file": "lib/css/CssModulesPlugin.js",
+          "line": 257,
+          "indexed": true,
+          "extracted": true,
+          "rank": null,
+          "rankShown": null,
+          "coverage": 0,
+          "nameShown": false,
+          "inBiggerPack": false,
+          "cause": "unresolved-refs",
+          "why": "1 reference(s) to implicitTypeLoaderFallback in CssModulesPlugin (line 277) but none resolved, so no callers edge",
+          "refs": {
+            "targets": [
+              "implicitTypeLoaderFallback"
+            ],
+            "callSites": [
+              277
+            ],
+            "extracted": 1,
+            "resolved": 0,
+            "attributedElsewhere": 0
+          }
+        },
+        {
+          "item": "symbol",
+          "name": "HtmlModulesPlugin",
+          "file": "lib/html/HtmlModulesPlugin.js",
+          "line": 441,
+          "indexed": true,
+          "extracted": true,
+          "rank": null,
+          "rankShown": null,
+          "coverage": 0,
+          "nameShown": false,
+          "inBiggerPack": false,
+          "cause": "unresolved-refs",
+          "why": "1 reference(s) to implicitTypeLoaderFallback in HtmlModulesPlugin (line 823) but none resolved, so no callers edge",
+          "refs": {
+            "targets": [
+              "implicitTypeLoaderFallback"
+            ],
+            "callSites": [
+              823
+            ],
+            "extracted": 1,
+            "resolved": 0,
+            "attributedElsewhere": 0
+          }
+        }
+      ],
+      "cause": "unresolved-refs",
+      "causes": [
+        "unresolved-refs"
+      ]
+    },
+    {
+      "repo": "jellyfin",
+      "language": "c_sharp",
+      "taskId": "jf-locate-lockout",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "query": "user disabled too many failed login attempts lockout event",
+      "tokens": 1441,
+      "header": "pack \"user disabled too many failed login attempts lockout event\" · 12 hits · 5 bodies · ~1441 tok · +148 more (raise limit or narrow query)",
+      "topHits": [
+        {
+          "path": "src/Jellyfin.Database/Jellyfin.Database.Implementations/Entities/User.cs",
+          "lines": "156-156",
+          "kind": "property",
+          "text": "public int? LoginAttemptsBeforeLockout { get; set; }"
+        },
+        {
+          "path": "src/Jellyfin.Database/Jellyfin.Database.Implementations/Entities/User.cs",
+          "lines": "14-350",
+          "kind": "class",
+          "text": "public class User : IHasPermissions, IHasConcurrencyToken"
+        },
+        {
+          "path": "src/Jellyfin.Database/Jellyfin.Database.Implementations/Entities/User.cs",
+          "lines": "141-141",
+          "kind": "property",
+          "text": "User.InvalidLoginAttemptCount"
+        },
+        {
+          "path": "MediaBrowser.Model/Users/UserPolicy.cs",
+          "lines": "174-174",
+          "kind": "property",
+          "text": "public int LoginAttemptsBeforeLockout { get; set; }"
+        },
+        {
+          "path": "MediaBrowser.Model/Users/UserPolicy.cs",
+          "lines": "14-198",
+          "kind": "class",
+          "text": "Users.UserPolicy"
+        },
+        {
+          "path": "Jellyfin.Server.Implementations/Events/Consumers/Security/AuthenticationFailedLogger.cs",
+          "lines": "16-50",
+          "kind": "class",
+          "text": "public class AuthenticationFailedLogger : IEventConsumer<AuthenticationRequestEventArgs>"
+        }
+      ],
+      "callers": "callers of #3ap Security.AuthenticationFailedLogger: none found",
+      "expected": {
+        "files": [
+          "Jellyfin.Server.Implementations/Users/UserManager.cs",
+          "Jellyfin.Data/Events/Users/UserLockedOutEventArgs.cs"
+        ],
+        "symbols": [
+          "AuthenticateUser",
+          "UserLockedOutEventArgs"
+        ]
+      },
+      "missed": {
+        "files": [
+          "Jellyfin.Server.Implementations/Users/UserManager.cs",
+          "Jellyfin.Data/Events/Users/UserLockedOutEventArgs.cs"
+        ],
+        "symbols": [
+          "AuthenticateUser",
+          "UserLockedOutEventArgs"
+        ]
+      },
+      "targets": [],
+      "preferred": {
+        "name": "Jellyfin.Database.Implementations.Entities.User.LoginAttemptsBeforeLockout",
+        "path": "src/Jellyfin.Database/Jellyfin.Database.Implementations/Entities/User.cs",
+        "lines": "156-156",
+        "kind": "property",
+        "coverage": 0.44,
+        "fixture": false
+      },
+      "items": [
+        {
+          "item": "symbol",
+          "name": "AuthenticateUser",
+          "file": "Jellyfin.Server.Implementations/Users/UserManager.cs",
+          "line": 498,
+          "indexed": true,
+          "extracted": true,
+          "rank": 87,
+          "rankShown": null,
+          "coverage": 0.11,
+          "nameShown": false,
+          "inBiggerPack": false,
+          "cause": "multi-step",
+          "why": "query words cover 11% of it; reachable in one hop from shown #bvv User (it references the shown symbol)",
+          "linkedTo": "#bvv User"
+        },
+        {
+          "item": "symbol",
+          "name": "UserLockedOutEventArgs",
+          "file": "Jellyfin.Data/Events/Users/UserLockedOutEventArgs.cs",
+          "line": 8,
+          "indexed": true,
+          "extracted": true,
+          "rank": 19,
+          "rankShown": 19,
+          "coverage": 0.22,
+          "nameShown": false,
+          "inBiggerPack": true,
+          "cause": "budget-format",
+          "why": "shown with a 4x budget (rank 19, after diversification 19)"
+        }
+      ],
+      "cause": "multi-step",
+      "causes": [
+        "multi-step",
+        "budget-format"
+      ]
+    },
+    {
+      "repo": "jellyfin",
+      "language": "c_sharp",
+      "taskId": "jf-explain-syncplay-wait",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "query": "syncplay group waiting buffering members ready resume playback",
+      "tokens": 1299,
+      "header": "pack \"syncplay group waiting buffering members ready resume playb…\" · 12 hits · 3 bodies · ~1299 tok · +149 more (raise limit or narrow query)",
+      "topHits": [
+        {
+          "path": "MediaBrowser.Controller/SyncPlay/PlaybackRequests/ReadyGroupRequest.cs",
+          "lines": "13-62",
+          "kind": "class",
+          "text": "public class ReadyGroupRequest : AbstractPlaybackRequest"
+        },
+        {
+          "path": "MediaBrowser.Controller/SyncPlay/PlaybackRequests/BufferGroupRequest.cs",
+          "lines": "13-62",
+          "kind": "class",
+          "text": "public class BufferGroupRequest : AbstractPlaybackRequest"
+        },
+        {
+          "path": "MediaBrowser.Controller/SyncPlay/GroupMember.cs",
+          "lines": "11-59",
+          "kind": "class",
+          "text": "public class GroupMember"
+        },
+        {
+          "path": "MediaBrowser.Controller/SyncPlay/GroupMember.cs",
+          "lines": "58-58",
+          "kind": "property",
+          "text": "public bool IgnoreGroupWait { get; set; }"
+        },
+        {
+          "path": "MediaBrowser.Controller/SyncPlay/GroupStates/WaitingGroupState.cs",
+          "lines": "41-41",
+          "kind": "property",
+          "text": "public bool ResumePlaying { get; set; }"
+        },
+        {
+          "path": "MediaBrowser.Controller/SyncPlay/GroupStates/WaitingGroupState.cs",
+          "lines": "18-679",
+          "kind": "class",
+          "text": "public class WaitingGroupState : AbstractGroupState"
+        }
+      ],
+      "callers": "callers of #bk3 PlaybackRequests.ReadyGroupRequest (+1 related decl) · 11 refs in 7 files · complete:",
+      "expected": {
+        "files": [
+          "MediaBrowser.Controller/SyncPlay/GroupStates/WaitingGroupState.cs",
+          "Emby.Server.Implementations/SyncPlay/Group.cs"
+        ],
+        "symbols": [
+          "WaitingGroupState",
+          "HandleRequest",
+          "SetBuffering",
+          "IsBuffering"
+        ]
+      },
+      "missed": {
+        "files": [
+          "Emby.Server.Implementations/SyncPlay/Group.cs"
+        ],
+        "symbols": [
+          "SetBuffering"
+        ]
+      },
+      "targets": [],
+      "preferred": {
+        "name": "MediaBrowser.Controller.SyncPlay.PlaybackRequests.ReadyGroupRequest",
+        "path": "MediaBrowser.Controller/SyncPlay/PlaybackRequests/ReadyGroupRequest.cs",
+        "lines": "13-62",
+        "kind": "class",
+        "coverage": 0.5,
+        "fixture": false
+      },
+      "items": [
+        {
+          "item": "symbol",
+          "name": "SetBuffering",
+          "file": "Emby.Server.Implementations/SyncPlay/Group.cs",
+          "line": 457,
+          "indexed": true,
+          "extracted": true,
+          "rank": 20,
+          "rankShown": 16,
+          "coverage": 0.38,
+          "nameShown": false,
+          "inBiggerPack": true,
+          "cause": "budget-format",
+          "why": "shown with a 4x budget (rank 20, after diversification 16)"
+        },
+        {
+          "item": "symbol",
+          "name": "IsBuffering",
+          "file": "Emby.Server.Implementations/SyncPlay/Group.cs",
+          "line": 475,
+          "indexed": true,
+          "extracted": true,
+          "rank": 19,
+          "rankShown": 15,
+          "coverage": 0.38,
+          "nameShown": false,
+          "inBiggerPack": true,
+          "cause": "budget-format",
+          "why": "shown with a 4x budget (rank 19, after diversification 15)"
+        }
+      ],
+      "cause": "budget-format",
+      "causes": [
+        "budget-format"
+      ]
+    },
+    {
+      "repo": "gitea",
+      "language": "go",
+      "taskId": "gt-explain-egress",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "query": "outgoing http request host allow block list lax strict dns rebinding",
+      "tokens": 956,
+      "header": "pack \"outgoing http request host allow block list lax strict dns …\" · 12 hits · 5 bodies · ~956 tok · +138 more (raise limit or narrow query)",
+      "topHits": [
+        {
+          "path": "modules/setting/security.go",
+          "lines": "47-55",
+          "kind": "function",
+          "text": "func checkHostList(key, hostList string, isBlockList bool)"
+        },
+        {
+          "path": "modules/egress/policy/matchlist.go",
+          "lines": "330-332",
+          "kind": "function",
+          "text": "func NewBlockList(hostList string) *BlockList"
+        },
+        {
+          "path": "modules/egress/policy/matchlist.go",
+          "lines": "326-328",
+          "kind": "function",
+          "text": "func NewAllowList(hostList string, mode Mode) *AllowList"
+        },
+        {
+          "path": "modules/egress/policy/matchlist.go",
+          "lines": "79-79",
+          "kind": "struct",
+          "text": "type BlockList struct"
+        },
+        {
+          "path": "modules/egress/policy/matchlist.go",
+          "lines": "78-78",
+          "kind": "struct",
+          "text": "type AllowList struct"
+        },
+        {
+          "path": "routers/api/actions/artifactsv4.go",
+          "lines": "449-451",
+          "kind": "struct",
+          "text": "type BlockList struct"
+        }
+      ],
+      "callers": "callers of #9f8 setting.checkHostList · 3 refs in 3 files · complete:",
+      "expected": {
+        "files": [
+          "modules/egress/policy/policy.go"
+        ],
+        "symbols": [
+          "checkAddr",
+          "gate",
+          "allowCheck",
+          "dialContext"
+        ]
+      },
+      "missed": {
+        "files": [],
+        "symbols": [
+          "checkAddr",
+          "dialContext"
+        ]
+      },
+      "targets": [],
+      "preferred": {
+        "name": "setting.checkHostList",
+        "path": "modules/setting/security.go",
+        "lines": "47-55",
+        "kind": "function",
+        "coverage": 0.36,
+        "fixture": false
+      },
+      "items": [
+        {
+          "item": "symbol",
+          "name": "checkAddr",
+          "file": "modules/egress/policy/policy.go",
+          "line": 109,
+          "indexed": true,
+          "extracted": true,
+          "rank": null,
+          "rankShown": null,
+          "coverage": 0.09,
+          "nameShown": false,
+          "inBiggerPack": false,
+          "cause": "multi-step",
+          "why": "query words cover 9% of it; reachable in one hop from shown #5uq gate (it references the shown symbol)",
+          "linkedTo": "#5uq gate"
+        },
+        {
+          "item": "symbol",
+          "name": "dialContext",
+          "file": "modules/egress/policy/policy.go",
+          "line": 205,
+          "indexed": true,
+          "extracted": true,
+          "rank": 195,
+          "rankShown": null,
+          "coverage": 0.09,
+          "nameShown": false,
+          "inBiggerPack": false,
+          "cause": "multi-step",
+          "why": "query words cover 9% of it; reachable in one hop from shown #5ux NewDialContext (the shown symbol references it)",
+          "linkedTo": "#5ux NewDialContext"
+        }
+      ],
+      "cause": "multi-step",
+      "causes": [
+        "multi-step"
+      ]
+    },
+    {
+      "repo": "exposed",
+      "language": "kotlin",
+      "taskId": "ex-locate-lifecycle-flush",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "query": "EntityLifecycleInterceptor flush entity cache before statement execution",
+      "tokens": 1261,
+      "header": "pack \"EntityLifecycleInterceptor flush entity cache before statem…\" · 10 hits · 4 bodies · ~1261 tok",
+      "topHits": [
+        {
+          "path": "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityLifecycleInterceptor.kt",
+          "lines": "28-143",
+          "kind": "class",
+          "text": "class EntityLifecycleInterceptor : GlobalStatementInterceptor"
+        },
+        {
+          "path": "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityLifecycleInterceptor.kt",
+          "lines": "34-37",
+          "kind": "method",
+          "text": "@Suppress(\"ComplexMethod\") override fun beforeExecution(transaction: Transaction, context: StatementContext)"
+        },
+        {
+          "path": "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityLifecycleInterceptor.kt",
+          "lines": "39-89",
+          "kind": "method",
+          "text": "private fun beforeExecution(transaction: Transaction, context: StatementContext, childStatement: Statement<*>…"
+        },
+        {
+          "path": "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityLifecycleInterceptor.kt",
+          "lines": "91-95",
+          "kind": "method",
+          "text": "override fun afterExecution(transaction: Transaction, contexts: List<StatementContext>, executedStatement: Pr…"
+        },
+        {
+          "path": "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityLifecycleInterceptor.kt",
+          "lines": "97-102",
+          "kind": "method",
+          "text": "override fun beforeCommit(transaction: Transaction)"
+        },
+        {
+          "path": "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityLifecycleInterceptor.kt",
+          "lines": "138-142",
+          "kind": "method",
+          "text": "private fun Transaction.flushEntities(query: AbstractQuery<*>)"
+        }
+      ],
+      "callers": "callers of #my EntityLifecycleInterceptor: none found",
+      "expected": {
+        "files": [
+          "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityLifecycleInterceptor.kt",
+          "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityCache.kt"
+        ],
+        "symbols": [
+          "beforeExecution",
+          "flushEntities",
+          "flushCache"
+        ]
+      },
+      "missed": {
+        "files": [
+          "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityCache.kt"
+        ],
+        "symbols": []
+      },
+      "targets": [],
+      "preferred": {
+        "name": "org.jetbrains.exposed.v1.dao.EntityLifecycleInterceptor",
+        "path": "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityLifecycleInterceptor.kt",
+        "lines": "28-143",
+        "kind": "class",
+        "coverage": 0.56,
+        "fixture": false
+      },
+      "items": [
+        {
+          "item": "symbol",
+          "name": "flushCache",
+          "file": "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityCache.kt",
+          "line": 349,
+          "indexed": true,
+          "extracted": true,
+          "rank": 12,
+          "rankShown": null,
+          "coverage": 0.33,
+          "nameShown": false,
+          "inBiggerPack": false,
+          "cause": "multi-step",
+          "why": "query words cover 33% of it; reachable in one hop from shown #n1 beforeExecution (the shown symbol references it)",
+          "linkedTo": "#n1 beforeExecution"
+        }
+      ],
+      "cause": "multi-step",
+      "causes": [
+        "multi-step"
+      ]
+    },
+    {
+      "repo": "exposed",
+      "language": "kotlin",
+      "taskId": "ex-explain-entity-flush",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "query": "entity cache flush inserts updates foreign key order tables",
+      "tokens": 1342,
+      "header": "pack \"entity cache flush inserts updates foreign key order tables\" · 12 hits · 3 bodies · ~1342 tok · +61 more (raise limit or narrow query)",
+      "topHits": [
+        {
+          "path": "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityCache.kt",
+          "lines": "349-355",
+          "kind": "function",
+          "text": "fun Transaction.flushCache(): List<Entity<*>>"
+        },
+        {
+          "path": "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityCache.kt",
+          "lines": "190-212",
+          "kind": "method",
+          "text": "fun flush(tables: Iterable<IdTable<*>>)"
+        },
+        {
+          "path": "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityCache.kt",
+          "lines": "152-160",
+          "kind": "method",
+          "text": "fun flush()"
+        },
+        {
+          "path": "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityCache.kt",
+          "lines": "236-282",
+          "kind": "method",
+          "text": "@Suppress(\"TooGenericExceptionCaught\") internal fun flushInserts(table: IdTable<*>)"
+        },
+        {
+          "path": "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityCache.kt",
+          "lines": "22-341",
+          "kind": "class",
+          "text": "EntityCache"
+        },
+        {
+          "path": "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/Entity.kt",
+          "lines": "403-436",
+          "kind": "method",
+          "text": "open fun flush(batch: EntityBatchUpdate? = null): Boolean"
+        }
+      ],
+      "callers": "callers of #2t2 dao.flushCache · 44 refs in 13 files · complete:",
+      "expected": {
+        "files": [
+          "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityCache.kt",
+          "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/SchemaUtils.kt"
+        ],
+        "symbols": [
+          "flush",
+          "flushInserts",
+          "updateEntities",
+          "sortTablesByReferences"
+        ]
+      },
+      "missed": {
+        "files": [
+          "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/SchemaUtils.kt"
+        ],
+        "symbols": [
+          "sortTablesByReferences"
+        ]
+      },
+      "targets": [],
+      "preferred": {
+        "name": "org.jetbrains.exposed.v1.dao.flushCache",
+        "path": "exposed-dao/src/main/kotlin/org/jetbrains/exposed/v1/dao/EntityCache.kt",
+        "lines": "349-355",
+        "kind": "function",
+        "coverage": 0.56,
+        "fixture": false
+      },
+      "items": [
+        {
+          "item": "symbol",
+          "name": "sortTablesByReferences",
+          "file": "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/SchemaUtils.kt",
+          "line": 18,
+          "indexed": true,
+          "extracted": true,
+          "rank": null,
+          "rankShown": null,
+          "coverage": 0.33,
+          "nameShown": false,
+          "inBiggerPack": false,
+          "cause": "multi-step",
+          "why": "query words cover 33% of it; reachable in one hop from shown #2st flush (the shown symbol references it)",
+          "linkedTo": "#2st flush"
+        }
+      ],
+      "cause": "multi-step",
+      "causes": [
+        "multi-step"
+      ]
+    },
+    {
+      "repo": "exposed",
+      "language": "kotlin",
+      "taskId": "ex-explain-nested-tx",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "query": "nested transactions useNestedTransactions outer transaction savepoint rollback",
+      "tokens": 1622,
+      "header": "pack \"nested transactions useNestedTransactions outer transaction…\" · 12 hits · 1 body · ~1622 tok",
+      "topHits": [
+        {
+          "path": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/DatabaseConfig.kt",
+          "lines": "16-16",
+          "kind": "property",
+          "text": "val useNestedTransactions: Boolean"
+        },
+        {
+          "path": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/DatabaseConfig.kt",
+          "lines": "212-212",
+          "kind": "property",
+          "text": "override val useNestedTransactions: Boolean"
+        },
+        {
+          "path": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/DatabaseApi.kt",
+          "lines": "18-18",
+          "kind": "property",
+          "text": "val useNestedTransactions: Boolean = config.useNestedTransactions"
+        },
+        {
+          "path": "spring-transaction/src/main/kotlin/org/jetbrains/exposed/v1/spring/transaction/SpringTransactionManager.kt",
+          "lines": "56-56",
+          "kind": "method",
+          "text": "override fun useSavepointForNestedTransaction()"
+        },
+        {
+          "path": "spring7-transaction/src/main/kotlin/org/jetbrains/exposed/v1/spring7/transaction/SpringTransactionManager.kt",
+          "lines": "55-55",
+          "kind": "method",
+          "text": "override fun useSavepointForNestedTransaction()"
+        },
+        {
+          "path": "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/transactions/JdbcTransactionInterface.kt",
+          "lines": "26-26",
+          "kind": "method",
+          "text": "fun rollback()"
+        }
+      ],
+      "expected": {
+        "files": [
+          "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/transactions/TransactionManager.kt"
+        ],
+        "symbols": [
+          "newTransaction",
+          "ThreadLocalTransaction",
+          "rollback",
+          "savepointName"
+        ]
+      },
+      "missed": {
+        "files": [],
+        "symbols": [
+          "ThreadLocalTransaction",
+          "savepointName"
+        ]
+      },
+      "targets": [],
+      "preferred": {
+        "name": "org.jetbrains.exposed.v1.core.DatabaseConfig.useNestedTransactions",
+        "path": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/DatabaseConfig.kt",
+        "lines": "16-16",
+        "kind": "property",
+        "coverage": 0.57,
+        "fixture": false
+      },
+      "items": [
+        {
+          "item": "symbol",
+          "name": "ThreadLocalTransaction",
+          "file": "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/transactions/TransactionManager.kt",
+          "line": 202,
+          "indexed": true,
+          "extracted": true,
+          "rank": 18,
+          "rankShown": 17,
+          "coverage": 0.43,
+          "nameShown": false,
+          "inBiggerPack": true,
+          "cause": "budget-format",
+          "why": "shown with a 4x budget (rank 18, after diversification 17)"
+        },
+        {
+          "item": "symbol",
+          "name": "savepointName",
+          "file": "exposed-jdbc/src/main/kotlin/org/jetbrains/exposed/v1/jdbc/transactions/TransactionManager.kt",
+          "line": 284,
+          "indexed": true,
+          "extracted": true,
+          "rank": 128,
+          "rankShown": null,
+          "coverage": 0.43,
+          "nameShown": false,
+          "inBiggerPack": false,
+          "cause": "ranking",
+          "why": "ranked 128 of 400 candidates (pack lists 12 pointers; below the weak-tail cut: score 26% of the top); query words cover 43% of it; top candidate org.jetbrains.exposed.v1.core.DatabaseConfig.useNestedTransactions covers 57%"
+        }
+      ],
+      "cause": "ranking",
+      "causes": [
+        "budget-format",
+        "ranking"
+      ]
+    },
+    {
+      "repo": "exposed",
+      "language": "kotlin",
+      "taskId": "ex-explain-table-order",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "query": "tables order foreign key references create cycle detection graph",
+      "tokens": 1373,
+      "header": "pack \"tables order foreign key references create cycle detection …\" · 12 hits · 3 bodies · ~1373 tok · +35 more (raise limit or narrow query)",
+      "topHits": [
+        {
+          "path": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/Table.kt",
+          "lines": "1769-1781",
+          "kind": "method",
+          "text": "fun foreignKey( vararg from: Column<*>, target: PrimaryKey, onUpdate: ReferenceOption? = null, onDelete: Refe…"
+        },
+        {
+          "path": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/Table.kt",
+          "lines": "1796-1803",
+          "kind": "method",
+          "text": "fun foreignKey( vararg references: Pair<Column<*>, Column<*>>, onUpdate: ReferenceOption? = null, onDelete: R…"
+        },
+        {
+          "path": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/Table.kt",
+          "lines": "1390-1401",
+          "kind": "method",
+          "text": "fun <T : Any> reference( name: String, foreign: IdTable<T>, onDelete: ReferenceOption? = null, onUpdate: Refe…"
+        },
+        {
+          "path": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/Table.kt",
+          "lines": "1275-1288",
+          "kind": "method",
+          "text": "fun <T : Any, S : T, C : Column<S>> C.references( ref: Column<T>, onDelete: ReferenceOption? = null, onUpdate…"
+        },
+        {
+          "path": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/Table.kt",
+          "lines": "1303-1317",
+          "kind": "method",
+          "text": "@JvmName(\"referencesById\") fun <T : Any, S : T, C : Column<S>> C.references( ref: Column<EntityID<T>>, onDele…"
+        },
+        {
+          "path": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/Table.kt",
+          "lines": "1333-1347",
+          "kind": "method",
+          "text": "Table.reference"
+        }
+      ],
+      "callers": "callers of #c4 Table.foreignKey (+1 related decl) · 16 refs in 12 files · 10 unresolved same-name refs:",
+      "expected": {
+        "files": [
+          "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/TableDepthGraph.kt"
+        ],
+        "symbols": [
+          "TableDepthGraph",
+          "sorted",
+          "hasCycle"
+        ]
+      },
+      "missed": {
+        "files": [
+          "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/TableDepthGraph.kt"
+        ],
+        "symbols": [
+          "sorted"
+        ]
+      },
+      "targets": [],
+      "preferred": {
+        "name": "org.jetbrains.exposed.v1.core.Table.foreignKey",
+        "path": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/Table.kt",
+        "lines": "1769-1781",
+        "kind": "method",
+        "coverage": 0.56,
+        "fixture": false
+      },
+      "items": [
+        {
+          "item": "symbol",
+          "name": "TableDepthGraph",
+          "file": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/TableDepthGraph.kt",
+          "line": 3,
+          "indexed": true,
+          "extracted": true,
+          "rank": 18,
+          "rankShown": 16,
+          "coverage": 0.22,
+          "nameShown": false,
+          "inBiggerPack": true,
+          "cause": "budget-format",
+          "why": "shown with a 4x budget (rank 18, after diversification 16)"
+        },
+        {
+          "item": "symbol",
+          "name": "sorted",
+          "file": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/TableDepthGraph.kt",
+          "line": 25,
+          "indexed": true,
+          "extracted": true,
+          "rank": 114,
+          "rankShown": null,
+          "coverage": 0.22,
+          "nameShown": false,
+          "inBiggerPack": false,
+          "cause": "multi-step",
+          "why": "query words cover 22% of it; reachable in one hop from shown #8y Table (it references the shown symbol)",
+          "linkedTo": "#8y Table"
+        },
+        {
+          "item": "symbol",
+          "name": "hasCycle",
+          "file": "exposed-core/src/main/kotlin/org/jetbrains/exposed/v1/core/TableDepthGraph.kt",
+          "line": 44,
+          "indexed": true,
+          "extracted": true,
+          "rank": 21,
+          "rankShown": 19,
+          "coverage": 0.33,
+          "nameShown": false,
+          "inBiggerPack": true,
+          "cause": "budget-format",
+          "why": "shown with a 4x budget (rank 21, after diversification 19)"
+        }
+      ],
+      "cause": "multi-step",
+      "causes": [
+        "budget-format",
+        "multi-step"
+      ]
+    },
+    {
+      "repo": "meilisearch",
+      "language": "rust",
+      "taskId": "ms-explain-dynamic-rules",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "query": "dynamic search rules pin documents time query filter conditions",
+      "tokens": 1391,
+      "header": "pack \"dynamic search rules pin documents time query filter condit…\" · 12 hits · 4 bodies · ~1391 tok · +90 more (raise limit or narrow query)",
+      "topHits": [
+        {
+          "path": "crates/index-scheduler/src/dynamic_search_rules.rs",
+          "lines": "7-9",
+          "kind": "struct",
+          "text": "pub struct DynamicSearchRules<'a>"
+        },
+        {
+          "path": "crates/milli/src/dynamic_search_rules/mod.rs",
+          "lines": "55-59",
+          "kind": "struct",
+          "text": "pub struct DynamicSearchRules"
+        },
+        {
+          "path": "crates/index-scheduler/src/lib.rs",
+          "lines": "1255-1263",
+          "kind": "method",
+          "text": "pub fn dynamic_search_rules( &self, features: RoFeatures, disabled_action: &'static str, ) -> Result<DynamicS…"
+        },
+        {
+          "path": "crates/index-scheduler/src/lib.rs",
+          "lines": "25-25",
+          "kind": "module",
+          "text": "mod dynamic_search_rules"
+        },
+        {
+          "path": "crates/index-scheduler/src/lib.rs",
+          "lines": "113-113",
+          "kind": "constant",
+          "text": "db_name.DYNAMIC_SEARCH_RULES"
+        },
+        {
+          "path": "crates/milli/src/search/mod.rs",
+          "lines": "320-327",
+          "kind": "method",
+          "text": "pub fn dynamic_search_rules( &mut self, dynamic_search_rules: &'a DynamicSearchRules, fuel: DsrFuel, ) -> &mu…"
+        }
+      ],
+      "callers": "callers of #7cb IndexScheduler.dynamic_search_rules · 1 ref in 1 file · 6 unresolved same-name refs:",
+      "expected": {
+        "files": [
+          "crates/milli/src/dynamic_search_rules/mod.rs",
+          "crates/milli/src/dynamic_search_rules/condition.rs",
+          "crates/milli/src/dynamic_search_rules/action.rs"
+        ],
+        "symbols": [
+          "resolve_actions",
+          "active_rules_for_query",
+          "apply_time_conditions",
+          "find_actions"
+        ]
+      },
+      "missed": {
+        "files": [
+          "crates/milli/src/dynamic_search_rules/condition.rs",
+          "crates/milli/src/dynamic_search_rules/action.rs"
+        ],
+        "symbols": [
+          "active_rules_for_query",
+          "apply_time_conditions",
+          "find_actions"
+        ]
+      },
+      "targets": [],
+      "preferred": {
+        "name": "DynamicSearchRules",
+        "path": "crates/index-scheduler/src/dynamic_search_rules.rs",
+        "lines": "7-9",
+        "kind": "struct",
+        "coverage": 0.33,
+        "fixture": false
+      },
+      "items": [
+        {
+          "item": "symbol",
+          "name": "active_rules_for_query",
+          "file": "crates/milli/src/dynamic_search_rules/condition.rs",
+          "line": 18,
+          "indexed": true,
+          "extracted": true,
+          "rank": 21,
+          "rankShown": 21,
+          "coverage": 0.67,
+          "nameShown": false,
+          "inBiggerPack": true,
+          "cause": "budget-format",
+          "why": "shown with a 4x budget (rank 21, after diversification 21)"
+        },
+        {
+          "item": "symbol",
+          "name": "apply_time_conditions",
+          "file": "crates/milli/src/dynamic_search_rules/condition.rs",
+          "line": 34,
+          "indexed": true,
+          "extracted": true,
+          "rank": 28,
+          "rankShown": 23,
+          "coverage": 0.56,
+          "nameShown": false,
+          "inBiggerPack": true,
+          "cause": "budget-format",
+          "why": "shown with a 4x budget (rank 28, after diversification 23)"
+        },
+        {
+          "item": "symbol",
+          "name": "find_actions",
+          "file": "crates/milli/src/dynamic_search_rules/action.rs",
+          "line": 49,
+          "indexed": true,
+          "extracted": true,
+          "rank": 124,
+          "rankShown": null,
+          "coverage": 0.44,
+          "nameShown": false,
+          "inBiggerPack": true,
+          "cause": "budget-format",
+          "why": "shown with a 4x budget (rank 124, after diversification none)"
+        }
+      ],
+      "cause": "budget-format",
+      "causes": [
+        "budget-format"
+      ]
+    },
+    {
+      "repo": "meilisearch",
+      "language": "rust",
+      "taskId": "ms-explain-bucket-sort",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "query": "ranking rules buckets candidates sort results",
+      "tokens": 1334,
+      "header": "pack \"ranking rules buckets candidates sort results\" · 12 hits · 4 bodies · ~1334 tok · +100 more (raise limit or narrow query)",
+      "topHits": [
+        {
+          "path": "crates/milli/src/search/new/logger/mod.rs",
+          "lines": "44-50",
+          "kind": "method",
+          "text": "fn skip_bucket_ranking_rule( &mut self, _ranking_rule_idx: usize, _ranking_rule: &dyn RankingRule<'_, Q>, _ca…"
+        },
+        {
+          "path": "crates/milli/src/search/new/logger/mod.rs",
+          "lines": "35-42",
+          "kind": "method",
+          "text": "fn next_bucket_ranking_rule( &mut self, _ranking_rule_idx: usize, _ranking_rule: &dyn RankingRule<'_, Q>, _un…"
+        },
+        {
+          "path": "crates/milli/src/search/new/bucket_sort.rs",
+          "lines": "315-393",
+          "kind": "function",
+          "text": "fn maybe_add_to_results<'ctx, Q: RankingRuleQueryTrait>( ctx: &mut SearchContext<'ctx>, from: usize, length: …"
+        },
+        {
+          "path": "crates/milli/src/search/new/bucket_sort.rs",
+          "lines": "23-310",
+          "kind": "function",
+          "text": "pub fn bucket_sort<'ctx, Q: RankingRuleQueryTrait>( ctx: &mut SearchContext<'ctx>, mut ranking_rules: Vec<Box…"
+        },
+        {
+          "path": "crates/milli/src/search/new/sort.rs",
+          "lines": "198-222",
+          "kind": "method",
+          "text": "fn next_bucket( &mut self, _ctx: &mut SearchContext<'ctx>, _logger: &mut dyn SearchLogger<Query>, universe: &…"
+        },
+        {
+          "path": "crates/milli/src/search/new/sort.rs",
+          "lines": "14-14",
+          "kind": "method",
+          "text": "fn next_bucket(&mut self) -> Result<Option<RankingRuleOutput<Query>>>"
+        }
+      ],
+      "callers": "callers of #5s6 SearchLogger.skip_bucket_ranking_rule: none resolved; possible (unresolved refs named skip_bucket_ranking_rule):",
+      "expected": {
+        "files": [
+          "crates/milli/src/search/new/bucket_sort.rs",
+          "crates/milli/src/search/new/ranking_rules.rs"
+        ],
+        "symbols": [
+          "bucket_sort",
+          "maybe_add_to_results",
+          "RankingRule",
+          "next_bucket"
+        ]
+      },
+      "missed": {
+        "files": [
+          "crates/milli/src/search/new/ranking_rules.rs"
+        ],
+        "symbols": []
+      },
+      "targets": [],
+      "preferred": {
+        "name": "SearchLogger.skip_bucket_ranking_rule",
+        "path": "crates/milli/src/search/new/logger/mod.rs",
+        "lines": "44-50",
+        "kind": "method",
+        "coverage": 0.67,
+        "fixture": false
+      },
+      "items": [
+        {
+          "item": "symbol",
+          "name": "RankingRule",
+          "file": "crates/milli/src/search/new/ranking_rules.rs",
+          "line": 26,
+          "indexed": true,
+          "extracted": true,
+          "rank": 27,
+          "rankShown": 25,
+          "coverage": 0.33,
+          "nameShown": false,
+          "inBiggerPack": true,
+          "cause": "budget-format",
+          "why": "shown with a 4x budget (rank 27, after diversification 25)"
+        },
+        {
+          "item": "symbol",
+          "name": "next_bucket",
+          "file": "crates/milli/src/search/new/ranking_rules.rs",
+          "line": 53,
+          "indexed": true,
+          "extracted": true,
+          "rank": 14,
+          "rankShown": 13,
+          "coverage": 0.67,
+          "nameShown": false,
+          "inBiggerPack": true,
+          "cause": "budget-format",
+          "why": "shown with a 4x budget (rank 14, after diversification 13)"
+        }
+      ],
+      "cause": "budget-format",
+      "causes": [
+        "budget-format"
+      ]
+    },
+    {
+      "repo": "meilisearch",
+      "language": "rust",
+      "taskId": "ms-usage-is-exact",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "query": "DisabledTyposTerms is_exact",
+      "tokens": 947,
+      "header": "pack \"DisabledTyposTerms is_exact\" · 12 hits · 5 bodies · ~947 tok",
+      "topHits": [
+        {
+          "path": "crates/milli/src/disabled_typos_terms.rs",
+          "lines": "38-41",
+          "kind": "method",
+          "text": "pub fn is_exact(&self, word: &str) -> bool"
+        },
+        {
+          "path": "crates/milli/src/disabled_typos_terms.rs",
+          "lines": "10-12",
+          "kind": "struct",
+          "text": "pub struct DisabledTyposTerms"
+        },
+        {
+          "path": "crates/milli/src/disabled_typos_terms.rs",
+          "lines": "15-20",
+          "kind": "method",
+          "text": "pub fn disabled_typos_terms(&self, txn: &RoTxn<'_>) -> heed::Result<DisabledTyposTerms>"
+        },
+        {
+          "path": "crates/milli/src/disabled_typos_terms.rs",
+          "lines": "22-34",
+          "kind": "method",
+          "text": "pub(crate) fn put_disabled_typos_terms( &self, txn: &mut RwTxn<'_>, disabled_typos_terms: &DisabledTyposTerms…"
+        },
+        {
+          "path": "crates/meilisearch-types/src/index_uid_pattern.rs",
+          "lines": "35-37",
+          "kind": "method",
+          "text": "pub fn is_exact(&self) -> bool"
+        },
+        {
+          "path": "crates/milli/src/fields_ids_map/metadata.rs",
+          "lines": "503-509",
+          "kind": "method",
+          "text": "pub fn is_exact(&self, field: &str) -> PatternMatch"
+        }
+      ],
+      "callers": "callers of #8ai DisabledTyposTerms.is_exact · 2 refs in 1 file · 7 unresolved same-name refs:",
+      "expected": {
+        "files": [
+          "crates/milli/src/update/index_documents/extract/extract_word_docids.rs",
+          "crates/milli/src/update/new/extract/searchable/extract_word_docids.rs",
+          "crates/milli/src/update/new/indexer/mod.rs"
+        ],
+        "symbols": [
+          "extract_word_docids",
+          "extract_document_change",
+          "extract_document_from_settings_change",
+          "extract_numbers_from_words_fst"
+        ]
+      },
+      "missed": {
+        "files": [
+          "crates/milli/src/update/index_documents/extract/extract_word_docids.rs",
+          "crates/milli/src/update/new/extract/searchable/extract_word_docids.rs"
+        ],
+        "symbols": [
+          "extract_word_docids",
+          "extract_document_change",
+          "extract_document_from_settings_change"
+        ]
+      },
+      "targets": [
+        "is_exact",
+        "DisabledTyposTerms"
+      ],
+      "preferred": {
+        "name": "DisabledTyposTerms.is_exact",
+        "path": "crates/milli/src/disabled_typos_terms.rs",
+        "lines": "38-41",
+        "kind": "method",
+        "coverage": 1,
+        "fixture": false
+      },
+      "items": [
+        {
+          "item": "symbol",
+          "name": "extract_word_docids",
+          "file": "crates/milli/src/update/index_documents/extract/extract_word_docids.rs",
+          "line": 28,
+          "indexed": true,
+          "extracted": true,
+          "rank": 302,
+          "rankShown": null,
+          "coverage": 0,
+          "nameShown": false,
+          "inBiggerPack": false,
+          "cause": "unresolved-refs",
+          "why": "2 reference(s) to is_exact/DisabledTyposTerms in extract_word_docids (line 130, 143) but none resolved, so no callers edge",
+          "refs": {
+            "targets": [
+              "is_exact",
+              "DisabledTyposTerms"
+            ],
+            "callSites": [
+              130,
+              143
+            ],
+            "extracted": 2,
+            "resolved": 0,
+            "attributedElsewhere": 0
+          }
+        },
+        {
+          "item": "symbol",
+          "name": "extract_document_change",
+          "file": "crates/milli/src/update/new/extract/searchable/extract_word_docids.rs",
+          "line": 333,
+          "indexed": true,
+          "extracted": true,
+          "rank": 276,
+          "rankShown": null,
+          "coverage": 0,
+          "nameShown": false,
+          "inBiggerPack": false,
+          "cause": "unresolved-refs",
+          "why": "2 reference(s) to is_exact/DisabledTyposTerms in extract_document_change (line 349, 351, 378, 407, 424, 442) but none resolved, so no callers edge",
+          "refs": {
+            "targets": [
+              "is_exact",
+              "DisabledTyposTerms"
+            ],
+            "callSites": [
+              349,
+              351,
+              378,
+              407,
+              424,
+              442
+            ],
+            "extracted": 2,
+            "resolved": 0,
+            "attributedElsewhere": 0
+          }
+        },
+        {
+          "item": "symbol",
+          "name": "extract_document_from_settings_change",
+          "file": "crates/milli/src/update/new/extract/searchable/extract_word_docids.rs",
+          "line": 570,
+          "indexed": true,
+          "extracted": true,
+          "rank": null,
+          "rankShown": null,
+          "coverage": 0,
+          "nameShown": false,
+          "inBiggerPack": false,
+          "cause": "unresolved-refs",
+          "why": "2 reference(s) to is_exact/DisabledTyposTerms in extract_document_from_settings_change (line 730, 746, 762, 772, 801, 825) but none resolved, so no callers edge",
+          "refs": {
+            "targets": [
+              "is_exact",
+              "DisabledTyposTerms"
+            ],
+            "callSites": [
+              730,
+              746,
+              762,
+              772,
+              801,
+              825
+            ],
+            "extracted": 2,
+            "resolved": 0,
+            "attributedElsewhere": 0
+          }
+        }
+      ],
+      "cause": "unresolved-refs",
+      "causes": [
+        "unresolved-refs"
+      ]
+    },
+    {
+      "repo": "meilisearch",
+      "language": "rust",
+      "taskId": "ms-usage-facet-bounds",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "query": "find_docids_of_facet_within_bounds",
+      "tokens": 1260,
+      "header": "pack \"find_docids_of_facet_within_bounds\" · 3 hits · 1 body · ~1260 tok",
+      "topHits": [
+        {
+          "path": "crates/milli/src/search/facet/facet_range_search.rs",
+          "lines": "15-67",
+          "kind": "function",
+          "text": "pub fn find_docids_of_facet_within_bounds<'t, BoundCodec>( rtxn: &'t heed::RoTxn<'t>, db: heed::Database<Face…"
+        },
+        {
+          "path": "crates/milli/src/update/facet/mod.rs",
+          "lines": "455-463",
+          "kind": "method",
+          "text": "pub fn delete_single_docid<'a>( &self, wtxn: &'a mut RwTxn<'_>, field_id: u16, key: &'a <BoundCodec as BytesE…"
+        },
+        {
+          "path": "crates/milli/src/update/new/channel.rs",
+          "lines": "566-568",
+          "kind": "method",
+          "text": "pub fn facet_docids<'a>(&'a self) -> FacetDocidsSender<'a, 'b>"
+        }
+      ],
+      "callers": "callers of #8iz find_docids_of_facet_within_bounds · 6 refs in 3 files · complete:",
+      "expected": {
+        "files": [
+          "crates/milli/src/dynamic_search_rules/condition.rs",
+          "crates/milli/src/search/facet/filter/index_filter.rs"
+        ],
+        "symbols": [
+          "apply_time_conditions",
+          "apply_filter_conditions",
+          "resolve_constraints",
+          "evaluate_operator",
+          "explore_facet_levels"
+        ]
+      },
+      "missed": {
+        "files": [],
+        "symbols": [
+          "evaluate_operator",
+          "explore_facet_levels"
+        ]
+      },
+      "targets": [
+        "find_docids_of_facet_within_bounds"
+      ],
+      "preferred": {
+        "name": "find_docids_of_facet_within_bounds",
+        "path": "crates/milli/src/search/facet/facet_range_search.rs",
+        "lines": "15-67",
+        "kind": "function",
+        "coverage": 1,
+        "fixture": false
+      },
+      "items": [
+        {
+          "item": "symbol",
+          "name": "evaluate_operator",
+          "file": "crates/milli/src/search/facet/filter/index_filter.rs",
+          "line": 109,
+          "indexed": true,
+          "extracted": true,
+          "rank": 272,
+          "rankShown": null,
+          "coverage": 0.2,
+          "nameShown": false,
+          "inBiggerPack": false,
+          "cause": "extraction",
+          "why": "the use of find_docids_of_facet_within_bounds at line 273 is not extracted as a reference",
+          "refs": {
+            "targets": [
+              "find_docids_of_facet_within_bounds"
+            ],
+            "callSites": [
+              273
+            ],
+            "extracted": 0,
+            "resolved": 0,
+            "attributedElsewhere": 0
+          },
+          "parseErrorAtLine": false
+        },
+        {
+          "item": "symbol",
+          "name": "explore_facet_levels",
+          "file": "crates/milli/src/search/facet/filter/index_filter.rs",
+          "line": 332,
+          "indexed": true,
+          "extracted": true,
+          "rank": 8,
+          "rankShown": null,
+          "coverage": 0.4,
+          "nameShown": false,
+          "inBiggerPack": false,
+          "cause": "extraction",
+          "why": "the use of find_docids_of_facet_within_bounds at line 353 is not extracted as a reference",
+          "refs": {
+            "targets": [
+              "find_docids_of_facet_within_bounds"
+            ],
+            "callSites": [
+              353
+            ],
+            "extracted": 0,
+            "resolved": 0,
+            "attributedElsewhere": 0
+          },
+          "parseErrorAtLine": false
+        }
+      ],
+      "cause": "extraction",
+      "causes": [
+        "extraction"
+      ]
+    },
+    {
+      "repo": "meilisearch",
+      "language": "rust",
+      "taskId": "ms-impact-search-rules",
+      "kind": "impact",
+      "strategy": "kopt-pack",
+      "query": "AuthFilter get_index_search_rules tenant token filter search routes",
+      "tokens": 1287,
+      "header": "pack \"AuthFilter get_index_search_rules tenant token filter searc…\" · 8 hits · 5 bodies · ~1287 tok",
+      "topHits": [
+        {
+          "path": "crates/meilisearch-auth/src/lib.rs",
+          "lines": "291-297",
+          "kind": "method",
+          "text": "pub fn get_index_search_rules(&self, index: &str) -> Option<IndexSearchRules>"
+        },
+        {
+          "path": "crates/meilisearch-auth/src/lib.rs",
+          "lines": "198-202",
+          "kind": "struct",
+          "text": "pub struct AuthFilter"
+        },
+        {
+          "path": "crates/meilisearch-auth/src/lib.rs",
+          "lines": "330-347",
+          "kind": "method",
+          "text": "fn get_index_search_rules(&self, index: &str) -> Option<IndexSearchRules>"
+        },
+        {
+          "path": "crates/meilisearch-auth/src/lib.rs",
+          "lines": "259-264",
+          "kind": "method",
+          "text": "pub fn tenant_token_is_index_authorized(&self, index: &str) -> bool"
+        },
+        {
+          "path": "crates/meilisearch-auth/src/lib.rs",
+          "lines": "267-279",
+          "kind": "method",
+          "text": "pub fn tenant_token_list_index_authorized(&self) -> Vec<String>"
+        },
+        {
+          "path": "crates/meilisearch-auth/src/lib.rs",
+          "lines": "222-224",
+          "kind": "method",
+          "text": "pub fn is_tenant_token(&self) -> bool"
+        }
+      ],
+      "callers": "callers of #as5 AuthFilter.get_index_search_rules · 1 ref in 1 file · 7 unresolved same-name refs:",
+      "expected": {
+        "files": [
+          "crates/meilisearch-auth/src/lib.rs",
+          "crates/meilisearch/src/routes/indexes/search.rs",
+          "crates/meilisearch/src/routes/indexes/facet_search.rs",
+          "crates/meilisearch/src/routes/indexes/similar.rs"
+        ],
+        "symbols": [
+          "get_index_search_rules",
+          "legacy_search_with_url_query",
+          "legacy_search_with_post",
+          "search",
+          "similar"
+        ]
+      },
+      "missed": {
+        "files": [
+          "crates/meilisearch/src/routes/indexes/search.rs",
+          "crates/meilisearch/src/routes/indexes/facet_search.rs",
+          "crates/meilisearch/src/routes/indexes/similar.rs"
+        ],
+        "symbols": [
+          "legacy_search_with_url_query",
+          "legacy_search_with_post",
+          "search",
+          "similar"
+        ]
+      },
+      "targets": [
+        "get_index_search_rules",
+        "AuthFilter"
+      ],
+      "preferred": {
+        "name": "AuthFilter.get_index_search_rules",
+        "path": "crates/meilisearch-auth/src/lib.rs",
+        "lines": "291-297",
+        "kind": "method",
+        "coverage": 0.7,
+        "fixture": false
+      },
+      "items": [
+        {
+          "item": "symbol",
+          "name": "legacy_search_with_url_query",
+          "file": "crates/meilisearch/src/routes/indexes/search.rs",
+          "line": 631,
+          "indexed": true,
+          "extracted": true,
+          "rank": 117,
+          "rankShown": null,
+          "coverage": 0.3,
+          "nameShown": false,
+          "inBiggerPack": false,
+          "cause": "unresolved-refs",
+          "why": "1 reference(s) to get_index_search_rules/AuthFilter in legacy_search_with_url_query (line 650) but none resolved, so no callers edge",
+          "refs": {
+            "targets": [
+              "get_index_search_rules",
+              "AuthFilter"
+            ],
+            "callSites": [
+              650
+            ],
+            "extracted": 1,
+            "resolved": 0,
+            "attributedElsewhere": 0
+          }
+        },
+        {
+          "item": "symbol",
+          "name": "legacy_search_with_post",
+          "file": "crates/meilisearch/src/routes/indexes/search.rs",
+          "line": 962,
+          "indexed": true,
+          "extracted": true,
+          "rank": 109,
+          "rankShown": null,
+          "coverage": 0.3,
+          "nameShown": false,
+          "inBiggerPack": false,
+          "cause": "unresolved-refs",
+          "why": "1 reference(s) to get_index_search_rules/AuthFilter in legacy_search_with_post (line 982) but none resolved, so no callers edge",
+          "refs": {
+            "targets": [
+              "get_index_search_rules",
+              "AuthFilter"
+            ],
+            "callSites": [
+              982
+            ],
+            "extracted": 1,
+            "resolved": 0,
+            "attributedElsewhere": 0
+          }
+        },
+        {
+          "item": "symbol",
+          "name": "search",
+          "file": "crates/meilisearch/src/routes/indexes/facet_search.rs",
+          "line": 302,
+          "indexed": true,
+          "extracted": true,
+          "rank": 52,
+          "rankShown": null,
+          "coverage": 0.3,
+          "nameShown": false,
+          "inBiggerPack": false,
+          "cause": "unresolved-refs",
+          "why": "1 reference(s) to get_index_search_rules/AuthFilter in search (line 324) but none resolved, so no callers edge",
+          "refs": {
+            "targets": [
+              "get_index_search_rules",
+              "AuthFilter"
+            ],
+            "callSites": [
+              324
+            ],
+            "extracted": 1,
+            "resolved": 0,
+            "attributedElsewhere": 0
+          }
+        },
+        {
+          "item": "symbol",
+          "name": "similar",
+          "file": "crates/meilisearch/src/routes/indexes/similar.rs",
+          "line": 204,
+          "indexed": true,
+          "extracted": true,
+          "rank": 145,
+          "rankShown": null,
+          "coverage": 0.3,
+          "nameShown": false,
+          "inBiggerPack": false,
+          "cause": "unresolved-refs",
+          "why": "1 reference(s) to get_index_search_rules/AuthFilter in similar (line 213) but none resolved, so no callers edge",
+          "refs": {
+            "targets": [
+              "get_index_search_rules",
+              "AuthFilter"
+            ],
+            "callSites": [
+              213
+            ],
+            "extracted": 1,
+            "resolved": 0,
+            "attributedElsewhere": 0
+          }
+        }
+      ],
+      "cause": "unresolved-refs",
+      "causes": [
+        "unresolved-refs"
+      ]
+    },
+    {
+      "repo": "laravel",
+      "language": "php",
+      "taskId": "lv-locate-cache-flexible",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "query": "cache stale value refresh background after response lock",
+      "tokens": 1314,
+      "header": "pack \"cache stale value refresh background after response lock\" · 12 hits · 2 bodies · ~1314 tok · +215 more (raise limit or narrow query)",
+      "topHits": [
+        {
+          "path": "src/Illuminate/Cache/LuaScripts.php",
+          "lines": "32-47",
+          "kind": "method",
+          "text": "public static function refreshLock()"
+        },
+        {
+          "path": "src/Illuminate/Cache/Repository.php",
+          "lines": "652-692",
+          "kind": "method",
+          "text": "public function flexible($key, $ttl, $callback, $lock = null, $alwaysDefer = false)"
+        },
+        {
+          "path": "src/Illuminate/Cache/DatabaseLock.php",
+          "lines": "110-119",
+          "kind": "method",
+          "text": "public function refresh($seconds = null)"
+        },
+        {
+          "path": "src/Illuminate/Cache/MemcachedLock.php",
+          "lines": "47-58",
+          "kind": "method",
+          "text": "public function refresh($seconds = null)"
+        },
+        {
+          "path": "src/Illuminate/Cache/Lock.php",
+          "lines": "147-150",
+          "kind": "method",
+          "text": "public function refresh($seconds = null)"
+        },
+        {
+          "path": "src/Illuminate/Cache/Lock.php",
+          "lines": "13-205",
+          "kind": "class",
+          "text": "Cache.Lock"
+        }
+      ],
+      "callers": "callers of #247 LuaScripts.refreshLock · 2 refs in 2 files · complete:",
+      "expected": {
+        "files": [
+          "src/Illuminate/Cache/Repository.php",
+          "src/Illuminate/Support/functions.php"
+        ],
+        "symbols": [
+          "flexible",
+          "defer"
+        ]
+      },
+      "missed": {
+        "files": [
+          "src/Illuminate/Support/functions.php"
+        ],
+        "symbols": []
+      },
+      "targets": [],
+      "preferred": {
+        "name": "Illuminate.Cache.LuaScripts.refreshLock",
+        "path": "src/Illuminate/Cache/LuaScripts.php",
+        "lines": "32-47",
+        "kind": "method",
+        "coverage": 0.38,
+        "fixture": false
+      },
+      "items": [
+        {
+          "item": "symbol",
+          "name": "defer",
+          "file": "src/Illuminate/Support/functions.php",
+          "line": 21,
+          "indexed": true,
+          "extracted": true,
+          "rank": null,
+          "rankShown": null,
+          "coverage": 0,
+          "nameShown": false,
+          "inBiggerPack": false,
+          "cause": "multi-step",
+          "why": "query words cover 0% of it; reachable in one hop from shown #59x flexible (the shown symbol references it)",
+          "linkedTo": "#59x flexible"
+        }
+      ],
+      "cause": "multi-step",
+      "causes": [
+        "multi-step"
+      ]
+    },
+    {
+      "repo": "laravel",
+      "language": "php",
+      "taskId": "lv-explain-http-batch",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "query": "http client batch concurrent requests concurrency progress catch then finally",
+      "tokens": 838,
+      "header": "pack \"http client batch concurrent requests concurrency progress …\" · 12 hits · 5 bodies · ~838 tok · +56 more (raise limit or narrow query)",
+      "topHits": [
+        {
+          "path": "src/Illuminate/Http/Client/Batch.php",
+          "lines": "243-248",
+          "kind": "method",
+          "text": "public function concurrency(int $limit): self"
+        },
+        {
+          "path": "src/Illuminate/Http/Client/Batch.php",
+          "lines": "191-196",
+          "kind": "method",
+          "text": "public function progress(Closure $callback): self"
+        },
+        {
+          "path": "src/Illuminate/Http/Client/Batch.php",
+          "lines": "18-451",
+          "kind": "class",
+          "text": "class Batch"
+        },
+        {
+          "path": "src/Illuminate/Http/Client/Batch.php",
+          "lines": "230-235",
+          "kind": "method",
+          "text": "public function finally(Closure $callback): self"
+        },
+        {
+          "path": "src/Illuminate/Http/Client/Batch.php",
+          "lines": "217-222",
+          "kind": "method",
+          "text": "public function then(Closure $callback): self"
+        },
+        {
+          "path": "src/Illuminate/Http/Client/Batch.php",
+          "lines": "204-209",
+          "kind": "method",
+          "text": "public function catch(Closure $callback): self"
+        }
+      ],
+      "callers": "callers of #9nn Batch.concurrency · 1 ref in 1 file · complete:",
+      "expected": {
+        "files": [
+          "src/Illuminate/Http/Client/Batch.php"
+        ],
+        "symbols": [
+          "send",
+          "concurrency",
+          "hasFailures",
+          "incrementFailedRequests"
+        ]
+      },
+      "missed": {
+        "files": [],
+        "symbols": [
+          "hasFailures"
+        ]
+      },
+      "targets": [],
+      "preferred": {
+        "name": "Illuminate.Http.Client.Batch.concurrency",
+        "path": "src/Illuminate/Http/Client/Batch.php",
+        "lines": "243-248",
+        "kind": "method",
+        "coverage": 0.6,
+        "fixture": false
+      },
+      "items": [
+        {
+          "item": "symbol",
+          "name": "hasFailures",
+          "file": "src/Illuminate/Http/Client/Batch.php",
+          "line": 413,
+          "indexed": true,
+          "extracted": true,
+          "rank": 91,
+          "rankShown": 61,
+          "coverage": 0.3,
+          "nameShown": false,
+          "inBiggerPack": true,
+          "cause": "budget-format",
+          "why": "shown with a 4x budget (rank 91, after diversification 61)"
+        }
+      ],
+      "cause": "budget-format",
+      "causes": [
+        "budget-format"
+      ]
+    },
+    {
+      "repo": "laravel",
+      "language": "php",
+      "taskId": "lv-explain-concurrency",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "query": "concurrency run closures parallel child processes results",
+      "tokens": 1434,
+      "header": "pack \"concurrency run closures parallel child processes results\" · 12 hits · 1 body · ~1434 tok · +74 more (raise limit or narrow query)",
+      "topHits": [
+        {
+          "path": "src/Illuminate/Concurrency/ProcessDriver.php",
+          "lines": "34-77",
+          "kind": "method",
+          "text": "public function run(Closure|array $tasks, CarbonInterval|int|null $timeout = null): array"
+        },
+        {
+          "path": "src/Illuminate/Concurrency/ProcessDriver.php",
+          "lines": "19-98",
+          "kind": "class",
+          "text": "Concurrency.ProcessDriver"
+        },
+        {
+          "path": "src/Illuminate/Concurrency/ForkDriver.php",
+          "lines": "19-32",
+          "kind": "method",
+          "text": "public function run(Closure|array $tasks, CarbonInterval|int|null $timeout = null): array"
+        },
+        {
+          "path": "src/Illuminate/Contracts/Concurrency/Driver.php",
+          "lines": "14-14",
+          "kind": "method",
+          "text": "public function run(Closure|array $tasks, CarbonInterval|int|null $timeout = null): array"
+        },
+        {
+          "path": "src/Illuminate/Concurrency/SyncDriver.php",
+          "lines": "18-23",
+          "kind": "method",
+          "text": "public function run(Closure|array $tasks, CarbonInterval|int|null $timeout = null): array"
+        },
+        {
+          "path": "src/Illuminate/Contracts/Process/ProcessResult.php",
+          "lines": "5-81",
+          "kind": "interface",
+          "text": "interface ProcessResult"
+        }
+      ],
+      "callers": "callers of #7rj ProcessDriver.run (+1 related decl) · 3 refs in 3 files · 93 unresolved same-name refs:",
+      "expected": {
+        "files": [
+          "src/Illuminate/Concurrency/ProcessDriver.php",
+          "src/Illuminate/Concurrency/Console/InvokeSerializedClosureCommand.php"
+        ],
+        "symbols": [
+          "run",
+          "defer",
+          "InvokeSerializedClosureCommand",
+          "handle"
+        ]
+      },
+      "missed": {
+        "files": [
+          "src/Illuminate/Concurrency/Console/InvokeSerializedClosureCommand.php"
+        ],
+        "symbols": [
+          "InvokeSerializedClosureCommand",
+          "handle"
+        ]
+      },
+      "targets": [],
+      "preferred": {
+        "name": "Illuminate.Concurrency.ProcessDriver.run",
+        "path": "src/Illuminate/Concurrency/ProcessDriver.php",
+        "lines": "34-77",
+        "kind": "method",
+        "coverage": 0.71,
+        "fixture": false
+      },
+      "items": [
+        {
+          "item": "symbol",
+          "name": "InvokeSerializedClosureCommand",
+          "file": "src/Illuminate/Concurrency/Console/InvokeSerializedClosureCommand.php",
+          "line": 11,
+          "indexed": true,
+          "extracted": true,
+          "rank": 25,
+          "rankShown": 24,
+          "coverage": 0.29,
+          "nameShown": false,
+          "inBiggerPack": true,
+          "cause": "budget-format",
+          "why": "shown with a 4x budget (rank 25, after diversification 24)"
+        },
+        {
+          "item": "symbol",
+          "name": "handle",
+          "file": "src/Illuminate/Concurrency/Console/InvokeSerializedClosureCommand.php",
+          "line": 41,
+          "indexed": true,
+          "extracted": true,
+          "rank": 87,
+          "rankShown": 74,
+          "coverage": 0.29,
+          "nameShown": false,
+          "inBiggerPack": true,
+          "cause": "budget-format",
+          "why": "shown with a 4x budget (rank 87, after diversification 74)"
+        }
+      ],
+      "cause": "budget-format",
+      "causes": [
+        "budget-format"
+      ]
+    },
+    {
+      "repo": "discourse",
+      "language": "ruby",
+      "taskId": "ds-explain-upcoming-promotion",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "query": "upcoming change automatic promotion status notify admins once",
+      "tokens": 1325,
+      "header": "pack \"upcoming change automatic promotion status notify admins on…\" · 12 hits · 5 bodies · ~1325 tok · +89 more (raise limit or narrow query)",
+      "topHits": [
+        {
+          "path": "app/services/upcoming_changes/notify_promotion.rb",
+          "lines": "24-166",
+          "kind": "class",
+          "text": "class UpcomingChanges::NotifyPromotion"
+        },
+        {
+          "path": "app/services/upcoming_changes/notify_promotion.rb",
+          "lines": "109-111",
+          "kind": "method",
+          "text": "def notify_admins?(params:)"
+        },
+        {
+          "path": "app/services/upcoming_changes/notify_promotion.rb",
+          "lines": "136-146",
+          "kind": "method",
+          "text": "def notify_admins(params:, bulk_notification_new_records:, existing_notifications:)"
+        },
+        {
+          "path": "app/services/upcoming_changes/notify_promotion.rb",
+          "lines": "89-91",
+          "kind": "method",
+          "text": "def should_notify_admins(params:)"
+        },
+        {
+          "path": "app/services/upcoming_changes/notify_promotion.rb",
+          "lines": "156-161",
+          "kind": "method",
+          "text": "NotifyPromotion.create_automatically_promoted_event"
+        },
+        {
+          "path": "app/services/upcoming_changes/notify_promotions.rb",
+          "lines": "5-94",
+          "kind": "class",
+          "text": "class UpcomingChanges::NotifyPromotions"
+        }
+      ],
+      "callers": "callers of #aqk NotifyPromotion: none found",
+      "expected": {
+        "files": [
+          "app/services/upcoming_changes/notify_promotion.rb",
+          "lib/upcoming_changes.rb"
+        ],
+        "symbols": [
+          "NotifyPromotion",
+          "promotion_not_already_handled",
+          "admin_has_not_manually_toggled",
+          "notify_admins?",
+          "meets_or_exceeds_status?"
+        ]
+      },
+      "missed": {
+        "files": [
+          "lib/upcoming_changes.rb"
+        ],
+        "symbols": [
+          "meets_or_exceeds_status?"
+        ]
+      },
+      "targets": [],
+      "preferred": {
+        "name": "NotifyPromotion",
+        "path": "app/services/upcoming_changes/notify_promotion.rb",
+        "lines": "24-166",
+        "kind": "class",
+        "coverage": 0.75,
+        "fixture": false
+      },
+      "items": [
+        {
+          "item": "symbol",
+          "name": "meets_or_exceeds_status?",
+          "file": "lib/upcoming_changes.rb",
+          "line": 164,
+          "indexed": true,
+          "extracted": true,
+          "rank": 87,
+          "rankShown": null,
+          "coverage": 0.38,
+          "nameShown": false,
+          "inBiggerPack": false,
+          "cause": "ranking",
+          "why": "ranked 87 of 541 candidates (pack lists 12 pointers; dropped by the per-file cap: 3 hits of this file already listed); query words cover 38% of it; top candidate NotifyPromotion covers 75%"
+        }
+      ],
+      "cause": "ranking",
+      "causes": [
+        "ranking"
+      ]
+    },
+    {
+      "repo": "playframework",
+      "language": "scala",
+      "taskId": "pf-locate-jwt-session",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "query": "session cookie jwt expired clock skew signature algorithm legacy signed cookie",
+      "tokens": 1305,
+      "header": "pack \"session cookie jwt expired clock skew signature algorithm l…\" · 12 hits · 5 bodies · ~1305 tok · +38 more (raise limit or narrow query)",
+      "topHits": [
+        {
+          "path": "core/play/src/main/scala/play/api/http/HttpConfiguration.scala",
+          "lines": "371-376",
+          "kind": "class",
+          "text": "case class JWTConfiguration( signatureAlgorithm: String = \"HS256\", expiresAfter: Option[FiniteDuration] = Non…"
+        },
+        {
+          "path": "core/play/src/main/scala/play/api/http/HttpConfiguration.scala",
+          "lines": "392-411",
+          "kind": "method",
+          "text": "private def getSignatureAlgorithm( config: Configuration, secretConfiguration: SecretConfiguration, parent: S…"
+        },
+        {
+          "path": "core/play/src/main/scala/play/api/http/HttpConfiguration.scala",
+          "lines": "106-115",
+          "kind": "class",
+          "text": "SessionConfiguration"
+        },
+        {
+          "path": "core/play/src/main/scala/play/api/mvc/Session.scala",
+          "lines": "138-142",
+          "kind": "class",
+          "text": "class LegacySessionCookieBaker @Inject() (val config: SessionConfiguration, val cookieSigner: CookieSigner) e…"
+        },
+        {
+          "path": "core/play/src/main/scala/play/api/mvc/Session.scala",
+          "lines": "120-130",
+          "kind": "class",
+          "text": "class DefaultSessionCookieBaker @Inject() ( val config: SessionConfiguration, val secretConfiguration: Secret…"
+        },
+        {
+          "path": "core/play/src/main/scala/play/api/mvc/Cookie.scala",
+          "lines": "731-731",
+          "kind": "property",
+          "text": "private val signatureAlgorithm = SignatureAlgorithm.forName(jwtConfigurat…"
+        }
+      ],
+      "callers": "callers of #60f JWTConfiguration · 10 refs in 3 files · complete:",
+      "expected": {
+        "files": [
+          "core/play/src/main/scala/play/api/mvc/Cookie.scala"
+        ],
+        "symbols": [
+          "JWTCookieDataCodec",
+          "JWTFormatter",
+          "parse",
+          "FallbackCookieDataCodec"
+        ]
+      },
+      "missed": {
+        "files": [],
+        "symbols": [
+          "parse"
+        ]
+      },
+      "targets": [],
+      "preferred": {
+        "name": "play.api.http.JWTConfiguration",
+        "path": "core/play/src/main/scala/play/api/http/HttpConfiguration.scala",
+        "lines": "371-376",
+        "kind": "class",
+        "coverage": 0.7,
+        "fixture": false
+      },
+      "items": [
+        {
+          "item": "symbol",
+          "name": "parse",
+          "file": "core/play/src/main/scala/play/api/mvc/Cookie.scala",
+          "line": 752,
+          "indexed": true,
+          "extracted": true,
+          "rank": 85,
+          "rankShown": 73,
+          "coverage": 0.2,
+          "nameShown": false,
+          "inBiggerPack": false,
+          "cause": "ranking",
+          "why": "ranked 85 of 401 candidates (pack lists 12 pointers; 73 after diversification); query words cover 20% of it; top candidate play.api.http.JWTConfiguration covers 70%"
+        }
+      ],
+      "cause": "ranking",
+      "causes": [
+        "ranking"
+      ]
+    },
+    {
+      "repo": "playframework",
+      "language": "scala",
+      "taskId": "pf-explain-gzip",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "query": "gzip filter compress response threshold chunked accept encoding",
+      "tokens": 1364,
+      "header": "pack \"gzip filter compress response threshold chunked accept enco…\" · 12 hits · 3 bodies · ~1364 tok · +26 more (raise limit or narrow query)",
+      "topHits": [
+        {
+          "path": "web/play-filters-helpers/src/main/scala/play/filters/gzip/GzipFilter.scala",
+          "lines": "203-225",
+          "kind": "class",
+          "text": "case class GzipFilterConfig( bufferSize: Int = 8192, chunkedThreshold: Int = 102400, threshold: Int = 0, shou…"
+        },
+        {
+          "path": "web/play-filters-helpers/src/main/scala/play/filters/gzip/GzipFilter.scala",
+          "lines": "218-218",
+          "kind": "method",
+          "text": "def withChunkedThreshold(threshold: Int): GzipFilterConfig"
+        },
+        {
+          "path": "web/play-filters-helpers/src/main/scala/play/filters/gzip/GzipFilter.scala",
+          "lines": "54-61",
+          "kind": "method",
+          "text": "def this( bufferSize: Int = 8192, chunkedThreshold: Int = 102400, threshold: Int = 0, shouldGzip: (RequestHea…"
+        },
+        {
+          "path": "web/play-filters-helpers/src/main/scala/play/filters/gzip/GzipFilter.scala",
+          "lines": "50-191",
+          "kind": "class",
+          "text": "@Singleton class GzipFilter @Inject() (config: GzipFilterConfig)(implicit mat: Materializer) extends Essentia…"
+        },
+        {
+          "path": "web/play-filters-helpers/src/main/scala/play/filters/gzip/GzipFilter.scala",
+          "lines": "170-179",
+          "kind": "method",
+          "text": "private def shouldCompress(result: Result)"
+        },
+        {
+          "path": "web/play-filters-helpers/src/main/scala/play/filters/gzip/GzipFilter.scala",
+          "lines": "186-186",
+          "kind": "method",
+          "text": "private def isNotAlreadyCompressed(header: ResponseHeader)"
+        }
+      ],
+      "callers": "callers of #d2h GzipFilterConfig · 9 refs in 3 files · complete:",
+      "expected": {
+        "files": [
+          "web/play-filters-helpers/src/main/scala/play/filters/gzip/GzipFilter.scala"
+        ],
+        "symbols": [
+          "handleResult",
+          "shouldCompress",
+          "mayCompress",
+          "gzipIsAcceptedAndPreferredBy"
+        ]
+      },
+      "missed": {
+        "files": [],
+        "symbols": [
+          "handleResult"
+        ]
+      },
+      "targets": [],
+      "preferred": {
+        "name": "play.filters.gzip.GzipFilterConfig",
+        "path": "web/play-filters-helpers/src/main/scala/play/filters/gzip/GzipFilter.scala",
+        "lines": "203-225",
+        "kind": "class",
+        "coverage": 0.63,
+        "fixture": false
+      },
+      "items": [
+        {
+          "item": "symbol",
+          "name": "handleResult",
+          "file": "web/play-filters-helpers/src/main/scala/play/filters/gzip/GzipFilter.scala",
+          "line": 77,
+          "indexed": true,
+          "extracted": true,
+          "rank": 80,
+          "rankShown": null,
+          "coverage": 0.25,
+          "nameShown": false,
+          "inBiggerPack": false,
+          "cause": "multi-step",
+          "why": "query words cover 25% of it; reachable in one hop from shown #d2d shouldCompress (it references the shown symbol)",
+          "linkedTo": "#d2d shouldCompress"
+        }
+      ],
+      "cause": "multi-step",
+      "causes": [
+        "multi-step"
+      ]
+    },
+    {
+      "repo": "playframework",
+      "language": "scala",
+      "taskId": "pf-explain-cached",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "query": "Cached action result cache etag expires not modified",
+      "tokens": 1373,
+      "header": "pack \"Cached action result cache etag expires not modified\" · 12 hits · 2 bodies · ~1373 tok · +119 more (raise limit or narrow query)",
+      "topHits": [
+        {
+          "path": "core/play/src/main/scala/play/api/controllers/Assets.scala",
+          "lines": "738-761",
+          "kind": "method",
+          "text": "private def maybeNotModified( request: RequestHeader, assetInfo: AssetInfo, aggressiveCaching: Boolean ): Opt…"
+        },
+        {
+          "path": "core/play/src/main/scala/play/api/controllers/Assets.scala",
+          "lines": "763-772",
+          "kind": "method",
+          "text": "private def cacheableResult[A <: Result](assetInfo: AssetInfo, aggressiveCaching: Boolean, r: A): Result"
+        },
+        {
+          "path": "cache/play-cache/src/main/java/play/cache/CachedAction.java",
+          "lines": "14-28",
+          "kind": "class",
+          "text": "public class CachedAction extends Action<Cached>"
+        },
+        {
+          "path": "cache/play-cache/src/main/java/play/cache/Cached.java",
+          "lines": "15-32",
+          "kind": "interface",
+          "text": "@With(CachedAction.class) @Target({ElementType.TYPE, ElementType.METHOD}) @Retention(RetentionPolicy.RUNTIME)…"
+        },
+        {
+          "path": "cache/play-cache/src/main/scala/play/api/cache/Cached.scala",
+          "lines": "26-118",
+          "kind": "class",
+          "text": "class Cached @Inject() (cache: AsyncCacheApi)(implicit materializer: Materializer)"
+        },
+        {
+          "path": "cache/play-cache/src/main/scala/play/api/cache/Cached.scala",
+          "lines": "209-231",
+          "kind": "method",
+          "text": "private def handleResult(result: Result, etagKey: String, resultKey: String): Future[Result]"
+        }
+      ],
+      "callers": "callers of #rn AssetsBuilder.maybeNotModified · 1 ref in 1 file · complete:",
+      "expected": {
+        "files": [
+          "cache/play-cache/src/main/scala/play/api/cache/Cached.scala"
+        ],
+        "symbols": [
+          "CachedBuilder",
+          "build",
+          "handleResult",
+          "cachingWithEternity"
+        ]
+      },
+      "missed": {
+        "files": [],
+        "symbols": [
+          "cachingWithEternity"
+        ]
+      },
+      "targets": [],
+      "preferred": {
+        "name": "controllers.AssetsBuilder.maybeNotModified",
+        "path": "core/play/src/main/scala/play/api/controllers/Assets.scala",
+        "lines": "738-761",
+        "kind": "method",
+        "coverage": 0.5,
+        "fixture": false
+      },
+      "items": [
+        {
+          "item": "symbol",
+          "name": "cachingWithEternity",
+          "file": "cache/play-cache/src/main/scala/play/api/cache/Cached.scala",
+          "line": 199,
+          "indexed": true,
+          "extracted": true,
+          "rank": 251,
+          "rankShown": 146,
+          "coverage": 0.25,
+          "nameShown": false,
+          "inBiggerPack": false,
+          "cause": "ranking",
+          "why": "ranked 251 of 445 candidates (pack lists 12 pointers; 146 after diversification); query words cover 25% of it; top candidate controllers.AssetsBuilder.maybeNotModified covers 50%"
+        }
+      ],
+      "cause": "ranking",
+      "causes": [
+        "ranking"
+      ]
+    },
+    {
+      "repo": "playframework",
+      "language": "scala",
+      "taskId": "pf-usage-assets-digest",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "query": "assets controller digest fingerprint",
+      "tokens": 1299,
+      "header": "pack \"assets controller digest fingerprint\" · 12 hits · 3 bodies · ~1299 tok · +107 more (raise limit or narrow query)",
+      "topHits": [
+        {
+          "path": "core/play/src/main/scala/play/api/controllers/Assets.scala",
+          "lines": "333-333",
+          "kind": "method",
+          "text": "private[controllers] def digest(path: String): Option[String]"
+        },
+        {
+          "path": "core/play/src/main/scala/play/api/controllers/Assets.scala",
+          "lines": "322-323",
+          "kind": "method",
+          "text": "private[controllers] override def digest(path: String)"
+        },
+        {
+          "path": "core/play/src/main/scala/play/api/controllers/Assets.scala",
+          "lines": "513-599",
+          "kind": "class",
+          "text": "private class AssetInfo( val name: String, val url: URL, val compressedUrls: Seq[(String, URL)], val digest: …"
+        },
+        {
+          "path": "core/play/src/main/scala/play/api/controllers/Assets.scala",
+          "lines": "687-687",
+          "kind": "class",
+          "text": "case class Asset(name: String)"
+        },
+        {
+          "path": "core/play/src/main/scala/play/api/controllers/Assets.scala",
+          "lines": "634-716",
+          "kind": "class",
+          "text": "object Assets"
+        },
+        {
+          "path": "core/play/src/main/scala/play/api/controllers/Assets.scala",
+          "lines": "331-338",
+          "kind": "trait",
+          "text": "trait AssetsMetadata"
+        }
+      ],
+      "callers": "callers of #q7 AssetsMetadata.digest (+2 related decls) · 2 refs in 1 file · 7 unresolved same-name refs:",
+      "expected": {
+        "files": [
+          "core/play/src/main/scala/play/api/controllers/Assets.scala"
+        ],
+        "symbols": [
+          "findAssetPath",
+          "assetInfoFromResource",
+          "versioned",
+          "StaticAssetsMetadata"
+        ]
+      },
+      "missed": {
+        "files": [],
+        "symbols": [
+          "findAssetPath",
+          "versioned"
+        ]
+      },
+      "targets": [
+        "digest"
+      ],
+      "preferred": {
+        "name": "controllers.AssetsMetadata.digest",
+        "path": "core/play/src/main/scala/play/api/controllers/Assets.scala",
+        "lines": "333-333",
+        "kind": "method",
+        "coverage": 0.75,
+        "fixture": false
+      },
+      "items": [
+        {
+          "item": "symbol",
+          "name": "findAssetPath",
+          "file": "core/play/src/main/scala/play/api/controllers/Assets.scala",
+          "line": 424,
+          "indexed": true,
+          "extracted": false,
+          "rank": null,
+          "rankShown": null,
+          "coverage": null,
+          "nameShown": false,
+          "inBiggerPack": false,
+          "cause": "extraction",
+          "why": "`findAssetPath` is indexed in this file but no range covers line 424 (method 362-362)",
+          "extractedElsewhere": [
+            "method 362-362"
+          ],
+          "parseErrorAtLine": false
+        },
+        {
+          "item": "symbol",
+          "name": "versioned",
+          "file": "core/play/src/main/scala/play/api/controllers/Assets.scala",
+          "line": 794,
+          "indexed": true,
+          "extracted": true,
+          "rank": 49,
+          "rankShown": 45,
+          "coverage": 0.5,
+          "nameShown": false,
+          "inBiggerPack": false,
+          "cause": "unresolved-refs",
+          "why": "1 reference(s) to digest in versioned (line 802) but none resolved, so no callers edge",
+          "refs": {
+            "targets": [
+              "digest"
+            ],
+            "callSites": [
+              802
+            ],
+            "extracted": 1,
+            "resolved": 0,
+            "attributedElsewhere": 0
+          }
+        }
+      ],
+      "cause": "extraction",
+      "causes": [
+        "extraction",
+        "unresolved-refs"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,118 @@
+{
+  "label": "kirograph",
+  "tool": "kirograph",
+  "package": "kirograph",
+  "version": "1.4.0",
+  "mode": "default",
+  "repo": {
+    "name": "jellyfin",
+    "url": "https://github.com/jellyfin/jellyfin.git",
+    "tag": "v10.11.11",
+    "commit": "1fbd8739292cce610231be93daf43368733edf63",
+    "language": "c_sharp",
+    "path": "bench/repos/jellyfin"
+  },
+  "headCommit": "1fbd8739292cce610231be93daf43368733edf63",
+  "commitMatchesTasks": true,
+  "date": "2026-10-09T13:11:46.321Z",
+  "image": "kopt-bench/kirograph:1.4.0",
+  "imageId": "sha256:bc769b34b739a6d6b3ed1f2954ed9df3e387e6c6dcfc597528ca16d232dac57e",
+  "engine": "docker",
+  "limits": "memory=3g cpus=8",
+  "cgroupMemory": {
+    "maxBytes": 3221225472,
+    "peakBytes": 576114688,
+    "oomKills": 0
+  },
+  "container": {
+    "node": "v22.23.3",
+    "arch": "arm64",
+    "platform": "linux",
+    "cpus": 10,
+    "memBytes": 8214851584,
+    "network": "none"
+  },
+  "primaryTool": "kirograph_context",
+  "toolArgsExample": {
+    "task": "<input>"
+  },
+  "serverCommand": {
+    "command": "kirograph",
+    "args": [
+      "serve",
+      "--mcp",
+      "--path",
+      "/work/<repo>"
+    ]
+  },
+  "oneSessionPerTask": true,
+  "indexOk": true,
+  "indexMs": 293647,
+  "indexSteps": [
+    {
+      "command": "kirograph init /work/jellyfin",
+      "ms": 586,
+      "exit": 0,
+      "signal": null,
+      "oomKills": 0
+    },
+    {
+      "command": "kirograph index /work/jellyfin",
+      "ms": 293061,
+      "exit": 0,
+      "signal": null,
+      "oomKills": 0
+    }
+  ],
+  "copyMs": 4543,
+  "indexDirs": [
+    "<repo>/.kirograph"
+  ],
+  "indexSizeBytes": 74125131,
+  "modelBytes": 0,
+  "indexStatus": "Graph\n  Files      1983\n  Symbols    33573\n  Edges      64272\n  Frameworks aspnet\n\n  By kind\n  ┌───────────┬──────────────────┐\n  │ variable  │ 12900            │\n  ├───────────┼──────────────────┤\n  │ import    │ 11317            │\n  ├───────────┼──────────────────┤\n  │ method    │ 7343             │\n  ├───────────┼──────────────────┤\n  │ class     │ 1685             │\n  ├───────────┼──────────────────┤\n  │ interface │ 196              │\n  ├───────────┼──────────────────┤\n  │ enum      │ 132              │\n  └───────────┴──────────────────┘\n\n  By language\n  ┌────────┬──────────────────┐\n  │ csharp │ 1960             │\n  ├────────┼──────────────────┤\n  │ yaml   │ 11               │\n  ├────────┼──────────────────┤\n  │ html   │ 7                │\n  ├────────┼──────────────────┤\n  │ bash   │ 3                │\n  ├────────┼──────────────────┤\n  │ css    │ 2                │\n  └────────┴──────────────────┘\n\n  Sync\n  Status     idle\n  Pending    1 files pending\n\n  Semantic Search\n  Status     disabled",
+  "surface": {
+    "serverInfo": {
+      "name": "kirograph",
+      "version": "0.1.0"
+    },
+    "toolCount": 7,
+    "toolNames": [
+      "kirograph_search",
+      "kirograph_context",
+      "kirograph_node",
+      "kirograph_gain",
+      "kirograph_read",
+      "kirograph_retrieve",
+      "kirograph_budget"
+    ],
+    "toolsChars": 4418,
+    "toolsEstTokens": 1473,
+    "instructionsChars": 0,
+    "instructionsEstTokens": 0,
+    "primaryToolListed": true,
+    "file": "kirograph.surface.json"
+  },
+  "inputs": {
+    "search": {
+      "file": "kirograph-jellyfin.jsonl",
+      "tasks": 12,
+      "failures": 0,
+      "queryMsMedian": 113,
+      "queryMsP90": 187,
+      "startupMsMedian": 357
+    },
+    "question": {
+      "file": "kirograph-jellyfin-question.jsonl",
+      "tasks": 12,
+      "failures": 7,
+      "queryMsMedian": 48,
+      "queryMsP90": 127,
+      "startupMsMedian": 345
+    }
+  },
+  "charsPerToken": 3,
+  "errors": [
+    "7/12 question queries failed or returned isError"
+  ]
+}

@@ -21,10 +21,11 @@ import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, readdirSync, rmdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { isUnsafeRoot, type KoptConfig } from '../core/config.js';
+import { writePrivateFile } from '../telemetry/fsutil.js';
 import { hookCommandLine, resolveKoptCommand, type KoptCommand } from './command.js';
-import { detectIde, readSurfacesCache } from './detect.js';
+import { detectIde, readSurfacesCache, writeSurfacesCache, type IdeInfo } from './detect.js';
 import { readText, sha1 } from './plan.js';
-import { hostEnv, type HostEnv } from './paths.js';
+import { hostEnv, isFile, readJsonFile, type HostEnv } from './paths.js';
 
 export const LEGACY_PREFIX = 'kopt-';
 export const LEGACY_EXCLUDE_MARK = '# kopt (Kiro IDE 0.x hooks, written by the kopt MCP server)';
@@ -54,13 +55,34 @@ export function legacyHookFiles(cmd: KoptCommand): Record<string, LegacyHookFile
 
 export type LegacyMode = 'auto' | 'on' | 'off';
 
+/** A cached "no IDE found" result is re-checked after this long. */
+const SURFACES_CACHE_TTL_MS = 24 * 3600_000;
+
+/**
+ * The installed Kiro IDE, from the surfaces cache kopt setup / doctor write, kept current: the IDE updates itself
+ * (0.x -> 1.x), so the version is re-read from the cached package.json (one small file); a cache without an IDE, or
+ * whose package.json is gone, is re-detected once it is a day old.
+ */
+export function currentIde(userDir: string, h: HostEnv = hostEnv(), now = Date.now()): IdeInfo | undefined {
+  const cached = readSurfacesCache(userDir);
+  const ide = cached?.ide;
+  if (ide?.path && isFile(ide.path)) {
+    const v = readJsonFile<{ version?: string }>(ide.path)?.version;
+    const m = typeof v === 'string' ? /(\d+)\.(\d+)\.(\d+)/.exec(v) : null;
+    return m ? { ...ide, version: m[0], major: Number(m[1]) } : ide;
+  }
+  if (cached && now - (cached.at ?? 0) < SURFACES_CACHE_TTL_MS) return ide;
+  const found = detectIde(h);
+  if (cached || found) writeSurfacesCache(userDir, { ...(cached ?? {}), ide: found });
+  return found;
+}
+
 /** Should the MCP server write legacy hooks into workspaces on this machine? */
 export function legacyHooksWanted(config: KoptConfig, h: HostEnv = hostEnv()): boolean {
   const mode: LegacyMode = config.kiro?.legacyWorkspaceHooks ?? 'auto';
   if (mode === 'off') return false;
   if (mode === 'on') return true;
-  const cached = readSurfacesCache(config.userDir);
-  const ide = cached?.ide ?? (cached ? undefined : detectIde(h));
+  const ide = currentIde(config.userDir, h);
   return !!ide && ide.major < 1;
 }
 
@@ -117,8 +139,20 @@ export function legacyWorkspaces(userDir: string): Record<string, Record<string,
 }
 
 function saveRegistry(userDir: string, reg: Record<string, Record<string, string>>): void {
-  mkdirSync(userDir, { recursive: true });
-  writeFileSync(registryPath(userDir), JSON.stringify(reg, null, 2) + '\n');
+  writePrivateFile(registryPath(userDir), JSON.stringify(reg, null, 2) + '\n');
+}
+
+/** Drop a workspace from the registry (its hooks were removed). */
+export function forgetLegacyWorkspace(userDir: string, root: string): void {
+  const reg = legacyWorkspaces(userDir);
+  if (!(root in reg)) return;
+  delete reg[root];
+  try {
+    if (Object.keys(reg).length) saveRegistry(userDir, reg);
+    else rmSync(registryPath(userDir), { force: true });
+  } catch {
+    // best effort
+  }
 }
 
 export interface LegacyResult {
@@ -179,7 +213,7 @@ export function removeLegacyWorkspaceHooks(root: string, dryRun = false): string
   for (const n of names) {
     const path = join(dir, n);
     const text = readText(path) ?? '';
-    if (!/kopt(\.cmd)? hook|kopt[\\/]dist[\\/]|bin\.js['"]? hook/.test(text)) continue; // not ours
+    if (!/kopt(\.cmd)?\\?['"]? hook|kopt[\\/]dist[\\/]|bin\.js\\?['"]? hook/.test(text)) continue; // not ours
     removed.push(path);
     if (!dryRun) rmSync(path, { force: true });
   }

@@ -1,0 +1,211 @@
+{
+  "repo": {
+    "name": "discourse",
+    "url": "https://github.com/discourse/discourse.git",
+    "tag": "v2026.9.0",
+    "commit": "343b20f97ef5f6bd70826ee0e993ba348b210fd5",
+    "language": "ruby",
+    "path": "bench/repos/discourse"
+  },
+  "notes": "Gold = production Ruby code (app/, lib/, config/, plugins/*/lib), specs excluded. Most tasks target features added in 2026 that models cannot answer from memory: the built-in MCP server and its OAuth flow (lib/discourse_mcp), passwordless email login codes, the nested-replies hot sort and upcoming-change promotion. Several symbols are only reachable through Rails/Service::Base metaprogramming (`rate_limit` after_create blocks, `model :x` -> `fetch_x`, `policy :name` steps). Ruby bang/predicate names (`consume!`, `should_autosilence?`) are written with their suffix. `search` is the phrase an agent would derive from the question (English, no identifier the developer did not give). Re-check with `kopt bench discourse --verify`.",
+  "tasks": [
+    {
+      "id": "ds-locate-mcp-pkce",
+      "kind": "locate",
+      "lang": "en",
+      "question": "When an MCP client exchanges an OAuth authorization code for tokens on Discourse's built-in MCP server, where is the PKCE code_verifier checked against the stored code challenge?",
+      "search": "mcp oauth authorization code exchange pkce code verifier challenge",
+      "gold": {
+        "files": ["lib/discourse_mcp/oauth.rb"],
+        "symbols": [
+          { "name": "exchange_code!", "file": "lib/discourse_mcp/oauth.rb", "line": 264, "kind": "method" },
+          { "name": "secure_compare_challenge", "file": "lib/discourse_mcp/oauth.rb", "line": 391, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read lib/discourse_mcp/oauth.rb@v2026.9.0: DiscourseMcp::OAuth::TokenIssuer.exchange_code! (264) looks the code up by digest, locks it, rejects consumed/expired codes, client_id, redirect_uri and resource mismatches, then calls secure_compare_challenge (391: verifier must match PKCE_VERIFIER_PATTERN, S256 = urlsafe base64 of SHA256(verifier) compared with secure_compare) before marking the code consumed and issuing access and refresh tokens."
+    },
+    {
+      "id": "ds-locate-nested-hot-score",
+      "kind": "locate",
+      "lang": "en",
+      "question": "In the nested (threaded) replies view, where is the 'hot' score of a reply computed from its likes, its direct replies and a freshness bonus that decays with a half-life?",
+      "search": "nested replies hot score likes replies freshness bonus half life",
+      "gold": {
+        "files": ["lib/nested_replies/hot_score_calculator.rb"],
+        "symbols": [
+          { "name": "score_for", "file": "lib/nested_replies/hot_score_calculator.rb", "line": 64, "kind": "method" },
+          { "name": "hot_score_sql", "file": "lib/nested_replies/hot_score_calculator.rb", "line": 41, "kind": "method" },
+          { "name": "formula_settings", "file": "lib/nested_replies/hot_score_calculator.rb", "line": 13, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read lib/nested_replies/hot_score_calculator.rb@v2026.9.0: NestedReplies::HotScoreCalculator.score_for (64, Ruby) and hot_score_sql (41, the same formula as a SQL CASE expression) compute ln(1 + max(like_score*like_weight + direct_replies*reply_weight, 0)) + freshness_max_bonus * 0.5^(age / half_life) for public posts, HOT_SCORE_FLOOR otherwise; the weights come from formula_settings (13, nested_replies_hot_* site settings)."
+    },
+    {
+      "id": "ds-locate-auto-silence",
+      "kind": "locate",
+      "lang": "en",
+      "question": "Where does Discourse decide to automatically silence a new user whose posts were flagged as spam by several different users, and how is the spam score threshold computed?",
+      "search": "automatically silence new user spam flags score threshold",
+      "gold": {
+        "files": ["app/services/spam_rule/auto_silence.rb", "app/models/reviewable.rb"],
+        "symbols": [
+          { "name": "should_autosilence?", "file": "app/services/spam_rule/auto_silence.rb", "line": 19, "kind": "method" },
+          { "name": "user_spam_stats", "file": "app/services/spam_rule/auto_silence.rb", "line": 29, "kind": "method" },
+          { "name": "spam_score_to_silence_new_user", "file": "app/models/reviewable.rb", "line": 317, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read @v2026.9.0: SpamRule::AutoSilence#should_autosilence? (auto_silence.rb:19) skips staged users and TL1+, then requires num_users_to_silence_new_user > 0, total_spam_score >= Reviewable.spam_score_to_silence_new_user and spam_user_count >= num_users_to_silence_new_user; user_spam_stats (29) sums pending/agreed spam reviewable scores and counts distinct flaggers in SQL; Reviewable.spam_score_to_silence_new_user (reviewable.rb:317) = sensitivity_score(silence_new_user_sensitivity, scale: 0.6). perform calls silence_user -> UserSilencer.auto_silence."
+    },
+    {
+      "id": "ds-locate-login-code-verify",
+      "kind": "locate",
+      "lang": "en",
+      "question": "With passwordless sign-in by emailed code, where is a submitted 6-digit login code checked, and how are wrong guesses counted so the code cannot be brute-forced?",
+      "search": "email login code verify submitted code attempts brute force hash",
+      "gold": {
+        "files": ["app/models/email_login_code.rb"],
+        "symbols": [
+          { "name": "verify", "file": "app/models/email_login_code.rb", "line": 60, "kind": "method" },
+          { "name": "hash_code", "file": "app/models/email_login_code.rb", "line": 45, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read app/models/email_login_code.rb@v2026.9.0: EmailLoginCode#verify (60) returns false for consumed/expired codes, burns one attempt atomically with UPDATE ... SET attempts = attempts + 1 WHERE attempts < MAX_ATTEMPTS (5) RETURNING attempts, then secure_compares code_hash with hash_code(submitted) and resets attempts to 0 on success; hash_code (45) is an HMAC-SHA256 keyed with GlobalSetting.safe_secret_key_base so a DB dump cannot enumerate the 6-digit space. The `active` scope also excludes attempts >= MAX_ATTEMPTS."
+    },
+    {
+      "id": "ds-explain-mcp-refresh-rotation",
+      "kind": "explain",
+      "lang": "en",
+      "question": "How does the built-in MCP server rotate OAuth refresh tokens, and what happens when an already-used refresh token is presented again (replay)?",
+      "search": "mcp oauth refresh token rotation replay family revoke",
+      "gold": {
+        "files": ["lib/discourse_mcp/oauth.rb", "app/models/mcp_oauth_refresh_token.rb"],
+        "symbols": [
+          { "name": "refresh!", "file": "lib/discourse_mcp/oauth.rb", "line": 301, "kind": "method" },
+          { "name": "issue!", "file": "app/models/mcp_oauth_refresh_token.rb", "line": 15, "kind": "method" },
+          { "name": "revoke_family!", "file": "app/models/mcp_oauth_refresh_token.rb", "line": 36, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read @v2026.9.0: TokenIssuer.refresh! (oauth.rb:301) locks the token row; if consumed_at is set it calls record.revoke_family! and raises InvalidAccess (replay); otherwise it checks revocation/expiry, client and resource, allows only narrowing scopes that keep the initial scope, validates the authorization and issues a new access token plus a new refresh token with the same family_id and parent: record. McpOauthRefreshToken.issue! (15) inherits the parent's expires_at and marks the parent consumed with replacement_id; revoke_family! (36) revokes every unrevoked token of the family."
+    },
+    {
+      "id": "ds-explain-upcoming-promotion",
+      "kind": "explain",
+      "lang": "en",
+      "question": "When an upcoming change reaches the configured promotion status, how does Discourse decide whether to promote it automatically, and how does it make sure admins are notified only once?",
+      "search": "upcoming change automatic promotion status notify admins once",
+      "gold": {
+        "files": ["app/services/upcoming_changes/notify_promotion.rb", "lib/upcoming_changes.rb"],
+        "symbols": [
+          { "name": "NotifyPromotion", "file": "app/services/upcoming_changes/notify_promotion.rb", "line": 24, "kind": "class" },
+          { "name": "promotion_not_already_handled", "file": "app/services/upcoming_changes/notify_promotion.rb", "line": 81, "kind": "method" },
+          { "name": "admin_has_not_manually_toggled", "file": "app/services/upcoming_changes/notify_promotion.rb", "line": 85, "kind": "method" },
+          { "name": "notify_admins?", "file": "app/services/upcoming_changes/notify_promotion.rb", "line": 109, "kind": "method" },
+          { "name": "meets_or_exceeds_status?", "file": "lib/upcoming_changes.rb", "line": 164, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read @v2026.9.0: UpcomingChanges::NotifyPromotion (notify_promotion.rb:24, Service::Base) chains policies setting_is_available, change_should_be_displayed, change_dependencies_met, meets_or_exceeds_status (-> UpcomingChanges.meets_or_exceeds_status?, lib/upcoming_changes.rb:164, compares status values with promote_upcoming_changes_on_status), promotion_not_already_handled (81, no automatically_promoted event yet), admin_has_not_manually_toggled (85) and should_notify_admins; then logs the promotion, notifies admins only if notify_admins? (109, no admins_notified_automatic_promotion event) and records the automatically_promoted event before triggering :upcoming_change_enabled. Called per setting by UpcomingChanges::NotifyPromotions from the CheckUpcomingChanges job."
+    },
+    {
+      "id": "ds-explain-rate-limit-create",
+      "kind": "explain",
+      "lang": "en",
+      "question": "How does an ActiveRecord model that declares `rate_limit` consume a rate-limiter slot when a record is created, and give the slot back when the record is destroyed or the transaction rolls back?",
+      "search": "rate_limit model create record limiter rollback destroy",
+      "gold": {
+        "files": ["lib/rate_limiter/on_create_record.rb", "lib/rate_limiter.rb"],
+        "symbols": [
+          { "name": "rate_limit", "file": "lib/rate_limiter/on_create_record.rb", "line": 35, "kind": "method" },
+          { "name": "default_rate_limiter", "file": "lib/rate_limiter/on_create_record.rb", "line": 12, "kind": "method" },
+          { "name": "performed!", "file": "lib/rate_limiter.rb", "line": 125, "kind": "method" },
+          { "name": "rollback!", "file": "lib/rate_limiter.rb", "line": 138, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read @v2026.9.0: RateLimiter::OnCreateRecord::ClassMethods#rate_limit (on_create_record.rb:35) registers after_create (calls the limiter's performed! and remembers it in @performed), after_destroy (rollback!) and after_rollback (rollback! only if performed), all skipped when @rate_limits_disabled; default_rate_limiter (12) builds RateLimiter.new(user, \"create_<model>\", 1, rate_limit[_new_user]_create_<model> setting). RateLimiter#performed! (rate_limiter.rb:125) runs the PERFORM_LUA sliding-window script and raises LimitExceeded; rollback! (138) LPOPs the newest entry."
+    },
+    {
+      "id": "ds-usage-disable-rate-limits",
+      "kind": "usage",
+      "lang": "en",
+      "question": "Which code disables the record-creation rate limits of a post or topic with `disable_rate_limits!` before saving it?",
+      "search": "disable_rate_limits! post topic save",
+      "gold": {
+        "files": ["lib/post_creator.rb", "lib/topic_creator.rb", "app/models/post_mover.rb"],
+        "symbols": [
+          { "name": "save_post", "file": "lib/post_creator.rb", "line": 612, "kind": "method" },
+          { "name": "save_topic", "file": "lib/topic_creator.rb", "line": 288, "kind": "method" },
+          { "name": "move", "file": "app/models/post_mover.rb", "line": 358, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "git grep 'disable_rate_limits!' -- '*.rb' (specs excluded) @v2026.9.0: defined lib/rate_limiter/on_create_record.rb:30; called at lib/post_creator.rb:613 (PostCreator#save_post, skip_validations or skip_rate_limits), lib/topic_creator.rb:289 (TopicCreator#save_topic, same options) and app/models/post_mover.rb:378 (PostMover#move, freeze_original duplicates the post). No plugin calls it."
+    },
+    {
+      "id": "ds-usage-prevent-posting",
+      "kind": "usage",
+      "lang": "en",
+      "question": "Which permission checks refuse to let a user post because `SpamRule::AutoSilence.prevent_posting?` says the user should be auto-silenced?",
+      "search": "SpamRule AutoSilence prevent_posting? guardian",
+      "gold": {
+        "files": ["lib/guardian/post_guardian.rb", "plugins/chat/lib/chat/guardian_extensions.rb"],
+        "symbols": [
+          { "name": "can_create_post_in_topic?", "file": "lib/guardian/post_guardian.rb", "line": 453, "kind": "method" },
+          { "name": "can_create_chat_message?", "file": "plugins/chat/lib/chat/guardian_extensions.rb", "line": 30, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "git grep 'prevent_posting?' -- '*.rb' (specs excluded) @v2026.9.0: defined app/services/spam_rule/auto_silence.rb:15 (blank or silenced user, or should_autosilence?); called at lib/guardian/post_guardian.rb:460 inside the private PostGuardian#can_create_post_in_topic? (non-PM topics only) and at plugins/chat/lib/chat/guardian_extensions.rb:33 in Chat::GuardianExtensions#can_create_chat_message?."
+    },
+    {
+      "id": "ds-usage-hot-score-fallback",
+      "kind": "usage",
+      "lang": "en",
+      "question": "Which methods of `NestedReplies::Sort` fall back to `HotScoreCalculator` to compute a hot score when no cached score is available?",
+      "search": "NestedReplies Sort HotScoreCalculator fallback",
+      "gold": {
+        "files": ["lib/nested_replies/sort.rb"],
+        "symbols": [
+          { "name": "hot_score_expression", "file": "lib/nested_replies/sort.rb", "line": 36, "kind": "method" },
+          { "name": "hot_score_values", "file": "lib/nested_replies/sort.rb", "line": 60, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "Read lib/nested_replies/sort.rb@v2026.9.0 and git grep 'HotScoreCalculator\\.' lib app: Sort.hot_score_expression (36) builds COALESCE(nested_hot_post_scores.<column>, HotScoreCalculator.hot_score_sql(posts_table)) for the SQL order; Sort.hot_score_values (60) calls HotScoreCalculator.score_for(post) when no cached scores are passed to sort_in_memory. The scheduled job RecalculateNestedHotScores calls recalculate_topic, which is not a fallback."
+    },
+    {
+      "id": "ds-impact-require-consent",
+      "kind": "impact",
+      "lang": "en",
+      "question": "If `McpOauthAuthorization.require_consent!` needed a new required argument (for example a reason), which callers would have to change?",
+      "search": "McpOauthAuthorization require_consent!",
+      "gold": {
+        "files": ["app/models/mcp_oauth_authorization.rb", "app/services/mcp_primitive_updater.rb", "lib/discourse_mcp/oauth.rb"],
+        "symbols": [
+          { "name": "require_consent!", "file": "app/models/mcp_oauth_authorization.rb", "line": 33, "kind": "method" },
+          { "name": "set_emergency_block!", "file": "app/services/mcp_primitive_updater.rb", "line": 30, "kind": "method" },
+          { "name": "require_fresh_consent_for_new_exposure!", "file": "app/services/mcp_primitive_updater.rb", "line": 71, "kind": "method" },
+          { "name": "revoke_disallowed_clients!", "file": "lib/discourse_mcp/oauth.rb", "line": 90, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "git grep 'require_consent!' -- '*.rb' (specs excluded) @v2026.9.0: defined app/models/mcp_oauth_authorization.rb:33 (revokes the access and refresh tokens of matching active authorizations and marks them consent_required); called at app/services/mcp_primitive_updater.rb:45 (McpPrimitiveUpdater#set_emergency_block!, when unblocking newly exposes a consent-relevant primitive), :80 (#require_fresh_consent_for_new_exposure!, from update!) and lib/discourse_mcp/oauth.rb:99 (ClientResolver.revoke_disallowed_clients!, run from config/initializers/020-discourse-mcp.rb when the metadata policy settings change)."
+    },
+    {
+      "id": "ds-impact-consume-login-code",
+      "kind": "impact",
+      "lang": "en",
+      "question": "If `EmailLoginCode#consume!` raised an error instead of returning false when it loses a race, which service steps would behave differently?",
+      "search": "EmailLoginCode consume! login code redeem",
+      "gold": {
+        "files": [
+          "app/models/email_login_code.rb",
+          "app/services/email_login_code/redeem.rb",
+          "app/services/invite/redeem_with_email_code.rb",
+          "app/services/user/create_password_reset_token.rb"
+        ],
+        "symbols": [
+          { "name": "consume!", "file": "app/models/email_login_code.rb", "line": 83, "kind": "method" },
+          { "name": "consume_code", "file": "app/services/email_login_code/redeem.rb", "line": 140, "kind": "method" },
+          { "name": "consume_code", "file": "app/services/invite/redeem_with_email_code.rb", "line": 128, "kind": "method" },
+          { "name": "consume_code", "file": "app/services/user/create_password_reset_token.rb", "line": 43, "kind": "method" }
+        ]
+      },
+      "verifiedBy": "git grep '\\.consume!' -- '*.rb' (specs excluded) @v2026.9.0: EmailLoginCode#consume! (email_login_code.rb:83) is an atomic UPDATE ... WHERE consumed_at IS NULL returning true only for the winner; called by EmailLoginCode::Redeem#consume_code (redeem.rb:140, `fail!(\"code already redeemed\") unless`), Invite::RedeemWithEmailCode#consume_code (redeem_with_email_code.rb:128, same pattern) and User::CreatePasswordResetToken#consume_code (create_password_reset_token.rb:43, used as `policy :consume_code` inside a transaction, so its boolean result is the policy outcome)."
+    }
+  ]
+}

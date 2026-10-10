@@ -1,0 +1,121 @@
+INFO: Invocation ID: 7d3c4c1e-2f3b-4a8e-9b51-0f1c2d3e4f5a
+Computing main repo mapping: 
+Loading: 
+Loading: 0 packages loaded
+Analyzing: 64 targets (312 packages loaded, 9841 targets configured)
+INFO: Analyzed 64 targets (512 packages loaded, 14532 targets configured).
+INFO: Found 44 targets and 20 test targets...
+[41 / 2,412] Compiling src/main/java/com/acme/shop/pricing/token1.java; 1s linux-sandbox ... (8 actions running)
+[82 / 2,412] Compiling src/main/java/com/acme/shop/refunds/page2.java; 2s linux-sandbox ... (8 actions running)
+[123 / 2,412] Compiling src/main/java/com/acme/shop/auth/order3.java; 3s linux-sandbox ... (8 actions running)
+[164 / 2,412] Compiling src/main/java/com/acme/shop/shipping/total4.java; 4s linux-sandbox ... (8 actions running)
+[205 / 2,412] Compiling src/main/java/com/acme/shop/cart/timeout5.java; 0s linux-sandbox ... (8 actions running)
+[246 / 2,412] Compiling src/main/java/com/acme/shop/orders/token6.java; 1s linux-sandbox ... (8 actions running)
+[287 / 2,412] Compiling src/main/java/com/acme/shop/cart/timeout7.java; 2s linux-sandbox ... (8 actions running)
+[328 / 2,412] Compiling src/main/java/com/acme/shop/auth/currency8.java; 3s linux-sandbox ... (8 actions running)
+[369 / 2,412] Compiling src/main/java/com/acme/shop/reports/payload9.java; 4s linux-sandbox ... (8 actions running)
+[410 / 2,412] Compiling src/main/java/com/acme/shop/customers/discount10.java; 0s linux-sandbox ... (8 actions running)
+[451 / 2,412] Compiling src/main/java/com/acme/shop/reports/customer11.java; 1s linux-sandbox ... (8 actions running)
+[492 / 2,412] Compiling src/main/java/com/acme/shop/inventory/timeout12.java; 2s linux-sandbox ... (8 actions running)
+[533 / 2,412] Compiling src/main/java/com/acme/shop/pricing/batch13.java; 3s linux-sandbox ... (8 actions running)
+[574 / 2,412] Compiling src/main/java/com/acme/shop/notifications/currency14.java; 4s linux-sandbox ... (8 actions running)
+[615 / 2,412] Compiling src/main/java/com/acme/shop/tax/address15.java; 0s linux-sandbox ... (8 actions running)
+[656 / 2,412] Compiling src/main/java/com/acme/shop/catalog/order16.java; 1s linux-sandbox ... (8 actions running)
+[697 / 2,412] Compiling src/main/java/com/acme/shop/webhooks/customer17.java; 2s linux-sandbox ... (8 actions running)
+[738 / 2,412] Compiling src/main/java/com/acme/shop/webhooks/customer18.java; 3s linux-sandbox ... (8 actions running)
+[779 / 2,412] Compiling src/main/java/com/acme/shop/inventory/batch19.java; 4s linux-sandbox ... (8 actions running)
+[820 / 2,412] Compiling src/main/java/com/acme/shop/payments/discount20.java; 0s linux-sandbox ... (8 actions running)
+[861 / 2,412] Compiling src/main/java/com/acme/shop/discounts/invoice21.java; 1s linux-sandbox ... (8 actions running)
+[902 / 2,412] Compiling src/main/java/com/acme/shop/payments/refund22.java; 2s linux-sandbox ... (8 actions running)
+[943 / 2,412] Compiling src/main/java/com/acme/shop/customers/invoice23.java; 3s linux-sandbox ... (8 actions running)
+[984 / 2,412] Compiling src/main/java/com/acme/shop/shipping/refund24.java; 4s linux-sandbox ... (8 actions running)
+[1,025 / 2,412] Compiling src/main/java/com/acme/shop/shipping/currency25.java; 0s linux-sandbox ... (8 actions running)
+[1,066 / 2,412] Compiling src/main/java/com/acme/shop/customers/order26.java; 1s linux-sandbox ... (8 actions running)
+[1,107 / 2,412] Compiling src/main/java/com/acme/shop/discounts/currency27.java; 2s linux-sandbox ... (8 actions running)
+[1,148 / 2,412] Compiling src/main/java/com/acme/shop/reports/order28.java; 3s linux-sandbox ... (8 actions running)
+[1,189 / 2,412] Compiling src/main/java/com/acme/shop/auth/refund29.java; 4s linux-sandbox ... (8 actions running)
+[1,230 / 2,412] Compiling src/main/java/com/acme/shop/customers/timeout30.java; 0s linux-sandbox ... (8 actions running)
+[1,271 / 2,412] Compiling src/main/java/com/acme/shop/catalog/page31.java; 1s linux-sandbox ... (8 actions running)
+[1,312 / 2,412] Compiling src/main/java/com/acme/shop/reports/currency32.java; 2s linux-sandbox ... (8 actions running)
+[1,353 / 2,412] Compiling src/main/java/com/acme/shop/shipping/page33.java; 3s linux-sandbox ... (8 actions running)
+[1,394 / 2,412] Compiling src/main/java/com/acme/shop/reports/token34.java; 4s linux-sandbox ... (8 actions running)
+[1,435 / 2,412] Compiling src/main/java/com/acme/shop/cart/customer35.java; 0s linux-sandbox ... (8 actions running)
+[1,476 / 2,412] Compiling src/main/java/com/acme/shop/refunds/order36.java; 1s linux-sandbox ... (8 actions running)
+[1,517 / 2,412] Compiling src/main/java/com/acme/shop/reports/customer37.java; 2s linux-sandbox ... (8 actions running)
+[1,558 / 2,412] Compiling src/main/java/com/acme/shop/cart/address38.java; 3s linux-sandbox ... (8 actions running)
+[1,599 / 2,412] Compiling src/main/java/com/acme/shop/notifications/discount39.java; 4s linux-sandbox ... (8 actions running)
+[1,640 / 2,412] Compiling src/main/java/com/acme/shop/invoices/timeout40.java; 0s linux-sandbox ... (8 actions running)
+[1,681 / 2,412] Compiling src/main/java/com/acme/shop/webhooks/order41.java; 1s linux-sandbox ... (8 actions running)
+[1,722 / 2,412] Compiling src/main/java/com/acme/shop/cart/timeout42.java; 2s linux-sandbox ... (8 actions running)
+[1,763 / 2,412] Compiling src/main/java/com/acme/shop/notifications/total43.java; 3s linux-sandbox ... (8 actions running)
+[1,804 / 2,412] Compiling src/main/java/com/acme/shop/cart/timeout44.java; 4s linux-sandbox ... (8 actions running)
+[1,845 / 2,412] Compiling src/main/java/com/acme/shop/refunds/address45.java; 0s linux-sandbox ... (8 actions running)
+[1,886 / 2,412] Compiling src/main/java/com/acme/shop/reports/rounding46.java; 1s linux-sandbox ... (8 actions running)
+[1,927 / 2,412] Compiling src/main/java/com/acme/shop/shipping/page47.java; 2s linux-sandbox ... (8 actions running)
+[1,968 / 2,412] Compiling src/main/java/com/acme/shop/auth/currency48.java; 3s linux-sandbox ... (8 actions running)
+[2,009 / 2,412] Compiling src/main/java/com/acme/shop/auth/customer49.java; 4s linux-sandbox ... (8 actions running)
+[2,050 / 2,412] Compiling src/main/java/com/acme/shop/cart/customer50.java; 0s linux-sandbox ... (8 actions running)
+[2,091 / 2,412] Compiling src/main/java/com/acme/shop/orders/order51.java; 1s linux-sandbox ... (8 actions running)
+[2,132 / 2,412] Compiling src/main/java/com/acme/shop/customers/token52.java; 2s linux-sandbox ... (8 actions running)
+[2,173 / 2,412] Compiling src/main/java/com/acme/shop/discounts/total53.java; 3s linux-sandbox ... (8 actions running)
+[2,214 / 2,412] Compiling src/main/java/com/acme/shop/inventory/total54.java; 4s linux-sandbox ... (8 actions running)
+[2,255 / 2,412] Compiling src/main/java/com/acme/shop/cart/payload55.java; 0s linux-sandbox ... (8 actions running)
+[2,296 / 2,412] Compiling src/main/java/com/acme/shop/refunds/timeout56.java; 1s linux-sandbox ... (8 actions running)
+[2,337 / 2,412] Compiling src/main/java/com/acme/shop/pricing/currency57.java; 2s linux-sandbox ... (8 actions running)
+[2,378 / 2,412] Compiling src/main/java/com/acme/shop/auth/token58.java; 3s linux-sandbox ... (8 actions running)
+[2,419 / 2,412] Compiling src/main/java/com/acme/shop/shipping/discount59.java; 4s linux-sandbox ... (8 actions running)
+[2,460 / 2,412] Compiling src/main/java/com/acme/shop/pricing/item60.java; 0s linux-sandbox ... (8 actions running)
+ERROR: /home/dev/shop/src/main/java/com/acme/shop/cart/BUILD.bazel:12:13: Building src/main/java/com/acme/shop/cart/libcart.jar (14 source files) failed: (Exit 1): java failed: error executing Javac command (from target //src/main/java/com/acme/shop/cart:cart) external/remotejdk17_linux/bin/java -XX:+UseParallelOldGC -XX:-CompactStrings --add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED ... (remaining 42 arguments skipped)
+src/main/java/com/acme/shop/cart/Cart.java:22: error: cannot find symbol
+    return computeTotal(items);
+           ^
+  symbol:   method computeTotal(List<Item>)
+  location: class Cart
+INFO: From Compiling src/main/java/com/acme/shop/api/Routes.java:
+warning: [options] source value 8 is obsolete and will be removed in a future release
+FAIL: //src/test/java/com/acme/shop/orders:OrderServiceTest (see /home/dev/.cache/bazel/_bazel_dev/1f2e3d4c/execroot/_main/bazel-out/k8-fastbuild/testlogs/src/test/java/com/acme/shop/orders/OrderServiceTest/test.log)
+INFO: From Testing //src/test/java/com/acme/shop/orders:OrderServiceTest:
+==================== Test output for //src/test/java/com/acme/shop/orders:OrderServiceTest:
+JUnit4 Test Runner
+.....E
+Time: 0.412
+There was 1 failure:
+1) rejectsEmptyOrder(com.acme.shop.orders.OrderServiceTest)
+java.lang.AssertionError: expected:<0> but was:<1>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at com.acme.shop.orders.OrderServiceTest.rejectsEmptyOrder(OrderServiceTest.java:33)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+
+FAILURES!!!
+Tests run: 6,  Failures: 1
+
+================================================================================
+INFO: Elapsed time: 48.221s, Critical Path: 31.07s
+INFO: 812 processes: 214 internal, 598 linux-sandbox.
+FAILED: Build did NOT complete successfully
+//src/test/java/com/acme/shop/cart:ItemTest                              PASSED in 4.5s
+//src/test/java/com/acme/shop/orders:OrderTest                              PASSED in 3.3s
+//src/test/java/com/acme/shop/refunds:TotalTest                              PASSED in 1.2s
+//src/test/java/com/acme/shop/payments:RefundTest                              PASSED in 2.1s
+//src/test/java/com/acme/shop/invoices:InvoiceTest                              PASSED in 1.2s
+//src/test/java/com/acme/shop/customers:CustomerTest                              PASSED in 0.7s
+//src/test/java/com/acme/shop/catalog:AddressTest                              PASSED in 0.1s
+//src/test/java/com/acme/shop/inventory:TokenTest                              PASSED in 1.7s
+//src/test/java/com/acme/shop/shipping:DiscountTest                              PASSED in 2.1s
+//src/test/java/com/acme/shop/auth:CurrencyTest                              PASSED in 0.4s
+//src/test/java/com/acme/shop/pricing:PayloadTest                              PASSED in 4.9s
+//src/test/java/com/acme/shop/tax:BatchTest                              PASSED in 4.5s
+//src/test/java/com/acme/shop/discounts:PageTest                              PASSED in 2.8s
+//src/test/java/com/acme/shop/reports:TimeoutTest                              PASSED in 2.4s
+//src/test/java/com/acme/shop/webhooks:RoundingTest                              PASSED in 4.8s
+//src/test/java/com/acme/shop/notifications:ItemTest                              PASSED in 4.4s
+//src/test/java/com/acme/shop/cart:OrderTest                              PASSED in 1.5s
+//src/test/java/com/acme/shop/orders:TotalTest                              PASSED in 0.1s
+//src/test/java/com/acme/shop/orders:OrderServiceTest                    FAILED in 2.3s
+  /home/dev/.cache/bazel/_bazel_dev/1f2e3d4c/execroot/_main/bazel-out/k8-fastbuild/testlogs/src/test/java/com/acme/shop/orders/OrderServiceTest/test.log
+//src/test/java/com/acme/shop/cart:CartTest                              NO STATUS
+
+Executed 19 out of 20 tests: 18 tests pass, 1 fails locally and 1 was skipped.
+There were tests whose specified size is too big. Use the --test_verbose_timeout_warnings command line option to see which ones these are.
+FAILED: Build did NOT complete successfully

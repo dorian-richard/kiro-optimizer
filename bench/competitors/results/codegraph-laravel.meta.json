@@ -1,0 +1,101 @@
+{
+  "label": "codegraph",
+  "tool": "codegraph",
+  "package": "@colbymchenry/codegraph",
+  "version": "1.6.2",
+  "mode": "default",
+  "repo": {
+    "name": "laravel",
+    "url": "https://github.com/laravel/framework.git",
+    "tag": "v13.35.0",
+    "commit": "a413a9da94884e5e9d58f4e6612884f712827804",
+    "language": "php",
+    "path": "bench/repos/laravel"
+  },
+  "headCommit": "a413a9da94884e5e9d58f4e6612884f712827804",
+  "commitMatchesTasks": true,
+  "date": "2026-10-09T13:53:58.936Z",
+  "image": "kopt-bench/codegraph:1.6.2",
+  "imageId": "sha256:db8f2e822e3863b14f3c037bc692fb20915bf2e48a3083248d72d3938a716f5a",
+  "engine": "docker",
+  "limits": "memory=6g cpus=8",
+  "cgroupMemory": {
+    "maxBytes": 6442450944,
+    "peakBytes": 3202699264,
+    "oomKills": 0
+  },
+  "container": {
+    "node": "v22.23.3",
+    "arch": "arm64",
+    "platform": "linux",
+    "cpus": 10,
+    "memBytes": 8214851584,
+    "network": "none"
+  },
+  "primaryTool": "codegraph_explore",
+  "toolArgsExample": {
+    "query": "<input>"
+  },
+  "serverCommand": {
+    "command": "codegraph",
+    "args": [
+      "serve",
+      "--mcp"
+    ]
+  },
+  "oneSessionPerTask": true,
+  "indexOk": true,
+  "indexMs": 20355,
+  "indexSteps": [
+    {
+      "command": "codegraph init --yes /work/laravel",
+      "ms": 20355,
+      "exit": 0,
+      "signal": null,
+      "oomKills": 0
+    }
+  ],
+  "copyMs": 11677,
+  "indexDirs": [
+    "<repo>/.codegraph"
+  ],
+  "indexSizeBytes": 196702437,
+  "modelBytes": 0,
+  "indexStatus": "CodeGraph Status\n\nProject: /work/laravel\n\nIndex Statistics:\n  Files:     3,172\n  Nodes:     61,187\n  Edges:     165,974\n  DB Size:   187.59 MB\n  Backend:   node:sqlite — built-in (full WAL)\n  Journal:   wal\n\nNodes by Kind:\n  method          31,432\n  import          14,002\n  field           4,660\n  class           4,120\n  file            3,116\n  namespace       2,831\n  enum_member     233\n  trait           215\n  interface       214\n  function        154\n  enum            134\n  constant        76\n\nFiles by Language:\n  php             3,113\n  yaml            56\n  javascript      3\n\n✓ Index is up to date",
+  "surface": {
+    "serverInfo": {
+      "name": "codegraph",
+      "version": "1.6.2"
+    },
+    "toolCount": 1,
+    "toolNames": [
+      "codegraph_explore"
+    ],
+    "toolsChars": 1725,
+    "toolsEstTokens": 575,
+    "instructionsChars": 6718,
+    "instructionsEstTokens": 2240,
+    "primaryToolListed": true,
+    "file": "codegraph.surface.json"
+  },
+  "inputs": {
+    "search": {
+      "file": "codegraph-laravel.jsonl",
+      "tasks": 12,
+      "failures": 0,
+      "queryMsMedian": 347,
+      "queryMsP90": 751,
+      "startupMsMedian": 202
+    },
+    "question": {
+      "file": "codegraph-laravel-question.jsonl",
+      "tasks": 12,
+      "failures": 0,
+      "queryMsMedian": 560,
+      "queryMsP90": 772,
+      "startupMsMedian": 178
+    }
+  },
+  "charsPerToken": 3,
+  "errors": []
+}

@@ -1,0 +1,23 @@
+xUnit.net Console Runner v2.6.6+5bfa3b4b8e (64-bit .NET 8.0.1)
+  Discovering: Shop.Tests
+  Discovered:  Shop.Tests
+  Starting:    Shop.Tests
+    Shop.Tests.CartTests.Total_WithDiscount [FAIL]
+      Assert.Equal() Failure: Values differ
+      Expected: 90
+      Actual:   100
+      Stack Trace:
+        /home/dev/shop/tests/Shop.Tests/CartTests.cs(28,0): at Shop.Tests.CartTests.Total_WithDiscount()
+           at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+           at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+    Shop.Tests.OrderTests.Create_RejectsEmpty [FAIL]
+      System.NullReferenceException : Object reference not set to an instance of an object.
+      Stack Trace:
+        /home/dev/shop/src/Shop/Services/OrderService.cs(22,0): at Shop.Services.OrderService.Create(List`1 items)
+        /home/dev/shop/tests/Shop.Tests/OrderTests.cs(41,0): at Shop.Tests.OrderTests.Create_RejectsEmpty()
+           at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+      Output:
+        creating order for customer 42
+  Finished:    Shop.Tests
+=== TEST EXECUTION SUMMARY ===
+   Shop.Tests  Total: 412, Errors: 0, Failed: 2, Skipped: 1, Time: 3.481s

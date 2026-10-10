@@ -9,6 +9,8 @@ import { posix } from 'node:path';
 import type { StatementSync } from 'node:sqlite';
 import type { Store } from '../store/store.js';
 import { pythonModule } from './langs/python.js';
+import { TsConfigs } from './tsconfig.js';
+import { baseTypeName, BUILTIN, declaredType } from './extract.js';
 
 export interface SymInfo {
   id: number;
@@ -38,6 +40,29 @@ interface RefRow {
   to: number | null;
 }
 
+/** An import ref; `from` set when the import sits inside a declaration (Python function-local imports). */
+interface ImportRef {
+  id: number;
+  name: string;
+  qualifier: string | null;
+  to: number | null;
+  from: number | null;
+}
+
+/** File contexts kept between files of a pass (oldest dropped first). */
+const MAX_CONTEXTS = 4096;
+
+/** Candidate lists up to this long are filtered on each use instead of memoized. */
+const MEMO_MIN = 16;
+
+interface MemberIndex {
+  /** parent symbol -> lowest member id with that parent */
+  byParent: Map<number, number>;
+  /** parentless methods (Go methods declared in another file, Rust impl blocks in other modules) */
+  orphans: SymInfo[];
+  size: number;
+}
+
 interface FileCtx {
   info: FileInfo;
   importTargets: Set<number>;
@@ -49,11 +74,17 @@ interface FileCtx {
 
 export interface ResolveScope {
   full: boolean;
+  /** Repo root on disk (tsconfig `paths`); defaults to the store's root. */
+  root?: string;
   changedFileIds: Set<number>;
   removedSymbolIds: Set<number>;
   changedNames: Set<string>;
   addedFileIds: Set<number>;
   removedFileIds: Set<number>;
+  /** Paths of the removed files (narrows which unresolved imports are worth another try). */
+  removedPaths?: Set<string>;
+  /** References examined so far, out of `total` (full passes: every ref; otherwise unknown). */
+  onProgress?: (done: number, total?: number) => void;
 }
 
 export interface ResolveStats {
@@ -66,6 +97,8 @@ export interface ResolveStats {
 const TYPE_KINDS = new Set(['class', 'interface', 'enum', 'type', 'struct', 'record', 'trait']);
 const CONTAINERS = new Set(['class', 'interface', 'enum', 'struct', 'record', 'trait', 'module']);
 const CALLABLE = new Set(['function', 'method', 'constructor']);
+/** Targets of member reads and writes. A read may also name a method or function used as a value (callbacks). */
+const FIELD_LIKE = new Set(['field', 'property', 'constant']);
 const NAMESPACE_LIKE = new Set(['namespace', 'module']);
 const SELF = new Set(['this', 'self', 'super', 'base', 'cls', '$this', 'Self', 'static', 'parent']);
 /** Languages where an unqualified name inside a class can mean a member of that class. */
@@ -81,6 +114,57 @@ const LOOSE = new Set(['c_sharp', 'php', 'ruby', 'rust', 'scala']);
  * through receiver types, so an untyped receiver chain there is left unresolved.
  */
 const DUCK_TYPED = new Set(['python', 'javascript', 'typescript', 'tsx', 'ruby', 'php']);
+/**
+ * Languages whose receivers kopt often cannot type (call chains, fields of fields, inferred locals) but whose
+ * calls on library types rarely share a name with repository code once the standard library's own method
+ * names are set aside: a qualified call there links by name when the name is distinctive and declared exactly
+ * once in the whole repository, as a function or method. Measured on gitea and meilisearch samples, nearly
+ * every such link is right. JVM and .NET code calls library APIs (JDK, AssertJ, Jackson...) through untyped
+ * chains far too often for that rule (most links were wrong on spring-framework), so it is not used there.
+ */
+const UNIQUE_NAME_OK = new Set(['go', 'rust']);
+
+/** Standard-library method names that a Go or Rust receiver of unknown type most likely means. */
+const STD_METHODS: Record<string, Set<string>> = {
+  rust: new Set(
+    (
+      'into try_into from try_from as_ref as_mut as_str as_slice as_bytes as_ptr as_path as_deref as_deref_mut ' +
+      'to_string to_owned to_vec to_lowercase to_uppercase to_ascii_lowercase to_ascii_uppercase to_be_bytes ' +
+      'to_le_bytes to_ne_bytes from_be_bytes from_le_bytes from_ne_bytes checked_add checked_sub checked_mul ' +
+      'checked_div checked_rem saturating_add saturating_sub saturating_mul saturating_div wrapping_add ' +
+      'wrapping_sub wrapping_mul overflowing_add overflowing_sub unwrap unwrap_or unwrap_or_else ' +
+      'unwrap_or_default unwrap_err expect expect_err map_err map_or map_or_else ok_or ok_or_else and_then ' +
+      'or_else is_some is_none is_some_and is_ok is_err iter iter_mut into_iter collect borrow borrow_mut deref ' +
+      'deref_mut drop push_str extend_from_slice retain drain entry or_insert or_insert_with or_default chars ' +
+      'bytes lines split_whitespace split_once rsplit_once trim_start trim_end trim_matches starts_with ' +
+      'ends_with strip_prefix strip_suffix contains_key get_mut get_or_insert_with insert remove take replace ' +
+      'swap copied cloned flatten flat_map filter_map enumerate zip rev skip take_while skip_while step_by ' +
+      'chain fold position find_map max_by_key min_by_key max_by min_by product last nth peekable windows ' +
+      'chunks chunks_exact sort_by sort_by_key sort_unstable sort_unstable_by dedup binary_search concat ' +
+      'lock read write send recv try_recv spawn poll block_on elapsed duration_since as_secs as_millis ' +
+      'as_micros as_nanos as_secs_f64 parse hash partial_cmp clone_from default extend truncate reserve ' +
+      'with_capacity capacity split_at split_off first_mut last_mut into_inner get_ref get_unchecked ' +
+      'to_str to_path_buf file_name extension exists is_file is_dir read_to_string write_all flush ' +
+      'join_all into_boxed_slice into_bytes from_utf8 from_str display downcast downcast_ref type_id'
+    ).split(' '),
+  ),
+  go: new Set(
+    (
+      'Unix UnixNano UnixMilli Format Sub Before After Equal IsZero Seconds Milliseconds Minutes Hours Truncate ' +
+      'Round Bytes Cap Reset WriteString WriteByte WriteRune ReadString ReadLine ReadBytes Scan Text Err Done ' +
+      'Deadline Cancel Lock Unlock RLock RUnlock Wait Load Store Swap CompareAndSwap Header Del Query QueryRow ' +
+      'QueryContext ExecContext Exec Begin BeginTx Commit Rollback Prepare Body StatusCode Encode Decode ' +
+      'Marshal Unmarshal MarshalJSON UnmarshalJSON Contains HasPrefix HasSuffix TrimSpace Name Size Mode ' +
+      'ModTime IsDir Sys Stat ReadDir Open Create Remove Rename Mkdir MkdirAll Seek Sync Fd Is As Unwrap Int ' +
+      'Int64 Uint64 Float64 Bool Value Values Next Peek Flush Copy Context WithContext WithValue ' +
+      'WithCancel WithTimeout Signal Notify Elem Kind Type Field Method NumField Interface IsNil IsValid ' +
+      'Index Slice Append Join Split Replace Fields Lines Hex Base64 Sum Hash Reader Writer ServeHTTP ' +
+      'Handle HandleFunc ListenAndServe Shutdown Dial Accept LocalAddr RemoteAddr SetDeadline FormValue ' +
+      'PostFormValue Cookie SetCookie Redirect WriteHeader Hijack Push Done Year Month Day Hour Minute Second ' +
+      'Weekday YearDay AddDate In UTC Local Location Since Until Parse ParseInt Atoi Itoa Sprint Fprint Fprintf'
+    ).split(' '),
+  ),
+};
 /**
  * Method names too common to link by name alone when the receiver type is unknown: they mostly hit
  * standard-library objects (lists, maps, promises, loggers, streams).
@@ -127,7 +211,7 @@ class Graph {
   private readonly names = new Map<string, SymInfo[]>();
   private readonly syms = new Map<number, SymInfo>();
   private readonly imports = new Map<number, Array<{ spec: string; target: number | null }>>();
-  private readonly importRefs = new Map<number, Array<{ id: number; name: string; qualifier: string | null; to: number | null }>>();
+  private readonly importRefs = new Map<number, ImportRef[]>();
   private readonly superMap = new Map<number, number[]>();
   private complete = false;
   private qCands: StatementSync;
@@ -136,7 +220,7 @@ class Graph {
   private qImportRefs: StatementSync;
   private qSupers: StatementSync;
 
-  constructor(private readonly store: Store) {
+  constructor(readonly store: Store) {
     const rows = store.db.prepare('SELECT id, path, lang, namespace FROM files').all() as Array<{ id: number; path: string; lang: string | null; namespace: string | null }>;
     for (const r of rows) {
       const info: FileInfo = { id: r.id, path: r.path, dir: dirOf(r.path), lang: r.lang ?? '', ns: r.namespace };
@@ -149,7 +233,7 @@ class Graph {
     this.qCands = store.prepare('SELECT id, file_id AS file, parent_id AS parent, kind, name, qname FROM symbols WHERE name = ?');
     this.qSym = store.prepare('SELECT id, file_id AS file, parent_id AS parent, kind, name, qname FROM symbols WHERE id = ?');
     this.qImports = store.prepare('SELECT spec, target_file_id AS target FROM file_imports WHERE file_id = ?');
-    this.qImportRefs = store.prepare("SELECT id, name, qualifier, to_symbol_id AS 'to' FROM refs WHERE file_id = ? AND kind = 'import'");
+    this.qImportRefs = store.prepare("SELECT id, name, qualifier, to_symbol_id AS 'to', from_symbol_id AS 'from' FROM refs WHERE file_id = ? AND kind = 'import'");
     this.qSupers = store.prepare("SELECT to_symbol_id AS t FROM refs WHERE from_symbol_id = ? AND kind IN ('inherit','implement') AND to_symbol_id IS NOT NULL");
   }
 
@@ -187,10 +271,10 @@ class Graph {
 
   loadImportRefs(): void {
     this.importRefs.clear();
-    const q = "SELECT id, file_id AS f, name, qualifier, to_symbol_id AS 'to' FROM refs WHERE kind = 'import'";
-    for (const r of this.store.db.prepare(q).iterate() as Iterable<{ id: number; f: number; name: string; qualifier: string | null; to: number | null }>) {
+    const q = "SELECT id, file_id AS f, name, qualifier, to_symbol_id AS 'to', from_symbol_id AS 'from' FROM refs WHERE kind = 'import'";
+    for (const r of this.store.db.prepare(q).iterate() as Iterable<ImportRef & { f: number }>) {
       const list = this.importRefs.get(r.f);
-      const v = { id: r.id, name: r.name, qualifier: r.qualifier, to: r.to };
+      const v: ImportRef = { id: r.id, name: r.name, qualifier: r.qualifier, to: r.to, from: r.from };
       if (list) list.push(v);
       else this.importRefs.set(r.f, [v]);
     }
@@ -231,11 +315,11 @@ class Graph {
     this.imports.set(fileId, rows);
   }
 
-  importRefsOf(fileId: number): Array<{ id: number; name: string; qualifier: string | null; to: number | null }> {
+  importRefsOf(fileId: number): ImportRef[] {
     let list = this.importRefs.get(fileId);
     if (list) return list;
     if (this.complete) return [];
-    list = (this.qImportRefs.all(fileId) as unknown as Array<{ id: number; name: string; qualifier: string | null; to: number | null }>).map((r) => ({ ...r }));
+    list = (this.qImportRefs.all(fileId) as unknown as ImportRef[]).map((r) => ({ ...r }));
     this.importRefs.set(fileId, list);
     return list;
   }
@@ -278,17 +362,52 @@ export class Resolver {
   readonly g: Graph;
   private readonly ctxs = new Map<number, FileCtx>();
   private readonly specCache = new Map<string, number | null>();
-  private readonly importMemo = new Map<string, number | null>();
+  private readonly importMemo = new Map<string, number | null | undefined>();
   private readonly typeMemo = new Map<string, number | null>();
   private goDirs?: string[];
+  private readonly tsconfigs?: TsConfigs;
+  private readonly extMemo = new Map<string, number | null | undefined>();
+  private qSig?: StatementSync;
+  private qInnerIn?: StatementSync;
+  private qInnerTop?: StatementSync;
+  private readonly chainMemo = new Map<string, number | typeof BUILTIN | null>();
+  private readonly chainActive = new Set<string>();
+  private chainDepth = 0;
+  /**
+   * Candidates of a name filtered by ref kind, per candidate list (lists are stable for a Resolver's lifetime).
+   * Big repositories have thousands of symbols named `get` or `toString`: filtering them again for each of 2M call
+   * refs, then once more per level of a type hierarchy, was most of the resolution time.
+   */
+  private readonly allowMemo = new WeakMap<SymInfo[], Map<string, SymInfo[]>>();
+  private readonly memberMemo = new WeakMap<SymInfo[], MemberIndex>();
+  private readonly partsMemo = new Map<number, number[]>();
 
-  constructor(store: Store, full: boolean) {
+  constructor(store: Store, full: boolean, root?: string) {
     this.g = new Graph(store);
     if (full) this.g.preload();
+    const r = root ?? store.root;
+    if (r) this.tsconfigs = new TsConfigs(r);
   }
 
   resetContexts(): void {
     this.ctxs.clear();
+  }
+
+  /**
+   * Refs come in id order, which is file order: once a file is done, its receiver-type and call-chain memos are
+   * dead weight (keyed by file + enclosing symbol), and only recently used file contexts are worth keeping. Without
+   * this a full pass on a 30k-file repository kept millions of entries until the end.
+   */
+  endFile(): void {
+    this.typeMemo.clear();
+    this.chainMemo.clear();
+    if (this.ctxs.size > MAX_CONTEXTS) {
+      let drop = this.ctxs.size - MAX_CONTEXTS / 2;
+      for (const k of this.ctxs.keys()) {
+        if (drop-- <= 0) break;
+        this.ctxs.delete(k);
+      }
+    }
   }
 
   // ------------------------------------------------------------------ module / import specifiers
@@ -356,7 +475,18 @@ export class Resolver {
       const noJs = base.replace(/\.(m|c)?jsx?$/, '');
       return this.firstExisting(noJs, TS_EXTS) ?? this.firstExisting(noJs + '/index', TS_EXTS);
     }
-    // path aliases (@/x, ~/x, #x) and monorepo-internal paths: unique suffix match only
+    // tsconfig/jsconfig `paths` and `baseUrl` of the nearest config
+    const cfg = this.tsconfigs?.forDir(from.dir);
+    if (cfg) {
+      for (const cand of this.tsconfigs!.candidates(spec, cfg)) {
+        const direct = this.g.byPath.get(cand);
+        if (direct !== undefined) return direct;
+        const base = cand.replace(/\.(m|c)?jsx?$/, '');
+        const f = this.firstExisting(base, TS_EXTS) ?? this.firstExisting(base + '/index', TS_EXTS);
+        if (f !== undefined) return f;
+      }
+    }
+    // other path aliases (@/x, ~/x, #x) and monorepo-internal paths: unique suffix match only
     const rest = spec.replace(/^(?:@|~|#|\$)\//, '').replace(/^#/, '');
     if (!rest.includes('/') && rest === spec) return undefined; // bare package name
     return this.suffixFile(rest, TS_EXTS, true);
@@ -465,7 +595,8 @@ export class Resolver {
 
   // ------------------------------------------------------------------ symbols
 
-  private kindAllowed(refKind: string, symKind: string, name: string, lang?: string): boolean {
+  /** `qualified`: the ref names a member of something (`Foo::BAR`, `self::X`), so constants qualify for type refs. */
+  private kindAllowed(refKind: string, symKind: string, name: string, lang?: string, qualified = false): boolean {
     switch (refKind) {
       case 'call':
         // instantiation looks like a call in Python whatever the class name's case (`cached_property`)
@@ -476,10 +607,46 @@ export class Resolver {
       case 'implement':
         return TYPE_KINDS.has(symKind) || symKind === 'module';
       case 'type_ref':
-        return TYPE_KINDS.has(symKind);
+        return TYPE_KINDS.has(symKind) || (qualified && symKind === 'constant');
+      case 'read':
+        return FIELD_LIKE.has(symKind) || symKind === 'method' || symKind === 'function';
+      case 'write':
+        return FIELD_LIKE.has(symKind);
       default:
         return true;
     }
+  }
+
+  /** `this.g.cands(name)` filtered by kindAllowed, memoized. */
+  private allowed(name: string, refKind: string, lang: string | undefined, qualified: boolean): SymInfo[] {
+    const all = this.g.cands(name);
+    if (!all.length) return all;
+    // short lists are cheaper to filter again than to keep in memory
+    if (all.length <= MEMO_MIN) return all.filter((c) => this.kindAllowed(refKind, c.kind, name, lang, qualified));
+    // kindAllowed only looks at the language for Python calls and at `qualified` for type refs
+    const key = `${refKind}\u0000${lang === 'python' ? 1 : 0}${refKind === 'type_ref' && qualified ? 1 : 0}`;
+    let byKey = this.allowMemo.get(all);
+    if (!byKey) this.allowMemo.set(all, (byKey = new Map()));
+    let list = byKey.get(key);
+    if (!list) {
+      list = all.filter((c) => this.kindAllowed(refKind, c.kind, name, lang, qualified));
+      byKey.set(key, list);
+    }
+    return list;
+  }
+
+  /** Allowed `call` candidates declared at top level (or in a namespace/module), memoized. */
+  private topLevelCalls(name: string, lang: string): SymInfo[] {
+    const pool = this.allowed(name, 'call', lang, false);
+    if (pool.length <= MEMO_MIN) return pool.filter((c) => c.parent == null || NAMESPACE_LIKE.has(this.g.sym(c.parent)?.kind ?? ''));
+    let byKey = this.allowMemo.get(pool);
+    if (!byKey) this.allowMemo.set(pool, (byKey = new Map()));
+    let list = byKey.get('top');
+    if (!list) {
+      list = pool.filter((c) => c.parent == null || NAMESPACE_LIKE.has(this.g.sym(c.parent)?.kind ?? ''));
+      byKey.set('top', list);
+    }
+    return list;
   }
 
   /** undefined = no candidate at this tier; null = ambiguous (stop). */
@@ -537,30 +704,60 @@ export class Resolver {
 
   /** All declarations of the same logical type (partial classes): members may live in any of them. */
   private typeParts(typeId: number): number[] {
+    const memo = this.partsMemo.get(typeId);
+    if (memo) return memo;
     const t = this.g.sym(typeId);
-    if (!t || !TYPE_KINDS.has(t.kind)) return [typeId];
-    const parts = this.g.cands(t.name).filter((c) => c.qname === t.qname && TYPE_KINDS.has(c.kind)).map((c) => c.id);
-    return parts.length ? parts : [typeId];
+    let parts = [typeId];
+    if (t && TYPE_KINDS.has(t.kind)) {
+      const found = this.g.cands(t.name).filter((c) => c.qname === t.qname && TYPE_KINDS.has(c.kind)).map((c) => c.id);
+      if (found.length) parts = found;
+    }
+    this.partsMemo.set(typeId, parts);
+    return parts;
+  }
+
+  /** Allowed member candidates of `name` indexed by their parent (lowest id per parent), memoized. */
+  private memberIndex(name: string, refKind: string): MemberIndex {
+    const cands = this.allowed(name, refKind, undefined, true);
+    let idx = cands.length > MEMO_MIN ? this.memberMemo.get(cands) : undefined;
+    if (!idx) {
+      const byParent = new Map<number, number>();
+      const orphans: SymInfo[] = [];
+      for (const c of cands) {
+        if (c.parent != null) {
+          const b = byParent.get(c.parent);
+          if (b === undefined || c.id < b) byParent.set(c.parent, c.id);
+        } else if (c.kind === 'method') orphans.push(c);
+      }
+      idx = { byParent, orphans, size: cands.length };
+      if (cands.length > MEMO_MIN) this.memberMemo.set(cands, idx);
+    }
+    return idx;
   }
 
   /** Member `name` of `typeIds` or their supertypes (BFS, nearest wins). */
   private memberOf(typeIds: number[], name: string, refKind: string): number | undefined {
-    const cands = this.g.cands(name).filter((c) => this.kindAllowed(refKind, c.kind, name));
-    if (!cands.length) return undefined;
+    const idx = this.memberIndex(name, refKind);
+    if (!idx.size) return undefined;
     const seen = new Set<number>();
     let level = typeIds.flatMap((t) => this.typeParts(t)).filter((t) => !seen.has(t) && (seen.add(t), true));
     for (let depth = 0; level.length && depth < 12; depth++) {
       for (const t of level) {
-        let best: number | undefined;
-        const owner = this.g.sym(t);
-        for (const c of cands) {
-          const isMember =
-            c.parent === t ||
-            // Go: methods declared in another file of the package carry no parent
-            (owner && c.parent == null && c.kind === 'method' && c.qname === `${owner.qname}.${name}` && this.sameDir(c.file, owner.file));
-          if (isMember && (best === undefined || c.id < best)) best = c.id;
+        let best = idx.byParent.get(t);
+        const owner = idx.orphans.length ? this.g.sym(t) : undefined;
+        if (owner) {
+          // Go: methods declared in another file of the package carry no parent
+          const qn = `${owner.qname}.${name}`;
+          for (const c of idx.orphans) if (c.qname === qn && this.sameDir(c.file, owner.file) && (best === undefined || c.id < best)) best = c.id;
         }
         if (best !== undefined) return best;
+        // Rust: `impl Foo` / `impl Trait for Foo` blocks in another file (module) of the crate: parentless
+        // methods named `Foo.name`, accepted only when exactly one exists
+        if (owner && this.g.files.get(owner.file)?.lang === 'rust') {
+          const qn = `${owner.qname}.${name}`;
+          const loose = idx.orphans.filter((c) => c.qname === qn);
+          if (loose.length === 1) return loose[0].id;
+        }
       }
       const next: number[] = [];
       for (const t of level) for (const s of this.g.supers(t)) for (const p of this.typeParts(s)) if (!seen.has(p)) (seen.add(p), next.push(p));
@@ -583,9 +780,10 @@ export class Resolver {
 
   /** Top-level `name` defined (or re-exported) by a module file. */
   private nameInFile(fileId: number, name: string, refKind: string, depth = 0): number | null | undefined {
-    const memo = `${fileId}\u0000${name}\u0000${refKind}`;
+    // the depth is part of the key: a lookup cut short by the depth limit must not answer a shallower one
+    const memo = `${fileId}\u0000${name}\u0000${refKind}\u0000${depth}`;
     if (this.importMemo.has(memo)) return this.importMemo.get(memo);
-    this.importMemo.set(memo, undefined as unknown as null); // cycle guard
+    this.importMemo.set(memo, undefined); // cycle guard
     let res: number | null | undefined = this.pick(
       this.g.cands(name).filter((c) => c.file === fileId && (c.parent == null || NAMESPACE_LIKE.has(this.g.sym(c.parent)?.kind ?? '')) && this.kindAllowed(refKind, c.kind, name)),
     );
@@ -594,7 +792,8 @@ export class Resolver {
       const info = this.g.files.get(fileId);
       if (info) {
         for (const r of this.g.importRefsOf(fileId)) {
-          if (r.name !== name || r.qualifier == null) continue;
+          // a function-local import binds a local name, not an attribute of the module
+          if (r.name !== name || r.qualifier == null || r.from != null) continue;
           const target = this.resolveSpec(r.qualifier, info);
           if (target !== undefined) {
             res = this.nameInFile(target, name, refKind, depth + 1);
@@ -602,7 +801,17 @@ export class Resolver {
           }
         }
         if (res === undefined) {
+          // wildcard re-exports only (`export * from`, `from x import *`, recorded as imports of `*`): a module
+          // that imports named things from another one (possibly inside a function) does not re-export the
+          // rest of it. Specs without any named import (CommonJS requires, older indexes) are followed too.
+          const named = new Set<string>();
+          const star = new Set<string>();
+          for (const r of this.g.importRefsOf(fileId)) {
+            if (r.qualifier == null) continue;
+            (r.name === '*' && r.from == null ? star : named).add(r.qualifier);
+          }
           for (const imp of this.g.fileImports(fileId)) {
+            if (named.has(imp.spec) && !star.has(imp.spec)) continue;
             const target = imp.target ?? this.resolveSpec(imp.spec, info);
             if (target === undefined || target === null || target === fileId) continue;
             const r = this.nameInFile(target, name, refKind, depth + 1);
@@ -614,13 +823,13 @@ export class Resolver {
         }
       }
     }
-    this.importMemo.set(memo, res ?? null);
+    this.importMemo.set(memo, res);
     return res;
   }
 
   resolveImportRef(r: RefRow): number | null {
     const f = this.g.files.get(r.file);
-    if (!f) return null;
+    if (!f || r.name === '*') return null; // wildcard marker, see nameInFile
     const q = r.qualifier ?? '';
     switch (f.lang) {
       case 'java':
@@ -670,9 +879,37 @@ export class Resolver {
     if (r.hint) {
       const kind = r.hint.charCodeAt(0);
       const arg = r.hint.slice(2);
+      // receiver declared with a primitive, string or array type: a library call, or a repository extension
+      if (kind === 88 /* X */) return r.kind === 'call' ? this.extensionOf(name, lang) ?? null : null;
+      if (kind === 67 /* C */) {
+        // receiver = result of another call in the same symbol: its declared return type when known,
+        // else the usual name-based tiers below
+        const t = this.chainType(r, arg);
+        if (t === BUILTIN) return r.kind === 'call' ? this.extensionOf(name, lang) ?? null : null;
+        if (t != null) {
+          const member = this.memberOf([t], name, r.kind);
+          if (member !== undefined) return member;
+          return r.kind === 'call' ? this.extensionOf(name, lang) ?? null : null;
+        }
+      }
       if (kind === 84 /* T */) {
         const typeId = this.resolveType(arg, r);
-        if (typeId == null) return null;
+        if (typeId == null) {
+          // JS `Date.prototype.getTwoDigitHour = function () {}` extends a type that is not in the index
+          const proto = all.filter((c) => c.parent == null && c.kind === 'method' && c.qname === `${arg}.${name}`);
+          return proto.length === 1 ? proto[0].id : null;
+        }
+        const member = this.memberOf([typeId], name, r.kind);
+        if (member !== undefined) return member;
+        // a repository type without that member: an extension declared for it (never for a static call
+        // `Type.name()` on a type outside the index, which stops above)
+        return r.kind === 'call' ? this.extensionOf(name, lang) ?? null : null;
+      }
+      if (kind === 81 /* Q */) {
+        // receiver typed with a type of an imported package (Go `p *policy.Policy`): `<import path>\u0001<Type>`
+        const sep = arg.indexOf('\u0001');
+        const typeId = sep > 0 ? this.typeInModule(arg.slice(0, sep), arg.slice(sep + 1), f.info) : undefined;
+        if (typeId === undefined) return null;
         return this.memberOf([typeId], name, r.kind) ?? null;
       }
       if (kind === 77 /* M */) {
@@ -701,8 +938,7 @@ export class Resolver {
     const unqualified = q === undefined;
     // class literals (`Foo.class.getMethod`) and literals as receivers are always outside the index
     if (q !== undefined && (q.endsWith('.class') || q.endsWith('::class') || /^["'`\d]/.test(q))) return null;
-    let pool = all.filter((c) => this.kindAllowed(r.kind, c.kind, name, lang));
-    if (unqualified && r.kind === 'call') pool = pool.filter((c) => c.parent == null || NAMESPACE_LIKE.has(this.g.sym(c.parent)?.kind ?? ''));
+    const pool = unqualified && r.kind === 'call' ? this.topLevelCalls(name, lang) : this.allowed(name, r.kind, lang, !unqualified);
     if (!pool.length) return null;
 
     let res = this.pick(pool.filter((c) => c.file === r.file));
@@ -730,9 +966,140 @@ export class Resolver {
       res = this.pick(pool.filter((c) => f.importedNs.has(this.g.files.get(c.file)?.ns ?? '\u0000')));
       if (res !== undefined) return res;
     }
-    const globalOk = unqualified ? LOOSE.has(lang) : DUCK_TYPED.has(lang) && name.length > 3 && !GENERIC.has(name);
+    const distinctive = name.length > 3 && !GENERIC.has(name);
+    if (!unqualified && r.kind === 'call' && distinctive && UNIQUE_NAME_OK.has(lang) && !STD_METHODS[lang]?.has(name)) {
+      // receiver of unknown type (no hint): link only a name declared once in the repo, as a callable
+      return all.length === 1 && CALLABLE.has(all[0].kind) ? all[0].id : null;
+    }
+    // Member reads and writes never link by a repository-wide unique name: property names (`kind`, `owner`,
+    // `direction`) recur across unrelated object shapes far more than method names do.
+    if (r.kind === 'read' || r.kind === 'write') return null;
+    const globalOk = unqualified ? LOOSE.has(lang) : DUCK_TYPED.has(lang) && distinctive;
     if (!globalOk) return null;
     return this.pick(pool) ?? null;
+  }
+
+  /**
+   * C# extension methods (`static T Foo(this string s)`) and Kotlin extension functions (`fun String.foo()`)
+   * declared in the repository: the target of a call on a receiver whose type has no such member (or lives
+   * outside the index). Undefined when the language has no extensions or no extension of that name exists.
+   */
+  private extensionOf(name: string, lang: string): number | null | undefined {
+    if (lang !== 'c_sharp' && lang !== 'kotlin') return undefined;
+    const key = `${lang}\u0000${name}`;
+    if (this.extMemo.has(key)) return this.extMemo.get(key);
+    const cands = this.g.cands(name).filter((c) => c.kind === 'method' || c.kind === 'function');
+    let res: number | null | undefined;
+    if (cands.length) {
+      this.qSig ??= this.g.store.prepare('SELECT signature FROM symbols WHERE id = ?');
+      const ext = cands.filter((c) => {
+        const sig = (this.qSig!.get(c.id) as { signature: string } | undefined)?.signature ?? '';
+        if (lang === 'c_sharp') return /\(\s*(?:\[[^\]]*\]\s*)?this\s/.test(sig);
+        // `fun Receiver.name(` / `fun <T> List<T>.name(`: the declared name is prefixed by a receiver type
+        const head = /\bfun\s+(?:<[^>]*>\s*)?([^(]*?)\s*\(/.exec(sig)?.[1] ?? '';
+        return head.length > name.length && head.endsWith(name) && /\.\s*$/.test(head.slice(0, -name.length));
+      });
+      res = this.pick(ext);
+    }
+    this.extMemo.set(key, res);
+    return res;
+  }
+
+  /**
+   * Type of the value returned by the call named in a `C:` hint (`<name>\u0001<qualifier>`): the call's own
+   * ref in the same symbol is resolved (recursively for longer chains), then the target's declared return
+   * type is resolved from the target's file. BUILTIN for primitive / string / array results; null when unknown.
+   */
+  private chainType(r: RefRow, spec: string): number | typeof BUILTIN | null {
+    const memo = `${r.file}\u0000${r.from ?? ''}\u0000${spec}`;
+    if (this.chainMemo.has(memo)) return this.chainMemo.get(memo)!;
+    if (this.chainActive.has(memo)) return null; // cycle
+    // only top-level answers are memoized: a nested one may have been cut short by the depth limit
+    const top = this.chainDepth === 0;
+    let res: number | typeof BUILTIN | null = null;
+    if (this.chainDepth < 8) {
+      this.chainActive.add(memo);
+      this.chainDepth++;
+      try {
+        const sep = spec.indexOf('\u0001');
+        const name = sep < 0 ? spec : spec.slice(0, sep);
+        const qual = sep < 0 ? '' : spec.slice(sep + 1);
+        // The unary `+` keeps SQLite off refs_name: once ANALYZE has run (PRAGMA optimize after a full pass) it
+        // prefers that index (6 rows per name on average), and walks 50k+ refs for each `.get()` of a chain.
+        let inner: RefRow | undefined;
+        if (r.from != null) {
+          this.qInnerIn ??= this.g.store.prepare(
+            `SELECT ${REF_COLS} FROM refs r LEFT JOIN idx_ref_hints h ON h.ref_id = r.id WHERE r.from_symbol_id = ? AND +r.file_id = ? AND +r.name = ? AND coalesce(r.qualifier, '') = ? AND r.kind IN ('call', 'new') ORDER BY r.id LIMIT 1`,
+          );
+          inner = this.qInnerIn.get(r.from, r.file, name, qual) as unknown as RefRow | undefined;
+        } else {
+          this.qInnerTop ??= this.g.store.prepare(
+            `SELECT ${REF_COLS} FROM refs r LEFT JOIN idx_ref_hints h ON h.ref_id = r.id WHERE r.file_id = ? AND +r.from_symbol_id IS NULL AND +r.name = ? AND coalesce(r.qualifier, '') = ? AND r.kind IN ('call', 'new') ORDER BY r.id LIMIT 1`,
+          );
+          inner = this.qInnerTop.get(r.file, name, qual) as unknown as RefRow | undefined;
+        }
+        const target = inner ? this.resolveRef({ ...inner }) : null;
+        if (target != null) res = this.returnType(target);
+      } finally {
+        this.chainDepth--;
+        this.chainActive.delete(memo);
+      }
+    }
+    if (top) this.chainMemo.set(memo, res);
+    return res;
+  }
+
+  /** The type named `typeName` declared at the top level of the files of module `spec`, when exactly one. */
+  private typeInModule(spec: string, typeName: string, from: FileInfo): number | undefined {
+    const files = this.moduleFiles(spec, from);
+    if (!files?.length) return undefined;
+    const set = new Set(files);
+    const types = this.g.cands(typeName).filter((c) => set.has(c.file) && c.parent == null && TYPE_KINDS.has(c.kind));
+    return types.length === 1 ? types[0].id : undefined;
+  }
+
+  /**
+   * A Go result type qualified by a package (`*policy.Policy`), seen from the file that declares the function:
+   * the package is the import whose last path segment (or alias-free name) is `pkg`.
+   */
+  private goQualifiedType(fileId: number, pkg: string, typeName: string): number | undefined {
+    const info = this.g.files.get(fileId);
+    if (!info) return undefined;
+    for (const imp of this.g.fileImports(fileId)) {
+      const segs = imp.spec.split('/');
+      let last = segs[segs.length - 1];
+      if (/^v\d+$/.test(last) && segs.length > 1) last = segs[segs.length - 2];
+      if (last.replace(/^go-|-go$/g, '').replace(/[-.]/g, '_') !== pkg) continue;
+      return this.typeInModule(imp.spec, typeName, info);
+    }
+    return undefined;
+  }
+
+  /** Declared result type of a callable symbol (a class for constructors and instantiations). */
+  private returnType(symId: number): number | typeof BUILTIN | null {
+    const s = this.g.sym(symId);
+    if (!s) return null;
+    if (TYPE_KINDS.has(s.kind)) return s.id;
+    if (s.kind === 'constructor') return this.enclosingType(s.parent) ?? null;
+    if (s.kind !== 'method' && s.kind !== 'function') return null;
+    const info = this.g.files.get(s.file);
+    this.qSig ??= this.g.store.prepare('SELECT signature FROM symbols WHERE id = ?');
+    const sig = (this.qSig.get(s.id) as { signature: string } | undefined)?.signature ?? '';
+    const text = returnTypeText(sig, s.name, info?.lang ?? '');
+    if (!text) return null;
+    const bare = text.replace(/^[&*?\s]+|[?!\s]+$/g, '').replace(/^(?:mut|const|readonly)\s+/, '');
+    if (/^(?:Self|this|static|self|\$this)$/.test(bare)) return this.enclosingType(s.parent) ?? null;
+    const unwrapped = /^(?:Promise|Result|Option|Task|ValueTask|Future|Mono)<\s*([^,<>]+(?:<[^<>]*>)?)/.exec(bare)?.[1] ?? bare;
+    const goQ = info?.lang === 'go' ? /^\*?([A-Za-z_]\w*)\.([A-Za-z_]\w*)$/.exec(unwrapped) : null;
+    if (goQ) return this.goQualifiedType(s.file, goQ[1], goQ[2]) ?? null;
+    const declared = declaredType(unwrapped);
+    if (declared === BUILTIN) return BUILTIN;
+    const tname = declared ?? baseTypeName(unwrapped);
+    if (!tname) return null;
+    // a type parameter (`<T> T get()`, `S uri(...)` in `UriSpec<S extends ...>`): unknown here
+    if (/^[A-Z][A-Z0-9]?$/.test(tname) || new RegExp(`<[^>]*\\b${tname}\\b`).test(sig.slice(0, sig.indexOf('(') + 1 || sig.length))) return null;
+    if (tname === 'Self') return this.enclosingType(s.parent) ?? null;
+    return this.resolveType(tname, { id: 0, file: s.file, from: s.id, name: tname, qualifier: null, kind: 'type_ref', hint: null, to: null });
   }
 
   /** Type symbol a receiver type name refers to, from the point of view of ref `r`. */
@@ -744,6 +1111,70 @@ export class Resolver {
     return res;
   }
 }
+
+/**
+ * Return type text from a stored signature: `public List<Foo> name(...)` (Java, C#), `fun name(...): Foo`
+ * (Kotlin), `def name(...)(...): Foo` (Scala), `name(...): Foo` (TypeScript, PHP), `-> Foo` (Rust, Python),
+ * `func (r *X) Name(...) (*Foo, error)` (Go). Undefined when the signature does not say.
+ */
+export function returnTypeText(sig: string, name: string, lang: string): string | undefined {
+  const esc = name.replace(/[$]/g, '\\$&');
+  const at = new RegExp(`(^|[^\\w$])${esc}\\s*(?:<[^()]*?>\\s*)?\\(`).exec(sig);
+  if (!at) return undefined;
+  const nameStart = at.index + at[1].length;
+  if (lang === 'java' || lang === 'c_sharp') {
+    const head = sig.slice(0, nameStart).replace(/@[\w.]+(?:\([^)]*\))?/g, ' ').trimEnd();
+    // last top-level token, generics included: `Map<String, List<Foo>>`, `Task<User>`, `Foo[]`
+    let depth = 0;
+    let k = head.length - 1;
+    for (; k >= 0; k--) {
+      const c = head[k];
+      if (c === '>') depth++;
+      else if (c === '<') depth--;
+      else if (depth === 0 && /\s/.test(c)) break;
+    }
+    const token = head.slice(k + 1);
+    return token && !JAVA_MODIFIERS.has(token) && !token.startsWith('<') ? token : undefined;
+  }
+  // skip the parameter list(s)
+  let i = sig.indexOf('(', nameStart);
+  let close = -1;
+  for (;;) {
+    if (i < 0 || sig[i] !== '(') break;
+    let depth = 0;
+    let j = i;
+    for (; j < sig.length; j++) {
+      if (sig[j] === '(') depth++;
+      else if (sig[j] === ')' && --depth === 0) break;
+    }
+    if (j >= sig.length) return undefined;
+    close = j;
+    i = j + 1;
+    while (sig[i] === ' ') i++;
+    if (lang !== 'scala' || sig[i] !== '(') break;
+  }
+  if (close < 0) return undefined;
+  const rest = sig.slice(close + 1).trim();
+  if (lang === 'rust' || lang === 'python') {
+    const m = /^->\s*(.+?)(?:\s+where\b.*)?$/.exec(rest);
+    return m?.[1].trim();
+  }
+  if (lang === 'go') {
+    if (!rest) return undefined;
+    if (rest.startsWith('(')) {
+      const first = rest.slice(1).split(',')[0].trim().split(/\s+/);
+      return first[first.length - 1];
+    }
+    return rest.split(/\s+/)[0];
+  }
+  const m = /^:\s*(.+?)(?:\s*(?:=|\{|where\b).*)?$/.exec(rest);
+  return m?.[1].trim();
+}
+
+const JAVA_MODIFIERS = new Set([
+  'public', 'protected', 'private', 'static', 'final', 'abstract', 'synchronized', 'native', 'default', 'strictfp',
+  'internal', 'virtual', 'override', 'sealed', 'async', 'extern', 'unsafe', 'new', 'partial', 'readonly', 'ref',
+]);
 
 // ------------------------------------------------------------------------------------------ driver
 
@@ -794,6 +1225,39 @@ function* refRows(store: Store, scope: ResolveScope, kinds: string[]): Generator
   if (batch.length) yield batch;
 }
 
+const MAX_IMPORT_KEYS = 64;
+const KEY_KINDS = "('class','interface','enum','type','struct','record','trait','module','namespace')";
+
+/**
+ * Words an import spec must contain to resolve to (or away from) the added / removed files: file stems, the
+ * directory names of index files and packages, and the type names they declare (JVM/PHP imports name a class). Undefined
+ * when there are too many to filter on (a large pull): every unresolved import is then retried.
+ */
+function importKeys(store: Store, g: Graph, scope: ResolveScope): string[] | undefined {
+  const keys = new Set<string>();
+  const addPath = (p: string) => {
+    const stem = stemOf(p);
+    if (stem) keys.add(stem);
+    // a directory is imported by name only through its index / __init__ file (`./dir`, `pkg.sub`); a directory
+    // word such as `shard` or `index` would select thousands of unrelated specs
+    if (stem === 'index' || stem === '__init__' || stem === 'mod') {
+      const dir = dirOf(p);
+      const base = dir.slice(dir.lastIndexOf('/') + 1);
+      if (base) keys.add(base);
+    }
+  };
+  const types = store.prepare(`SELECT DISTINCT name FROM symbols WHERE file_id = ? AND kind IN ${KEY_KINDS} LIMIT 64`);
+  for (const id of scope.addedFileIds) {
+    const f = g.files.get(id);
+    if (f) addPath(f.path);
+    for (const r of types.iterate(id) as Iterable<{ name: string }>) if (r.name) keys.add(r.name);
+    if (keys.size > MAX_IMPORT_KEYS) return undefined;
+  }
+  for (const p of scope.removedPaths ?? []) addPath(p);
+  if (scope.removedFileIds.size && !scope.removedPaths) return undefined;
+  return keys.size > MAX_IMPORT_KEYS ? undefined : [...keys];
+}
+
 function applyUpdates(store: Store, updates: Array<[number, number | null]>): void {
   if (!updates.length) return;
   const upd = store.prepare('UPDATE refs SET to_symbol_id = ? WHERE id = ?');
@@ -813,7 +1277,7 @@ function debug(label: string, t0: number): void {
 
 export async function resolveIndex(store: Store, scope: ResolveScope): Promise<ResolveStats> {
   const t0 = performance.now();
-  const res = new Resolver(store, scope.full);
+  const res = new Resolver(store, scope.full, scope.root);
   debug('preload', t0);
   const stats: ResolveStats = { refsConsidered: 0, refsResolved: 0, importsResolved: 0, durationMs: 0 };
 
@@ -822,17 +1286,26 @@ export async function resolveIndex(store: Store, scope: ResolveScope): Promise<R
     const updates: Array<[number, number | null]> = [];
     const rows: Array<{ rowid: number; file: number; spec: string; target: number | null }> = [];
     const sel = 'SELECT rowid, file_id AS file, spec, target_file_id AS target FROM file_imports';
-    if (scope.full) rows.push(...(store.db.prepare(sel).all() as unknown as typeof rows));
+    // Never `rows.push(...all())`: spreading every row as a call argument overflows the stack past ~110k rows
+    // (a 30k-file Java repository has over 500k import lines).
+    if (scope.full) for (const r of store.db.prepare(sel).iterate() as Iterable<(typeof rows)[number]>) rows.push(r);
     else {
       const byFile = store.db.prepare(`${sel} WHERE file_id = ?`);
-      for (const id of scope.changedFileIds) rows.push(...(byFile.all(id) as unknown as typeof rows));
+      for (const id of scope.changedFileIds) for (const r of byFile.iterate(id) as Iterable<(typeof rows)[number]>) rows.push(r);
       if (scope.addedFileIds.size || scope.removedFileIds.size) {
         const seen = new Set(rows.map((r) => r.rowid));
-        const stale = store.db.prepare(`${sel} WHERE target_file_id IS NULL`).all() as unknown as typeof rows;
-        const removed = scope.removedFileIds.size
-          ? (store.db.prepare(`${sel} WHERE target_file_id IN (${[...scope.removedFileIds].join(',')})`).all() as unknown as typeof rows)
-          : [];
-        for (const r of [...stale, ...removed]) if (!seen.has(r.rowid)) rows.push(r);
+        const take = (it: Iterable<unknown>) => {
+          for (const r of it as Iterable<(typeof rows)[number]>) if (!seen.has(r.rowid)) (seen.add(r.rowid), rows.push(r));
+        };
+        // Unresolved imports that the added/removed files could change (an ES-size repository has 200k of them:
+        // re-trying them all took ~1 s and 140 MB for each new file)
+        const keys = importKeys(store, res.g, scope);
+        if (keys === undefined) take(store.db.prepare(`${sel} WHERE target_file_id IS NULL`).iterate());
+        else if (keys.length) {
+          const like = keys.map(() => "spec LIKE ? ESCAPE '\\'").join(' OR ');
+          take(store.db.prepare(`${sel} WHERE target_file_id IS NULL AND (${like})`).iterate(...keys.map((k) => `%${k.replace(/[\\%_]/g, '\\$&')}%`)));
+        }
+        if (scope.removedFileIds.size) take(store.db.prepare(`${sel} WHERE target_file_id IN (${[...scope.removedFileIds].join(',')})`).iterate());
       }
     }
     const touchedFiles = new Set<number>();
@@ -866,18 +1339,25 @@ export async function resolveIndex(store: Store, scope: ResolveScope): Promise<R
   }
 
   debug('file imports', t0);
+  const totalRefs = scope.full ? (store.db.prepare('SELECT count(*) AS n FROM refs').get() as { n: number }).n : undefined;
+  scope.onProgress?.(0, totalRefs);
   // B. import refs, C. inheritance, D. everything else. Each phase is written before the next reads it.
   const phases: Array<{ kinds: string[]; fn: (r: RefRow) => number | null }> = [
     { kinds: ['import'], fn: (r) => res.resolveImportRef(r) },
     { kinds: ['inherit', 'implement'], fn: (r) => res.resolveRef(r) },
-    { kinds: ['call', 'new', 'type_ref'], fn: (r) => res.resolveRef(r) },
+    { kinds: ['call', 'new', 'type_ref', 'read', 'write'], fn: (r) => res.resolveRef(r) },
   ];
+  let lastFile = -1;
   for (const [i, phase] of phases.entries()) {
     const supers = new Map<number, number[]>();
     const importTargets = new Map<number, number | null>();
     for (const rows of refRows(store, scope, phase.kinds)) {
       const updates: Array<[number, number | null]> = [];
       for (const r of rows) {
+        if (r.file !== lastFile) {
+          if (lastFile !== -1) res.endFile();
+          lastFile = r.file;
+        }
         stats.refsConsidered++;
         let to: number | null = null;
         try {
@@ -893,6 +1373,7 @@ export async function resolveIndex(store: Store, scope: ResolveScope): Promise<R
         if (to !== r.to) updates.push([r.id, to]);
       }
       applyUpdates(store, updates);
+      scope.onProgress?.(stats.refsConsidered, totalRefs);
       await yieldNow();
     }
     debug(`phase ${phase.kinds.join('/')}`, t0);

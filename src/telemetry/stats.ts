@@ -116,7 +116,7 @@ export function stats(config: KoptConfig, opts: { days?: number } = {}): string 
   }
   if (perSession.size) {
     const v = [...perSession.values()];
-    lines.push(`sessions: ${v.length} · tool calls/session avg ${Math.round(v.reduce((a, b) => a + b, 0) / v.length)}, max ${Math.max(...v)}`);
+    lines.push(`sessions: ${v.length} · tool calls/session avg ${Math.round(v.reduce((a, b) => a + b, 0) / v.length)}, max ${v.reduce((a, b) => Math.max(a, b), 0)}`);
   }
 
   // context intake per tool, as observed by PostToolUse (built-in and MCP tools alike)

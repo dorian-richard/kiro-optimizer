@@ -1,0 +1,454 @@
+{
+  "repo": "spring-framework",
+  "language": "java",
+  "repoRoot": "bench/repos/spring-framework",
+  "headCommit": "82a6b40b9366ec181ededdad282b307ee5381a52",
+  "date": "2026-10-09T22:20:47.606Z",
+  "index": {
+    "built": true,
+    "durationMs": 20224,
+    "files": 9552,
+    "symbols": 138619,
+    "refs": 762001,
+    "path": "<index-dir>/.kopt-spring-framework/index.db"
+  },
+  "files": {
+    "indexed": 9552,
+    "skipped": 0,
+    "skippedByReason": {},
+    "indexedByLang": {
+      "java": 9150,
+      "javascript": 10,
+      "kotlin": 388,
+      "python": 2,
+      "ruby": 2
+    }
+  },
+  "langs": [
+    {
+      "lang": "java",
+      "files": 9150,
+      "lines": 1494467,
+      "symbols": 135136,
+      "symbolsPerKloc": 90.42,
+      "byKind": {
+        "method": {
+          "count": 84459,
+          "perKloc": 56.51
+        },
+        "field": {
+          "count": 19290,
+          "perKloc": 12.91
+        },
+        "class": {
+          "count": 15346,
+          "perKloc": 10.27
+        },
+        "constructor": {
+          "count": 6879,
+          "perKloc": 4.6
+        },
+        "constant": {
+          "count": 6083,
+          "perKloc": 4.07
+        },
+        "interface": {
+          "count": 2713,
+          "perKloc": 1.82
+        },
+        "record": {
+          "count": 184,
+          "perKloc": 0.12
+        },
+        "enum": {
+          "count": 182,
+          "perKloc": 0.12
+        }
+      },
+      "refs": 743980,
+      "refsResolved": 378965,
+      "resolvedRate": 0.5094,
+      "refsWithCandidate": 560038,
+      "resolvedOfCandidates": 0.6767,
+      "refsByKind": {
+        "call": {
+          "total": 343812,
+          "resolved": 165589
+        },
+        "type_ref": {
+          "total": 182370,
+          "resolved": 63706
+        },
+        "import": {
+          "total": 87931,
+          "resolved": 41394
+        },
+        "read": {
+          "total": 60257,
+          "resolved": 51937
+        },
+        "new": {
+          "total": 43979,
+          "resolved": 32314
+        },
+        "write": {
+          "total": 16055,
+          "resolved": 16031
+        },
+        "implement": {
+          "total": 4907,
+          "resolved": 3960
+        },
+        "inherit": {
+          "total": 4669,
+          "resolved": 4034
+        }
+      },
+      "parse": {
+        "sampledFiles": 1000,
+        "sampledLines": 165586,
+        "filesWithErrors": 10,
+        "errorNodes": 12,
+        "missingNodes": 0,
+        "errorFileRate": 0.01,
+        "errorsPerKloc": 0.072,
+        "parseFailures": 0,
+        "worst": [
+          {
+            "path": "spring-beans/src/main/java/org/springframework/beans/factory/support/AbstractBeanFactory.java",
+            "errors": 2,
+            "firstErrorLine": 205
+          },
+          {
+            "path": "spring-webmvc/src/main/java/org/springframework/web/servlet/support/WebContentGenerator.java",
+            "errors": 2,
+            "firstErrorLine": 127
+          },
+          {
+            "path": "spring-beans/src/main/java/org/springframework/beans/factory/config/BeanDefinition.java",
+            "errors": 1,
+            "firstErrorLine": 156
+          },
+          {
+            "path": "spring-context/src/main/java/org/springframework/context/annotation/ClassPathBeanDefinitionScanner.java",
+            "errors": 1,
+            "firstErrorLine": 202
+          },
+          {
+            "path": "spring-context/src/main/java/org/springframework/validation/ValidationUtils.java",
+            "errors": 1,
+            "firstErrorLine": 71
+          },
+          {
+            "path": "spring-core-test/src/main/java/org/springframework/aot/agent/RecordedInvocation.java",
+            "errors": 1,
+            "firstErrorLine": 233
+          },
+          {
+            "path": "spring-core/src/main/java/org/springframework/util/ClassUtils.java",
+            "errors": 1,
+            "firstErrorLine": 1283
+          },
+          {
+            "path": "spring-jdbc/src/main/java/org/springframework/jdbc/core/SqlParameter.java",
+            "errors": 1,
+            "firstErrorLine": 181
+          }
+        ]
+      },
+      "precision": {
+        "sampled": 30,
+        "nameOk": 30,
+        "startOk": 30,
+        "endOk": 30,
+        "signatureOk": 30,
+        "allOk": 30,
+        "rate": 1,
+        "failures": []
+      }
+    },
+    {
+      "lang": "kotlin",
+      "files": 388,
+      "lines": 34532,
+      "symbols": 3473,
+      "symbolsPerKloc": 100.57,
+      "byKind": {
+        "method": {
+          "count": 2060,
+          "perKloc": 59.65
+        },
+        "class": {
+          "count": 621,
+          "perKloc": 17.98
+        },
+        "property": {
+          "count": 514,
+          "perKloc": 14.88
+        },
+        "function": {
+          "count": 222,
+          "perKloc": 6.43
+        },
+        "interface": {
+          "count": 36,
+          "perKloc": 1.04
+        },
+        "constructor": {
+          "count": 14,
+          "perKloc": 0.41
+        },
+        "constant": {
+          "count": 6,
+          "perKloc": 0.17
+        }
+      },
+      "refs": 17913,
+      "refsResolved": 7903,
+      "resolvedRate": 0.4412,
+      "refsWithCandidate": 12677,
+      "resolvedOfCandidates": 0.6234,
+      "refsByKind": {
+        "call": {
+          "total": 8875,
+          "resolved": 3358
+        },
+        "type_ref": {
+          "total": 3280,
+          "resolved": 1626
+        },
+        "import": {
+          "total": 2138,
+          "resolved": 1134
+        },
+        "read": {
+          "total": 2094,
+          "resolved": 685
+        },
+        "new": {
+          "total": 1273,
+          "resolved": 902
+        },
+        "implement": {
+          "total": 98,
+          "resolved": 94
+        },
+        "write": {
+          "total": 95,
+          "resolved": 53
+        },
+        "inherit": {
+          "total": 60,
+          "resolved": 51
+        }
+      },
+      "parse": {
+        "sampledFiles": 388,
+        "sampledLines": 34798,
+        "filesWithErrors": 4,
+        "errorNodes": 5,
+        "missingNodes": 0,
+        "errorFileRate": 0.0103,
+        "errorsPerKloc": 0.144,
+        "parseFailures": 0,
+        "worst": [
+          {
+            "path": "spring-tx/src/test/kotlin/org/springframework/transaction/reactive/TransactionalOperatorExtensionsTests.kt",
+            "errors": 2,
+            "firstErrorLine": 64
+          },
+          {
+            "path": "spring-web/src/test/kotlin/org/springframework/http/codec/json/KotlinSerializationJsonEncoderTests.kt",
+            "errors": 1,
+            "firstErrorLine": 166
+          },
+          {
+            "path": "spring-web/src/test/kotlin/org/springframework/http/converter/cbor/KotlinSerializationCborHttpMessageConverterTests.kt",
+            "errors": 1,
+            "firstErrorLine": 196
+          },
+          {
+            "path": "spring-web/src/test/kotlin/org/springframework/http/converter/json/KotlinSerializationJsonHttpMessageConverterTests.kt",
+            "errors": 1,
+            "firstErrorLine": 265
+          }
+        ]
+      },
+      "precision": {
+        "sampled": 30,
+        "nameOk": 30,
+        "startOk": 30,
+        "endOk": 30,
+        "signatureOk": 30,
+        "allOk": 30,
+        "rate": 1,
+        "failures": []
+      }
+    },
+    {
+      "lang": "javascript",
+      "files": 10,
+      "lines": 40,
+      "symbols": 6,
+      "symbolsPerKloc": 150,
+      "byKind": {
+        "function": {
+          "count": 6,
+          "perKloc": 150
+        }
+      },
+      "refs": 86,
+      "refsResolved": 0,
+      "resolvedRate": 0,
+      "refsWithCandidate": 42,
+      "resolvedOfCandidates": 0,
+      "refsByKind": {
+        "write": {
+          "total": 38,
+          "resolved": 0
+        },
+        "call": {
+          "total": 24,
+          "resolved": 0
+        },
+        "read": {
+          "total": 22,
+          "resolved": 0
+        },
+        "new": {
+          "total": 2,
+          "resolved": 0
+        }
+      },
+      "parse": {
+        "sampledFiles": 0,
+        "sampledLines": 0,
+        "filesWithErrors": 0,
+        "errorNodes": 0,
+        "missingNodes": 0,
+        "errorFileRate": 0,
+        "errorsPerKloc": 0,
+        "parseFailures": 0,
+        "worst": []
+      },
+      "precision": {
+        "sampled": 0,
+        "nameOk": 0,
+        "startOk": 0,
+        "endOk": 0,
+        "signatureOk": 0,
+        "allOk": 0,
+        "rate": 0,
+        "failures": []
+      }
+    },
+    {
+      "lang": "python",
+      "files": 2,
+      "lines": 10,
+      "symbols": 2,
+      "symbolsPerKloc": 200,
+      "byKind": {
+        "function": {
+          "count": 2,
+          "perKloc": 200
+        }
+      },
+      "refs": 6,
+      "refsResolved": 0,
+      "resolvedRate": 0,
+      "refsWithCandidate": 0,
+      "resolvedOfCandidates": 0,
+      "refsByKind": {
+        "call": {
+          "total": 2,
+          "resolved": 0
+        },
+        "import": {
+          "total": 2,
+          "resolved": 0
+        },
+        "new": {
+          "total": 2,
+          "resolved": 0
+        }
+      },
+      "parse": {
+        "sampledFiles": 0,
+        "sampledLines": 0,
+        "filesWithErrors": 0,
+        "errorNodes": 0,
+        "missingNodes": 0,
+        "errorFileRate": 0,
+        "errorsPerKloc": 0,
+        "parseFailures": 0,
+        "worst": []
+      },
+      "precision": {
+        "sampled": 0,
+        "nameOk": 0,
+        "startOk": 0,
+        "endOk": 0,
+        "signatureOk": 0,
+        "allOk": 0,
+        "rate": 0,
+        "failures": []
+      }
+    },
+    {
+      "lang": "ruby",
+      "files": 2,
+      "lines": 40,
+      "symbols": 2,
+      "symbolsPerKloc": 50,
+      "byKind": {
+        "function": {
+          "count": 2,
+          "perKloc": 50
+        }
+      },
+      "refs": 16,
+      "refsResolved": 4,
+      "resolvedRate": 0.25,
+      "refsWithCandidate": 6,
+      "resolvedOfCandidates": 0.6667,
+      "refsByKind": {
+        "call": {
+          "total": 12,
+          "resolved": 4
+        },
+        "new": {
+          "total": 4,
+          "resolved": 0
+        }
+      },
+      "parse": {
+        "sampledFiles": 0,
+        "sampledLines": 0,
+        "filesWithErrors": 0,
+        "errorNodes": 0,
+        "missingNodes": 0,
+        "errorFileRate": 0,
+        "errorsPerKloc": 0,
+        "parseFailures": 0,
+        "worst": []
+      },
+      "precision": {
+        "sampled": 0,
+        "nameOk": 0,
+        "startOk": 0,
+        "endOk": 0,
+        "signatureOk": 0,
+        "allOk": 0,
+        "rate": 0,
+        "failures": []
+      }
+    }
+  ],
+  "settings": {
+    "parseSamplePerLang": 1000,
+    "precisionSamplePerLang": 30,
+    "seed": "spring-framework"
+  },
+  "durationMs": 3214
+}

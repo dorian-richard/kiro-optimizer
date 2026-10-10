@@ -137,7 +137,7 @@ describe('PreToolUse governor', () => {
     bigFile(c, 'src/small.ts', 50);
     const first = await handleHook(pre(c, 'read_file', { path: 'src/Big.java' }), c);
     expect(first.exitCode).toBe(2);
-    expect(first.stderr).toMatch(/^kopt: src\/Big\.java has 3412 lines \(~\d+k tokens\)\. Use kopt_outline path=src\/Big\.java or kopt_read src\/Big\.java:<a>-<b>, or read with offset\/limit\.$/);
+    expect(first.stderr).toMatch(/^kopt: src\/Big\.java is ~\d+k tokens \(3412 lines\)\. Use kopt_read src\/Big\.java mode=outline or kopt_read src\/Big\.java:<a>-<b>, or read with offset\/limit\.$/);
     expect((await handleHook(pre(c, 'read_file', { path: 'src/Big.java' }), c)).exitCode).toBe(0);
     // ranged reads and small files are never blocked
     expect((await handleHook(pre(c, 'read_file', { path: 'src/Big.java', offset: 10, limit: 40 }, 's2'), c)).exitCode).toBe(0);
@@ -148,6 +148,25 @@ describe('PreToolUse governor', () => {
     expect(loadSession(c.userDir, 's1').blocks['big-read']).toBe(1);
   });
 
+  it('decides big reads by estimated tokens, not lines: many short lines cost less than the block', async () => {
+    const c = makeConfig('bigread-tokens');
+    // 900 lines but ~8 KB (~2.7k tokens): a block (one more full-context request) would cost more than it saves
+    const abs = join(c.root, 'src', 'short.py');
+    mkdirSync(join(abs, '..'), { recursive: true });
+    writeFileSync(abs, Array.from({ length: 900 }, (_, i) => `x${i} = ${i}`).join('\n') + '\n');
+    expect((await handleHook(pre(c, 'read_file', { path: 'src/short.py' }), c)).exitCode).toBe(0);
+    // 300 long lines, ~45 KB (~15k tokens): blocked although it is far below 800 lines
+    const wide = join(c.root, 'src', 'wide.json');
+    writeFileSync(wide, Array.from({ length: 300 }, (_, i) => `{"id": ${i}, "payload": "${'x'.repeat(140)}"},`).join('\n') + '\n');
+    const r = await handleHook(pre(c, 'read_file', { path: 'src/wide.json' }), c);
+    expect(r.exitCode).toBe(2);
+    expect(r.stderr).toMatch(/^kopt: src\/wide\.json is ~1\dk tokens \(300 lines\)/);
+    // the threshold is configurable; 0 disables the rule
+    const off = makeConfig('bigread-off', (x) => { x.governor.bigFileTokens = 0; });
+    writeFileSync(join(off.root, 'w.json'), readFileSync(wide));
+    expect((await handleHook(pre(off, 'read_file', { path: 'w.json' }), off)).exitCode).toBe(0);
+  });
+
   it('redirects verbose test/build commands to kopt_run once per command when the MCP server is installed', async () => {
     const c = makeConfig('verbose');
     // not installed: no redirect
@@ -155,7 +174,7 @@ describe('PreToolUse governor', () => {
     installMcp(c);
     const out = await handleHook(pre(c, 'execute_bash', { command: 'cd api && npm test -- --watch=false', cwd: c.root }), c);
     expect(out.exitCode).toBe(2);
-    expect(out.stderr).toBe('kopt: use kopt_run with command="npm test -- --watch=false" cwd="api": same execution, returns only failures/errors (full log via kopt_expand).');
+    expect(out.stderr).toBe('kopt: use kopt_run with command="npm test -- --watch=false" cwd="api": same execution, returns only failures/errors (full log via kopt_read <handle>).');
     // retry of the same command goes through
     expect((await handleHook(pre(c, 'execute_bash', { command: 'cd api && npm test -- --watch=false', cwd: c.root }), c)).exitCode).toBe(0);
     // non-verbose shell commands are never touched
@@ -172,7 +191,7 @@ describe('PreToolUse governor', () => {
     expect((await run()).exitCode).toBe(0);
     const dup = await run();
     expect(dup.exitCode).toBe(2);
-    expect(dup.stderr).toBe('kopt governor: identical command already ran this session and no file changed since; reuse its result.');
+    expect(dup.stderr).toBe('kopt governor: identical command already ran this session and no file changed since; reuse its result (run it again to override).');
     expect((await run()).exitCode).toBe(0); // insisting is allowed (no deadlock)
     await handleHook({ hook_event_name: 'PostFileSave', session_id: 's1', cwd: c.root, file_path: join(c.root, 'app.py') }, c);
     expect((await run()).exitCode).toBe(0);
@@ -181,6 +200,36 @@ describe('PreToolUse governor', () => {
     await handleHook({ hook_event_name: 'postToolUse', session_id: 's1', cwd: c.root, tool_name: 'fs_write', tool_input: { path: 'app.py' }, tool_response: { success: true } }, c);
     expect((await run()).exitCode).toBe(0);
     expect(loadSession(c.userDir, 's1').blocks['duplicate-run']).toBe(2);
+  });
+
+  it('redirects only predictably verbose runs, never quiet, narrowed or long-running commands, at most 3 per session', async () => {
+    const c = makeConfig('verbose-only', (x) => { x.governor.blockDuplicateRuns = false; });
+    installMcp(c);
+    for (const cmd of ['npx tsc --noEmit', 'go vet ./...', 'go build ./...', 'pytest tests/test_api.py', 'mvn -q test -Dtest=OrderTest', 'npm test -- src/a.test.ts',
+      'npm run typecheck', 'mvn spring-boot:run', './gradlew bootRun', 'npm run dev', 'npm start', 'npm test -- --watch', 'tsc -w', 'ng serve', 'python manage.py runserver']) {
+      expect((await handleHook(pre(c, 'execute_bash', { command: cmd }, 'q1'), c)).exitCode, cmd).toBe(0);
+    }
+    expect(loadSession(c.userDir, 'q1').blocks['verbose-cmd']).toBeUndefined();
+    let blocked = 0;
+    for (const cmd of ['mvn test', './gradlew build', 'npm test', 'pytest', 'cargo test']) {
+      if ((await handleHook(pre(c, 'execute_bash', { command: cmd }, 'q2'), c)).exitCode === 2) blocked++;
+    }
+    expect(blocked).toBe(3); // the first redirects taught the model: no more turns spent on it
+  });
+
+  it('does not redirect when kopt_run is not callable (disabledTools, KOPT_DISABLE_RUN) and stops advertising it', async () => {
+    for (const [name, entry] of [
+      ['run-disabled-tools', { command: 'node', args: [], disabledTools: ['kopt_run'] }],
+      ['run-disabled-env', { command: 'node', args: [], env: { KOPT_DISABLE_RUN: '1' } }],
+    ] as const) {
+      const c = makeConfig(name, (x) => { x.governor.blockDuplicateRuns = false; });
+      mkdirSync(join(c.root, '.kiro', 'settings'), { recursive: true });
+      writeFileSync(join(c.root, '.kiro', 'settings', 'mcp.json'), JSON.stringify({ mcpServers: { kopt: entry } }));
+      expect((await handleHook(pre(c, 'execute_bash', { command: 'mvn test' }), c)).exitCode, name).toBe(0);
+      mkdirSync(c.dataDir, { recursive: true });
+      const start = await handleHook({ hook_event_name: 'SessionStart', session_id: 'adv', cwd: c.root }, c);
+      expect(start.stdout, name).not.toContain('kopt_run');
+    }
   });
 
   it('does not redirect to kopt_run when the kopt MCP server is disabled (it counts as absent)', async () => {
@@ -275,6 +324,55 @@ describe('robustness', () => {
   });
 });
 
+describe('duplicate-run detection', () => {
+  const run = (c: KoptConfig, command: string, session = 'u1') => handleHook(pre(c, 'execute_bash', { command }, session), c);
+  const post = (c: KoptConfig, tool: string, input: unknown, session = 'u1') =>
+    handleHook({ hook_event_name: 'PostToolUse', session_id: session, cwd: c.root, tool_name: tool, tool_input: input, tool_response: 'ok' }, c);
+
+  it('counts shell commands that may write (sed -i, git checkout, npm install) and code-tool edits as changes, not readers', async () => {
+    const c = makeConfig('dup-shell');
+    expect((await run(c, 'pytest -q')).exitCode).toBe(0);
+    await post(c, 'execute_bash', { command: 'ls -la && cat app.py | grep x && git status' });
+    expect((await run(c, 'pytest -q')).exitCode).toBe(2); // readers change nothing
+    for (const writer of ['sed -i s/a/b/ app.py', 'git checkout -- app.py', 'npm install', 'echo x > app.py']) {
+      await post(c, 'execute_bash', { command: writer });
+      expect((await run(c, 'pytest -q')).exitCode, writer).toBe(0);
+      expect((await run(c, 'pytest -q')).exitCode, writer).toBe(2);
+    }
+    // kiro `code` tool (rename_symbol, format, pattern_rewrite) writes files
+    await post(c, 'code', { operation: 'rename_symbol', file_path: 'app.py', old: 'a', new: 'b' });
+    expect((await run(c, 'pytest -q')).exitCode).toBe(0);
+  });
+
+  it('a new user prompt always allows the next identical run ("run it again")', async () => {
+    const c = makeConfig('dup-prompt', (x) => { x.budgets.frontload = 0; });
+    expect((await run(c, 'go test ./...')).exitCode).toBe(0);
+    await handleHook({ hook_event_name: 'UserPromptSubmit', session_id: 'u1', cwd: c.root, prompt: 'I fixed it myself, run the tests again' }, c);
+    expect((await run(c, 'go test ./...')).exitCode).toBe(0);
+  });
+
+  it('sees edits the hooks never observed (user editor, another terminal) through the git workspace state', async () => {
+    const c = makeConfig('dup-git');
+    const { execFileSync } = await import('node:child_process');
+    execFileSync('git', ['init', '-q'], { cwd: c.root });
+    writeFileSync(join(c.root, 'app.py'), 'x = 1\n');
+    expect((await run(c, 'pytest -q')).exitCode).toBe(0);
+    await post(c, 'execute_bash', { command: 'pytest -q' }); // state right after the run
+    expect(Object.values(loadSession(c.userDir, 'u1').runs)[0].fp).toMatch(/^[0-9a-f]{40}$/);
+    expect((await run(c, 'pytest -q')).exitCode).toBe(2); // nothing changed: blocked once
+    expect((await run(c, 'pytest -q')).exitCode).toBe(0);
+    await post(c, 'execute_bash', { command: 'pytest -q' });
+    writeFileSync(join(c.root, 'app.py'), 'x = 2  # edited outside Kiro\n'); // no hook saw this
+    expect((await run(c, 'pytest -q')).exitCode).toBe(0);
+  });
+
+  it('never treats watch modes or dev servers as test/build runs', async () => {
+    const c = makeConfig('dup-watch');
+    for (const cmd of ['npm run dev', 'npm run dev']) expect((await run(c, cmd)).exitCode).toBe(0);
+    expect(loadSession(c.userDir, 'u1').runs).toEqual({});
+  });
+});
+
 describe('PostToolUse and file events', () => {
   it('records the size of built-in tool responses without output', async () => {
     const c = makeConfig('post');
@@ -306,7 +404,7 @@ describe('SessionStart and Stop', () => {
     const c = makeConfig('start-noindex');
     installMcp(c);
     const none = await handleHook({ hook_event_name: 'SessionStart', session_id: 'a', cwd: c.root }, c);
-    expect(none.stdout).toBe('kopt: index building in the background. Prefer kopt_find/kopt_read/kopt_outline over grep + whole-file reads; kopt_run for tests/builds.\n');
+    expect(none.stdout).toBe('kopt: index building in the background. Prefer kopt_find/kopt_read/kopt_refs over grep + whole-file reads; kopt_run for tests/builds.\n');
     expect(spawned).toHaveLength(0);
 
     const { Store } = await import('../src/store/store.js');
@@ -314,13 +412,18 @@ describe('SessionStart and Stop', () => {
     installMcp(c2);
     const store = Store.open(join(c2.dataDir, 'index.db'));
     store.setMeta('commit', '0123456789abcdef');
+    // first build still running (the MCP server created index.db): no second indexer, no "0 symbols"
+    const building = await handleHook({ hook_event_name: 'SessionStart', session_id: 'b0', cwd: c2.root }, c2);
+    expect(building.stdout).toBe(none.stdout);
+    expect(spawned).toHaveLength(0);
+    store.setMeta('indexed_at', String(Date.now()));
     store.close();
     const out = await handleHook({ hook_event_name: 'SessionStart', session_id: 'b', cwd: c2.root }, c2);
     expect(out.exitCode).toBe(0);
-    expect(out.stdout).toBe('kopt: index @0123456, 0 symbols. Prefer kopt_find/kopt_read/kopt_outline over grep + whole-file reads; kopt_run for tests/builds.\n');
+    expect(out.stdout).toBe('kopt: index @0123456, 0 symbols. Prefer kopt_find/kopt_read/kopt_refs over grep + whole-file reads; kopt_run for tests/builds.\n');
     expect(out.stdout!.length).toBeLessThanOrEqual(251);
     expect(spawned).toHaveLength(1);
-    expect(spawned[0].argv.slice(-2)).toEqual(['index', '--refresh']);
+    expect(spawned[0].argv.slice(-3)).toEqual(['index', '--refresh', '--if-idle']);
     expect(spawned[0].cwd).toBe(c2.root);
     // throttled: a second session start right after does not spawn again
     await handleHook({ hook_event_name: 'SessionStart', session_id: 'c', cwd: c2.root }, c2);
@@ -354,8 +457,12 @@ describe('SessionStart and Stop', () => {
 describe('UserPromptSubmit front-load', () => {
   const hit = (lines: string[], meta?: Record<string, unknown>) => ({ text: ['find "q" · 2 hits · ~40 tok', ...lines].join('\n'), tokens: 40, meta });
 
+  /** Prompt pointers are off by default (budgets.frontload 0): these tests turn them on. */
   function withIndex(name: string, over: (c: KoptConfig) => void = () => {}): KoptConfig {
-    const c = makeConfig(name, over);
+    const c = makeConfig(name, (x) => {
+      x.budgets.frontload = 200;
+      over(x);
+    });
     mkdirSync(c.dataDir, { recursive: true });
     writeFileSync(join(c.dataDir, 'index.db'), '');
     return c;
@@ -390,15 +497,53 @@ describe('UserPromptSubmit front-load', () => {
     expect((await handleHook(prompt(c, 'fix the refund calculator rounding', 's2'), c)).stdout).toContain('#3mv');
   });
 
+  it('never sends the also: lines of a find result as pointers', async () => {
+    const c = withIndex('fl-also');
+    mock(() => hit([
+      'src/billing/refund/RefundCalculator.java',
+      '  #3mv 12-140 class public class RefundCalculator',
+      '  also: roundHalfEven L150 #3mz, toString L170 #3n0',
+      'src/billing/refund/RefundPolicy.java',
+      '  #3p1 5-40 class public class RefundPolicy',
+    ]));
+    const out = await handleHook(prompt(c, 'fix the refund calculator rounding'), c);
+    expect(out.stdout).toBe(
+      `${FRONTLOAD_HEADER}\nsrc/billing/refund/RefundCalculator.java\n  #3mv 12-140 class public class RefundCalculator\n` +
+        'src/billing/refund/RefundPolicy.java\n  #3p1 5-40 class public class RefundPolicy\n',
+    );
+  });
+
   it('measures term coverage with light stemming', async () => {
-    const { stem, termCoverage, requiredCoverage } = await import('../src/hooks/frontload.js');
+    const { stem, termCoverage } = await import('../src/hooks/frontload.js');
     expect(stem('orders')).toBe('order');
     expect(stem('applies')).toBe('apply');
     expect(stem('computation')).toBe('comput');
     expect(termCoverage(['refund', 'computation', 'orders'], 'src/billing/RefundCalculator.java #1 1-9 method computeRefund(Order o)')).toBe(3);
     expect(termCoverage(['refund', 'tax'], 'src/util/DateUtil.java #2 1-9 method parseDate')).toBe(0);
-    expect(requiredCoverage(2)).toBe(2);
-    expect(requiredCoverage(8)).toBe(3);
+  });
+
+  it('reads what a prompt says about the code: named code, domain words, follow-ups', async () => {
+    const { promptSignal, confidentHit } = await import('../src/hooks/frontload.js');
+    // generic developer words and conversation are not evidence
+    for (const p of ['write the commit message for these changes', 'revert the last change', 'fix the failing test', 'yes continue',
+      'run the tests again', 'please add type hints to the new code', 'rename user_id to account_id in the file I have open', 'ok']) {
+      const sig = promptSignal(p);
+      expect(sig.followUp || (!sig.identifiers.length && sig.words.length < 2), p).toBe(true);
+    }
+    expect(promptSignal('where is the refund amount computed').words).toEqual(['refund', 'amount', 'computed']);
+    expect(promptSignal('why does `getBean` return null for prototype scope?').identifiers).toEqual([['getbean']]);
+    expect(promptSignal('OrderService.place throws on empty carts').identifiers).toEqual([['orderservice', 'place']]);
+    expect(promptSignal('look at src/billing/refund_policy.ts first').identifiers).toContainEqual(['refundpolicy']);
+    expect(promptSignal('How does Django decide which CSRF cookie to set?', ['django']).words).toEqual(['csrf', 'cookie']);
+    // named code: the top hit must be it
+    const named = promptSignal('why does getBean return null for prototype beans');
+    expect(confidentHit(named, 'src/Factory.java #1 1-9 method Object getBean(String name)')).toBe(true);
+    expect(confidentHit(named, 'src/Scope.java #2 1-9 class PrototypeScope')).toBe(false);
+    // words: at least 2 covered, and 2/3 of them
+    const words = promptSignal('fix the rounding in the refund calculator');
+    expect(confidentHit(words, 'src/RefundCalculator.java #3 1-9 class RefundCalculator')).toBe(true);
+    expect(confidentHit(promptSignal('add a changelog entry for the release'), 'gis/srs.py #4 1-9 function add_srs_entry')).toBe(false);
+    expect(confidentHit(promptSignal('where are refund amounts rounded for partial captures'), 'src/Refund.java #5 1-9 class Refund')).toBe(false);
   });
 
   it('understands the grouped find layout (path line + indented pointers) and keeps budgets', async () => {
@@ -418,21 +563,33 @@ describe('UserPromptSubmit front-load', () => {
     expect(again).toBe(`${FRONTLOAD_HEADER}\nsrc/billing/refund/RefundPolicy.java\n  #3n0 5-60 class public class RefundPolicy implements Policy with a long signature that does not fit\n`);
   });
 
-  it('stays silent when the top hit is weak, the prompt is too short, there is no index, or frontload is disabled', async () => {
+  it('stays silent when the top hit is weak, the prompt is a follow-up, there is no index, or frontload is disabled', async () => {
     const c = withIndex('fl-weak');
-    mock(() => hit(['#1 function parseDate  src/util/date.ts:1-20']));
+    const calls = mock(() => hit(['#1 function parseDate  src/util/date.ts:1-20']));
     expect((await handleHook(prompt(c, 'fix the refund calculator rounding'), c)).stdout).toBeUndefined();
-    expect((await handleHook(prompt(c, 'yes continue'), c)).stdout).toBeUndefined();
-    // honours an explicit coverage reported by retrieval
+    // follow-ups and generic prompts do not even query the index
+    for (const p of ['yes continue', 'fix the failing test', 'write the commit message for these changes', 'revert the last change']) {
+      expect((await handleHook(prompt(c, p), c)).stdout, p).toBeUndefined();
+    }
+    expect(calls).toHaveLength(1);
+    // retrieval's own coverage count (generic words included) is not trusted
     mock(() => hit(['#1 function parseDate  src/util/date.ts:1-20'], { topTermsMatched: 3 }));
-    expect((await handleHook(prompt(c, 'fix the refund calculator rounding'), c)).stdout).toContain('#1');
+    expect((await handleHook(prompt(c, 'fix the refund calculator rounding'), c)).stdout).toBeUndefined();
 
     const noIndex = makeConfig('fl-noindex');
     mock(() => hit(['#3mv class RefundCalculator  src/RefundCalculator.java:1-9']));
-    expect((await handleHook(prompt(noIndex, 'refund calculator rounding'), noIndex)).stdout).toBeUndefined();
+    expect((await handleHook(prompt(noIndex, 'fix the rounding in the refund calculator'), noIndex)).stdout).toBeUndefined();
 
     const off = withIndex('fl-off', (x) => { x.budgets.frontload = 0; });
-    expect((await handleHook(prompt(off, 'refund calculator rounding'), off)).stdout).toBeUndefined();
+    expect((await handleHook(prompt(off, 'fix the rounding in the refund calculator'), off)).stdout).toBeUndefined();
+  });
+
+  it('is off by default; when on, caps pointers at 4', async () => {
+    const c = withIndex('fl-cap');
+    expect(defaultConfig(c.root).budgets.frontload).toBe(0);
+    mock(() => hit(Array.from({ length: 8 }, (_, i) => `#a${i} method RefundCalculator.step${i}  src/billing/RefundCalculator.java:${i * 10 + 1}-${i * 10 + 9}`)));
+    const out = (await handleHook(prompt(c, 'explain how the refund calculator works'), c)).stdout!;
+    expect(out.trim().split('\n')).toHaveLength(1 + 4);
   });
 
   it('skips when retrieval exceeds the time limit and survives a missing retrieval module', async () => {
@@ -443,10 +600,10 @@ describe('UserPromptSubmit front-load', () => {
       newContext: async () => ({}),
     });
     const t0 = performance.now();
-    expect((await handleHook(prompt(c, 'refund calculator rounding'), c)).stdout).toBeUndefined();
+    expect((await handleHook(prompt(c, 'fix the rounding in the refund calculator'), c)).stdout).toBeUndefined();
     expect(performance.now() - t0).toBeLessThan(550);
     setFrontloadDeps({ loadRetrieval: () => Promise.reject(new Error('Cannot find module')) });
-    expect(await handleHook(prompt(c, 'refund calculator rounding', 's9'), c)).toEqual({ exitCode: 0 });
+    expect(await handleHook(prompt(c, 'fix the rounding in the refund calculator', 's9'), c)).toEqual({ exitCode: 0 });
   });
 
   it('closes the index it opened when retrieval fails or is too slow (an open handle locks index.db on Windows)', async () => {
@@ -458,13 +615,13 @@ describe('UserPromptSubmit front-load', () => {
       return { store: {}, close: () => { closed++; } };
     };
     setFrontloadDeps({ loadRetrieval: () => Promise.reject(new Error('Cannot find module')), openStore, newContext: async () => ({}) });
-    expect(await handleHook(prompt(c, 'refund calculator rounding', 'c1'), c)).toEqual({ exitCode: 0 });
+    expect(await handleHook(prompt(c, 'fix the rounding in the refund calculator', 'c1'), c)).toEqual({ exitCode: 0 });
     setFrontloadDeps({
       loadRetrieval: () => new Promise((r) => setTimeout(() => r({ find: () => hit(['#3mv class RefundCalculator  a.java:1-2']) }), 600)),
       openStore,
       newContext: async () => ({}),
     });
-    expect((await handleHook(prompt(c, 'refund calculator rounding', 'c2'), c)).stdout).toBeUndefined();
+    expect((await handleHook(prompt(c, 'fix the rounding in the refund calculator', 'c2'), c)).stdout).toBeUndefined();
     await new Promise((r) => setTimeout(r, 0));
     expect(opened).toBe(2);
     expect(closed).toBe(2);
@@ -475,7 +632,7 @@ describe('UserPromptSubmit front-load', () => {
     const available = await import(spec).then(() => true, () => false);
     if (!available) return; // sibling module not built yet: covered by the mocked tests above
     const { Store } = await import('../src/store/store.js');
-    const c = makeConfig('fl-real');
+    const c = makeConfig('fl-real', (x) => { x.budgets.frontload = 200; });
     const store = Store.open(join(c.dataDir, 'index.db'));
     store.transaction(() => {
       const f = store.prepare('INSERT INTO files(id, path, lang, hash, size, line_count, rank) VALUES (?, ?, ?, ?, ?, ?, ?)');
@@ -503,7 +660,7 @@ describe('UserPromptSubmit front-load', () => {
   it('reads the prompt from USER_PROMPT when the payload has none (IDE legacy hooks)', async () => {
     const c = withIndex('fl-env');
     mock(() => hit(['#3mv class RefundCalculator  src/RefundCalculator.java:1-9']));
-    process.env.USER_PROMPT = 'refund calculator rounding';
+    process.env.USER_PROMPT = 'fix the rounding in the refund calculator';
     try {
       const out = await handleHook({ hook_event_name: 'UserPromptSubmit', session_id: 'e', cwd: c.root }, c);
       expect(out.stdout).toContain('#3mv');
@@ -580,13 +737,69 @@ describe('duplicate events from two active hook formats', () => {
   });
 
   it('a duplicate of a blocked call stays silent (the first copy already blocked it)', async () => {
-    const c = makeConfig('dedup-block', (x) => { x.governor.bigFileLines = 100; });
+    const c = makeConfig('dedup-block', (x) => { x.governor.bigFileLines = 100; x.governor.bigFileTokens = 1000; });
     bigFile(c, 'Big.java', 500);
     const ev = (source: string): HookEvent => ({ ...pre(c, 'read_file', { path: 'Big.java' }, 'd2'), _kopt_source: source });
     const first = await handleHook(ev('agent'), c);
     expect(first.exitCode).toBe(2);
     expect(await handleHook(ev('global'), c)).toEqual({ exitCode: 0 });
     expect(loadSession(c.userDir, 'd2').blocks['big-read']).toBe(1);
+  });
+});
+
+describe('IDE 0.x legacy sessions and prompt dedup', () => {
+  it('gives legacy hook events (no chat id) a pseudo-session that ends after 30 idle minutes', async () => {
+    const { legacySessionId, LEGACY_SESSION_IDLE_MS } = await import('../src/hooks/index.js');
+    const c = makeConfig('legacy-session');
+    const t0 = Date.now();
+    const a = legacySessionId(c, t0);
+    expect(legacySessionId(c, t0 + 60_000)).toBe(a);
+    const b = legacySessionId(c, t0 + 60_000 + LEGACY_SESSION_IDLE_MS + 1);
+    expect(b).not.toBe(a);
+    expect(b).toMatch(/^legacy-[0-9a-f]{8}-/);
+  });
+
+  it('a new chat in IDE 0.x gets pointers again (no day-long anon session), and a prompt seen by two hook formats is handled once', async () => {
+    const c = makeConfig('legacy-pointers', (x) => { x.budgets.frontload = 200; });
+    mkdirSync(c.dataDir, { recursive: true });
+    writeFileSync(join(c.dataDir, 'index.db'), '');
+    setFrontloadDeps({
+      loadRetrieval: async () => ({ find: () => ({ text: 'find · 1 hit\n#3mv class RefundCalculator  src/RefundCalculator.java:1-9', tokens: 20 }) }),
+      openStore: async () => ({ store: {}, close: () => {} }),
+      newContext: async () => ({}),
+    });
+    const legacy = (prompt: string): HookEvent => ({ hook_event_name: 'promptSubmit', cwd: c.root, prompt, _kopt_source: 'legacy' });
+    expect((await handleHook(legacy('fix the rounding in the refund calculator'), c)).stdout).toContain('#3mv');
+    // the same prompt delivered by the v1 global hook too (IDE 1.x still runs legacy hooks it finds): once
+    expect((await handleHook({ hook_event_name: 'UserPromptSubmit', session_id: 'v1-chat', cwd: c.root, prompt: 'fix the rounding in the refund calculator', _kopt_source: 'global' }, c)).stdout).toBeUndefined();
+    // a later chat (after the idle window): the pointer is sent again
+    const { legacySessionId, LEGACY_SESSION_IDLE_MS } = await import('../src/hooks/index.js');
+    legacySessionId(c, Date.now() - 2 * LEGACY_SESSION_IDLE_MS); // simulate an old pseudo-session
+    const later = join(c.userDir, 'sessions');
+    for (const f of readdirSync(later).filter((n) => n.startsWith('_legacy-'))) {
+      const p = join(later, f);
+      if (f.endsWith('.json')) writeFileSync(p, JSON.stringify({ id: 'legacy-old', at: Date.now() - 2 * LEGACY_SESSION_IDLE_MS }));
+    }
+    await new Promise((r) => setTimeout(r, DUPLICATE_WINDOW_MS + 50));
+    expect((await handleHook(legacy('fix the rounding in the refund calculator'), c)).stdout).toContain('#3mv');
+  }, 10_000);
+});
+
+describe('private files (POSIX)', () => {
+  it.skipIf(process.platform === 'win32')('writes session state, usage logs and error logs owner-only', async () => {
+    const c = makeConfig('private');
+    await handleHook(pre(c, 'grep_search', { query: 'x' }, 'p1'), c);
+    await handleHook({ hook_event_name: 'PostToolUse', session_id: 'p1', cwd: c.root, tool_name: 'read_file', tool_input: { path: 'a' }, tool_response: 'x' }, c);
+    const { logHookError } = await import('../src/hooks/index.js');
+    logHookError(c, new Error('boom'));
+    const { statSync } = await import('node:fs');
+    const mode = (p: string) => statSync(p).mode & 0o777;
+    expect(mode(c.userDir)).toBe(0o700);
+    expect(mode(sessionFile(c.userDir, 'p1'))).toBe(0o600);
+    const tel = join(c.userDir, 'telemetry');
+    expect(mode(tel)).toBe(0o700);
+    for (const f of readdirSync(tel)) expect(mode(join(tel, f))).toBe(0o600);
+    expect(mode(join(c.userDir, 'hook-errors.log'))).toBe(0o600);
   });
 });
 

@@ -10,6 +10,7 @@ import { renderMarkdown, writeResults } from '../src/bench/report.js';
 import { extractTargets, nativeNaive, nativeRanged, pickWindows, topVisibleFiles, type KoptModules } from '../src/bench/strategies.js';
 import { goldDefSignatures, validateTaskFile, verifyTasks } from '../src/bench/tasks.js';
 import { runBench } from '../src/bench/index.js';
+import { repoIndexDir } from '../src/bench/run.js';
 import type { BenchTask, TaskStrategyResult } from '../src/bench/types.js';
 
 let root: string;
@@ -110,6 +111,17 @@ describe('nativeGrep', () => {
     expect(g.visible[0].path).not.toBe('tests/test_refund.py');
   });
 
+  it('counts overlapping keywords on every line that contains them, and the file union once', () => {
+    // `refund` is a substring of `compute_refund`: grepping `refund` alone also returns the compute_refund lines
+    const g = nativeGrep(root, ['refund', 'compute_refund']);
+    const refund = g.candidates.find((c) => c.keyword === 'refund')!.matches;
+    const compute = g.candidates.find((c) => c.keyword === 'compute_refund')!.matches;
+    expect(refund).toBeGreaterThanOrEqual(compute);
+    // the test file has 40 lines with both keywords: counted once per line in the per-file stats
+    expect(g.files.find((f) => f.path === 'tests/test_refund.py')).toMatchObject({ distinct: 2, count: 40 });
+    expect(g.files.find((f) => f.path === 'src/orders/service.py')).toMatchObject({ distinct: 2, count: 2 });
+  });
+
   it('reports no matches without throwing', () => {
     const g = nativeGrep(root, ['zzz_does_not_exist']);
     expect(g.text).toBe('No matches found');
@@ -166,6 +178,9 @@ describe('native strategies', () => {
     const text = ['find "refund" · 3 hits · ~90 tok', 'src/a.py:1-9 #3mv compute_refund(order)', 'src/b.py:4-8 cancel', 'src/a.py:1-9 #3mv dup'].join('\n');
     expect(extractTargets(text, 2)).toEqual(['#3mv', 'src/b.py:4-8']);
     expect(extractTargets('header #zz', 2)).toEqual([]);
+    // also: lines name other symbols of a listed file; the next hit is read, not one of them
+    const grouped = ['find "refund" · 2 hits · ~90 tok', 'src/a.py', '  #3mv 1-9 function compute_refund(order)', '  also: helper L20 #3mw', 'src/b.py', '  #3n1 4-8 function cancel()'].join('\n');
+    expect(extractTargets(grouped, 2)).toEqual(['#3mv', '#3n1']);
   });
 });
 
@@ -289,6 +304,16 @@ describe('task files', () => {
     expect(msgs.some((m) => m.includes('gold file missing: src/nope.py'))).toBe(true);
     expect(msgs.some((m) => m.includes('cancel not found at src/orders/service.py:1'))).toBe(true);
     expect(msgs.some((m) => m.includes('not listed in gold.files'))).toBe(true);
+  });
+});
+
+describe('repoIndexDir', () => {
+  it('gives every repo its own index under --index-dir when several repos run', () => {
+    const d = join(tmpdir(), 'idx');
+    expect(repoIndexDir(undefined, 'django', true)).toBeUndefined();
+    expect(repoIndexDir(d, 'django', false)).toBe(d);
+    expect(repoIndexDir(d, 'django', true)).toBe(join(d, '.kopt-django'));
+    expect(repoIndexDir(d, 'webpack', true)).not.toBe(repoIndexDir(d, 'django', true));
   });
 });
 

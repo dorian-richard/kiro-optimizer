@@ -2,12 +2,15 @@
 
 Runtime: Node >= 22.13, ESM (`"type": "module"`), TypeScript strict, imports with `.js` suffix
 (`import { x } from '../core/tokens.js'`). **Zero native dependencies**: SQLite = `node:sqlite`
-(FTS5 available), parsing = `web-tree-sitter@0.25` + `tree-sitter-wasms` grammars. Tests: vitest in `test/`.
+(FTS5 available), parsing = `web-tree-sitter@0.25` + `tree-sitter-wasms` grammars, with newer pure-WASM Scala and
+Rust grammars vendored in `vendor/grammars` (origin, versions and licenses in its README; each file is checked against
+its SHA-256 before loading, and kopt falls back to `tree-sitter-wasms` on a mismatch or a load failure). Tests: vitest
+in `test/`.
 Never write to stdout from library code (stdout is the MCP stdio channel); log to stderr.
 
 Shared, already written (do not change signatures without coordination):
 - `src/core/types.ts` – domain types (`ExtractedFile`, `ToolResult`, `TelemetryEvent`...).
-- `src/core/api.ts` – parameter shapes of the 6 tools.
+- `src/core/api.ts` – parameter shapes of the tools.
 - `src/core/config.ts` – `KoptConfig`, `loadConfig(root)`, `indexPath(cfg)`, plus the location helpers below.
 - `src/core/tokens.ts` – `estimateTokens`, `truncateLines`, `truncateMiddle`, `packSections`.
 - `src/core/context.ts` – `Ledger` (dedup), `ToolContext`, `newToolContext`.
@@ -67,6 +70,10 @@ export interface IndexOptions {
   /** Restrict to these repo-relative paths (incremental). Default: walk the whole repo. */
   paths?: string[];
   onProgress?: (done: number, total: number) => void;
+  /** Phases: wait (another process holds the index lock) | list | parse | index | resolve | rank; searchable from resolve on. */
+  onPhase?: (p: IndexPhase) => void;
+  /** Another process indexing the project (<index.db>.lock): 'wait' (default) or 'skip' (stats.locked = true). */
+  lock?: 'wait' | 'skip';
 }
 export interface IndexStats {
   filesSeen: number; filesIndexed: number; filesUnchanged: number; filesDeleted: number;
@@ -82,8 +89,11 @@ export function languageForPath(path: string): Lang | undefined;
 export function splitIdentifier(name: string): string[];   // "parseHTTPRequest_v2" -> ["parse","http","request","v2"]
 export function termsForText(text: string): string[];      // identifiers + their sub-words, lower-cased, deduped
 ```
-After a full or incremental pass: resolve `refs.to_symbol_id` (name + qualifier + imports + same file/dir/namespace
-heuristics; prefer unresolved over wrong), resolve `file_imports.target_file_id`, compute `files.rank` and
+Refs include member reads and writes that are not calls (`read` / `write`: `obj.field`, `this.x = v`, `x.n++`, struct
+and object initializer keys), except reads of very common property names through an untyped receiver and JVM package
+paths. After a full or incremental pass: resolve `refs.to_symbol_id` (name + qualifier + imports + same
+file/dir/namespace heuristics; prefer unresolved over wrong; member reads and writes never resolve by a
+repository-wide unique name, and are left out of the ranks), resolve `file_imports.target_file_id`, compute `files.rank` and
 `symbols.rank` (PageRank on the file graph / normalized weighted in-degree for symbols), set meta `commit`, `indexed_at`.
 Must handle 10k+ files: batch inserts in transactions, skip files > `config.maxFileBytes`, respect `.gitignore`,
 `.kiroignore` and `config.exclude`, skip binary/minified files (very long lines).
@@ -98,23 +108,57 @@ export function refs(store: Store, p: RefsParams, ctx: ToolContext): ToolResult;
 /** Resolve a target string (handle, qualified name, name, path, path:range) to symbols/files. */
 export function resolveTarget(store: Store, target: string): ResolvedTarget;
 ```
-`find` = hybrid lexical ranking: FTS5 bm25 (weights `FTS_WEIGHTS`) on terms from `termsForText(query)`
-(OR of terms, prefix match on long terms) + exact/case-insensitive name match boost + `symbols.rank` +
-`files.rank` prior + kind prior (types/functions > fields). `pack` mode: top pointers + bodies of the best 1-3
-symbols (skeleton for containers) within `budgets.pack`.
+`find` = hybrid lexical ranking: FTS5 bm25 (weights `FTS_WEIGHTS`) on terms from `parseQuery(query)` (OR of
+content terms, prefix match on long terms; identifier-like stopwords such as get/is/or kept as low-weight name
+terms) + exact/case-insensitive name match boost + names spelled by consecutive query words (`get bean` ->
+getBean) + compound names (`silence` -> should_autosilence) + name-side term coverage + `symbols.rank` /
+`files.rank` priors + kind prior (types/functions > fields) - test/fixture/docs/example demotion. Hits keep 3 per
+file (a file dominating the top 10 gets 3 more in pack) and list the rest of a shown file on an `also:` line.
+`pack` mode, within `budgets.pack`: pointers (8 full, 4 compact), callers of the symbols the query names (or of
+the best body) one line per file with `L<line> in <caller> (defined <start>-<end>)` (interface/implementation/override
+families merged, test callers summarized; the section head says `complete` or counts the unresolved same-name refs;
+the callers of thin wrappers follow when room is left), bodies of the named then best symbols up to ~60% of the budget (skeleton for large
+containers followed by their matching members; trivial delegations and test code skipped), callees of the best
+body grouped by target file.
+
+`refs` (`in`, depth 1): one line per caller and file, `path:<line> in #h Caller (defined <start>-<end>): <code of the
+line, 100 chars max>` (plain when the budget is short, one line per file when even that does not fit), then the
+callers of thin wrappers (functions or methods of at most 7 lines that call the target and at most 2 other names)
+under `via wrapper`, then unresolved same-name refs of a related kind under `possible` (up to 20), then one last line
+`complete: ...` (every reference to the name resolved, and every function whose body names it listed or calling
+another symbol of that name) or `incomplete: ...` (what may be missing). Fields list their `read` / `write` refs.
+
+`read`/`outline` serve only paths inside the project that are not excluded by .gitignore / .kiroignore (nested
+files, .git/info/exclude and Kiro's global kiroignore included); `.git` and links leaving the project are refused
+with one line (`src/retrieval/access.ts`).
 
 ### compress — `src/compress/`
 ```ts
 // src/compress/index.ts
-export async function runCommand(p: RunParams, ctx: ToolContext): Promise<ToolResult>;
+/** `signal`: the MCP request's cancellation; the command tree is killed once every caller waiting for it cancelled. */
+export async function runCommand(p: RunParams, ctx: ToolContext, opts?: { signal?: AbortSignal }): Promise<ToolResult>;
 export function expand(p: ExpandParams, ctx: ToolContext): ToolResult;
 /** Pure: pick a filter by command/output signature and compress. */
 export function compressOutput(command: string, output: string, exitCode: number, maxTokens: number): { text: string; filter: string };
 /** Workspace fingerprint used to detect "same command, nothing changed". */
-export function workspaceFingerprint(root: string): string;
+export function workspaceFingerprint(root: string, exclude?: string[]): string;
+/** Pure (src/compress/command.ts, no imports): why a command never exits by itself (watch mode, dev server, log
+ *  follower), else undefined. kopt_run refuses those unless `timeoutSec` is given; the governor never redirects them. */
+export function longRunningReason(command: string): string | undefined;
 ```
-Full raw output saved under `<dataDir>/outputs/<handle>.log` (handle = `o` + 6 hex chars); result text ends
-with `full output: kopt_expand <handle>` when something was elided.
+A failing run (not a cached answer) gets up to `RUN_SOURCE_TOKENS` (200) more tokens when the index is ready
+(`RepoHandle.peek()`; the CLI opens the index read-only, no build and no refresh): `retrieval.failureContext` maps
+stack frames to their enclosing symbol (deepest first), failing tests to the product functions they call (one level
+through test helpers, then through thin wrappers, down to the function that sets the field a diff shows or the one
+the test is named after), and a failure message to the one product function that has it as a string literal
+(`src/retrieval/failures.ts`). When the failures of a test run do not all fit in detail, the filters list every
+failing test first, grouped by file (`failureOverview` in `src/compress/filters/common.ts`).
+Full raw output saved under `<dataDir>/outputs/<handle>.log` (handle = `o` + 6 hex chars, files 0600, folder 0700);
+result text ends with `full output: kopt_read <handle> (grep=<regex> filters it)` when something was elided. Header: `exit N · 8.2s`
+(duration from 1 s, `· raw ~N tok` only when compressed); outputs of 120 tokens or less are returned as they are, and
+a result is never larger than the raw output. An identical command already running joins that run; a cacheable
+command is cached only when the workspace fingerprint (git status + ignored inputs, before and after the run) did
+not change during it. Nothing ran (refusal, empty command, bad cwd): exit code 2.
 
 ### hooks + telemetry — `src/hooks/`, `src/telemetry/`
 ```ts
@@ -164,9 +208,15 @@ export function ensureLegacyWorkspaceHooks(root: string, config: KoptConfig, o?:
 ```
 
 ### mcp + cli — `src/mcp/`, `src/cli.ts`
-Tools: `kopt_find`, `kopt_read`, `kopt_outline`, `kopt_refs`, `kopt_run`, `kopt_expand`. Descriptions short
-(< 350 chars each), server `instructions` < 600 chars. Transport: stdio only (Kiro starts `kopt mcp` locally); one
-server answers for one project at a time.
+Tools: Kiro lists `kopt_find`, `kopt_read`, `kopt_refs`, `kopt_run` (`LISTED_TOOLS`). `kopt_outline` and
+`kopt_expand` still answer by name (CLI, older configurations) and are reached through `kopt_read`: a directory, a
+glob, `.` or `mode: "outline"` (outline), a `kopt_run` log handle `o1a2b3c[:a-b]` with optional `grep` (expand);
+`readRoute` decides. Each listed spec is one line with only the parameters of the common calls, hand-written JSON
+Schema (no `$schema`, no `required`, no type on single-value enums); every other parameter is still accepted. No
+server instructions: the routing lives in the always-on steering only. The tool specs as Kiro sends them plus the
+steering body stay within 350 tokens (chars / 3, `test/mcp.test.ts`). Texts of the modules that name the folded
+tools are spelled as the `kopt_read` call (`listedSpelling`). Transport: stdio only (Kiro starts `kopt mcp`
+locally); one server answers for one project at a time.
 
 ```ts
 // src/mcp/server.ts
@@ -180,6 +230,9 @@ export interface RepoHandle {
   prepare?(): Promise<string | undefined>;
 }
 ```
+`RepoHandle.acquire(tool?)` gets the tool name: during a first build, `kopt_find`/`kopt_read`/`kopt_outline` are
+served once symbols are written, `kopt_refs` once references are resolved. All passes (first build, refreshes) run in
+one worker thread per project (`src/mcp/index-host.ts`), which exits after 60 s idle.
 `kopt mcp` without `--root` resolves the root as above and starts the first index build in a worker thread as soon
 as the root is known. The package's bin is `dist/bin.js`, which drops Node's SQLite ExperimentalWarning and
 refuses Node < 22.13 (a hook then exits 0 silently) before loading `cli.js`.

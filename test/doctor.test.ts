@@ -63,17 +63,19 @@ function box(name: string): { h: HostEnv; repo: string; home: string } {
 }
 
 describe('kopt doctor', () => {
-  it('passes every check after setup: silent allow path, exit-2 block path, MCP server with 6 tools', async () => {
+  it('passes every check after setup: silent allow path, exit-2 block path, MCP server with 4 tools', async () => {
     const b = box('healthy');
     await setupUser({ h: b.h, command: CMD, noInstallStep: true, runVersion: () => 'kiro-cli 2.28.0' });
     const report = await runDoctor({ h: b.h, cwd: b.repo, runVersion: () => 'kiro-cli 2.28.0', validateWithCli: false, timeoutMs: 30_000 });
     const byId = Object.fromEntries(report.checks.map((c) => [c.id, c]));
     const text = formatChecks(report.checks);
-    for (const id of ['node', 'ide', 'cli', 'mcp.json', 'hooks', 'agent', 'default-agent', 'steering', 'kiroignore', 'ide-settings', 'hook-allow', 'hook-block', 'mcp']) {
+    for (const id of ['node', 'ide', 'cli', 'mcp.json', 'hooks', 'agent', 'default-agent', 'steering', 'kiroignore', 'ide-settings', 'hook-allow', 'hook-block', 'hook-stop', 'mcp', 'hook-command']) {
       expect(byId[id]?.status, `${id}\n${text}`).toBe('ok');
     }
     expect(byId['hook-allow'].message).toMatch(/exit 0, no output/);
-    expect(byId.mcp.message).toMatch(/lists 6 tools/);
+    // run like a Kiro started from the Dock / Start menu: no shell-profile PATH
+    expect(byId['hook-allow'].message).toMatch(process.platform === 'win32' ? /system PATH only/ : /PATH=\/usr\/bin:\/bin/);
+    expect(byId.mcp.message).toMatch(/lists 4 tools/);
     expect(byId.index.status).toBe('warn'); // nothing indexed yet for the repo
     expect(text.split('\n')).toHaveLength(report.checks.length); // one line per check
     expect(report.ok).toBe(true);
@@ -99,10 +101,54 @@ describe('kopt doctor', () => {
     expect(report.ok).toBe(false);
   }, 90_000);
 
+  it('reports the index size on disk, and a build that failed after the last good one', async () => {
+    const b = box('index-state');
+    const { Store } = await import('../src/store/store.js');
+    const { indexPath, loadConfig } = await import('../src/core/config.js');
+    const cfg = loadConfig(b.repo);
+    const store = Store.open(indexPath(cfg));
+    store.setMeta('indexed_at', String(Date.now() - 60_000));
+    store.close();
+    const index = async () => (await runDoctor({ h: b.h, cwd: b.repo, runVersion: () => 'kiro-cli 2.28.0', skipProcesses: true })).checks.find((c) => c.id === 'index')!;
+    const ok = await index();
+    expect(ok.status).toBe('ok');
+    expect(ok.message).toMatch(/^index: 0 files, 0 symbols, updated .* ago, \d+ MB on disk \(/);
+    writeFileSync(join(cfg.dataDir, 'last-error.json'), JSON.stringify({ at: Date.now(), message: 'Maximum call stack size exceeded', attempts: 2 }));
+    const failed = await index();
+    expect(failed.status).toBe('fail');
+    expect(failed.message).toMatch(/^index: the last build failed .* ago: Maximum call stack size exceeded/);
+    expect(failed.fix).toMatch(/kopt index/);
+  });
+
   it('quick mode starts no process', async () => {
     const b = box('quick');
     const report = await runDoctor({ h: b.h, cwd: b.repo, runVersion: () => 'kiro-cli 2.28.0', skipProcesses: true });
     expect(report.checks.find((c) => c.id === 'hook-allow')).toBeUndefined();
     expect(report.checks.find((c) => c.id === 'mcp.json')?.status).toBe('fail'); // setup never ran here
   });
+
+  it('fails commands that need PATH (bare kopt) and a Stop hook that exits non-zero, with the minimal environment', async () => {
+    const b = box('path-dependent');
+    // the old setup form: bare `kopt` everywhere (works in a terminal with nvm, not in a Dock-started Kiro)
+    const shim: KoptCommand = { shell: 'kopt', mcp: { command: 'kopt', args: ['mcp'] }, kind: 'shim' };
+    await setupUser({ h: b.h, command: shim, noInstallStep: true, runVersion: () => 'kiro-cli 2.28.0' });
+    const hooksFile = join(b.home, '.kiro', 'hooks', 'kopt.json');
+    const report = await runDoctor({ h: b.h, cwd: b.repo, runVersion: () => 'kiro-cli 2.28.0', validateWithCli: false, timeoutMs: 30_000 });
+    const byId = Object.fromEntries(report.checks.map((c) => [c.id, c]));
+    expect(byId['hook-command'].status).toBe('fail');
+    expect(byId['hook-command'].message).toMatch(/looked up on PATH/);
+    expect(byId['mcp-command'].status).toBe('fail');
+    expect(byId['hook-allow'].status).toBe('fail');
+    expect(byId.mcp.status).toBe('fail');
+    expect(report.ok).toBe(false);
+
+    // a Stop hook that exits 1 would make Kiro IDE 1.x continue the agent, turn after turn
+    await setupUser({ h: b.h, command: CMD, noInstallStep: true, runVersion: () => 'kiro-cli 2.28.0' });
+    const hooks = JSON.parse(readFileSync(hooksFile, 'utf8'));
+    hooks.hooks.find((x: any) => x.trigger === 'Stop').action.command = 'exit 1';
+    writeFileSync(hooksFile, JSON.stringify(hooks));
+    const stop = (await runDoctor({ h: b.h, cwd: b.repo, runVersion: () => 'kiro-cli 2.28.0', validateWithCli: false, timeoutMs: 30_000 })).checks.find((c) => c.id === 'hook-stop' && /global/.test(c.message));
+    expect(stop?.status).toBe('fail');
+    expect(stop?.message).toMatch(/continue the agent/);
+  }, 120_000);
 });

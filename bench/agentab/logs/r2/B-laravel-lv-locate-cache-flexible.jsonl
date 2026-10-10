@@ -1,0 +1,2 @@
+{"arm":"B","repo":"laravel","task":"lv-locate-cache-flexible","rep":1,"ts":"2026-10-09T20:58:30.591Z","ms":1066,"cmd":"kopt find \"flexible stale while revalidate cache defer lock refresh\" --pack","kopt":true,"koptSub":"find","chars":4464,"tokens":1488,"lines":115,"truncated":false,"exit":0}
+{"arm":"B","repo":"laravel","task":"lv-locate-cache-flexible","rep":1,"ts":"2026-10-09T20:58:35.787Z","ms":493,"cmd":"kopt read \"#f7c\"","kopt":true,"koptSub":"read","chars":475,"tokens":159,"lines":13,"truncated":false,"exit":0}

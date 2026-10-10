@@ -1,0 +1,753 @@
+{
+  "meta": {
+    "label": "heldout-meilisearch-question",
+    "repo": {
+      "name": "meilisearch",
+      "url": "https://github.com/meilisearch/meilisearch.git",
+      "tag": "v1.54.3",
+      "commit": "7ebd97e38c36882b0c78d79e433b9115b4f003b3",
+      "language": "rust",
+      "path": "bench/repos/meilisearch"
+    },
+    "repoRoot": "bench/repos/meilisearch",
+    "headCommit": "7ebd97e38c36882b0c78d79e433b9115b4f003b3",
+    "date": "2026-10-09T20:18:24.081Z",
+    "input": "question",
+    "charsPerToken": 3,
+    "strategies": [
+      "native-naive",
+      "native-ranged",
+      "kopt-pack",
+      "kopt-hits+read",
+      "kirograph",
+      "codegraph"
+    ],
+    "grepLimits": {
+      "maxMatches": 100,
+      "maxChars": 10000,
+      "maxLineChars": 250
+    },
+    "readLimits": {
+      "naiveTopFiles": 3,
+      "naiveMaxLines": 2000,
+      "rangedMatches": 4,
+      "rangedContext": 60
+    },
+    "koptBudgets": {
+      "find": 700,
+      "pack": 2500,
+      "read": 3000
+    },
+    "index": {
+      "built": false,
+      "durationMs": 0,
+      "files": 715,
+      "symbols": 18280,
+      "path": "<index-dir>/.kopt-meilisearch/index.db"
+    },
+    "notes": [
+      "kirograph: outputs loaded from bench/competitors/results/kirograph-meilisearch.jsonl",
+      "codegraph: outputs loaded from bench/competitors/results/codegraph-meilisearch.jsonl"
+    ],
+    "durationMs": 670
+  },
+  "results": [
+    {
+      "taskId": "ho-ms-explain-key-value",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 12032,
+      "chars": 36093,
+      "toolCalls": 4,
+      "durationMs": 232,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "crates/meilisearch-auth/src/store.rs",
+          "crates/meilisearch-auth/src/lib.rs"
+        ],
+        "symbolsMissed": [
+          "generate_key_as_hexa",
+          "generate_key"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "derived",
+          "chars": 4263,
+          "tokens": 1421
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/milli/src/search/new/query_term/compute_derivations.rs",
+          "chars": 13682,
+          "tokens": 4561
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/milli/src/search/new/query_term/mod.rs",
+          "chars": 17246,
+          "tokens": 5749
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/milli/src/search/new/limits.rs",
+          "chars": 902,
+          "tokens": 301
+        }
+      ]
+    },
+    {
+      "taskId": "ho-ms-explain-key-value",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 6354,
+      "chars": 19060,
+      "toolCalls": 3,
+      "durationMs": 1,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "crates/meilisearch-auth/src/store.rs",
+          "crates/meilisearch-auth/src/lib.rs"
+        ],
+        "symbolsMissed": [
+          "generate_key_as_hexa",
+          "generate_key"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "derived",
+          "chars": 4263,
+          "tokens": 1421
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/milli/src/search/new/query_term/compute_derivations.rs:1-188",
+          "chars": 7303,
+          "tokens": 2435
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/milli/src/search/new/query_term/mod.rs:133-327",
+          "chars": 7494,
+          "tokens": 2498
+        }
+      ]
+    },
+    {
+      "taskId": "ho-ms-explain-key-value",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 1287,
+      "chars": 3859,
+      "toolCalls": 1,
+      "durationMs": 36,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"How is the secret value of an API key derived from its uid and the master key?\"",
+          "chars": 3859,
+          "tokens": 1287
+        }
+      ]
+    },
+    {
+      "taskId": "ho-ms-explain-key-value",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 708,
+      "chars": 2122,
+      "toolCalls": 3,
+      "durationMs": 25,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"How is the secret value of an API key derived from its uid and the master key?\"",
+          "chars": 1758,
+          "tokens": 586
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#4dn",
+          "chars": 271,
+          "tokens": 91
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#2wo",
+          "chars": 93,
+          "tokens": 31
+        }
+      ]
+    },
+    {
+      "taskId": "ho-ms-explain-key-value",
+      "kind": "explain",
+      "strategy": "kirograph",
+      "skipped": "no kirograph result line for this task",
+      "tokens": 0,
+      "chars": 0,
+      "toolCalls": 0,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "crates/meilisearch-auth/src/store.rs",
+          "crates/meilisearch-auth/src/lib.rs"
+        ],
+        "symbolsMissed": [
+          "generate_key_as_hexa",
+          "generate_key"
+        ],
+        "found": false
+      },
+      "calls": []
+    },
+    {
+      "taskId": "ho-ms-explain-key-value",
+      "kind": "explain",
+      "strategy": "codegraph",
+      "skipped": "no codegraph result line for this task",
+      "tokens": 0,
+      "chars": 0,
+      "toolCalls": 0,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "crates/meilisearch-auth/src/store.rs",
+          "crates/meilisearch-auth/src/lib.rs"
+        ],
+        "symbolsMissed": [
+          "generate_key_as_hexa",
+          "generate_key"
+        ],
+        "found": false
+      },
+      "calls": []
+    },
+    {
+      "taskId": "ho-ms-locate-key-authorized",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 51079,
+      "chars": 153232,
+      "toolCalls": 4,
+      "durationMs": 263,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "crates/meilisearch-auth/src/store.rs"
+        ],
+        "symbolsMissed": [
+          "is_key_authorized",
+          "get_expiration_date"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "may",
+          "chars": 9936,
+          "tokens": 3312
+        },
+        {
+          "tool": "read_file",
+          "args": "external-crates/async-openai/src/types/chat.rs",
+          "chars": 56092,
+          "tokens": 18698
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/milli/src/update/facet/incremental.rs",
+          "chars": 28300,
+          "tokens": 9434
+        },
+        {
+          "tool": "read_file",
+          "args": "crates/index-scheduler/src/lib.rs",
+          "chars": 58904,
+          "tokens": 19635
+        }
+      ]
+    },
+    {
+      "taskId": "ho-ms-locate-key-authorized",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 8917,
+      "chars": 26747,
+      "toolCalls": 3,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0.5,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "crates/meilisearch-auth/src/store.rs"
+        ],
+        "symbolsMissed": [
+          "is_key_authorized",
+          "get_expiration_date"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "may",
+          "chars": 9936,
+          "tokens": 3312
+        },
+        {
+          "tool": "read_file",
+          "args": "external-crates/async-openai/src/types/chat.rs:1-188",
+          "chars": 7009,
+          "tokens": 2337
+        },
+        {
+          "tool": "read_file",
+          "args": "external-crates/async-openai/src/types/chat.rs:447-647",
+          "chars": 9802,
+          "tokens": 3268
+        }
+      ]
+    },
+    {
+      "taskId": "ho-ms-locate-key-authorized",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1341,
+      "chars": 4022,
+      "toolCalls": 1,
+      "durationMs": 41,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"Where does Meilisearch check that an API key may perform an action on a given index and has not expired?\"",
+          "chars": 4022,
+          "tokens": 1341
+        }
+      ]
+    },
+    {
+      "taskId": "ho-ms-locate-key-authorized",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 746,
+      "chars": 2237,
+      "toolCalls": 3,
+      "durationMs": 32,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"Where does Meilisearch check that an API key may perform an action on a given index and has not expired?\"",
+          "chars": 2016,
+          "tokens": 672
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#le",
+          "chars": 77,
+          "tokens": 26
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#ky",
+          "chars": 144,
+          "tokens": 48
+        }
+      ]
+    },
+    {
+      "taskId": "ho-ms-locate-key-authorized",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "skipped": "no kirograph result line for this task",
+      "tokens": 0,
+      "chars": 0,
+      "toolCalls": 0,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "crates/meilisearch-auth/src/lib.rs",
+          "crates/meilisearch-auth/src/store.rs"
+        ],
+        "symbolsMissed": [
+          "is_key_authorized",
+          "get_expiration_date"
+        ],
+        "found": false
+      },
+      "calls": []
+    },
+    {
+      "taskId": "ho-ms-locate-key-authorized",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "skipped": "no codegraph result line for this task",
+      "tokens": 0,
+      "chars": 0,
+      "toolCalls": 0,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "crates/meilisearch-auth/src/lib.rs",
+          "crates/meilisearch-auth/src/store.rs"
+        ],
+        "symbolsMissed": [
+          "is_key_authorized",
+          "get_expiration_date"
+        ],
+        "found": false
+      },
+      "calls": []
+    }
+  ],
+  "aggregates": [
+    {
+      "strategy": "native-naive",
+      "tasks": 2,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 31555.5,
+      "meanTokens": 31556,
+      "p90Tokens": 51079,
+      "totalTokens": 63111,
+      "totalChars": 189325,
+      "meanToolCalls": 4,
+      "meanFileRecall": 0.25,
+      "meanSymbolRecall": 0,
+      "meanDefRecall": 0,
+      "found": 0,
+      "foundRate": 0,
+      "tokensPerFound": null
+    },
+    {
+      "strategy": "native-ranged",
+      "tasks": 2,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 7635.5,
+      "meanTokens": 7636,
+      "p90Tokens": 8917,
+      "totalTokens": 15271,
+      "totalChars": 45807,
+      "meanToolCalls": 3,
+      "meanFileRecall": 0.25,
+      "meanSymbolRecall": 0,
+      "meanDefRecall": 0,
+      "found": 0,
+      "foundRate": 0,
+      "tokensPerFound": null
+    },
+    {
+      "strategy": "kopt-pack",
+      "tasks": 2,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 1314,
+      "meanTokens": 1314,
+      "p90Tokens": 1341,
+      "totalTokens": 2628,
+      "totalChars": 7881,
+      "meanToolCalls": 1,
+      "meanFileRecall": 1,
+      "meanSymbolRecall": 1,
+      "meanDefRecall": 0.5,
+      "found": 2,
+      "foundRate": 1,
+      "tokensPerFound": 1314
+    },
+    {
+      "strategy": "kopt-hits+read",
+      "tasks": 2,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 727,
+      "meanTokens": 727,
+      "p90Tokens": 746,
+      "totalTokens": 1454,
+      "totalChars": 4359,
+      "meanToolCalls": 3,
+      "meanFileRecall": 1,
+      "meanSymbolRecall": 1,
+      "meanDefRecall": 0.5,
+      "found": 2,
+      "foundRate": 1,
+      "tokensPerFound": 727
+    },
+    {
+      "strategy": "kirograph",
+      "tasks": 0,
+      "skipped": 2,
+      "errors": 0,
+      "medianTokens": 0,
+      "meanTokens": 0,
+      "p90Tokens": 0,
+      "totalTokens": 0,
+      "totalChars": 0,
+      "meanToolCalls": 0,
+      "meanFileRecall": 0,
+      "meanSymbolRecall": 0,
+      "meanDefRecall": 0,
+      "found": 0,
+      "foundRate": 0,
+      "tokensPerFound": null
+    },
+    {
+      "strategy": "codegraph",
+      "tasks": 0,
+      "skipped": 2,
+      "errors": 0,
+      "medianTokens": 0,
+      "meanTokens": 0,
+      "p90Tokens": 0,
+      "totalTokens": 0,
+      "totalChars": 0,
+      "meanToolCalls": 0,
+      "meanFileRecall": 0,
+      "meanSymbolRecall": 0,
+      "meanDefRecall": 0,
+      "found": 0,
+      "foundRate": 0,
+      "tokensPerFound": null
+    }
+  ],
+  "paired": [
+    {
+      "a": "native-naive",
+      "b": "kopt-pack",
+      "nRun": 2,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 2,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-pack",
+      "nRun": 2,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 2,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-naive",
+      "b": "kopt-hits+read",
+      "nRun": 2,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 2,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-hits+read",
+      "nRun": 2,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 2,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "kirograph",
+      "b": "kopt-pack",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "codegraph",
+      "b": "kopt-pack",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "kirograph",
+      "b": "kopt-hits+read",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "codegraph",
+      "b": "kopt-hits+read",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-ranged",
+      "b": "kirograph",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-ranged",
+      "b": "codegraph",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-naive",
+      "b": "native-ranged",
+      "nRun": 2,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    }
+  ],
+  "byKind": [
+    {
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 51079
+    },
+    {
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 8917
+    },
+    {
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tasks": 1,
+      "found": 1,
+      "medianTokens": 1341
+    },
+    {
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tasks": 1,
+      "found": 1,
+      "medianTokens": 746
+    },
+    {
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 12032
+    },
+    {
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 6354
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tasks": 1,
+      "found": 1,
+      "medianTokens": 1287
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tasks": 1,
+      "found": 1,
+      "medianTokens": 708
+    }
+  ]
+}

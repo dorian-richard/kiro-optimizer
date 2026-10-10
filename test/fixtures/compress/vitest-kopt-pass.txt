@@ -1,0 +1,159 @@
+
+ RUN  v3.2.7 /home/dev/shop
+
+(node:15629) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15623) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+[perf] kopt hook (malformed input, via tsx): 201ms
+(node:15630) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/doctor.test.ts (3 tests) 2514ms
+   ✓ kopt doctor > passes every check after setup: silent allow path, exit-2 block path, MCP server with 6 tools  2372ms
+[perf] kopt mcp spawn -> tools/list (via tsx): 595ms
+ ✓ test/hooks-shell.test.ts (4 tests) 3796ms
+   ✓ kopt hook through a shell > allow path: exit 0, empty stdout, empty stderr  2600ms
+   ✓ kopt hook through a shell > never leaks the node:sqlite ExperimentalWarning (SessionStart opens the index)  374ms
+   ✓ kopt hook through a shell > IDE 0.x legacy invocation: no stdin payload (pipe left open), data in USER_PROMPT, returns at once  541ms
+ ✓ test/bench-ab.test.ts (12 tests) 4175ms
+   ✓ run-kiro-cli-ab.sh with stubs > runs the plan, isolates arms, parses and analyzes  4026ms
+(node:17856) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:16643) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/indexer.index.test.ts (25 tests) 3806ms
+   ✓ git listing and workers > lists files through git (untracked included, .gitignore honored) and records HEAD  451ms
+   ✓ git listing and workers > bulk-loads with secondary indexes dropped, then restores them  355ms
+   ✓ git listing and workers > produces the same index with the worker pool  1078ms
+ ✓ test/bench.test.ts (23 tests) 1757ms
+   ✓ nativeGrep > greps the most selective keywords first and broadens while under the cap  331ms
+(node:18415) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:18600) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+[size] tools/list: 2819 chars ~940 tok; instructions: 374 chars ~125 tok
+ ✓ test/compress.lifecycle.test.ts (9 tests) 6259ms
+   ✓ stop signals kill running command trees > SIGTERM to `kopt run` kills the command it started  1107ms
+   ✓ stop signals kill running command trees > SIGINT to `kopt run` kills the command it started  601ms
+   ✓ stop signals kill running command trees > SIGHUP to `kopt run` kills the command it started  1434ms
+   ✓ commands that never exit > are refused with a one-line hint unless timeoutSec is given  2015ms
+ ✓ test/xplat.test.ts (48 tests | 1 skipped) 2556ms
+   ✓ parse worker pool > parses in worker threads with the same results as in-process  1125ms
+   ✓ parse worker pool > falls back to in-process parsing when workers cannot start  307ms
+ ✓ test/kiro.test.ts (11 tests) 3151ms
+   ✓ suggestKiroignore > collapses many output dirs into one pattern only when no source dir shares the name  456ms
+   ✓ installKiro > installs into a workspace, merging with existing configuration  454ms
+   ✓ installKiro > keeps user-edited kopt files unless forced, but updates files it wrote itself  419ms
+   ✓ installKiro > refreshes a stale kopt server entry while keeping user fields, and refuses to clobber invalid JSON  363ms
+   ✓ installKiro > installs user-wide into ~/.kiro (same layout as kopt setup) with a global kiroignore and the IDE user setting  312ms
+ ✓ test/bench-failures.test.ts (13 tests) 1861ms
+   ✓ competitor results > runBench adds competitors that have a results file and scores them  507ms
+ ✓ test/mcp.test.ts (13 tests) 1645ms
+   ✓ LocalRepo lifecycle > answers "index building" while the first build runs, then serves the store  476ms
+   ✓ LocalRepo lifecycle > refreshes on dirty marker / interval, one at a time, without blocking calls on slow refreshes  614ms
+(node:19521) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:19785) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:19759) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+compression @900 tok:
+pytest-pass.txt          11500 -> 18 tok (99.8%)
+pytest-fail.txt          13013 -> 318 tok (97.6%)
+unittest-fail.txt        602 -> 223 tok (63.0%)
+jest-pass.txt            12533 -> 27 tok (99.8%)
+jest-fail.txt            1608 -> 358 tok (77.7%)
+vitest-pass.txt          2401 -> 24 tok (99.0%)
+vitest-fail.txt          1626 -> 125 tok (92.3%)
+maven-pass.txt           8418 -> 39 tok (99.5%)
+maven-compile-fail.txt   3071 -> 272 tok (91.1%)
+maven-test-fail.txt      3680 -> 263 tok (92.9%)
+gradle-pass.txt          4287 -> 27 tok (99.4%)
+gradle-fail.txt          1101 -> 274 tok (75.1%)
+dotnet-build-pass.txt    5210 -> 30 tok (99.4%)
+dotnet-build-fail.txt    630 -> 147 tok (76.7%)
+dotnet-test-fail.txt     830 -> 239 tok (71.2%)
+go-test-pass.txt         7254 -> 18 tok (99.8%)
+go-test-fail.txt         1539 -> 298 tok (80.6%)
+tsc-fail.txt             3459 -> 350 tok (89.9%)
+tsc-pretty-fail.txt      240 -> 141 tok (41.3%)
+eslint-fail.txt          5204 -> 178 tok (96.6%)
+npm-install.txt          628 -> 41 tok (93.5%)
+npm-build-fail.txt       2386 -> 212 tok (91.1%)
+cargo-test-pass.txt      5311 -> 23 tok (99.6%)
+cargo-build-fail.txt     2248 -> 182 tok (91.9%)
+cargo-test-fail.txt      2111 -> 98 tok (95.4%)
+git-log.txt              4405 -> 888 tok (79.8%)
+git-diff.txt             5268 -> 811 tok (84.6%)
+git-status.txt           655 -> 92 tok (86.0%)
+generic-fail.txt         4629 -> 188 tok (95.9%)
+generic-pass.txt         9031 -> 70 tok (99.2%)
+mocha-pass.txt           6903 -> 10 tok (99.9%)
+mocha-fail.txt           4445 -> 188 tok (95.8%)
+mocha-json-fail.txt      27323 -> 157 tok (99.4%)
+rspec-fail.txt           4368 -> 188 tok (95.7%)
+phpunit-fail.txt         462 -> 175 tok (62.1%)
+pest-fail.txt            6366 -> 86 tok (98.6%)
+sbt-test-fail.txt        4086 -> 171 tok (95.8%)
+sbt-compile-fail.txt     932 -> 167 tok (82.1%)
+xunit-console-fail.txt   441 -> 193 tok (56.2%)
+nunit-console-fail.txt   546 -> 198 tok (63.7%)
+dotnet-mtp-fail.txt      383 -> 101 tok (73.6%)
+bazel-test-fail.txt      3837 -> 313 tok (91.8%)
+jest-json-fail.txt       32718 -> 182 tok (99.4%)
+go-test-json-fail.txt    25630 -> 67 tok (99.7%)
+eslint-json.txt          10107 -> 519 tok (94.9%)
+ ✓ test/retrieval.stale.test.ts (7 tests) 649ms
+   ✓ staleness > tolerates a missing or broken indexer module  301ms
+ ✓ test/compress.filters.test.ts (79 tests) 960ms
+ ✓ test/indexer.extract.test.ts (24 tests) 1082ms
+   ✓ best-effort languages > php, ruby, scala  683ms
+ ✓ test/hooks.test.ts (34 tests) 1265ms
+   ✓ UserPromptSubmit front-load > skips when retrieval exceeds the time limit and survives a missing retrieval module  417ms
+   ✓ UserPromptSubmit front-load > closes the index it opened when retrieval fails or is too slow (an open handle locks index.db on Windows)  402ms
+ ✓ test/setup.test.ts (25 tests) 9647ms
+   ✓ kopt setup (user level, temp HOME) > generates a CLI 2.x agent the real kiro-cli accepts and selects as default (temp HOME)  1822ms
+   ✓ global install (temp npm prefix) > installs from an npx cache copy into the global prefix with real npm  3756ms
+   ✓ global install (temp npm prefix) > packs a built npx copy as-is (no prepare, no symlink into the npx cache) and installs the tarball  3453ms
+kopt: find failed: database is not open
+kopt: read failed: database is not open
+kopt: outline failed: database is not open
+kopt: refs failed: database is not open
+ ✓ test/retrieval.test.ts (46 tests) 1197ms
+(node:20017) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/hooks-commands.test.ts (5 tests) 5ms
+ ✓ test/telemetry.test.ts (7 tests) 94ms
+ ✓ test/indexer.resolve.test.ts (9 tests) 848ms
+ ✓ test/compress.command.test.ts (111 tests) 17ms
+ ✓ test/compress.runner.test.ts (20 tests) 12676ms
+   ✓ runCommand > keeps small outputs verbatim, merges stdout/stderr in arrival order, no expand pointer  449ms
+   ✓ runCommand > kills the whole process tree on timeout  3332ms
+   ✓ dedup cache (git workspace) > serves an identical re-run from cache until a file changes  6062ms
+   ✓ dedup cache (git workspace) > git commands use the git filter and are cacheable  376ms
+   ✓ workspaceFingerprint without git > falls back to an mtime/size scan  585ms
+ ✓ test/compress.cache.test.ts (7 tests) 15138ms
+   ✓ workspace fingerprint: ignored state > env files and installed dependencies are inputs  842ms
+   ✓ workspace fingerprint: ignored state > build outputs are part of the key but not of the inputs; caches and logs are ignored  319ms
+   ✓ kopt_run cache and ignored state > re-runs after a gitignored .env or a dependency install changes (no stale verdict)  2642ms
+   ✓ kopt_run cache and ignored state > does not cache a run during which a file changed, then caches the next one  5349ms
+   ✓ kopt_run cache and ignored state > a command that writes its own ignored build output is still cached  2347ms
+   ✓ kopt_run cache and ignored state > joins an identical run in progress instead of starting it twice  3207ms
+ ✓ test/cli.test.ts (14 tests) 16903ms
+   ✓ kopt hook > exits 0 on empty stdin and on non-object JSON  363ms
+   ✓ kopt hook > passes a well-formed event to the hooks module and never fails the session  532ms
+   ✓ kopt CLI > reports usage errors on stderr with a non-zero exit  479ms
+   ✓ kopt CLI > init --dry-run lists the files it would write  747ms
+   ✓ kopt mcp (stdio) > speaks clean MCP on stdout and lists the 6 tools  2505ms
+   ✓ kopt run (end to end, needs compress) > quotes argv, prints compact output and propagates failure  2772ms
+   ✓ kopt find (end to end, needs indexer + retrieval) > indexes a tiny repo on first use and prints hits  3036ms
+   ✓ kopt mcp first build (worker thread, needs indexer + retrieval) > builds the index in the background and answers once ready  1863ms
+   ✓ zero-config commands (temp HOME) > setup --dry-run --no-global plans the user-level files and writes nothing  438ms
+   ✓ zero-config commands (temp HOME) > setup then doctor --quick then uninstall  1999ms
+   ✓ zero-config commands (temp HOME) > kopt mcp without --root serves the git root of its cwd, and nothing in a home directory  1504ms
+
+ Test Files  23 passed (23)
+      Tests  548 passed | 1 skipped (549)
+   Start at  16:24:58
+   Duration  17.94s (transform 4.27s, setup 0ms, collect 16.78s, tests 92.00s, environment 2ms, prepare 2.97s)

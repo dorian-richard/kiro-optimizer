@@ -321,13 +321,26 @@ export interface QualityReport {
 // ---------------------------------------------------------------------------------------------------------
 // Corpus summary (kopt bench all) -> bench/results/summary.{md,json}
 //
-// summary.json is the input of the report generators (docs/BENCHMARKS.md, HTML page). Its shape:
+// summary.json is the input of the report generators (GitHub markdown page, HTML report). Its shape:
 //   BenchSummary {
-//     schema: 'kopt-bench-summary/1'        // bump on breaking changes
-//     date, input, strategies[]             // strategies = column order of the tables
+//     schema: 'kopt-bench-summary/1'        // bump on breaking changes (adding optional fields is not breaking)
+//     date: ISO-8601 string, input: 'search' | 'question' | 'natural'
+//     strategies: StrategyName[]            // column order of the tables (built-ins first, then competitors)
 //     environment: { node, platform, toolVersion }
 //     rows: SummaryRow[]                    // one per repo of bench/langs.json, in file order
+//       .repo .language .tag .commit .loc   // corpus metadata (bench/langs.json)
+//       .ok / .error                        // false + message when the repo could not be benchmarked
+//       .verifyIssues .tasks                // gold items failing --verify (0 expected), number of tasks
+//       .index                              // { built, durationMs, files, symbols, refs } | null
+//       .quality                            // primary-language extraction quality | null (see SummaryRow)
+//       .strategies: SummaryStrategyCell[]  // one per strategy that ran (found, tokens, recalls)
+//       .byKind: SummaryKindCell[]          // found per task kind (locate/explain/usage/impact) and strategy
+//       .failures                           // kopt-pack misses per primary cause | null (see SummaryFailures)
+//       .files: { bench, quality }          // repo-relative paths of the detailed results
+//       .durationMs
 //     totals: SummaryStrategyCell[]         // pooled over every task of every repo that ran
+//     failureTotals?: SummaryFailures       // pooled over every repo (same shape as rows[].failures)
+//     failuresFile?: string                 // bench/results/failures.md (per-task evidence, failures.json)
 //     notes: string[]
 //   }
 // Every number is raw (rates in 0..1, tokens as integers, durations in ms); formatting is the generator's job.
@@ -385,9 +398,29 @@ export interface SummaryRow {
   } | null;
   strategies: SummaryStrategyCell[];
   byKind: SummaryKindCell[];
+  /** Failure analysis of `kopt-pack` (null when it did not run on this repo). */
+  failures: SummaryFailures | null;
   /** Repo-relative paths of the detailed result files. */
   files: { bench?: string; quality?: string };
   durationMs: number;
+}
+
+/**
+ * Root cause of a kopt miss (bench/results/failures.md, src/bench/failures.ts):
+ * ranking = (a) ranking / natural-language mismatch, unresolved-refs = (b), extraction = (c) extraction gap,
+ * budget-format = (d) answer present but cut / shown without its path, multi-step = (e) needs a follow-up call.
+ */
+export type FailureCause = 'ranking' | 'unresolved-refs' | 'extraction' | 'budget-format' | 'multi-step';
+
+export interface SummaryFailures {
+  strategy: StrategyName;
+  /** Tasks run / missed by the strategy. */
+  tasks: number;
+  missed: number;
+  /** Missed tasks per primary cause (the most severe cause among the task's missed items). */
+  byCause: Record<FailureCause, number>;
+  /** Missed gold items (files and symbols) per cause. */
+  itemsByCause: Record<FailureCause, number>;
 }
 
 export interface BenchSummary {
@@ -398,5 +431,8 @@ export interface BenchSummary {
   environment: { node: string; platform: string; toolVersion: string };
   rows: SummaryRow[];
   totals: SummaryStrategyCell[];
+  failureTotals?: SummaryFailures;
+  /** Repo-relative path of the failure analysis (markdown; the JSON sits next to it). */
+  failuresFile?: string;
   notes: string[];
 }

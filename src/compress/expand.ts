@@ -1,4 +1,5 @@
-// kopt_expand: read more of a stored command output by handle (line range and/or regex with context).
+// kopt_expand: read more of a stored command output by handle (line range and/or regex with context). The model
+// reaches it as `kopt_read <handle>`, `kopt_read <handle>:<a>-<b>` and `kopt_read <handle>` with grep.
 
 import type { ExpandParams } from '../core/api.js';
 import type { ToolContext } from '../core/context.js';
@@ -26,7 +27,7 @@ export function expandOutput(p: ExpandParams, ctx: ToolContext): ToolResult {
   const maxTokens = Math.max(40, p.maxTokens ?? cfg.budgets.expand);
   const store = new OutputStore(cfg.dataDir);
   const log = store.readLog(handle);
-  if (log === undefined) return oneLine(`unknown output handle ${handle || '(empty)'} (expired or never created) – re-run with kopt_run`, { found: false });
+  if (log === undefined) return oneLine(`unknown output handle ${handle || '(empty)'} (expired or never created): re-run the command with kopt_run`, { found: false });
   touch(store, handle);
   const lines = log.split('\n');
   const n = lines.length;
@@ -73,7 +74,7 @@ export function expandOutput(p: ExpandParams, ctx: ToolContext): ToolResult {
     }
     const lastShown = ranges[Math.max(0, k - 1)][1] + 1;
     const body = kept.join('\n');
-    const more = k < ranges.length ? `\n… +${ranges.length - k} more match groups (startLine:${ranges[k][0] + 1})` : '';
+    const more = k < ranges.length ? `\n… +${ranges.length - k} more match groups (from ${handle}:${ranges[k][0] + 1}-)` : '';
     const text = `${headerFor(ranges[0][0] + 1, lastShown)}\n${body}${more}`;
     return { text, tokens: estimateTokens(text), meta: { matches, groups: ranges.length, shownGroups: k } };
   }
@@ -93,7 +94,7 @@ export function expandOutput(p: ExpandParams, ctx: ToolContext): ToolResult {
     body = kept.length ? kept.join('\n') : `${slice[0].slice(0, Math.max(20, tokensToChars(budget)))}…`;
   }
   const lastLine = start + shown - 1;
-  const more = lastLine < end ? `\n… ${end - lastLine} more lines (startLine:${lastLine + 1})` : '';
+  const more = lastLine < end ? `\n… ${end - lastLine} more lines (${handle}:${lastLine + 1}-${end < n ? end : ''})` : '';
   const text = `${header(lastLine)}\n${body}${more}`;
   return { text, tokens: estimateTokens(text), meta: { lines: shown, total: n } };
 }

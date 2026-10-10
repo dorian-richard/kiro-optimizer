@@ -1,0 +1,101 @@
+{
+  "label": "codegraph",
+  "tool": "codegraph",
+  "package": "@colbymchenry/codegraph",
+  "version": "1.6.2",
+  "mode": "default",
+  "repo": {
+    "name": "playframework",
+    "url": "https://github.com/playframework/playframework.git",
+    "tag": "3.0.12",
+    "commit": "316f494b2d1292c250c19685f21189ab077d7229",
+    "language": "scala",
+    "path": "bench/repos/playframework"
+  },
+  "headCommit": "316f494b2d1292c250c19685f21189ab077d7229",
+  "commitMatchesTasks": true,
+  "date": "2026-10-09T13:51:03.227Z",
+  "image": "kopt-bench/codegraph:1.6.2",
+  "imageId": "sha256:db8f2e822e3863b14f3c037bc692fb20915bf2e48a3083248d72d3938a716f5a",
+  "engine": "docker",
+  "limits": "memory=6g cpus=8",
+  "cgroupMemory": {
+    "maxBytes": 6442450944,
+    "peakBytes": 2271506432,
+    "oomKills": 0
+  },
+  "container": {
+    "node": "v22.23.3",
+    "arch": "arm64",
+    "platform": "linux",
+    "cpus": 10,
+    "memBytes": 8214851584,
+    "network": "none"
+  },
+  "primaryTool": "codegraph_explore",
+  "toolArgsExample": {
+    "query": "<input>"
+  },
+  "serverCommand": {
+    "command": "codegraph",
+    "args": [
+      "serve",
+      "--mcp"
+    ]
+  },
+  "oneSessionPerTask": true,
+  "indexOk": true,
+  "indexMs": 9717,
+  "indexSteps": [
+    {
+      "command": "codegraph init --yes /work/playframework",
+      "ms": 9717,
+      "exit": 0,
+      "signal": null,
+      "oomKills": 0
+    }
+  ],
+  "copyMs": 4565,
+  "indexDirs": [
+    "<repo>/.codegraph"
+  ],
+  "indexSizeBytes": 103362789,
+  "modelBytes": 0,
+  "indexStatus": "CodeGraph Status\n\nProject: /work/playframework\n\nIndex Statistics:\n  Files:     1,559\n  Nodes:     32,911\n  Edges:     77,431\n  DB Size:   98.57 MB\n  Backend:   node:sqlite — built-in (full WAL)\n  Journal:   wal\n\nNodes by Kind:\n  import          10,395\n  method          10,230\n  field           5,228\n  class           2,322\n  file            1,476\n  constant        828\n  module          644\n  namespace       609\n  route           423\n  trait           350\n  interface       186\n  function        139\n  type_alias      44\n  variable        21\n  enum_member     12\n  enum            4\n\nFiles by Language:\n  scala           801\n  java            619\n  yaml            80\n  xml             48\n  javascript      8\n  properties      3\n\n✓ Index is up to date",
+  "surface": {
+    "serverInfo": {
+      "name": "codegraph",
+      "version": "1.6.2"
+    },
+    "toolCount": 1,
+    "toolNames": [
+      "codegraph_explore"
+    ],
+    "toolsChars": 1725,
+    "toolsEstTokens": 575,
+    "instructionsChars": 6718,
+    "instructionsEstTokens": 2240,
+    "primaryToolListed": true,
+    "file": "codegraph.surface.json"
+  },
+  "inputs": {
+    "search": {
+      "file": "codegraph-playframework.jsonl",
+      "tasks": 12,
+      "failures": 0,
+      "queryMsMedian": 152,
+      "queryMsP90": 348,
+      "startupMsMedian": 128
+    },
+    "question": {
+      "file": "codegraph-playframework-question.jsonl",
+      "tasks": 12,
+      "failures": 0,
+      "queryMsMedian": 323,
+      "queryMsP90": 436,
+      "startupMsMedian": 143
+    }
+  },
+  "charsPerToken": 3,
+  "errors": []
+}

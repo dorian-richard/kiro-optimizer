@@ -1,0 +1,3023 @@
+{
+  "meta": {
+    "label": "playframework",
+    "repo": {
+      "name": "playframework",
+      "url": "https://github.com/playframework/playframework.git",
+      "tag": "3.0.12",
+      "commit": "316f494b2d1292c250c19685f21189ab077d7229",
+      "language": "scala",
+      "path": "bench/repos/playframework"
+    },
+    "repoRoot": "bench/repos/playframework",
+    "headCommit": "316f494b2d1292c250c19685f21189ab077d7229",
+    "date": "2026-10-09T22:39:50.250Z",
+    "input": "search",
+    "charsPerToken": 3,
+    "strategies": [
+      "native-naive",
+      "native-ranged",
+      "kopt-pack",
+      "kopt-hits+read",
+      "kirograph",
+      "codegraph"
+    ],
+    "grepLimits": {
+      "maxMatches": 100,
+      "maxChars": 10000,
+      "maxLineChars": 250
+    },
+    "readLimits": {
+      "naiveTopFiles": 3,
+      "naiveMaxLines": 2000,
+      "rangedMatches": 4,
+      "rangedContext": 60
+    },
+    "koptBudgets": {
+      "find": 700,
+      "pack": 2500,
+      "read": 3000
+    },
+    "index": {
+      "built": false,
+      "durationMs": 0,
+      "files": 1427,
+      "symbols": 18592,
+      "path": "<index-dir>/.kopt-playframework/index.db"
+    },
+    "notes": [
+      "kirograph: outputs loaded from bench/competitors/results/kirograph-playframework.jsonl",
+      "codegraph: outputs loaded from bench/competitors/results/codegraph-playframework.jsonl"
+    ],
+    "durationMs": 4806
+  },
+  "results": [
+    {
+      "taskId": "pf-locate-evolution-conflict",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 16437,
+      "chars": 49308,
+      "toolCalls": 4,
+      "durationMs": 424,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "conflict",
+          "chars": 9935,
+          "tokens": 3312
+        },
+        {
+          "tool": "read_file",
+          "args": "persistence/play-jdbc-evolutions/src/test/scala/play/api/db/evolutions/ScriptSpec.scala",
+          "chars": 4206,
+          "tokens": 1402
+        },
+        {
+          "tool": "read_file",
+          "args": "persistence/play-jdbc-evolutions/src/main/scala/play/api/db/evolutions/EvolutionsApi.scala",
+          "chars": 31534,
+          "tokens": 10512
+        },
+        {
+          "tool": "read_file",
+          "args": "documentation/manual/working/commonGuide/build/sbtDependencies.md",
+          "chars": 3633,
+          "tokens": 1211
+        }
+      ]
+    },
+    {
+      "taskId": "pf-locate-evolution-conflict",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 36185,
+      "chars": 108548,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "conflict",
+          "chars": 9935,
+          "tokens": 3312
+        },
+        {
+          "tool": "read_file",
+          "args": "dev-mode/sbt-plugin/src/sbt-test/play-sbt-plugin/distribution/public/javascripts/jquery-2.2.0.min.js:1-5",
+          "chars": 85589,
+          "tokens": 28530
+        },
+        {
+          "tool": "read_file",
+          "args": "persistence/play-jdbc-evolutions/src/main/scala/play/api/db/evolutions/Evolutions.scala:145-265",
+          "chars": 4460,
+          "tokens": 1487
+        },
+        {
+          "tool": "read_file",
+          "args": "persistence/play-jdbc-evolutions/src/main/scala/play/api/db/evolutions/EvolutionsApi.scala:82-202",
+          "chars": 4603,
+          "tokens": 1535
+        },
+        {
+          "tool": "read_file",
+          "args": "persistence/play-jdbc-evolutions/src/main/scala/play/api/db/evolutions/EvolutionsApi.scala:256-376",
+          "chars": 3961,
+          "tokens": 1321
+        }
+      ]
+    },
+    {
+      "taskId": "pf-locate-evolution-conflict",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1321,
+      "chars": 3963,
+      "toolCalls": 1,
+      "durationMs": 36,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"evolution script modified already applied hash conflict downs ups\"",
+          "chars": 3963,
+          "tokens": 1321
+        }
+      ]
+    },
+    {
+      "taskId": "pf-locate-evolution-conflict",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 1353,
+      "chars": 4056,
+      "toolCalls": 3,
+      "durationMs": 24,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"evolution script modified already applied hash conflict downs ups\"",
+          "chars": 2017,
+          "tokens": 673
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#9f2",
+          "chars": 1326,
+          "tokens": 442
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#9ex",
+          "chars": 713,
+          "tokens": 238
+        }
+      ]
+    },
+    {
+      "taskId": "pf-locate-evolution-conflict",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tokens": 658,
+      "chars": 1973,
+      "toolCalls": 1,
+      "durationMs": 51,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.3333333333333333,
+        "defRecall": 0.3333333333333333,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "scripts",
+          "conflictings"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "evolution script modified already applied hash conflict downs ups",
+          "chars": 1973,
+          "tokens": 658
+        }
+      ]
+    },
+    {
+      "taskId": "pf-locate-evolution-conflict",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tokens": 8330,
+      "chars": 24989,
+      "toolCalls": 1,
+      "durationMs": 625,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.6666666666666666,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "evolution script modified already applied hash conflict downs ups",
+          "chars": 24989,
+          "tokens": 8330
+        }
+      ]
+    },
+    {
+      "taskId": "pf-locate-csrf-body-token",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 37419,
+      "chars": 112252,
+      "toolCalls": 4,
+      "durationMs": 393,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "web/play-filters-helpers/src/main/scala/play/filters/csrf/CSRFActions.scala"
+        ],
+        "symbolsMissed": [
+          "checkBody",
+          "extractTokenFromFormBody",
+          "extractTokenFromMultipartFormDataBody",
+          "BodyHandler"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "before",
+          "chars": 9823,
+          "tokens": 3275
+        },
+        {
+          "tool": "read_file",
+          "args": "documentation/manual/releases/release27/migration27/JavaHttpContextMigration27.md",
+          "chars": 28550,
+          "tokens": 9517
+        },
+        {
+          "tool": "read_file",
+          "args": "documentation/style/main.css",
+          "chars": 13676,
+          "tokens": 4559
+        },
+        {
+          "tool": "read_file",
+          "args": "documentation/manual/releases/release26/migration26/Migration26.md",
+          "chars": 60203,
+          "tokens": 20068
+        }
+      ]
+    },
+    {
+      "taskId": "pf-locate-csrf-body-token",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 8263,
+      "chars": 24787,
+      "toolCalls": 3,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "web/play-filters-helpers/src/main/scala/play/filters/csrf/CSRFActions.scala"
+        ],
+        "symbolsMissed": [
+          "checkBody",
+          "extractTokenFromFormBody",
+          "extractTokenFromMultipartFormDataBody",
+          "BodyHandler"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "before",
+          "chars": 9823,
+          "tokens": 3275
+        },
+        {
+          "tool": "read_file",
+          "args": "documentation/manual/releases/release26/migration26/Migration26.md:280-400",
+          "chars": 6552,
+          "tokens": 2184
+        },
+        {
+          "tool": "read_file",
+          "args": "documentation/manual/releases/release27/migration27/JavaHttpContextMigration27.md:1-269",
+          "chars": 8412,
+          "tokens": 2804
+        }
+      ]
+    },
+    {
+      "taskId": "pf-locate-csrf-body-token",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1328,
+      "chars": 3982,
+      "toolCalls": 1,
+      "durationMs": 47,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"csrf token form body multipart extract buffer before action\"",
+          "chars": 3982,
+          "tokens": 1328
+        }
+      ]
+    },
+    {
+      "taskId": "pf-locate-csrf-body-token",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 2089,
+      "chars": 6263,
+      "toolCalls": 3,
+      "durationMs": 30,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.75,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "BodyHandler"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"csrf token form body multipart extract buffer before action\"",
+          "chars": 2066,
+          "tokens": 689
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#d0z",
+          "chars": 3424,
+          "tokens": 1142
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#d0y",
+          "chars": 773,
+          "tokens": 258
+        }
+      ]
+    },
+    {
+      "taskId": "pf-locate-csrf-body-token",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tokens": 972,
+      "chars": 2914,
+      "toolCalls": 1,
+      "durationMs": 56,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "web/play-filters-helpers/src/main/scala/play/filters/csrf/CSRFActions.scala"
+        ],
+        "symbolsMissed": [
+          "checkBody",
+          "extractTokenFromFormBody",
+          "extractTokenFromMultipartFormDataBody",
+          "BodyHandler"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "csrf token form body multipart extract buffer before action",
+          "chars": 2914,
+          "tokens": 972
+        }
+      ]
+    },
+    {
+      "taskId": "pf-locate-csrf-body-token",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tokens": 8333,
+      "chars": 24998,
+      "toolCalls": 1,
+      "durationMs": 348,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.25,
+        "defRecall": 0.25,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "checkBody",
+          "extractTokenFromFormBody",
+          "BodyHandler"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "csrf token form body multipart extract buffer before action",
+          "chars": 24998,
+          "tokens": 8333
+        }
+      ]
+    },
+    {
+      "taskId": "pf-locate-jwt-session",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 27379,
+      "chars": 82133,
+      "toolCalls": 4,
+      "durationMs": 429,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "expired|skew",
+          "chars": 4000,
+          "tokens": 1334
+        },
+        {
+          "tool": "read_file",
+          "args": "core/play/src/test/scala/play/api/mvc/CookiesSpec.scala",
+          "chars": 13187,
+          "tokens": 4396
+        },
+        {
+          "tool": "read_file",
+          "args": "core/play/src/main/scala/play/api/mvc/Cookie.scala",
+          "chars": 29510,
+          "tokens": 9837
+        },
+        {
+          "tool": "read_file",
+          "args": "core/play/src/main/resources/reference.conf",
+          "chars": 35436,
+          "tokens": 11812
+        }
+      ]
+    },
+    {
+      "taskId": "pf-locate-jwt-session",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 6863,
+      "chars": 20583,
+      "toolCalls": 4,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.75,
+        "defRecall": 0.75,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "FallbackCookieDataCodec"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "expired|skew",
+          "chars": 4000,
+          "tokens": 1334
+        },
+        {
+          "tool": "read_file",
+          "args": "core/play/src/main/resources/reference.conf:117-237",
+          "chars": 4532,
+          "tokens": 1511
+        },
+        {
+          "tool": "read_file",
+          "args": "core/play/src/main/scala/play/api/mvc/Cookie.scala:607-802",
+          "chars": 7171,
+          "tokens": 2391
+        },
+        {
+          "tool": "read_file",
+          "args": "core/play/src/test/scala/play/api/mvc/CookiesSpec.scala:187-307",
+          "chars": 4880,
+          "tokens": 1627
+        }
+      ]
+    },
+    {
+      "taskId": "pf-locate-jwt-session",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1305,
+      "chars": 3913,
+      "toolCalls": 1,
+      "durationMs": 31,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.75,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "parse"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"session cookie jwt expired clock skew signature algorithm legacy signed cookie\"",
+          "chars": 3913,
+          "tokens": 1305
+        }
+      ]
+    },
+    {
+      "taskId": "pf-locate-jwt-session",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 1188,
+      "chars": 3560,
+      "toolCalls": 3,
+      "durationMs": 21,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.75,
+        "defRecall": 0.25,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "parse"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"session cookie jwt expired clock skew signature algorithm legacy signed cookie\"",
+          "chars": 2044,
+          "tokens": 682
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#60f",
+          "chars": 272,
+          "tokens": 91
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#60i",
+          "chars": 1244,
+          "tokens": 415
+        }
+      ]
+    },
+    {
+      "taskId": "pf-locate-jwt-session",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tokens": 1348,
+      "chars": 4043,
+      "toolCalls": 1,
+      "durationMs": 47,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "core/play/src/main/scala/play/api/mvc/Cookie.scala"
+        ],
+        "symbolsMissed": [
+          "JWTCookieDataCodec",
+          "JWTFormatter",
+          "parse",
+          "FallbackCookieDataCodec"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "session cookie jwt expired clock skew signature algorithm legacy signed cookie",
+          "chars": 4043,
+          "tokens": 1348
+        }
+      ]
+    },
+    {
+      "taskId": "pf-locate-jwt-session",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tokens": 8299,
+      "chars": 24897,
+      "toolCalls": 1,
+      "durationMs": 178,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.25,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "session cookie jwt expired clock skew signature algorithm legacy signed cookie",
+          "chars": 24897,
+          "tokens": 8299
+        }
+      ]
+    },
+    {
+      "taskId": "pf-locate-routes-validation",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 30592,
+      "chars": 91771,
+      "toolCalls": 4,
+      "durationMs": 404,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "overloaded",
+          "chars": 3887,
+          "tokens": 1296
+        },
+        {
+          "tool": "read_file",
+          "args": "dev-mode/play-routes-compiler/src/main/scala/play/routes/compiler/RoutesFileParser.scala",
+          "chars": 13874,
+          "tokens": 4625
+        },
+        {
+          "tool": "read_file",
+          "args": "core/play/src/main/scala/play/core/parsers/Multipart.scala",
+          "chars": 29680,
+          "tokens": 9894
+        },
+        {
+          "tool": "read_file",
+          "args": "core/play/src/main/scala/play/api/mvc/BodyParsers.scala",
+          "chars": 44330,
+          "tokens": 14777
+        }
+      ]
+    },
+    {
+      "taskId": "pf-locate-routes-validation",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 6891,
+      "chars": 20669,
+      "toolCalls": 4,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "validate",
+          "parseContent"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "overloaded",
+          "chars": 3887,
+          "tokens": 1296
+        },
+        {
+          "tool": "read_file",
+          "args": "core/play/src/main/scala/play/api/mvc/BodyParsers.scala:972-1092",
+          "chars": 5012,
+          "tokens": 1671
+        },
+        {
+          "tool": "read_file",
+          "args": "core/play/src/main/scala/play/core/parsers/Multipart.scala:1-170",
+          "chars": 7425,
+          "tokens": 2475
+        },
+        {
+          "tool": "read_file",
+          "args": "dev-mode/play-routes-compiler/src/main/scala/play/routes/compiler/RoutesFileParser.scala:59-179",
+          "chars": 4345,
+          "tokens": 1449
+        }
+      ]
+    },
+    {
+      "taskId": "pf-locate-routes-validation",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 1317,
+      "chars": 3950,
+      "toolCalls": 1,
+      "durationMs": 41,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"routes file overloaded controller methods missing parameter compilation error\"",
+          "chars": 3950,
+          "tokens": 1317
+        }
+      ]
+    },
+    {
+      "taskId": "pf-locate-routes-validation",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 961,
+      "chars": 2879,
+      "toolCalls": 3,
+      "durationMs": 25,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "validate",
+          "parseContent"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"routes file overloaded controller methods missing parameter compilation error\"",
+          "chars": 2038,
+          "tokens": 680
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#2h1",
+          "chars": 202,
+          "tokens": 68
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#2gm",
+          "chars": 639,
+          "tokens": 213
+        }
+      ]
+    },
+    {
+      "taskId": "pf-locate-routes-validation",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tokens": 1094,
+      "chars": 3282,
+      "toolCalls": 1,
+      "durationMs": 39,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "dev-mode/play-routes-compiler/src/main/scala/play/routes/compiler/RoutesFileParser.scala"
+        ],
+        "symbolsMissed": [
+          "validate",
+          "parseContent"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "routes file overloaded controller methods missing parameter compilation error",
+          "chars": 3282,
+          "tokens": 1094
+        }
+      ]
+    },
+    {
+      "taskId": "pf-locate-routes-validation",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tokens": 7795,
+      "chars": 23383,
+      "toolCalls": 1,
+      "durationMs": 242,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "routes file overloaded controller methods missing parameter compilation error",
+          "chars": 23383,
+          "tokens": 7795
+        }
+      ]
+    },
+    {
+      "taskId": "pf-explain-gzip",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 29620,
+      "chars": 88856,
+      "toolCalls": 4,
+      "durationMs": 418,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "threshold",
+          "chars": 9979,
+          "tokens": 3327
+        },
+        {
+          "tool": "read_file",
+          "args": "web/play-filters-helpers/src/main/scala/play/filters/gzip/GzipFilter.scala",
+          "chars": 14408,
+          "tokens": 4803
+        },
+        {
+          "tool": "read_file",
+          "args": "core/play/src/main/scala/play/api/mvc/BodyParsers.scala",
+          "chars": 44330,
+          "tokens": 14777
+        },
+        {
+          "tool": "read_file",
+          "args": "web/play-filters-helpers/src/test/scala/play/filters/gzip/GzipFilterSpec.scala",
+          "chars": 20139,
+          "tokens": 6713
+        }
+      ]
+    },
+    {
+      "taskId": "pf-explain-gzip",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 9495,
+      "chars": 28477,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.25,
+        "defRecall": 0.25,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "handleResult",
+          "mayCompress",
+          "gzipIsAcceptedAndPreferredBy"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "threshold",
+          "chars": 9979,
+          "tokens": 3327
+        },
+        {
+          "tool": "read_file",
+          "args": "core/play/src/main/java/play/mvc/BodyParser.java:403-523",
+          "chars": 4334,
+          "tokens": 1445
+        },
+        {
+          "tool": "read_file",
+          "args": "core/play/src/main/scala/play/api/mvc/BodyParsers.scala:242-362",
+          "chars": 3901,
+          "tokens": 1301
+        },
+        {
+          "tool": "read_file",
+          "args": "core/play/src/main/scala/play/api/mvc/BodyParsers.scala:570-690",
+          "chars": 4775,
+          "tokens": 1592
+        },
+        {
+          "tool": "read_file",
+          "args": "web/play-filters-helpers/src/main/scala/play/filters/gzip/GzipFilter.scala:158-278",
+          "chars": 5488,
+          "tokens": 1830
+        }
+      ]
+    },
+    {
+      "taskId": "pf-explain-gzip",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 1364,
+      "chars": 4091,
+      "toolCalls": 1,
+      "durationMs": 34,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.75,
+        "defRecall": 0.25,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "handleResult"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"gzip filter compress response threshold chunked accept encoding\"",
+          "chars": 4091,
+          "tokens": 1364
+        }
+      ]
+    },
+    {
+      "taskId": "pf-explain-gzip",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 1113,
+      "chars": 3336,
+      "toolCalls": 3,
+      "durationMs": 22,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.75,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "handleResult"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"gzip filter compress response threshold chunked accept encoding\"",
+          "chars": 2059,
+          "tokens": 687
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#d2h",
+          "chars": 1134,
+          "tokens": 378
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#d2l",
+          "chars": 143,
+          "tokens": 48
+        }
+      ]
+    },
+    {
+      "taskId": "pf-explain-gzip",
+      "kind": "explain",
+      "strategy": "kirograph",
+      "tokens": 1405,
+      "chars": 4215,
+      "toolCalls": 1,
+      "durationMs": 40,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "web/play-filters-helpers/src/main/scala/play/filters/gzip/GzipFilter.scala"
+        ],
+        "symbolsMissed": [
+          "handleResult",
+          "shouldCompress",
+          "mayCompress",
+          "gzipIsAcceptedAndPreferredBy"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "gzip filter compress response threshold chunked accept encoding",
+          "chars": 4215,
+          "tokens": 1405
+        }
+      ]
+    },
+    {
+      "taskId": "pf-explain-gzip",
+      "kind": "explain",
+      "strategy": "codegraph",
+      "tokens": 7764,
+      "chars": 23292,
+      "toolCalls": 1,
+      "durationMs": 133,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "web/play-filters-helpers/src/main/scala/play/filters/gzip/GzipFilter.scala"
+        ],
+        "symbolsMissed": [
+          "handleResult",
+          "shouldCompress",
+          "mayCompress",
+          "gzipIsAcceptedAndPreferredBy"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "gzip filter compress response threshold chunked accept encoding",
+          "chars": 23292,
+          "tokens": 7764
+        }
+      ]
+    },
+    {
+      "taskId": "pf-explain-forwarded",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 17092,
+      "chars": 51271,
+      "toolCalls": 4,
+      "durationMs": 354,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "proxies",
+          "chars": 10030,
+          "tokens": 3344
+        },
+        {
+          "tool": "read_file",
+          "args": "transport/server/play-server/src/test/scala/play/core/server/common/ForwardedHeaderHandlerSpec.scala",
+          "chars": 21295,
+          "tokens": 7099
+        },
+        {
+          "tool": "read_file",
+          "args": "documentation/manual/working/commonGuide/production/HTTPServer.md",
+          "chars": 9392,
+          "tokens": 3131
+        },
+        {
+          "tool": "read_file",
+          "args": "transport/server/play-server/src/main/scala/play/core/server/common/ForwardedHeaderHandler.scala",
+          "chars": 10554,
+          "tokens": 3518
+        }
+      ]
+    },
+    {
+      "taskId": "pf-explain-forwarded",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 8979,
+      "chars": 26932,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "proxies",
+          "chars": 10030,
+          "tokens": 3344
+        },
+        {
+          "tool": "read_file",
+          "args": "core/play-guice/src/main/scala/play/api/inject/guice/GuiceInjectorBuilder.scala:44-164",
+          "chars": 3758,
+          "tokens": 1253
+        },
+        {
+          "tool": "read_file",
+          "args": "documentation/manual/working/commonGuide/production/HTTPServer.md:99-193",
+          "chars": 5087,
+          "tokens": 1696
+        },
+        {
+          "tool": "read_file",
+          "args": "transport/server/play-server/src/main/scala/play/core/server/common/ForwardedHeaderHandler.scala:1-82",
+          "chars": 3698,
+          "tokens": 1233
+        },
+        {
+          "tool": "read_file",
+          "args": "transport/server/play-server/src/main/scala/play/core/server/common/ForwardedHeaderHandler.scala:89-209",
+          "chars": 4359,
+          "tokens": 1453
+        }
+      ]
+    },
+    {
+      "taskId": "pf-explain-forwarded",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 1275,
+      "chars": 3823,
+      "toolCalls": 1,
+      "durationMs": 32,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"forwarded headers x-forwarded-for trusted proxies remote address secure\"",
+          "chars": 3823,
+          "tokens": 1275
+        }
+      ]
+    },
+    {
+      "taskId": "pf-explain-forwarded",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 1780,
+      "chars": 5336,
+      "toolCalls": 3,
+      "durationMs": 24,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"forwarded headers x-forwarded-for trusted proxies remote address secure\"",
+          "chars": 2075,
+          "tokens": 692
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#cpt",
+          "chars": 3038,
+          "tokens": 1013
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#cq7",
+          "chars": 223,
+          "tokens": 75
+        }
+      ]
+    },
+    {
+      "taskId": "pf-explain-forwarded",
+      "kind": "explain",
+      "strategy": "kirograph",
+      "tokens": 1284,
+      "chars": 3851,
+      "toolCalls": 1,
+      "durationMs": 43,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "transport/server/play-server/src/main/scala/play/core/server/common/ForwardedHeaderHandler.scala"
+        ],
+        "symbolsMissed": [
+          "forwardedConnection",
+          "forwardedHeaders",
+          "parseEntry",
+          "isTrustedProxy"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "forwarded headers x-forwarded-for trusted proxies remote address secure",
+          "chars": 3851,
+          "tokens": 1284
+        }
+      ]
+    },
+    {
+      "taskId": "pf-explain-forwarded",
+      "kind": "explain",
+      "strategy": "codegraph",
+      "tokens": 8322,
+      "chars": 24965,
+      "toolCalls": 1,
+      "durationMs": 112,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.75,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "forwarded headers x-forwarded-for trusted proxies remote address secure",
+          "chars": 24965,
+          "tokens": 8322
+        }
+      ]
+    },
+    {
+      "taskId": "pf-explain-cached",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 23170,
+      "chars": 69506,
+      "toolCalls": 4,
+      "durationMs": 437,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.25,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "CachedBuilder",
+          "handleResult",
+          "cachingWithEternity"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "expires",
+          "chars": 9917,
+          "tokens": 3306
+        },
+        {
+          "tool": "read_file",
+          "args": "cache/play-ehcache/src/test/scala/play/api/cache/CachedSpec.scala",
+          "chars": 15626,
+          "tokens": 5209
+        },
+        {
+          "tool": "read_file",
+          "args": "core/play/src/main/java/play/core/cookie/encoding/ClientCookieDecoder.java",
+          "chars": 8034,
+          "tokens": 2678
+        },
+        {
+          "tool": "read_file",
+          "args": "core/play-integration-test/src/test/scala/play/it/http/JavaResultsHandlingSpec.scala",
+          "chars": 35929,
+          "tokens": 11977
+        }
+      ]
+    },
+    {
+      "taskId": "pf-explain-cached",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 6746,
+      "chars": 20236,
+      "toolCalls": 4,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "CachedBuilder",
+          "build",
+          "handleResult",
+          "cachingWithEternity"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "expires",
+          "chars": 9917,
+          "tokens": 3306
+        },
+        {
+          "tool": "read_file",
+          "args": "core/play/src/main/java/play/core/cookie/encoding/ClientCookieDecoder.java:98-265",
+          "chars": 5208,
+          "tokens": 1736
+        },
+        {
+          "tool": "read_file",
+          "args": "core/play/src/main/java/play/core/cookie/encoding/CookieHeaderNames.java:1-37",
+          "chars": 1107,
+          "tokens": 369
+        },
+        {
+          "tool": "read_file",
+          "args": "core/play/src/main/scala/play/api/mvc/Cookie.scala:64-184",
+          "chars": 4004,
+          "tokens": 1335
+        }
+      ]
+    },
+    {
+      "taskId": "pf-explain-cached",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 1373,
+      "chars": 4119,
+      "toolCalls": 1,
+      "durationMs": 43,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.75,
+        "defRecall": 0.25,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "cachingWithEternity"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"Cached action result cache etag expires not modified\"",
+          "chars": 4119,
+          "tokens": 1373
+        }
+      ]
+    },
+    {
+      "taskId": "pf-explain-cached",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 1233,
+      "chars": 3697,
+      "toolCalls": 3,
+      "durationMs": 28,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.75,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "cachingWithEternity"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"Cached action result cache etag expires not modified\"",
+          "chars": 2067,
+          "tokens": 689
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#rn",
+          "chars": 1063,
+          "tokens": 355
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#ro",
+          "chars": 567,
+          "tokens": 189
+        }
+      ]
+    },
+    {
+      "taskId": "pf-explain-cached",
+      "kind": "explain",
+      "strategy": "kirograph",
+      "tokens": 1329,
+      "chars": 3986,
+      "toolCalls": 1,
+      "durationMs": 49,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "cache/play-cache/src/main/scala/play/api/cache/Cached.scala"
+        ],
+        "symbolsMissed": [
+          "CachedBuilder",
+          "build",
+          "handleResult",
+          "cachingWithEternity"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "Cached action result cache etag expires not modified",
+          "chars": 3986,
+          "tokens": 1329
+        }
+      ]
+    },
+    {
+      "taskId": "pf-explain-cached",
+      "kind": "explain",
+      "strategy": "codegraph",
+      "tokens": 8318,
+      "chars": 24952,
+      "toolCalls": 1,
+      "durationMs": 170,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "Cached action result cache etag expires not modified",
+          "chars": 24952,
+          "tokens": 8318
+        }
+      ]
+    },
+    {
+      "taskId": "pf-usage-prepare-cookies",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 20433,
+      "chars": 61295,
+      "toolCalls": 4,
+      "durationMs": 219,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "ServerResultUtils|prepareCookies",
+          "chars": 4865,
+          "tokens": 1622
+        },
+        {
+          "tool": "read_file",
+          "args": "transport/server/play-netty-server/src/main/scala/play/core/server/netty/PlayRequestHandler.scala",
+          "chars": 15593,
+          "tokens": 5198
+        },
+        {
+          "tool": "read_file",
+          "args": "transport/server/play-pekko-http-server/src/main/scala/play/core/server/PekkoHttpServer.scala",
+          "chars": 31276,
+          "tokens": 10426
+        },
+        {
+          "tool": "read_file",
+          "args": "transport/server/play-server/src/test/scala/play/core/server/common/ServerResultUtilsSpec.scala",
+          "chars": 9561,
+          "tokens": 3187
+        }
+      ]
+    },
+    {
+      "taskId": "pf-usage-prepare-cookies",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 7284,
+      "chars": 21847,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "handleAction",
+          "runAction"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "ServerResultUtils|prepareCookies",
+          "chars": 4865,
+          "tokens": 1622
+        },
+        {
+          "tool": "read_file",
+          "args": "transport/server/play-netty-server/src/main/scala/play/core/server/netty/PlayRequestHandler.scala:26-146",
+          "chars": 5281,
+          "tokens": 1761
+        },
+        {
+          "tool": "read_file",
+          "args": "transport/server/play-pekko-http-server/src/main/scala/play/core/server/PekkoHttpServer.scala:252-372",
+          "chars": 4568,
+          "tokens": 1523
+        },
+        {
+          "tool": "read_file",
+          "args": "transport/server/play-server/src/main/scala/play/core/server/common/ServerResultUtils.scala:1-85",
+          "chars": 3291,
+          "tokens": 1097
+        },
+        {
+          "tool": "read_file",
+          "args": "transport/server/play-server/src/main/scala/play/core/server/common/ServerResultUtils.scala:238-342",
+          "chars": 3842,
+          "tokens": 1281
+        }
+      ]
+    },
+    {
+      "taskId": "pf-usage-prepare-cookies",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 1261,
+      "chars": 3781,
+      "toolCalls": 1,
+      "durationMs": 26,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"ServerResultUtils prepareCookies server backend\"",
+          "chars": 3781,
+          "tokens": 1261
+        }
+      ]
+    },
+    {
+      "taskId": "pf-usage-prepare-cookies",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 1581,
+      "chars": 4740,
+      "toolCalls": 3,
+      "durationMs": 20,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "transport/server/play-netty-server/src/main/scala/play/core/server/netty/PlayRequestHandler.scala",
+          "transport/server/play-pekko-http-server/src/main/scala/play/core/server/PekkoHttpServer.scala"
+        ],
+        "symbolsMissed": [
+          "handleAction",
+          "runAction"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"ServerResultUtils prepareCookies server backend\"",
+          "chars": 1109,
+          "tokens": 370
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#ctc",
+          "chars": 955,
+          "tokens": 319
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#csf",
+          "chars": 2676,
+          "tokens": 892
+        }
+      ]
+    },
+    {
+      "taskId": "pf-usage-prepare-cookies",
+      "kind": "usage",
+      "strategy": "kirograph",
+      "tokens": 2238,
+      "chars": 6712,
+      "toolCalls": 1,
+      "durationMs": 44,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "transport/server/play-netty-server/src/main/scala/play/core/server/netty/PlayRequestHandler.scala",
+          "transport/server/play-pekko-http-server/src/main/scala/play/core/server/PekkoHttpServer.scala"
+        ],
+        "symbolsMissed": [
+          "handleAction",
+          "runAction"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "ServerResultUtils prepareCookies server backend",
+          "chars": 6712,
+          "tokens": 2238
+        }
+      ]
+    },
+    {
+      "taskId": "pf-usage-prepare-cookies",
+      "kind": "usage",
+      "strategy": "codegraph",
+      "tokens": 8329,
+      "chars": 24987,
+      "toolCalls": 1,
+      "durationMs": 144,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "ServerResultUtils prepareCookies server backend",
+          "chars": 24987,
+          "tokens": 8329
+        }
+      ]
+    },
+    {
+      "taskId": "pf-usage-enforce-max-length",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 19555,
+      "chars": 58662,
+      "toolCalls": 3,
+      "durationMs": 301,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "enforceMaxLength",
+          "chars": 2445,
+          "tokens": 815
+        },
+        {
+          "tool": "read_file",
+          "args": "core/play/src/test/scala/play/api/mvc/MaxLengthBodyParserSpec.scala",
+          "chars": 11887,
+          "tokens": 3963
+        },
+        {
+          "tool": "read_file",
+          "args": "core/play/src/main/scala/play/api/mvc/BodyParsers.scala",
+          "chars": 44330,
+          "tokens": 14777
+        }
+      ]
+    },
+    {
+      "taskId": "pf-usage-enforce-max-length",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 7175,
+      "chars": 21522,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "enforceMaxLength",
+          "chars": 2445,
+          "tokens": 815
+        },
+        {
+          "tool": "read_file",
+          "args": "core/play/src/main/scala/play/api/mvc/BodyParsers.scala:573-693",
+          "chars": 4708,
+          "tokens": 1570
+        },
+        {
+          "tool": "read_file",
+          "args": "core/play/src/main/scala/play/api/mvc/BodyParsers.scala:777-897",
+          "chars": 5139,
+          "tokens": 1713
+        },
+        {
+          "tool": "read_file",
+          "args": "core/play/src/main/scala/play/api/mvc/BodyParsers.scala:1009-1129",
+          "chars": 5153,
+          "tokens": 1718
+        },
+        {
+          "tool": "read_file",
+          "args": "core/play/src/test/scala/play/api/mvc/MaxLengthBodyParserSpec.scala:36-156",
+          "chars": 4077,
+          "tokens": 1359
+        }
+      ]
+    },
+    {
+      "taskId": "pf-usage-enforce-max-length",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 1397,
+      "chars": 4191,
+      "toolCalls": 1,
+      "durationMs": 25,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.25,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"PlayBodyParsers enforceMaxLength body parser max length\"",
+          "chars": 4191,
+          "tokens": 1397
+        }
+      ]
+    },
+    {
+      "taskId": "pf-usage-enforce-max-length",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 2233,
+      "chars": 6696,
+      "toolCalls": 3,
+      "durationMs": 18,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"PlayBodyParsers enforceMaxLength body parser max length\"",
+          "chars": 1591,
+          "tokens": 531
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#3kp",
+          "chars": 797,
+          "tokens": 266
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#3j8",
+          "chars": 4308,
+          "tokens": 1436
+        }
+      ]
+    },
+    {
+      "taskId": "pf-usage-enforce-max-length",
+      "kind": "usage",
+      "strategy": "kirograph",
+      "tokens": 2514,
+      "chars": 7541,
+      "toolCalls": 1,
+      "durationMs": 44,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.25,
+        "defRecall": 0,
+        "filesMissed": [
+          "core/play/src/main/scala/play/api/mvc/BodyParsers.scala"
+        ],
+        "symbolsMissed": [
+          "raw",
+          "multipartFormData",
+          "tolerantBodyParser"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "PlayBodyParsers enforceMaxLength body parser max length",
+          "chars": 7541,
+          "tokens": 2514
+        }
+      ]
+    },
+    {
+      "taskId": "pf-usage-enforce-max-length",
+      "kind": "usage",
+      "strategy": "codegraph",
+      "tokens": 8325,
+      "chars": 24974,
+      "toolCalls": 1,
+      "durationMs": 157,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.75,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "PlayBodyParsers enforceMaxLength body parser max length",
+          "chars": 24974,
+          "tokens": 8325
+        }
+      ]
+    },
+    {
+      "taskId": "pf-usage-assets-digest",
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tokens": 10240,
+      "chars": 30718,
+      "toolCalls": 4,
+      "durationMs": 237,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.25,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "findAssetPath",
+          "assetInfoFromResource",
+          "StaticAssetsMetadata"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "fingerprint",
+          "chars": 8057,
+          "tokens": 2686
+        },
+        {
+          "tool": "read_file",
+          "args": "dev-mode/sbt-plugin/src/sbt-test/play-sbt-plugin/routes-compiler-namespace-reverse-router/tests/RouterSpec.scala",
+          "chars": 1842,
+          "tokens": 614
+        },
+        {
+          "tool": "read_file",
+          "args": "dev-mode/sbt-plugin/src/sbt-test/play-sbt-plugin/routes-compiler-injected-routes-compilation-with-request-passed/tests/RouterSpec.scala",
+          "chars": 10478,
+          "tokens": 3493
+        },
+        {
+          "tool": "read_file",
+          "args": "dev-mode/sbt-plugin/src/sbt-test/play-sbt-plugin/routes-compiler-injected-routes-compilation/tests/RouterSpec.scala",
+          "chars": 10341,
+          "tokens": 3447
+        }
+      ]
+    },
+    {
+      "taskId": "pf-usage-assets-digest",
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tokens": 7184,
+      "chars": 21549,
+      "toolCalls": 4,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.25,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "findAssetPath",
+          "assetInfoFromResource",
+          "StaticAssetsMetadata"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "fingerprint",
+          "chars": 8057,
+          "tokens": 2686
+        },
+        {
+          "tool": "read_file",
+          "args": "dev-mode/sbt-plugin/src/sbt-test/play-sbt-plugin/routes-compiler-injected-routes-compilation-with-request-passed/tests/RouterSpec.scala:170-242",
+          "chars": 2812,
+          "tokens": 938
+        },
+        {
+          "tool": "read_file",
+          "args": "dev-mode/sbt-plugin/src/sbt-test/play-sbt-plugin/routes-compiler-namespace-reverse-router/tests/RouterSpec.scala:1-53",
+          "chars": 1842,
+          "tokens": 614
+        },
+        {
+          "tool": "read_file",
+          "args": "documentation/manual/working/commonGuide/assets/AssetsOverview.md:83-266",
+          "chars": 8838,
+          "tokens": 2946
+        }
+      ]
+    },
+    {
+      "taskId": "pf-usage-assets-digest",
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tokens": 1299,
+      "chars": 3895,
+      "toolCalls": 1,
+      "durationMs": 38,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.5,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "findAssetPath",
+          "versioned"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"assets controller digest fingerprint\"",
+          "chars": 3895,
+          "tokens": 1299
+        }
+      ]
+    },
+    {
+      "taskId": "pf-usage-assets-digest",
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tokens": 655,
+      "chars": 1963,
+      "toolCalls": 3,
+      "durationMs": 19,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0.25,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "findAssetPath",
+          "assetInfoFromResource",
+          "versioned"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"assets controller digest fingerprint\"",
+          "chars": 1674,
+          "tokens": 558
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#q7",
+          "chars": 134,
+          "tokens": 45
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#q3",
+          "chars": 155,
+          "tokens": 52
+        }
+      ]
+    },
+    {
+      "taskId": "pf-usage-assets-digest",
+      "kind": "usage",
+      "strategy": "kirograph",
+      "tokens": 1143,
+      "chars": 3428,
+      "toolCalls": 1,
+      "durationMs": 38,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "findAssetPath",
+          "assetInfoFromResource",
+          "versioned",
+          "StaticAssetsMetadata"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "assets controller digest fingerprint",
+          "chars": 3428,
+          "tokens": 1143
+        }
+      ]
+    },
+    {
+      "taskId": "pf-usage-assets-digest",
+      "kind": "usage",
+      "strategy": "codegraph",
+      "tokens": 7946,
+      "chars": 23836,
+      "toolCalls": 1,
+      "durationMs": 143,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "assets controller digest fingerprint",
+          "chars": 23836,
+          "tokens": 7946
+        }
+      ]
+    },
+    {
+      "taskId": "pf-impact-requires-csrf-check",
+      "kind": "impact",
+      "strategy": "native-naive",
+      "tokens": 14050,
+      "chars": 42147,
+      "toolCalls": 4,
+      "durationMs": 128,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "CSRFActionHelper|requiresCsrfCheck",
+          "chars": 6273,
+          "tokens": 2091
+        },
+        {
+          "tool": "read_file",
+          "args": "web/play-filters-helpers/src/main/scala/play/filters/csrf/CSRFActions.scala",
+          "chars": 27864,
+          "tokens": 9288
+        },
+        {
+          "tool": "read_file",
+          "args": "web/play-filters-helpers/src/main/java/play/filters/csrf/RequireCSRFCheckAction.java",
+          "chars": 5492,
+          "tokens": 1831
+        },
+        {
+          "tool": "read_file",
+          "args": "web/play-filters-helpers/src/main/scala/play/api/test/CSRFTokenHelper.scala",
+          "chars": 2518,
+          "tokens": 840
+        }
+      ]
+    },
+    {
+      "taskId": "pf-impact-requires-csrf-check",
+      "kind": "impact",
+      "strategy": "native-ranged",
+      "tokens": 8181,
+      "chars": 24536,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "CSRFActionHelper|requiresCsrfCheck",
+          "chars": 6273,
+          "tokens": 2091
+        },
+        {
+          "tool": "read_file",
+          "args": "web/play-filters-helpers/src/main/java/play/filters/csrf/RequireCSRFCheckAction.java:20-140",
+          "chars": 4330,
+          "tokens": 1444
+        },
+        {
+          "tool": "read_file",
+          "args": "web/play-filters-helpers/src/main/scala/play/filters/csrf/CSRFActions.scala:12-132",
+          "chars": 5386,
+          "tokens": 1796
+        },
+        {
+          "tool": "read_file",
+          "args": "web/play-filters-helpers/src/main/scala/play/filters/csrf/CSRFActions.scala:338-458",
+          "chars": 4054,
+          "tokens": 1352
+        },
+        {
+          "tool": "read_file",
+          "args": "web/play-filters-helpers/src/main/scala/play/filters/csrf/CSRFActions.scala:557-677",
+          "chars": 4493,
+          "tokens": 1498
+        }
+      ]
+    },
+    {
+      "taskId": "pf-impact-requires-csrf-check",
+      "kind": "impact",
+      "strategy": "kopt-pack",
+      "tokens": 1272,
+      "chars": 3816,
+      "toolCalls": 1,
+      "durationMs": 24,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.75,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"CSRFActionHelper requiresCsrfCheck\"",
+          "chars": 3816,
+          "tokens": 1272
+        }
+      ]
+    },
+    {
+      "taskId": "pf-impact-requires-csrf-check",
+      "kind": "impact",
+      "strategy": "kopt-hits+read",
+      "tokens": 3286,
+      "chars": 9856,
+      "toolCalls": 3,
+      "durationMs": 16,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"CSRFActionHelper requiresCsrfCheck\"",
+          "chars": 1478,
+          "tokens": 493
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#d1l",
+          "chars": 410,
+          "tokens": 137
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#d17",
+          "chars": 7968,
+          "tokens": 2656
+        }
+      ]
+    },
+    {
+      "taskId": "pf-impact-requires-csrf-check",
+      "kind": "impact",
+      "strategy": "kirograph",
+      "tokens": 1097,
+      "chars": 3290,
+      "toolCalls": 1,
+      "durationMs": 37,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.25,
+        "defRecall": 0,
+        "filesMissed": [
+          "web/play-filters-helpers/src/main/scala/play/filters/csrf/CSRFActions.scala",
+          "web/play-filters-helpers/src/main/java/play/filters/csrf/RequireCSRFCheckAction.java"
+        ],
+        "symbolsMissed": [
+          "CSRFAction",
+          "CSRFCheckAction",
+          "RequireCSRFCheckAction"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "CSRFActionHelper requiresCsrfCheck",
+          "chars": 3290,
+          "tokens": 1097
+        }
+      ]
+    },
+    {
+      "taskId": "pf-impact-requires-csrf-check",
+      "kind": "impact",
+      "strategy": "codegraph",
+      "tokens": 8306,
+      "chars": 24918,
+      "toolCalls": 1,
+      "durationMs": 82,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "CSRFActionHelper requiresCsrfCheck",
+          "chars": 24918,
+          "tokens": 8306
+        }
+      ]
+    },
+    {
+      "taskId": "pf-impact-get-handler-for",
+      "kind": "impact",
+      "strategy": "native-naive",
+      "tokens": 30519,
+      "chars": 91554,
+      "toolCalls": 4,
+      "durationMs": 323,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "getHandlerFor",
+          "chars": 876,
+          "tokens": 292
+        },
+        {
+          "tool": "read_file",
+          "args": "documentation/manual/releases/release27/migration27/Migration27.md",
+          "chars": 43809,
+          "tokens": 14603
+        },
+        {
+          "tool": "read_file",
+          "args": "transport/server/play-netty-server/src/main/scala/play/core/server/netty/PlayRequestHandler.scala",
+          "chars": 15593,
+          "tokens": 5198
+        },
+        {
+          "tool": "read_file",
+          "args": "transport/server/play-pekko-http-server/src/main/scala/play/core/server/PekkoHttpServer.scala",
+          "chars": 31276,
+          "tokens": 10426
+        }
+      ]
+    },
+    {
+      "taskId": "pf-impact-get-handler-for",
+      "kind": "impact",
+      "strategy": "native-ranged",
+      "tokens": 7978,
+      "chars": 23930,
+      "toolCalls": 5,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "getHandlerFor",
+          "chars": 876,
+          "tokens": 292
+        },
+        {
+          "tool": "read_file",
+          "args": "documentation/manual/releases/release27/migration27/Migration27.md:291-411",
+          "chars": 7736,
+          "tokens": 2579
+        },
+        {
+          "tool": "read_file",
+          "args": "transport/server/play-netty-server/src/main/scala/play/core/server/netty/PlayRequestHandler.scala:81-201",
+          "chars": 5639,
+          "tokens": 1880
+        },
+        {
+          "tool": "read_file",
+          "args": "transport/server/play-pekko-http-server/src/main/scala/play/core/server/PekkoHttpServer.scala:298-418",
+          "chars": 5251,
+          "tokens": 1751
+        },
+        {
+          "tool": "read_file",
+          "args": "transport/server/play-server/src/main/scala/play/core/server/Server.scala:44-164",
+          "chars": 4428,
+          "tokens": 1476
+        }
+      ]
+    },
+    {
+      "taskId": "pf-impact-get-handler-for",
+      "kind": "impact",
+      "strategy": "kopt-pack",
+      "tokens": 1534,
+      "chars": 4601,
+      "toolCalls": 1,
+      "durationMs": 26,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"Server getHandlerFor netty pekko request handling\"",
+          "chars": 4601,
+          "tokens": 1534
+        }
+      ]
+    },
+    {
+      "taskId": "pf-impact-get-handler-for",
+      "kind": "impact",
+      "strategy": "kopt-hits+read",
+      "tokens": 1338,
+      "chars": 4009,
+      "toolCalls": 3,
+      "durationMs": 19,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"Server getHandlerFor netty pekko request handling\"",
+          "chars": 2020,
+          "tokens": 674
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#cmx",
+          "chars": 1796,
+          "tokens": 599
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#ckd",
+          "chars": 193,
+          "tokens": 65
+        }
+      ]
+    },
+    {
+      "taskId": "pf-impact-get-handler-for",
+      "kind": "impact",
+      "strategy": "kirograph",
+      "tokens": 2238,
+      "chars": 6714,
+      "toolCalls": 1,
+      "durationMs": 34,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0.3333333333333333,
+        "defRecall": 0,
+        "filesMissed": [
+          "transport/server/play-server/src/main/scala/play/core/server/Server.scala",
+          "transport/server/play-netty-server/src/main/scala/play/core/server/netty/PlayRequestHandler.scala",
+          "transport/server/play-pekko-http-server/src/main/scala/play/core/server/PekkoHttpServer.scala"
+        ],
+        "symbolsMissed": [
+          "handle",
+          "handleRequest"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "kirograph",
+          "args": "Server getHandlerFor netty pekko request handling",
+          "chars": 6714,
+          "tokens": 2238
+        }
+      ]
+    },
+    {
+      "taskId": "pf-impact-get-handler-for",
+      "kind": "impact",
+      "strategy": "codegraph",
+      "tokens": 8319,
+      "chars": 24955,
+      "toolCalls": 1,
+      "durationMs": 147,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "codegraph",
+          "args": "Server getHandlerFor netty pekko request handling",
+          "chars": 24955,
+          "tokens": 8319
+        }
+      ]
+    }
+  ],
+  "aggregates": [
+    {
+      "strategy": "native-naive",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 21801.5,
+      "meanTokens": 23042,
+      "p90Tokens": 30592,
+      "totalTokens": 276506,
+      "totalChars": 829473,
+      "meanToolCalls": 3.9166666666666665,
+      "meanFileRecall": 0.9166666666666666,
+      "meanSymbolRecall": 0.7916666666666666,
+      "meanDefRecall": 0.75,
+      "found": 9,
+      "foundRate": 0.75,
+      "tokensPerFound": 30723
+    },
+    {
+      "strategy": "native-ranged",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 7631,
+      "meanTokens": 10102,
+      "p90Tokens": 9495,
+      "totalTokens": 121224,
+      "totalChars": 363616,
+      "meanToolCalls": 4.5,
+      "meanFileRecall": 0.9166666666666666,
+      "meanSymbolRecall": 0.5208333333333334,
+      "meanDefRecall": 0.4305555555555555,
+      "found": 5,
+      "foundRate": 0.4166666666666667,
+      "tokensPerFound": 24245
+    },
+    {
+      "strategy": "kopt-pack",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 1319,
+      "meanTokens": 1337,
+      "p90Tokens": 1397,
+      "totalTokens": 16046,
+      "totalChars": 48125,
+      "meanToolCalls": 1,
+      "meanFileRecall": 1,
+      "meanSymbolRecall": 0.8958333333333334,
+      "meanDefRecall": 0.38888888888888884,
+      "found": 8,
+      "foundRate": 0.6666666666666666,
+      "tokensPerFound": 2006
+    },
+    {
+      "strategy": "kopt-hits+read",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 1345.5,
+      "meanTokens": 1568,
+      "p90Tokens": 2233,
+      "totalTokens": 18810,
+      "totalChars": 56391,
+      "meanToolCalls": 3,
+      "meanFileRecall": 0.9166666666666666,
+      "meanSymbolRecall": 0.6875,
+      "meanDefRecall": 0.40972222222222215,
+      "found": 5,
+      "foundRate": 0.4166666666666667,
+      "tokensPerFound": 3762
+    },
+    {
+      "strategy": "kirograph",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 1306.5,
+      "meanTokens": 1443,
+      "p90Tokens": 2238,
+      "totalTokens": 17320,
+      "totalChars": 51949,
+      "meanToolCalls": 1,
+      "meanFileRecall": 0.16666666666666666,
+      "meanSymbolRecall": 0.09722222222222221,
+      "meanDefRecall": 0.027777777777777776,
+      "found": 0,
+      "foundRate": 0,
+      "tokensPerFound": null
+    },
+    {
+      "strategy": "codegraph",
+      "tasks": 12,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 8318.5,
+      "meanTokens": 8199,
+      "p90Tokens": 8330,
+      "totalTokens": 98386,
+      "totalChars": 295146,
+      "meanToolCalls": 1,
+      "meanFileRecall": 0.9166666666666666,
+      "meanSymbolRecall": 0.8541666666666666,
+      "meanDefRecall": 0.5138888888888888,
+      "found": 10,
+      "foundRate": 0.8333333333333334,
+      "tokensPerFound": 9839
+    }
+  ],
+  "paired": [
+    {
+      "a": "native-naive",
+      "b": "kopt-pack",
+      "nRun": 12,
+      "nBoth": 7,
+      "onlyA": 2,
+      "onlyB": 1,
+      "medianRatio": 0.07143952953208899,
+      "geoMeanRatio": 0.06551020808284477,
+      "bCheaper": 7
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-pack",
+      "nRun": 12,
+      "nBoth": 5,
+      "onlyA": 0,
+      "onlyB": 3,
+      "medianRatio": 0.15548221488815547,
+      "geoMeanRatio": 0.12471784560368764,
+      "bCheaper": 5
+    },
+    {
+      "a": "native-naive",
+      "b": "kopt-hits+read",
+      "nRun": 12,
+      "nBoth": 5,
+      "onlyA": 4,
+      "onlyB": 0,
+      "medianRatio": 0.10414228879007723,
+      "geoMeanRatio": 0.10007418508691183,
+      "bCheaper": 5
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-hits+read",
+      "nRun": 12,
+      "nBoth": 5,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": 0.19824033856776924,
+      "geoMeanRatio": 0.17309728782655381,
+      "bCheaper": 5
+    },
+    {
+      "a": "kirograph",
+      "b": "kopt-pack",
+      "nRun": 12,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 8,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "codegraph",
+      "b": "kopt-pack",
+      "nRun": 12,
+      "nBoth": 7,
+      "onlyA": 3,
+      "onlyB": 1,
+      "medianRatio": 0.15858343337334935,
+      "geoMeanRatio": 0.16213267054383776,
+      "bCheaper": 7
+    },
+    {
+      "a": "kirograph",
+      "b": "kopt-hits+read",
+      "nRun": 12,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 5,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "codegraph",
+      "b": "kopt-hits+read",
+      "nRun": 12,
+      "nBoth": 5,
+      "onlyA": 5,
+      "onlyB": 0,
+      "medianRatio": 0.21389089161259311,
+      "geoMeanRatio": 0.22625700691560907,
+      "bCheaper": 5
+    },
+    {
+      "a": "native-ranged",
+      "b": "kirograph",
+      "nRun": 12,
+      "nBoth": 0,
+      "onlyA": 5,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-ranged",
+      "b": "codegraph",
+      "nRun": 12,
+      "nBoth": 5,
+      "onlyA": 0,
+      "onlyB": 5,
+      "medianRatio": 1.0152793057083487,
+      "geoMeanRatio": 0.7650471920682522,
+      "bCheaper": 2
+    },
+    {
+      "a": "native-naive",
+      "b": "native-ranged",
+      "nRun": 12,
+      "nBoth": 5,
+      "onlyA": 4,
+      "onlyB": 0,
+      "medianRatio": 0.5253334893517435,
+      "geoMeanRatio": 0.5781383772297328,
+      "bCheaper": 4
+    }
+  ],
+  "byKind": [
+    {
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tasks": 4,
+      "found": 3,
+      "medianTokens": 28985.5
+    },
+    {
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tasks": 4,
+      "found": 1,
+      "medianTokens": 7577
+    },
+    {
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tasks": 4,
+      "found": 3,
+      "medianTokens": 1319
+    },
+    {
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tasks": 4,
+      "found": 1,
+      "medianTokens": 1270.5
+    },
+    {
+      "kind": "locate",
+      "strategy": "kirograph",
+      "tasks": 4,
+      "found": 0,
+      "medianTokens": 1033
+    },
+    {
+      "kind": "locate",
+      "strategy": "codegraph",
+      "tasks": 4,
+      "found": 3,
+      "medianTokens": 8314.5
+    },
+    {
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tasks": 3,
+      "found": 2,
+      "medianTokens": 23170
+    },
+    {
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tasks": 3,
+      "found": 1,
+      "medianTokens": 8979
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tasks": 3,
+      "found": 1,
+      "medianTokens": 1364
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tasks": 3,
+      "found": 1,
+      "medianTokens": 1233
+    },
+    {
+      "kind": "explain",
+      "strategy": "kirograph",
+      "tasks": 3,
+      "found": 0,
+      "medianTokens": 1329
+    },
+    {
+      "kind": "explain",
+      "strategy": "codegraph",
+      "tasks": 3,
+      "found": 2,
+      "medianTokens": 8318
+    },
+    {
+      "kind": "usage",
+      "strategy": "native-naive",
+      "tasks": 3,
+      "found": 2,
+      "medianTokens": 19555
+    },
+    {
+      "kind": "usage",
+      "strategy": "native-ranged",
+      "tasks": 3,
+      "found": 1,
+      "medianTokens": 7184
+    },
+    {
+      "kind": "usage",
+      "strategy": "kopt-pack",
+      "tasks": 3,
+      "found": 2,
+      "medianTokens": 1299
+    },
+    {
+      "kind": "usage",
+      "strategy": "kopt-hits+read",
+      "tasks": 3,
+      "found": 1,
+      "medianTokens": 1581
+    },
+    {
+      "kind": "usage",
+      "strategy": "kirograph",
+      "tasks": 3,
+      "found": 0,
+      "medianTokens": 2238
+    },
+    {
+      "kind": "usage",
+      "strategy": "codegraph",
+      "tasks": 3,
+      "found": 3,
+      "medianTokens": 8325
+    },
+    {
+      "kind": "impact",
+      "strategy": "native-naive",
+      "tasks": 2,
+      "found": 2,
+      "medianTokens": 22284.5
+    },
+    {
+      "kind": "impact",
+      "strategy": "native-ranged",
+      "tasks": 2,
+      "found": 2,
+      "medianTokens": 8079.5
+    },
+    {
+      "kind": "impact",
+      "strategy": "kopt-pack",
+      "tasks": 2,
+      "found": 2,
+      "medianTokens": 1403
+    },
+    {
+      "kind": "impact",
+      "strategy": "kopt-hits+read",
+      "tasks": 2,
+      "found": 2,
+      "medianTokens": 2312
+    },
+    {
+      "kind": "impact",
+      "strategy": "kirograph",
+      "tasks": 2,
+      "found": 0,
+      "medianTokens": 1667.5
+    },
+    {
+      "kind": "impact",
+      "strategy": "codegraph",
+      "tasks": 2,
+      "found": 2,
+      "medianTokens": 8312.5
+    }
+  ]
+}

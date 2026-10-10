@@ -1,0 +1,111 @@
+{
+  "label": "kirograph",
+  "tool": "kirograph",
+  "package": "kirograph",
+  "version": "1.4.0",
+  "mode": "default",
+  "repo": {
+    "name": "webpack",
+    "url": "https://github.com/webpack/webpack.git",
+    "tag": "v5.111.1",
+    "commit": "5a106753839fd7e1b86138c3a5f6b348341147a7",
+    "language": "javascript",
+    "path": "bench/repos/webpack"
+  },
+  "headCommit": "5a106753839fd7e1b86138c3a5f6b348341147a7",
+  "commitMatchesTasks": true,
+  "date": "2026-10-09T12:29:05.108Z",
+  "image": "kopt-bench/kirograph:1.4.0",
+  "imageId": "sha256:bc769b34b739a6d6b3ed1f2954ed9df3e387e6c6dcfc597528ca16d232dac57e",
+  "engine": "docker",
+  "limits": "memory=3g cpus=8",
+  "container": {
+    "node": "v22.23.3",
+    "arch": "arm64",
+    "platform": "linux",
+    "cpus": 10,
+    "memBytes": 8214851584,
+    "network": "none"
+  },
+  "primaryTool": "kirograph_context",
+  "toolArgsExample": {
+    "task": "<input>"
+  },
+  "serverCommand": {
+    "command": "kirograph",
+    "args": [
+      "serve",
+      "--mcp",
+      "--path",
+      "/work/<repo>"
+    ]
+  },
+  "oneSessionPerTask": true,
+  "indexOk": true,
+  "indexMs": 573696,
+  "indexSteps": [
+    {
+      "command": "kirograph init /work/webpack",
+      "ms": 796,
+      "exit": 0,
+      "signal": null
+    },
+    {
+      "command": "kirograph index /work/webpack",
+      "ms": 572900,
+      "exit": 0,
+      "signal": null
+    }
+  ],
+  "copyMs": 46528,
+  "indexDirs": [
+    "<repo>/.kirograph"
+  ],
+  "indexSizeBytes": 110718794,
+  "modelBytes": 0,
+  "indexStatus": "Graph\n  Files      16416\n  Symbols    64772\n  Edges      155796\n  Frameworks react\n\n  By kind\n  ┌────────────┬──────────────────┐\n  │ constant   │ 40673            │\n  ├────────────┼──────────────────┤\n  │ variable   │ 7173             │\n  ├────────────┼──────────────────┤\n  │ method     │ 6320             │\n  ├────────────┼──────────────────┤\n  │ import     │ 5369             │\n  ├────────────┼──────────────────┤\n  │ function   │ 2983             │\n  ├────────────┼──────────────────┤\n  │ class      │ 1401             │\n  ├────────────┼──────────────────┤\n  │ interface  │ 578              │\n  ├────────────┼──────────────────┤\n  │ type_alias │ 273              │\n  ├────────────┼──────────────────┤\n  │ enum       │ 2                │\n  └────────────┴──────────────────┘\n\n  By language\n  ┌────────────┬──────────────────┐\n  │ javascript │ 14983            │\n  ├────────────┼──────────────────┤\n  │ css        │ 926              │\n  ├────────────┼──────────────────┤\n  │ html       │ 382              │\n  ├────────────┼──────────────────┤\n  │ typescript │ 105              │\n  ├────────────┼──────────────────┤\n  │ yaml       │ 9                │\n  ├────────────┼──────────────────┤\n  │ bash       │ 4                │\n  ├────────────┼──────────────────┤\n  │ jsx        │ 4                │\n  ├────────────┼──────────────────┤\n  │ cpp        │ 1                │\n  ├────────────┼──────────────────┤\n  │ scss       │ 1                │\n  ├────────────┼──────────────────┤\n  │ tsx        │ 1                │\n  └────────────┴──────────────────┘\n\n  Sync\n  Status     idle\n  Pending    15 files pending\n  ⚠ Index may be stale. Run `kirograph sync` to update.\n\n  Semantic Search\n  Status     disabled",
+  "surface": {
+    "serverInfo": {
+      "name": "kirograph",
+      "version": "0.1.0"
+    },
+    "toolCount": 7,
+    "toolNames": [
+      "kirograph_search",
+      "kirograph_context",
+      "kirograph_node",
+      "kirograph_gain",
+      "kirograph_read",
+      "kirograph_retrieve",
+      "kirograph_budget"
+    ],
+    "toolsChars": 4418,
+    "toolsEstTokens": 1473,
+    "instructionsChars": 0,
+    "instructionsEstTokens": 0,
+    "primaryToolListed": true,
+    "file": "kirograph.surface.json"
+  },
+  "inputs": {
+    "search": {
+      "file": "kirograph-webpack.jsonl",
+      "tasks": 12,
+      "failures": 0,
+      "queryMsMedian": 99,
+      "queryMsP90": 146,
+      "startupMsMedian": 233
+    },
+    "question": {
+      "file": "kirograph-webpack-question.jsonl",
+      "tasks": 12,
+      "failures": 7,
+      "queryMsMedian": 60,
+      "queryMsP90": 171,
+      "startupMsMedian": 247
+    }
+  },
+  "charsPerToken": 3,
+  "errors": [
+    "7/12 question queries failed or returned isError"
+  ]
+}

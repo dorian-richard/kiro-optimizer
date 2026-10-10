@@ -1,0 +1,741 @@
+{
+  "meta": {
+    "label": "heldout-webpack-question",
+    "repo": {
+      "name": "webpack",
+      "url": "https://github.com/webpack/webpack.git",
+      "tag": "v5.111.1",
+      "commit": "5a106753839fd7e1b86138c3a5f6b348341147a7",
+      "language": "javascript",
+      "path": "bench/repos/webpack"
+    },
+    "repoRoot": "bench/repos/webpack",
+    "headCommit": "5a106753839fd7e1b86138c3a5f6b348341147a7",
+    "date": "2026-10-09T20:18:41.241Z",
+    "input": "question",
+    "charsPerToken": 3,
+    "strategies": [
+      "native-naive",
+      "native-ranged",
+      "kopt-pack",
+      "kopt-hits+read",
+      "kirograph",
+      "codegraph"
+    ],
+    "grepLimits": {
+      "maxMatches": 100,
+      "maxChars": 10000,
+      "maxLineChars": 250
+    },
+    "readLimits": {
+      "naiveTopFiles": 3,
+      "naiveMaxLines": 2000,
+      "rangedMatches": 4,
+      "rangedContext": 60
+    },
+    "koptBudgets": {
+      "find": 700,
+      "pack": 2500,
+      "read": 3000
+    },
+    "index": {
+      "built": false,
+      "durationMs": 0,
+      "files": 14902,
+      "symbols": 22575,
+      "path": "<index-dir>/.kopt-webpack/index.db"
+    },
+    "notes": [
+      "kirograph: outputs loaded from bench/competitors/results/kirograph-webpack.jsonl",
+      "codegraph: outputs loaded from bench/competitors/results/codegraph-webpack.jsonl"
+    ],
+    "durationMs": 3780
+  },
+  "results": [
+    {
+      "taskId": "ho-wp-locate-ignore-plugin",
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tokens": 19871,
+      "chars": 59610,
+      "toolCalls": 4,
+      "durationMs": 2043,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "checkIgnore"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "resourceRegExp",
+          "chars": 4264,
+          "tokens": 1422
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/context/ContextReplacementPlugin.js",
+          "chars": 7874,
+          "tokens": 2625
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/NormalModuleReplacementPlugin.js",
+          "chars": 2100,
+          "tokens": 700
+        },
+        {
+          "tool": "read_file",
+          "args": "types.d.ts",
+          "chars": 45372,
+          "tokens": 15124
+        }
+      ]
+    },
+    {
+      "taskId": "ho-wp-locate-ignore-plugin",
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tokens": 4619,
+      "chars": 13853,
+      "toolCalls": 4,
+      "durationMs": 1,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [],
+        "symbolsMissed": [
+          "checkIgnore"
+        ],
+        "found": false
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "resourceRegExp",
+          "chars": 4264,
+          "tokens": 1422
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/NormalModuleReplacementPlugin.js:1-75",
+          "chars": 2100,
+          "tokens": 700
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/context/ContextReplacementPlugin.js:1-165",
+          "chars": 5791,
+          "tokens": 1931
+        },
+        {
+          "tool": "read_file",
+          "args": "schemas/plugins/IgnorePlugin.check.js:1-6",
+          "chars": 1698,
+          "tokens": 566
+        }
+      ]
+    },
+    {
+      "taskId": "ho-wp-locate-ignore-plugin",
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tokens": 441,
+      "chars": 1321,
+      "toolCalls": 1,
+      "durationMs": 46,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"Where does webpack decide that a module request is ignored when both resourceRegExp and contextRegExp are configured?\"",
+          "chars": 1321,
+          "tokens": 441
+        }
+      ]
+    },
+    {
+      "taskId": "ho-wp-locate-ignore-plugin",
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tokens": 242,
+      "chars": 721,
+      "toolCalls": 3,
+      "durationMs": 31,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"Where does webpack decide that a module request is ignored when both resourceRegExp and contextRegExp are configured?\"",
+          "chars": 619,
+          "tokens": 207
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#d0b",
+          "chars": 50,
+          "tokens": 17
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#fdg",
+          "chars": 52,
+          "tokens": 18
+        }
+      ]
+    },
+    {
+      "taskId": "ho-wp-locate-ignore-plugin",
+      "kind": "locate",
+      "strategy": "kirograph",
+      "skipped": "no kirograph result line for this task",
+      "tokens": 0,
+      "chars": 0,
+      "toolCalls": 0,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/IgnorePlugin.js"
+        ],
+        "symbolsMissed": [
+          "checkIgnore"
+        ],
+        "found": false
+      },
+      "calls": []
+    },
+    {
+      "taskId": "ho-wp-locate-ignore-plugin",
+      "kind": "locate",
+      "strategy": "codegraph",
+      "skipped": "no codegraph result line for this task",
+      "tokens": 0,
+      "chars": 0,
+      "toolCalls": 0,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/IgnorePlugin.js"
+        ],
+        "symbolsMissed": [
+          "checkIgnore"
+        ],
+        "found": false
+      },
+      "calls": []
+    },
+    {
+      "taskId": "ho-wp-explain-banner",
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tokens": 18591,
+      "chars": 55772,
+      "toolCalls": 4,
+      "durationMs": 1551,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "BannerPlugin",
+          "chars": 5265,
+          "tokens": 1755
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/BannerPlugin.js",
+          "chars": 4161,
+          "tokens": 1387
+        },
+        {
+          "tool": "read_file",
+          "args": "test/configCases/plugins/banner-plugin/webpack.config.js",
+          "chars": 974,
+          "tokens": 325
+        },
+        {
+          "tool": "read_file",
+          "args": "types.d.ts",
+          "chars": 45372,
+          "tokens": 15124
+        }
+      ]
+    },
+    {
+      "taskId": "ho-wp-explain-banner",
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tokens": 4513,
+      "chars": 13538,
+      "toolCalls": 4,
+      "durationMs": 2,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 1,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "grep",
+          "args": "BannerPlugin",
+          "chars": 5265,
+          "tokens": 1755
+        },
+        {
+          "tool": "read_file",
+          "args": "lib/BannerPlugin.js:1-151",
+          "chars": 4161,
+          "tokens": 1387
+        },
+        {
+          "tool": "read_file",
+          "args": "test/configCases/plugins/banner-plugin/webpack.config.js:1-44",
+          "chars": 974,
+          "tokens": 325
+        },
+        {
+          "tool": "read_file",
+          "args": "types.d.ts:708-828",
+          "chars": 3138,
+          "tokens": 1046
+        }
+      ]
+    },
+    {
+      "taskId": "ho-wp-explain-banner",
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tokens": 1319,
+      "chars": 3955,
+      "toolCalls": 1,
+      "durationMs": 47,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "pack \"How does the BannerPlugin turn the banner text into a comment at the top of the emitted files?\"",
+          "chars": 3955,
+          "tokens": 1319
+        }
+      ]
+    },
+    {
+      "taskId": "ho-wp-explain-banner",
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tokens": 1319,
+      "chars": 3953,
+      "toolCalls": 3,
+      "durationMs": 17,
+      "recall": {
+        "fileRecall": 1,
+        "symbolRecall": 1,
+        "defRecall": 0.5,
+        "filesMissed": [],
+        "symbolsMissed": [],
+        "found": true
+      },
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "hits \"How does the BannerPlugin turn the banner text into a comment at the top of the emitted files?\"",
+          "chars": 560,
+          "tokens": 187
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#2x1",
+          "chars": 2848,
+          "tokens": 950
+        },
+        {
+          "tool": "kopt_read",
+          "args": "#c62",
+          "chars": 545,
+          "tokens": 182
+        }
+      ]
+    },
+    {
+      "taskId": "ho-wp-explain-banner",
+      "kind": "explain",
+      "strategy": "kirograph",
+      "skipped": "no kirograph result line for this task",
+      "tokens": 0,
+      "chars": 0,
+      "toolCalls": 0,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/BannerPlugin.js"
+        ],
+        "symbolsMissed": [
+          "BannerPlugin",
+          "wrapComment"
+        ],
+        "found": false
+      },
+      "calls": []
+    },
+    {
+      "taskId": "ho-wp-explain-banner",
+      "kind": "explain",
+      "strategy": "codegraph",
+      "skipped": "no codegraph result line for this task",
+      "tokens": 0,
+      "chars": 0,
+      "toolCalls": 0,
+      "durationMs": 0,
+      "recall": {
+        "fileRecall": 0,
+        "symbolRecall": 0,
+        "defRecall": 0,
+        "filesMissed": [
+          "lib/BannerPlugin.js"
+        ],
+        "symbolsMissed": [
+          "BannerPlugin",
+          "wrapComment"
+        ],
+        "found": false
+      },
+      "calls": []
+    }
+  ],
+  "aggregates": [
+    {
+      "strategy": "native-naive",
+      "tasks": 2,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 19231,
+      "meanTokens": 19231,
+      "p90Tokens": 19871,
+      "totalTokens": 38462,
+      "totalChars": 115382,
+      "meanToolCalls": 4,
+      "meanFileRecall": 1,
+      "meanSymbolRecall": 0.5,
+      "meanDefRecall": 0.5,
+      "found": 1,
+      "foundRate": 0.5,
+      "tokensPerFound": 38462
+    },
+    {
+      "strategy": "native-ranged",
+      "tasks": 2,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 4566,
+      "meanTokens": 4566,
+      "p90Tokens": 4619,
+      "totalTokens": 9132,
+      "totalChars": 27391,
+      "meanToolCalls": 4,
+      "meanFileRecall": 1,
+      "meanSymbolRecall": 0.5,
+      "meanDefRecall": 0.5,
+      "found": 1,
+      "foundRate": 0.5,
+      "tokensPerFound": 9132
+    },
+    {
+      "strategy": "kopt-pack",
+      "tasks": 2,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 880,
+      "meanTokens": 880,
+      "p90Tokens": 1319,
+      "totalTokens": 1760,
+      "totalChars": 5276,
+      "meanToolCalls": 1,
+      "meanFileRecall": 1,
+      "meanSymbolRecall": 1,
+      "meanDefRecall": 0.75,
+      "found": 2,
+      "foundRate": 1,
+      "tokensPerFound": 880
+    },
+    {
+      "strategy": "kopt-hits+read",
+      "tasks": 2,
+      "skipped": 0,
+      "errors": 0,
+      "medianTokens": 780.5,
+      "meanTokens": 781,
+      "p90Tokens": 1319,
+      "totalTokens": 1561,
+      "totalChars": 4674,
+      "meanToolCalls": 3,
+      "meanFileRecall": 1,
+      "meanSymbolRecall": 1,
+      "meanDefRecall": 0.75,
+      "found": 2,
+      "foundRate": 1,
+      "tokensPerFound": 781
+    },
+    {
+      "strategy": "kirograph",
+      "tasks": 0,
+      "skipped": 2,
+      "errors": 0,
+      "medianTokens": 0,
+      "meanTokens": 0,
+      "p90Tokens": 0,
+      "totalTokens": 0,
+      "totalChars": 0,
+      "meanToolCalls": 0,
+      "meanFileRecall": 0,
+      "meanSymbolRecall": 0,
+      "meanDefRecall": 0,
+      "found": 0,
+      "foundRate": 0,
+      "tokensPerFound": null
+    },
+    {
+      "strategy": "codegraph",
+      "tasks": 0,
+      "skipped": 2,
+      "errors": 0,
+      "medianTokens": 0,
+      "meanTokens": 0,
+      "p90Tokens": 0,
+      "totalTokens": 0,
+      "totalChars": 0,
+      "meanToolCalls": 0,
+      "meanFileRecall": 0,
+      "meanSymbolRecall": 0,
+      "meanDefRecall": 0,
+      "found": 0,
+      "foundRate": 0,
+      "tokensPerFound": null
+    }
+  ],
+  "paired": [
+    {
+      "a": "native-naive",
+      "b": "kopt-pack",
+      "nRun": 2,
+      "nBoth": 1,
+      "onlyA": 0,
+      "onlyB": 1,
+      "medianRatio": 0.0709483083212307,
+      "geoMeanRatio": 0.07094830832123071,
+      "bCheaper": 1
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-pack",
+      "nRun": 2,
+      "nBoth": 1,
+      "onlyA": 0,
+      "onlyB": 1,
+      "medianRatio": 0.2922667848437846,
+      "geoMeanRatio": 0.29226678484378454,
+      "bCheaper": 1
+    },
+    {
+      "a": "native-naive",
+      "b": "kopt-hits+read",
+      "nRun": 2,
+      "nBoth": 1,
+      "onlyA": 0,
+      "onlyB": 1,
+      "medianRatio": 0.0709483083212307,
+      "geoMeanRatio": 0.07094830832123071,
+      "bCheaper": 1
+    },
+    {
+      "a": "native-ranged",
+      "b": "kopt-hits+read",
+      "nRun": 2,
+      "nBoth": 1,
+      "onlyA": 0,
+      "onlyB": 1,
+      "medianRatio": 0.2922667848437846,
+      "geoMeanRatio": 0.29226678484378454,
+      "bCheaper": 1
+    },
+    {
+      "a": "kirograph",
+      "b": "kopt-pack",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "codegraph",
+      "b": "kopt-pack",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "kirograph",
+      "b": "kopt-hits+read",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "codegraph",
+      "b": "kopt-hits+read",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-ranged",
+      "b": "kirograph",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-ranged",
+      "b": "codegraph",
+      "nRun": 0,
+      "nBoth": 0,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": null,
+      "geoMeanRatio": null,
+      "bCheaper": 0
+    },
+    {
+      "a": "native-naive",
+      "b": "native-ranged",
+      "nRun": 2,
+      "nBoth": 1,
+      "onlyA": 0,
+      "onlyB": 0,
+      "medianRatio": 0.24275186918401376,
+      "geoMeanRatio": 0.24275186918401373,
+      "bCheaper": 1
+    }
+  ],
+  "byKind": [
+    {
+      "kind": "locate",
+      "strategy": "native-naive",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 19871
+    },
+    {
+      "kind": "locate",
+      "strategy": "native-ranged",
+      "tasks": 1,
+      "found": 0,
+      "medianTokens": 4619
+    },
+    {
+      "kind": "locate",
+      "strategy": "kopt-pack",
+      "tasks": 1,
+      "found": 1,
+      "medianTokens": 441
+    },
+    {
+      "kind": "locate",
+      "strategy": "kopt-hits+read",
+      "tasks": 1,
+      "found": 1,
+      "medianTokens": 242
+    },
+    {
+      "kind": "explain",
+      "strategy": "native-naive",
+      "tasks": 1,
+      "found": 1,
+      "medianTokens": 18591
+    },
+    {
+      "kind": "explain",
+      "strategy": "native-ranged",
+      "tasks": 1,
+      "found": 1,
+      "medianTokens": 4513
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-pack",
+      "tasks": 1,
+      "found": 1,
+      "medianTokens": 1319
+    },
+    {
+      "kind": "explain",
+      "strategy": "kopt-hits+read",
+      "tasks": 1,
+      "found": 1,
+      "medianTokens": 1319
+    }
+  ]
+}

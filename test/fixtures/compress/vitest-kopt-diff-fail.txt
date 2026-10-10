@@ -1,0 +1,336 @@
+ RUN  v3.2.7 /home/dev/shop
+
+(node:33087) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33090) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+[size] tools/list: 2465 chars ~822 tok; instructions: 58 chars ~20 tok
+(node:33092) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33091) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33085) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33089) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+kopt: find failed: database is not open
+kopt: read failed: database is not open
+kopt: outline failed: database is not open
+kopt: refs failed: database is not open
+ ✓ test/retrieval.test.ts (52 tests) 743ms
+ ✓ test/indexer.extract.test.ts (24 tests) 752ms
+
+compression @900 tok:
+pytest-pass.txt          11500 -> 18 tok (99.8%)
+pytest-fail.txt          13013 -> 318 tok (97.6%)
+unittest-fail.txt        602 -> 223 tok (63.0%)
+jest-pass.txt            12533 -> 27 tok (99.8%)
+jest-fail.txt            1608 -> 358 tok (77.7%)
+vitest-pass.txt          2401 -> 24 tok (99.0%)
+vitest-fail.txt          1626 -> 125 tok (92.3%)
+maven-pass.txt           8418 -> 39 tok (99.5%)
+maven-compile-fail.txt   3071 -> 269 tok (91.2%)
+maven-test-fail.txt      3680 -> 263 tok (92.9%)
+gradle-pass.txt          4287 -> 27 tok (99.4%)
+gradle-fail.txt          1101 -> 274 tok (75.1%)
+dotnet-build-pass.txt    5210 -> 30 tok (99.4%)
+dotnet-build-fail.txt    630 -> 143 tok (77.3%)
+dotnet-test-fail.txt     830 -> 239 tok (71.2%)
+go-test-pass.txt         7254 -> 18 tok (99.8%)
+go-test-fail.txt         1539 -> 298 tok (80.6%)
+tsc-fail.txt             3459 -> 343 tok (90.1%)
+tsc-pretty-fail.txt      240 -> 138 tok (42.5%)
+eslint-fail.txt          5204 -> 167 tok (96.8%)
+npm-install.txt          628 -> 41 tok (93.5%)
+npm-build-fail.txt       2386 -> 212 tok (91.1%)
+cargo-test-pass.txt      5311 -> 23 tok (99.6%)
+cargo-build-fail.txt     2248 -> 182 tok (91.9%)
+cargo-test-fail.txt      2111 -> 98 tok (95.4%)
+git-log.txt              4405 -> 888 tok (79.8%)
+git-diff.txt             5268 -> 811 tok (84.6%)
+git-status.txt           655 -> 92 tok (86.0%)
+generic-fail.txt         4629 -> 188 tok (95.9%)
+generic-pass.txt         9031 -> 70 tok (99.2%)
+mocha-pass.txt           6903 -> 10 tok (99.9%)
+mocha-fail.txt           4445 -> 188 tok (95.8%)
+mocha-json-fail.txt      27323 -> 157 tok (99.4%)
+rspec-fail.txt           4368 -> 188 tok (95.7%)
+phpunit-fail.txt         462 -> 175 tok (62.1%)
+pest-fail.txt            6366 -> 86 tok (98.6%)
+sbt-test-fail.txt        4086 -> 171 tok (95.8%)
+sbt-compile-fail.txt     932 -> 154 tok (83.5%)
+xunit-console-fail.txt   441 -> 193 tok (56.2%)
+nunit-console-fail.txt   546 -> 198 tok (63.7%)
+dotnet-mtp-fail.txt      383 -> 101 tok (73.6%)
+bazel-test-fail.txt      3837 -> 313 tok (91.8%)
+jest-json-fail.txt       32718 -> 182 tok (99.4%)
+go-test-json-fail.txt    25630 -> 67 tok (99.7%)
+eslint-json.txt          10107 -> 384 tok (96.2%)
+vitest-kopt-pass.txt     3740 -> 27 tok (99.3%)
+vitest-kopt-fail.txt     6764 -> 158 tok (97.7%)
+build-kopt-fail.txt      521 -> 205 tok (60.7%)
+ ✓ test/compress.filters.test.ts (83 tests) 683ms
+ ✓ test/bench-failures.test.ts (13 tests) 796ms
+ ✓ test/xplat.test.ts (48 tests | 1 skipped) 1141ms
+   ✓ parse worker pool > parses in worker threads with the same results as in-process  491ms
+(node:34598) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+[perf] kopt hook (malformed input, via tsx): 172ms
+(node:35325) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34148) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/bench.test.ts (24 tests) 960ms
+ ✓ test/indexer.resolve2.test.ts (14 tests) 296ms
+ ✓ test/indexer.index.test.ts (25 tests) 2178ms
+   ✓ git listing and workers > produces the same index with the worker pool  349ms
+ ✓ test/kiro.test.ts (11 tests) 1139ms
+(node:36345) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/retrieval.search.test.ts (14 tests) 115ms
+ ✓ test/telemetry.test.ts (8 tests) 47ms
+[perf] kopt mcp spawn -> tools/list (via tsx): 255ms
+(node:37180) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/hooks.test.ts (47 tests) 3700ms
+   ✓ duplicate-run detection > sees edits the hooks never observed (user editor, another terminal) through the git workspace state  348ms
+   ✓ UserPromptSubmit front-load > skips when retrieval exceeds the time limit and survives a missing retrieval module  411ms
+   ✓ UserPromptSubmit front-load > closes the index it opened when retrieval fails or is too slow (an open handle locks index.db on Windows)  404ms
+   ✓ IDE 0.x legacy sessions and prompt dedup > a new chat in IDE 0.x gets pointers again (no day-long anon session), and a prompt seen by two hook formats is handled once  2063ms
+(node:37412) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/mcp.test.ts (18 tests) 4424ms
+   ✓ LocalRepo lifecycle > answers "index building" while the first build runs, then serves the store  465ms
+   ✓ LocalRepo lifecycle > refreshes on dirty marker / interval, one at a time, without blocking calls on slow refreshes  613ms
+   ✓ LocalRepo lifecycle > serves search, read and outline once symbols are written, before references are resolved  1215ms
+   ✓ LocalRepo lifecycle > answers at once with an estimate when the build will take longer than a call may wait  1263ms
+   ✓ LocalRepo lifecycle > runs the full freshness check only when git state moved (or every fullRefreshIntervalMs)  427ms
+ ✓ test/retrieval.stale.test.ts (10 tests) 603ms
+ ✓ test/bench-ab.test.ts (12 tests) 2503ms
+   ✓ run-kiro-cli-ab.sh with stubs > runs the plan, isolates arms, parses and analyzes  2424ms
+ ✓ test/indexer.grammars.test.ts (11 tests) 276ms
+(node:38147) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/indexer.robust.test.ts (19 tests) 2013ms
+   ✓ symlinks > never indexes files reached through a symlink, tracked or reported by hooks  334ms
+   ✓ symbol ids > come back when a removed symbol or a deleted file comes back  346ms
+(node:38369) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/indexer.resolve.test.ts (9 tests) 290ms
+(node:38478) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/hooks-commands.test.ts (9 tests) 17ms
+ ✓ test/indexer.resolve3.test.ts (5 tests) 268ms
+(node:38739) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:38913) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ test/compress.runner.test.ts (21 tests | 2 failed) 5879ms
+   ✓ runCommand > compresses a long successful run, stores the log and points to it 84ms
+   ✓ runCommand > keeps small outputs verbatim, merges stdout/stderr in arrival order, no expand pointer 176ms
+   ✓ runCommand > reports failures with the error lines and the exit code 68ms
+   ✓ runCommand > strips ANSI and carriage-return progress before storing 52ms
+   ✓ runCommand > returns 127 for unknown commands 9ms
+   ✓ runCommand > returns 128+n for signals (POSIX) 40ms
+   ✓ runCommand > kills the whole process tree on timeout  3321ms
+   ✓ runCommand > runs in a sub-directory and refuses to leave the repo 88ms
+   ✓ runCommand > honours KOPT_SHELL (e.g. pwsh) 1ms
+   ✓ runCommand > caps the raw capture keeping head and tail 100ms
+   × dedup cache (git workspace) > serves an identical re-run from cache until a file changes 749ms
+     → expected 2 to be 1 // Object.is equality
+   × dedup cache (git workspace) > a long cached result already shown in this session becomes one line that keeps the verdict 350ms
+     → expected { handle: 'ocab49d', …(12) } to match object { cacheable: true, stored: true }
+(11 matching properties omitted from actual)
+   ✓ dedup cache (git workspace) > never caches non-deterministic commands 88ms
+   ✓ dedup cache (git workspace) > git commands use the git filter and are cacheable 98ms
+   ✓ dedup cache (git workspace) > workspaceFingerprint ignores kopt data and tracks content changes 216ms
+   ✓ workspaceFingerprint without git > falls back to an mtime/size scan 219ms
+   ✓ expand > pages through the log within budget 2ms
+   ✓ expand > returns an exact line range 1ms
+   ✓ expand > greps with 2 lines of context and merged ranges 3ms
+   ✓ expand > answers unknown handles and bad regexes with one line 1ms
+   ✓ OutputStore retention > evicts least recently used logs and their cache entries 3ms
+(node:39568) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:37828) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/retrieval.failures.test.ts (6 tests) 41ms
+ ✓ test/indexer.lock.test.ts (5 tests) 1501ms
+   ✓ index lock > a skip-mode pass does nothing while another process indexes; a wait-mode pass waits for it  750ms
+   ✓ index lock > two connections building the same index at once never collide (no UNIQUE failure)  585ms
+ ✓ test/compress.command.test.ts (113 tests) 33ms
+(node:39922) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/retrieval.access.test.ts (3 tests) 48ms
+ ✓ test/indexer.recall.test.ts (3 tests) 44ms
+ ✓ test/doctor.test.ts (5 tests) 4489ms
+   ✓ kopt doctor > passes every check after setup: silent allow path, exit-2 block path, MCP server with 6 tools  2173ms
+   ✓ kopt doctor > reports a hook command that prints on the allow path (it would intercept tools in Kiro) and a missing MCP entry  653ms
+   ✓ kopt doctor > fails commands that need PATH (bare kopt) and a Stop hook that exits non-zero, with the minimal environment  1569ms
+ ✓ test/hooks-shell.test.ts (6 tests) 3857ms
+   ✓ kopt hook through a shell > allow path: exit 0, empty stdout, empty stderr  1487ms
+   ✓ kopt hook through a shell > block path: exit 2 with a one-line reason on stderr and nothing on stdout  335ms
+   ✓ kopt hook through a shell > never leaks the node:sqlite ExperimentalWarning (SessionStart opens the index)  313ms
+   ✓ kopt hook through a shell > IDE 0.x legacy invocation: no stdin payload (pipe left open), data in USER_PROMPT, returns at once  350ms
+   ✓ kopt hook through a shell > an invalid config file never prints on the allow path: the warning goes to hook-errors.log  854ms
+   ✓ kopt hook through a shell > Stop always exits 0, even for a payload kopt cannot read (exit 1 = "continue the agent" in Kiro IDE 1.x)  509ms
+ ✓ test/indexer.scale.test.ts (5 tests) 3209ms
+   ✓ resolution at scale > resolves 200k import specs in a full pass (no argument spread of all rows)  2632ms
+   ✓ resolution at scale > re-resolves unresolved imports when a file is added, with 200k of them pending  379ms
+ ✓ test/setup.test.ts (37 tests) 9855ms
+   ✓ kopt command resolution > the POSIX launcher runs with PATH=/usr/bin:/bin and maps hook failures to a silent exit 0  616ms
+   ✓ kopt setup (user level, temp HOME) > generates a CLI 2.x agent the real kiro-cli accepts and selects as default (temp HOME)  5941ms
+   ✓ global install (temp npm prefix) > installs from an npx cache copy into the global prefix with real npm  1747ms
+   ✓ global install (temp npm prefix) > packs a built npx copy as-is (no prepare, no symlink into the npx cache) and installs the tarball  880ms
+ ✓ test/compress.lifecycle.test.ts (12 tests) 7479ms
+   ✓ stop signals kill running command trees > SIGTERM to `kopt run` kills the command it started  611ms
+   ✓ stop signals kill running command trees > SIGINT to `kopt run` kills the command it started  594ms
+   ✓ stop signals kill running command trees > SIGHUP to `kopt run` kills the command it started  838ms
+   ✓ stop signals kill running command trees > a descendant that left the process group (setsid) is killed too  773ms
+   ✓ cancellation > a run joined by an identical call is killed only when every caller has cancelled  620ms
+   ✓ commands that never exit > are refused with a one-line hint unless timeoutSec is given  2012ms
+   ✓ result size > small outputs come back as they are under a one-line exit header  1291ms
+ ❯ test/compress.cache.test.ts (9 tests | 3 failed) 8106ms
+   ✓ workspace fingerprint: ignored state > env files and installed dependencies are inputs  307ms
+   ✓ workspace fingerprint: ignored state > build outputs are part of the key but not of the inputs; caches and logs are ignored 168ms
+   ✓ workspace fingerprint without git: skipped dirs > tracks dependency markers and build outputs, not their whole content 74ms
+   × kopt_run cache and ignored state > re-runs after a gitignored .env or a dependency install changes (no stale verdict) 444ms
+     → expected { handle: 'o14a7a7', …(12) } to match object { exitCode: 1, cached: false, …(1) }
+(10 matching properties omitted from actual)
+   × kopt_run cache and ignored state > does not cache a run during which a file changed, then caches the next one 3994ms
+     → expected { handle: 'ofd4911', …(12) } to match object { cached: false, stored: true }
+(11 matching properties omitted from actual)
+   × kopt_run cache and ignored state > a command that writes its own ignored build output is still cached 604ms
+     → expected { handle: 'o14a7a7', …(12) } to match object { exitCode: +0, stored: true }
+(11 matching properties omitted from actual)
+   ✓ kopt_run cache and ignored state > joins an identical run in progress instead of starting it twice  2285ms
+   ✓ fingerprint cost on big checkouts > the async fingerprint equals the sync one, in a git repo and outside git 122ms
+   ✓ fingerprint cost on big checkouts > read-only commands (git log/diff/status piped through grep, head...) skip the fingerprint after the run 1ms
+ ✓ test/cli.test.ts (16 tests) 11390ms
+   ✓ kopt mcp (stdio) > speaks clean MCP on stdout and lists the 6 tools  1554ms
+   ✓ kopt run (end to end, needs compress) > quotes argv, prints compact output and propagates failure  1019ms
+   ✓ kopt find (end to end, needs indexer + retrieval) > indexes a tiny repo on first use and prints hits  1242ms
+   ✓ kopt CLI sessions (KOPT_SESSION) > keep their dedup ledger between calls; calls without a session stay stateless  3334ms
+   ✓ kopt mcp first build (worker thread, needs indexer + retrieval) > builds the index in the background and answers once ready  668ms
+   ✓ zero-config commands (temp HOME) > setup leaves a development checkout alone unless --global is given (flag order)  541ms
+   ✓ zero-config commands (temp HOME) > setup then doctor --quick then uninstall  597ms
+   ✓ zero-config commands (temp HOME) > kopt mcp without --root serves the git root of its cwd, and nothing in a home directory  984ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/compress.cache.test.ts > kopt_run cache and ignored state > re-runs after a gitignored .env or a dependency install changes (no stale verdict)
+AssertionError: expected { handle: 'o14a7a7', …(12) } to match object { exitCode: 1, cached: false, …(1) }
+(10 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "cached": false,
+    "exitCode": 1,
+-   "stored": true,
++   "stored": false,
+  }
+
+ ❯ test/compress.cache.test.ts:164:21
+    162|     const ctx = newToolContext(cfg);
+    163|     const r1 = await runCommand({ command: 'npm test' }, ctx);
+    164|     expect(r1.meta).toMatchObject({ exitCode: 1, cached: false, stored…
+       |                     ^
+    165|     expect(r1.text).toContain('FLAG FLAG=bad');
+    166|     expect((await runCommand({ command: 'npm test' }, ctx)).meta).toMa…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  test/compress.cache.test.ts > kopt_run cache and ignored state > does not cache a run during which a file changed, then caches the next one
+AssertionError: expected { handle: 'ofd4911', …(12) } to match object { cached: false, stored: true }
+(11 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "cached": false,
+-   "stored": true,
++   "stored": false,
+  }
+
+ ❯ test/compress.cache.test.ts:196:21
+    194|     const r2 = await runCommand({ command: cmd }, ctx);
+    195|     expect(count()).toBe(2);
+    196|     expect(r2.meta).toMatchObject({ cached: false, stored: true });
+       |                     ^
+    197|     expect(r2.text).toContain('src=v2');
+    198|     const r3 = await runCommand({ command: cmd }, newToolContext(cfg));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  test/compress.cache.test.ts > kopt_run cache and ignored state > a command that writes its own ignored build output is still cached
+AssertionError: expected { handle: 'o14a7a7', …(12) } to match object { exitCode: +0, stored: true }
+(11 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "exitCode": 0,
+-   "stored": true,
++   "stored": false,
+  }
+
+ ❯ test/compress.cache.test.ts:214:21
+    212|     const ctx = newToolContext(cfg);
+    213|     const r1 = await runCommand({ command: 'npm test' }, ctx);
+    214|     expect(r1.meta).toMatchObject({ exitCode: 0, stored: true });
+       |                     ^
+    215|     const r2 = await runCommand({ command: 'npm test' }, newToolContex…
+    216|     expect(r2.meta).toMatchObject({ cached: true });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  test/compress.runner.test.ts > dedup cache (git workspace) > serves an identical re-run from cache until a file changes
+AssertionError: expected 2 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 2
+
+ ❯ test/compress.runner.test.ts:233:21
+    231|     // same session, short result: re-sent whole (a one-line pointer w…
+    232|     const r2 = await runCommand({ command: 'npm test' }, ctx);
+    233|     expect(count()).toBe(1);
+       |                     ^
+    234|     expect(r2.text).toBe(`cached run ${handle}: no file changed since …
+    235|     expect(r2.meta).toMatchObject({ cached: true });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  test/compress.runner.test.ts > dedup cache (git workspace) > a long cached result already shown in this session becomes one line that keeps the verdict
+AssertionError: expected { handle: 'ocab49d', …(12) } to match object { cacheable: true, stored: true }
+(11 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "cacheable": true,
+-   "stored": true,
++   "stored": false,
+  }
+
+ ❯ test/compress.runner.test.ts:287:21
+    285|     const ctx = newToolContext(cfg);
+    286|     const r1 = await runCommand({ command: 'npm run check' }, ctx);
+    287|     expect(r1.meta).toMatchObject({ cacheable: true, stored: true });
+       |                     ^
+    288|     expect(r1.tokens).toBeGreaterThan(60);
+    289|     const handle = r1.meta!.handle as string;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+ Test Files  2 failed | 31 passed (33)
+      Tests  5 failed | 691 passed | 1 skipped (697)
+   Start at  23:32:18
+   Duration  14.07s (transform 2.44s, setup 0ms, collect 9.32s, tests 78.88s, environment 4ms, prepare 2.54s)

@@ -6,6 +6,7 @@ import { join } from 'node:path';
 import type { ExtractedFile, ExtractedSymbol } from '../core/types.js';
 import type { FileRow, SymbolRow } from '../store/schema.js';
 import type { Store } from '../store/store.js';
+import { staysInside } from './access.js';
 import { sha1 } from './common.js';
 
 export interface Source {
@@ -19,6 +20,8 @@ export interface Source {
 }
 
 export function loadSource(store: Store, path: string, file?: FileRow): Source | undefined {
+  // Never follow a link out of the project (a symlink committed in a cloned repository).
+  if (store.root && !staysInside(store.root, join(store.root, path))) return undefined;
   const row = file ?? store.fileByPath(path);
   let raw: string | undefined;
   try {
@@ -158,7 +161,7 @@ export function locate(store: Store, src: Source, sym: SymbolRow): Located {
   if (!src.stale) return { start: clamp(sym.start_line), end: clamp(sym.end_line), how: 'exact' };
   const ef = extracted(store, src);
   if (ef) {
-    const m = bestExtracted(ef.symbols, sym);
+    const m = bestExtracted(ef.symbols, sym, overloadOrdinal(store, sym));
     if (m) return { start: clamp(m.startLine), end: clamp(m.endLine), how: 'extracted' };
   } else scheduleExtract(store, src);
   const r = relocate(src, sym);
@@ -166,13 +169,36 @@ export function locate(store: Store, src: Source, sym: SymbolRow): Located {
   return { start: clamp(sym.start_line), end: clamp(sym.end_line), how: 'stale' };
 }
 
-function bestExtracted(list: ExtractedSymbol[], sym: SymbolRow): ExtractedSymbol | undefined {
+const OVERLOADS_SQL = 'SELECT id FROM symbols WHERE file_id = ? AND name = ? AND kind = ? AND qname = ? ORDER BY start_line, id';
+
+/** Position of `sym` among the indexed symbols of its file sharing its name, kind and qualified name (overloads). */
+export function overloadOrdinal(store: Store, sym: SymbolRow): { index: number; count: number } {
+  try {
+    const ids = (store.prepare(OVERLOADS_SQL).all(sym.file_id, sym.name, sym.kind, sym.qname) as unknown as Array<{ id: number }>).map((r) => r.id);
+    return { index: Math.max(0, ids.indexOf(sym.id)), count: ids.length };
+  } catch {
+    return { index: 0, count: 1 };
+  }
+}
+
+/**
+ * The freshly extracted symbol that is `sym`: same name and kind, same qualified name, then the same signature,
+ * then (overloads) the same position among its namesakes, and only then the nearest start line.
+ */
+export function bestExtracted(list: ExtractedSymbol[], sym: SymbolRow, ordinal = { index: 0, count: 1 }): ExtractedSymbol | undefined {
+  const named = list.filter((s) => s.name === sym.name && s.kind === sym.kind);
+  if (!named.length) return undefined;
+  const sameQ = named.filter((s) => s.qualifiedName === sym.qname || sym.qname.endsWith('.' + s.qualifiedName) || s.qualifiedName.endsWith('.' + sym.qname));
+  const pool = sameQ.length ? sameQ : named;
+  const sig = norm(sym.signature);
+  const bySig = pool.filter((s) => norm(s.signature) === sig);
+  if (bySig.length === 1) return bySig[0];
+  // Same number of namesakes as when indexed: the k-th overload is still the k-th.
+  if (!bySig.length && sameQ.length > 1 && sameQ.length === ordinal.count) return [...sameQ].sort((a, b) => a.startLine - b.startLine)[ordinal.index];
   let best: ExtractedSymbol | undefined;
   let bestD = Infinity;
-  for (const s of list) {
-    if (s.name !== sym.name || s.kind !== sym.kind) continue;
-    const sameQ = s.qualifiedName === sym.qname || sym.qname.endsWith('.' + s.qualifiedName) || s.qualifiedName.endsWith('.' + sym.qname);
-    const d = Math.abs(s.startLine - sym.start_line) + (sameQ ? 0 : 100000);
+  for (const s of bySig.length ? bySig : pool) {
+    const d = Math.abs(s.startLine - sym.start_line);
     if (d < bestD) {
       bestD = d;
       best = s;
@@ -193,6 +219,10 @@ export function relocate(src: Source, sym: SymbolRow): { start: number; end: num
   const sig = norm(sym.signature);
   const esc = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const rx = new RegExp(`(^|[^A-Za-z0-9_$])${esc}(?![A-Za-z0-9_$])`);
+  // What the declaration has before the name ("public void", "def", "func (s *Server)"): a call site such as
+  // `validate(o);` contains the name too, but not this prefix.
+  const inSig = rx.exec(sig);
+  const sigBefore = inSig ? norm(sig.slice(0, inSig.index + inSig[1].length)) : '';
   let bestLine = -1;
   let bestD = Infinity;
   const lines = src.lines;
@@ -202,6 +232,8 @@ export function relocate(src: Source, sym: SymbolRow): { start: number; end: num
     if (!m) continue;
     const upto = norm(line.slice(0, m.index + m[0].length));
     if (!upto || !sig.includes(upto)) continue;
+    const before = norm(line.slice(0, m.index + m[1].length));
+    if (sigBefore ? !before || !sigBefore.endsWith(before) : /;\s*$/.test(line)) continue;
     const d = Math.abs(i + 1 - sym.start_line);
     if (d < bestD) {
       bestD = d;

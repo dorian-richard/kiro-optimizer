@@ -16,17 +16,28 @@ export interface RetrievalModule {
   read(store: Store, p: ReadParams, ctx: ToolContext): ToolResult;
   outline(store: Store, p: OutlineParams, ctx: ToolContext): ToolResult;
   refs(store: Store, p: RefsParams, ctx: ToolContext): ToolResult;
+  /** Optional: where a failing command's output points in the index (kopt_run appends it). */
+  failureContext?(store: Store, output: string, maxTokens: number): string | undefined;
 }
 
 export interface CompressModule {
-  runCommand(p: RunParams, ctx: ToolContext): Promise<ToolResult>;
+  runCommand(p: RunParams, ctx: ToolContext, opts?: { signal?: AbortSignal }): Promise<ToolResult>;
   expand(p: ExpandParams, ctx: ToolContext): ToolResult;
+}
+
+export interface IndexPhase {
+  phase: 'wait' | 'list' | 'parse' | 'index' | 'resolve' | 'rank';
+  done?: number;
+  total?: number;
+  holder?: number;
 }
 
 export interface IndexOptions {
   config: KoptConfig;
   paths?: string[];
   onProgress?: (done: number, total: number) => void;
+  onPhase?: (p: IndexPhase) => void;
+  lock?: 'wait' | 'skip';
 }
 
 export interface IndexStats {
@@ -38,6 +49,8 @@ export interface IndexStats {
   refs: number;
   durationMs: number;
   commit?: string;
+  filesPending?: number;
+  locked?: boolean;
 }
 
 export interface IndexerModule {

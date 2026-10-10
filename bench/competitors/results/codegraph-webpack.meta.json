@@ -1,0 +1,101 @@
+{
+  "label": "codegraph",
+  "tool": "codegraph",
+  "package": "@colbymchenry/codegraph",
+  "version": "1.6.2",
+  "mode": "default",
+  "repo": {
+    "name": "webpack",
+    "url": "https://github.com/webpack/webpack.git",
+    "tag": "v5.111.1",
+    "commit": "5a106753839fd7e1b86138c3a5f6b348341147a7",
+    "language": "javascript",
+    "path": "bench/repos/webpack"
+  },
+  "headCommit": "5a106753839fd7e1b86138c3a5f6b348341147a7",
+  "commitMatchesTasks": true,
+  "date": "2026-10-09T14:02:56.287Z",
+  "image": "kopt-bench/codegraph:1.6.2",
+  "imageId": "sha256:db8f2e822e3863b14f3c037bc692fb20915bf2e48a3083248d72d3938a716f5a",
+  "engine": "docker",
+  "limits": "memory=6g cpus=8",
+  "cgroupMemory": {
+    "maxBytes": 6442450944,
+    "peakBytes": 4388929536,
+    "oomKills": 0
+  },
+  "container": {
+    "node": "v22.23.3",
+    "arch": "arm64",
+    "platform": "linux",
+    "cpus": 10,
+    "memBytes": 8214851584,
+    "network": "none"
+  },
+  "primaryTool": "codegraph_explore",
+  "toolArgsExample": {
+    "query": "<input>"
+  },
+  "serverCommand": {
+    "command": "codegraph",
+    "args": [
+      "serve",
+      "--mcp"
+    ]
+  },
+  "oneSessionPerTask": true,
+  "indexOk": true,
+  "indexMs": 170986,
+  "indexSteps": [
+    {
+      "command": "codegraph init --yes /work/webpack",
+      "ms": 170986,
+      "exit": 0,
+      "signal": null,
+      "oomKills": 0
+    }
+  ],
+  "copyMs": 25730,
+  "indexDirs": [
+    "<repo>/.codegraph"
+  ],
+  "indexSizeBytes": 151924965,
+  "modelBytes": 0,
+  "indexStatus": "CodeGraph Status\n\nProject: /work/webpack\n\nIndex Statistics:\n  Files:     14,979\n  Nodes:     52,401\n  Edges:     110,104\n  DB Size:   144.89 MB\n  Backend:   node:sqlite — built-in (full WAL)\n  Journal:   wal\n\nNodes by Kind:\n  file            14,955\n  constant        10,757\n  function        7,313\n  method          6,040\n  import          5,334\n  property        4,370\n  variable        1,498\n  class           1,267\n  interface       578\n  type_alias      273\n  enum_member     11\n  component       3\n  enum            2\n\nFiles by Language:\n  javascript      14,839\n  typescript      109\n  yaml            24\n  jsx             4\n  cpp             1\n  tsx             1\n  xml             1\n\n✓ Index is up to date",
+  "surface": {
+    "serverInfo": {
+      "name": "codegraph",
+      "version": "1.6.2"
+    },
+    "toolCount": 1,
+    "toolNames": [
+      "codegraph_explore"
+    ],
+    "toolsChars": 1725,
+    "toolsEstTokens": 575,
+    "instructionsChars": 6718,
+    "instructionsEstTokens": 2240,
+    "primaryToolListed": true,
+    "file": "codegraph.surface.json"
+  },
+  "inputs": {
+    "search": {
+      "file": "codegraph-webpack.jsonl",
+      "tasks": 12,
+      "failures": 0,
+      "queryMsMedian": 243,
+      "queryMsP90": 325,
+      "startupMsMedian": 138
+    },
+    "question": {
+      "file": "codegraph-webpack-question.jsonl",
+      "tasks": 12,
+      "failures": 0,
+      "queryMsMedian": 448,
+      "queryMsP90": 694,
+      "startupMsMedian": 169
+    }
+  },
+  "charsPerToken": 3,
+  "errors": []
+}

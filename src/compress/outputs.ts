@@ -1,13 +1,19 @@
 // Persistent store of command outputs: <dataDir>/outputs/<handle>.log + index.json (run cache + LRU metadata).
+// Logs often contain secrets (env dumps, connection strings in stack traces): the folder is private to the user
+// (0700) and every file in it is 0600 (POSIX; Windows profile folders are already per-user).
 
 import { createHash } from 'node:crypto';
-import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, unlinkSync, writeFileSync } from 'node:fs';
+import { chmodSync, existsSync, mkdirSync, readdirSync, readFileSync, statSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { renameWithRetry } from '../telemetry/fsutil.js';
 
 export const MAX_OUTPUTS = 200;
 export const MAX_OUTPUT_BYTES = 200 * 1024 * 1024;
 export const HANDLE_RE = /^o[0-9a-f]{6}$/;
+const DIR_MODE = 0o700;
+const FILE_MODE = 0o600;
+/** Folders already made private by this process. */
+const secured = new Set<string>();
 
 export interface RunEntry {
   command: string;
@@ -72,7 +78,7 @@ export class OutputStore {
     // Atomic replace: the MCP server and the CLI may both write. On Windows a concurrent reader makes the
     // rename fail for a few milliseconds (sharing violation): retried, and the temp file never lingers.
     const tmp = `${this.indexPath}.${process.pid}.${Date.now()}.tmp`;
-    writeFileSync(tmp, JSON.stringify(idx));
+    writeFileSync(tmp, JSON.stringify(idx), { mode: FILE_MODE });
     try {
       renameWithRetry(tmp, this.indexPath);
     } catch (err) {
@@ -103,7 +109,7 @@ export class OutputStore {
 
   writeLog(idx: OutputIndex, handle: string, text: string, command: string): void {
     this.ensureDir();
-    writeFileSync(this.logPath(handle), text);
+    writeFileSync(this.logPath(handle), text, { mode: FILE_MODE });
     const now = Date.now();
     idx.outputs[handle] = { bytes: Buffer.byteLength(text), lines: text ? text.split('\n').length : 0, command, at: now, used: now };
     this.evict(idx);
@@ -159,13 +165,33 @@ export class OutputStore {
   }
 
   private ensureDir(): void {
-    if (existsSync(this.dir)) return;
-    mkdirSync(this.dir, { recursive: true });
-    // Keep logs out of `git status` / `git add .` (and therefore out of the workspace fingerprint).
-    try {
-      writeFileSync(join(this.dir, '.gitignore'), '*\n');
-    } catch {
-      /* not fatal */
+    if (secured.has(this.dir) && existsSync(this.dir)) return;
+    if (!existsSync(this.dir)) {
+      // `mode` applies to every folder created here, the data dir included.
+      mkdirSync(this.dir, { recursive: true, mode: DIR_MODE });
+      // Keep logs out of `git status` / `git add .` (and therefore out of the workspace fingerprint).
+      try {
+        writeFileSync(join(this.dir, '.gitignore'), '*\n');
+      } catch {
+        /* not fatal */
+      }
+    } else if (process.platform !== 'win32') {
+      // Written by an older kopt with default permissions: tighten the folder and the files already in it.
+      try {
+        if ((statSync(this.dir).mode & 0o077) !== 0) {
+          chmodSync(this.dir, DIR_MODE);
+          for (const f of readdirSync(this.dir)) {
+            try {
+              chmodSync(join(this.dir, f), FILE_MODE);
+            } catch {
+              /* removed meanwhile */
+            }
+          }
+        }
+      } catch {
+        /* not ours to change */
+      }
     }
+    secured.add(this.dir);
   }
 }

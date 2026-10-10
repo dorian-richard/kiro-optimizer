@@ -1,6 +1,11 @@
 // Regenerates the compress fixtures: `node test/fixtures/compress/generate.mjs`.
 // Outputs imitate the real tools' formats (CI / non-TTY mode). Long passing runs are generated, failing
 // sections are written by hand. Paths use the fake repo root /home/dev/shop.
+// Not generated here: vitest-kopt-pass.txt, vitest-kopt-fail.txt and build-kopt-fail.txt are real outputs of this
+// repository's own `npx vitest run` (passing, and with one injected failing assertion) and `npm run build` (after
+// renaming ToolResult.tokens), captured through kopt_run's runner with the worktree path rewritten to /home/dev/shop.
+// vitest-kopt-many-fail.txt (19 failures in 4 files) and vitest-kopt-diff-fail.txt (5 failures with object diffs)
+// are stored kopt_run logs of two failing runs of this repository's suite.
 
 import { writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -1102,6 +1107,558 @@ function genericPass() {
   return L.join('\n') + '\n';
 }
 
+// ---------------------------------------------------------------------------------------------------------------
+// mocha
+
+function mochaTree(suites, failAt = new Map()) {
+  const L = [''];
+  let passing = 0;
+  for (let f = 0; f < suites; f++) {
+    const d = domains[f % domains.length];
+    L.push(`  ${d} ${pick(nouns)}${f}`);
+    const k = 4 + Math.floor(rnd() * 5);
+    for (let t = 0; t < k; t++) {
+      const key = `${f}:${t}`;
+      if (failAt.has(key)) L.push(`    ${failAt.get(key)}) ${pick(verbs)} ${pick(nouns)}`);
+      else {
+        L.push(`    ✔ ${pick(verbs)} ${pick(nouns)} when ${pick(nouns)} is ${pick(['empty', 'valid', 'missing', 'expired'])}${t % 4 === 0 ? ` (${Math.floor(rnd() * 90) + 10}ms)` : ''}`);
+        passing++;
+      }
+    }
+    L.push('');
+  }
+  return { L, passing };
+}
+
+function mochaPass() {
+  const { L, passing } = mochaTree(70);
+  L.push('', `  ${passing} passing (4s)`, '  3 pending', '');
+  return L.join('\n') + '\n';
+}
+
+function mochaFail() {
+  const { L, passing } = mochaTree(40, new Map([['3:1', 1], ['17:2', 2], ['29:0', 3]]));
+  L.push(
+    '',
+    `  ${passing} passing (3s)`,
+    '  1 pending',
+    '  3 failing',
+    '',
+    '  1) cart item3',
+    '       computes total with discount:',
+    '',
+    '      AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:',
+    '',
+    '100 !== 90',
+    '',
+    '      + expected - actual',
+    '',
+    '      -100',
+    '      +90',
+    '',
+    '      at Context.<anonymous> (test/cart/cart.test.js:14:12)',
+    '      at callFn (node_modules/mocha/lib/runnable.js:366:21)',
+    '      at Runnable.run (node_modules/mocha/lib/runnable.js:354:5)',
+    '      at Runner.runTest (node_modules/mocha/lib/runner.js:666:10)',
+    '      at process.processImmediate (node:internal/timers:483:21)',
+    '',
+    '  2) orders order17',
+    '       rejects an empty order:',
+    '     TypeError: Cannot read properties of undefined (reading \'length\')',
+    '      at OrderService.create (src/orders/service.js:22:31)',
+    '      at Context.<anonymous> (test/orders/service.test.js:33:20)',
+    '      at callFn (node_modules/mocha/lib/runnable.js:366:21)',
+    '      at Runnable.run (node_modules/mocha/lib/runnable.js:354:5)',
+    '      at process.processImmediate (node:internal/timers:483:21)',
+    '',
+    '  3) refunds refund29',
+    '       "before each" hook for "refunds the full amount":',
+    '     TypeError: Cannot read properties of undefined (reading \'length\')',
+    '      at OrderService.create (src/orders/service.js:22:31)',
+    '      at Context.<anonymous> (test/refunds/refund.test.js:12:18)',
+    '      at process.processImmediate (node:internal/timers:483:21)',
+    '',
+    '',
+  );
+  return L.join('\n');
+}
+
+function mochaJsonFail() {
+  const tests = [];
+  for (let i = 0; i < 160; i++) {
+    const d = domains[i % domains.length];
+    tests.push({ title: `${pick(verbs)} ${pick(nouns)} ${i}`, fullTitle: `${d} ${pick(verbs)} ${pick(nouns)} ${i}`, file: `/home/dev/shop/test/${d}/${d}.test.js`, duration: Math.floor(rnd() * 40), currentRetry: 0, speed: 'fast', err: {} });
+  }
+  const failures = [
+    {
+      title: 'computes total with discount', fullTitle: 'Cart computes total with discount', file: '/home/dev/shop/test/cart/cart.test.js', duration: 3, currentRetry: 0,
+      err: {
+        stack: 'AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n100 !== 90\n\n    at Context.<anonymous> (/home/dev/shop/test/cart/cart.test.js:14:12)\n    at callFn (/home/dev/shop/node_modules/mocha/lib/runnable.js:366:21)\n    at process.processImmediate (node:internal/timers:483:21)',
+        message: 'Expected values to be strictly equal:\n\n100 !== 90\n', generatedMessage: true, name: 'AssertionError', code: 'ERR_ASSERTION', actual: '100', expected: '90', operator: 'strictEqual',
+      },
+    },
+    {
+      title: 'rejects an empty order', fullTitle: 'Orders rejects an empty order', file: '/home/dev/shop/test/orders/service.test.js', duration: 1, currentRetry: 0,
+      err: { stack: "TypeError: Cannot read properties of undefined (reading 'length')\n    at OrderService.create (/home/dev/shop/src/orders/service.js:22:31)\n    at Context.<anonymous> (/home/dev/shop/test/orders/service.test.js:33:20)\n    at callFn (/home/dev/shop/node_modules/mocha/lib/runnable.js:366:21)", message: "Cannot read properties of undefined (reading 'length')" },
+    },
+  ];
+  const doc = { stats: { suites: 42, tests: 162, passes: 160, pending: 0, failures: 2, start: '2026-10-09T10:12:01.123Z', end: '2026-10-09T10:12:04.567Z', duration: 3444 }, tests: [...tests, ...failures], pending: [], failures, passes: tests };
+  return JSON.stringify(doc, null, 2) + '\n';
+}
+
+// ---------------------------------------------------------------------------------------------------------------
+// rspec
+
+function rspecFail() {
+  const L = ['Randomized with seed 41587', ''];
+  // documentation format: one line per example
+  for (let f = 0; f < 45; f++) {
+    const d = domains[f % domains.length];
+    L.push(`${d.replace(/^./, (c) => c.toUpperCase())}::${pick(nouns).replace(/^./, (c) => c.toUpperCase())}`);
+    for (let t = 0; t < 6; t++) {
+      if (f === 7 && t === 2) L.push('  #total applies the discount (FAILED - 1)');
+      else if (f === 21 && t === 0) L.push('  POST /orders rejects empty orders (FAILED - 2)');
+      else if (f === 30 && t === 4) L.push('  #refund refunds the full amount (PENDING: Not yet implemented)');
+      else L.push(`  ${pick(verbs)} ${pick(nouns)} when ${pick(nouns)} is ${pick(['empty', 'valid', 'missing', 'expired'])}`);
+    }
+    L.push('');
+  }
+  L.push(
+    'Pending: (Failures listed here are expected and do not affect your suite\'s status)',
+    '',
+    '  1) Refunds::Refund#refund refunds the full amount',
+    '     # Not yet implemented',
+    '     # ./spec/models/refund_spec.rb:40',
+    '',
+    'Failures:',
+    '',
+    '  1) Cart#total applies the discount',
+    '     Failure/Error: expect(cart.total).to eq(90)',
+    '',
+    '       expected: 90',
+    '            got: 100',
+    '',
+    '       (compared using ==)',
+    "     # ./spec/models/cart_spec.rb:14:in `block (3 levels) in <top (required)>'",
+    "     # /usr/local/bundle/gems/rspec-core-3.13.0/lib/rspec/core/example.rb:263:in `instance_exec'",
+    "     # /usr/local/bundle/gems/rspec-core-3.13.0/lib/rspec/core/example.rb:263:in `block in run'",
+    '',
+    '  2) OrdersController POST /orders rejects empty orders',
+    '     Failure/Error: order.items.each { |item| reserve(item) }',
+    '',
+    '     NoMethodError:',
+    "       undefined method `items' for nil",
+    "     # ./app/controllers/orders_controller.rb:22:in `create'",
+    "     # /usr/local/bundle/gems/actionpack-7.1.3/lib/action_controller/metal/basic_implicit_render.rb:6:in `send_action'",
+    "     # /usr/local/bundle/gems/actionpack-7.1.3/lib/abstract_controller/base.rb:224:in `process_action'",
+    "     # ./spec/requests/orders_spec.rb:31:in `block (3 levels) in <top (required)>'",
+    '',
+    'Finished in 12.34 seconds (files took 2.1 seconds to load)',
+    '270 examples, 2 failures, 1 pending',
+    '',
+    'Failed examples:',
+    '',
+    'rspec ./spec/models/cart_spec.rb:12 # Cart#total applies the discount',
+    'rspec ./spec/requests/orders_spec.rb:29 # OrdersController POST /orders rejects empty orders',
+    '',
+    'Randomized with seed 41587',
+    '',
+  );
+  return L.join('\n');
+}
+
+// ---------------------------------------------------------------------------------------------------------------
+// phpunit / pest
+
+function phpunitFail() {
+  const dots = [];
+  for (let i = 0; i < 6; i++) {
+    let row = '';
+    for (let k = 0; k < 63; k++) row += i === 1 && k === 15 ? 'F' : i === 3 && k === 40 ? 'E' : i === 4 && k === 2 ? 'S' : '.';
+    dots.push(`${row} ${String((i + 1) * 63).padStart(3)} / 400 (${String(Math.round(((i + 1) * 63 * 100) / 400)).padStart(3)}%)`);
+  }
+  dots.push(`${'.'.repeat(22)}                                         400 / 400 (100%)`);
+  return `PHPUnit 10.5.2 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.3.0
+Configuration: /home/dev/shop/phpunit.xml
+
+${dots.join('\n')}
+
+Time: 00:04.512, Memory: 38.00 MB
+
+There was 1 error:
+
+1) Tests\\Unit\\OrderServiceTest::testCreateRejectsEmptyCart
+TypeError: App\\Services\\OrderService::create(): Argument #1 ($items) must be of type array, null given, called in /home/dev/shop/tests/Unit/OrderServiceTest.php on line 41
+
+/home/dev/shop/app/Services/OrderService.php:22
+/home/dev/shop/tests/Unit/OrderServiceTest.php:41
+/home/dev/shop/vendor/phpunit/phpunit/src/Framework/TestCase.php:1188
+
+--
+
+There was 1 failure:
+
+1) Tests\\Unit\\CartTest::testTotalWithDiscount
+Failed asserting that 100 matches expected 90.
+
+/home/dev/shop/tests/Unit/CartTest.php:28
+
+FAILURES!
+Tests: 400, Assertions: 1132, Errors: 1, Failures: 1, Skipped: 1.
+`;
+}
+
+function pestFail() {
+  const L = [];
+  for (let f = 0; f < 50; f++) {
+    const d = domains[f % domains.length].replace(/^./, (c) => c.toUpperCase());
+    if (f === 12) {
+      L.push('   FAIL  Tests\\Feature\\OrderTest');
+      L.push('  ✓ it lists orders                                                       0.08s');
+      L.push('  ⨯ it creates an order                                                   0.12s');
+      L.push('');
+      continue;
+    }
+    L.push(`   PASS  Tests\\${f % 3 ? 'Unit' : 'Feature'}\\${d}${f}Test`);
+    for (let t = 0; t < 5; t++) L.push(`  ✓ it ${pick(verbs)} ${pick(nouns)}${' '.repeat(40)}0.0${t}s`);
+    L.push('');
+  }
+  L.push(
+    '  ────────────────────────────────────────────────────────────────────────────────────────────',
+    '   FAILED  Tests\\Feature\\OrderTest > it creates an order',
+    '  Expected response status code [201] but received 500.',
+    'Failed asserting that 500 is identical to 201.',
+    '',
+    '  at tests/Feature/OrderTest.php:22',
+    '     18▕         $response = $this->postJson(\'/api/orders\', [',
+    '     19▕             \'items\' => [[\'sku\' => \'A-1\', \'quantity\' => 2]],',
+    '     20▕         ]);',
+    '     21▕',
+    '  ➜  22▕         $response->assertCreated();',
+    '     23▕     });',
+    '',
+    '  1   tests/Feature/OrderTest.php:22',
+    '',
+    '',
+    '  Tests:    1 failed, 251 passed (744 assertions)',
+    '  Duration: 6.21s',
+    '',
+  );
+  return L.join('\n');
+}
+
+// ---------------------------------------------------------------------------------------------------------------
+// sbt / scalatest
+
+function sbtBanner() {
+  return `[info] welcome to sbt 1.9.7 (Eclipse Adoptium Java 17.0.9)
+[info] loading settings for project shop-build from plugins.sbt ...
+[info] loading project definition from /home/dev/shop/project
+[info] loading settings for project root from build.sbt ...
+[info] set current project to shop (in build file:/home/dev/shop/)`;
+}
+
+function sbtTestFail() {
+  const L = [sbtBanner(), '[info] compiling 42 Scala sources to /home/dev/shop/target/scala-2.13/classes ...', '[info] done compiling', '[info] compiling 18 Scala sources to /home/dev/shop/target/scala-2.13/test-classes ...', '[info] done compiling'];
+  for (let f = 0; f < 30; f++) {
+    const d = domains[f % domains.length].replace(/^./, (c) => c.toUpperCase());
+    L.push(`[info] ${f === 4 ? 'CartSpec' : f === 11 ? 'OrderSpec' : `${d}${f}Spec`}:`);
+    L.push(`[info] ${d}`);
+    for (let t = 0; t < 6; t++) {
+      if (f === 4 && t === 3) {
+        L.push('[info] - should compute the total with discount *** FAILED ***');
+        L.push('[info]   100 did not equal 90 (CartSpec.scala:14)');
+      } else if (f === 11 && t === 1) {
+        L.push('[info] - should reject empty orders *** FAILED ***');
+        L.push('[info]   java.lang.IllegalStateException: no items');
+        L.push('[info]   at com.acme.shop.orders.OrderService.create(OrderService.scala:22)');
+        L.push('[info]   at com.acme.shop.orders.OrderSpec.$anonfun$new$2(OrderSpec.scala:31)');
+        L.push('[info]   at org.scalatest.OutcomeOf.outcomeOf(OutcomeOf.scala:85)');
+        L.push('[info]   at org.scalatest.OutcomeOf.outcomeOf$(OutcomeOf.scala:83)');
+        L.push('[info]   at org.scalatest.Transformer.apply(Transformer.scala:22)');
+        L.push('[info]   ...');
+      } else L.push(`[info] - should ${pick(verbs)} ${pick(nouns)} when ${pick(nouns)} is ${pick(['empty', 'valid', 'missing'])}`);
+    }
+  }
+  L.push(
+    '[info] Run completed in 3 seconds, 120 milliseconds.',
+    '[info] Total number of tests run: 180',
+    '[info] Suites: completed 30, aborted 0',
+    '[info] Tests: succeeded 178, failed 2, canceled 0, ignored 0, pending 0',
+    '[info] *** 2 TESTS FAILED ***',
+    '[error] Failed tests:',
+    '[error] \tcom.acme.shop.cart.CartSpec',
+    '[error] \tcom.acme.shop.orders.OrderSpec',
+    '[error] (Test / test) sbt.TestsFailedException: Tests unsuccessful',
+    '[error] Total time: 24 s, completed Oct 9, 2026, 10:12:01 AM',
+    '',
+  );
+  return L.join('\n');
+}
+
+function sbtCompileFail() {
+  const L = [sbtBanner()];
+  for (let i = 0; i < 40; i++) L.push(`[info] Fetched artifacts of ${pick(['shop-core', 'shop-api', 'shop-web'])}`);
+  L.push(
+    '[info] compiling 42 Scala sources to /home/dev/shop/core/target/scala-2.13/classes ...',
+    '[error] /home/dev/shop/core/src/main/scala/com/acme/shop/cart/Cart.scala:22:20: type mismatch;',
+    '[error]  found   : String("x")',
+    '[error]  required: Int',
+    '[error]     val total: Int = "x"',
+    '[error]                    ^',
+    '[error] /home/dev/shop/core/src/main/scala/com/acme/shop/orders/OrderService.scala:57:9: not found: value computeTotal',
+    '[error]     computeTotal(items)',
+    '[error]     ^',
+    '[warn] /home/dev/shop/core/src/main/scala/com/acme/shop/Main.scala:3:8: Unused import',
+    '[warn] import scala.util.Try',
+    '[warn]        ^',
+    '[warn] one warning found',
+    '[error] two errors found',
+    '[info] compiling 12 Scala sources to /home/dev/shop/api/target/scala-3.3.1/classes ...',
+    '[error] -- [E007] Type Mismatch Error: /home/dev/shop/api/src/main/scala/com/acme/shop/api/Routes.scala:31:24 ----------',
+    '[error] 31 |    val port: Int = config.getString("port")',
+    '[error]    |                    ^^^^^^^^^^^^^^^^^^^^^^^^',
+    '[error]    |                    Found:    String',
+    '[error]    |                    Required: Int',
+    '[error]    |',
+    '[error]    | longer explanation available when compiling with `-explain`',
+    '[error] one error found',
+    '[error] (core / Compile / compileIncremental) Compilation failed',
+    '[error] (api / Compile / compileIncremental) Compilation failed',
+    '[error] Total time: 18 s, completed Oct 9, 2026, 10:14:31 AM',
+    '',
+  );
+  return L.join('\n');
+}
+
+// ---------------------------------------------------------------------------------------------------------------
+// .NET runners: xUnit console, NUnit console, Microsoft.Testing.Platform
+
+function xunitConsoleFail() {
+  const L = ['xUnit.net Console Runner v2.6.6+5bfa3b4b8e (64-bit .NET 8.0.1)', '  Discovering: Shop.Tests', '  Discovered:  Shop.Tests', '  Starting:    Shop.Tests'];
+  L.push(
+    '    Shop.Tests.CartTests.Total_WithDiscount [FAIL]',
+    '      Assert.Equal() Failure: Values differ',
+    '      Expected: 90',
+    '      Actual:   100',
+    '      Stack Trace:',
+    '        /home/dev/shop/tests/Shop.Tests/CartTests.cs(28,0): at Shop.Tests.CartTests.Total_WithDiscount()',
+    '           at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)',
+    '           at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)',
+    '    Shop.Tests.OrderTests.Create_RejectsEmpty [FAIL]',
+    '      System.NullReferenceException : Object reference not set to an instance of an object.',
+    '      Stack Trace:',
+    '        /home/dev/shop/src/Shop/Services/OrderService.cs(22,0): at Shop.Services.OrderService.Create(List`1 items)',
+    '        /home/dev/shop/tests/Shop.Tests/OrderTests.cs(41,0): at Shop.Tests.OrderTests.Create_RejectsEmpty()',
+    '           at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)',
+    '      Output:',
+    '        creating order for customer 42',
+    '  Finished:    Shop.Tests',
+    '=== TEST EXECUTION SUMMARY ===',
+    '   Shop.Tests  Total: 412, Errors: 0, Failed: 2, Skipped: 1, Time: 3.481s',
+    '',
+  );
+  return L.join('\n');
+}
+
+function nunitConsoleFail() {
+  return `NUnit Console 3.17.0 (Release)
+Copyright (c) 2022 Charlie Poole, Rob Prouse
+Thursday, October 9, 2026 10:12:01 AM
+
+Runtime Environment
+   OS Version: Linux 6.5.0.1015
+   Runtime: .NET 8.0.1
+
+Test Files
+    tests/Shop.Tests/bin/Debug/net8.0/Shop.Tests.dll
+
+Errors, Failures and Warnings
+
+1) Failed : Shop.Tests.CartTests.TotalWithDiscount
+  Expected: 90
+  But was:  100
+
+   at Shop.Tests.CartTests.TotalWithDiscount() in /home/dev/shop/tests/Shop.Tests/CartTests.cs:line 28
+
+2) Error : Shop.Tests.OrderTests.CreateRejectsEmpty
+System.NullReferenceException : Object reference not set to an instance of an object.
+   at Shop.Services.OrderService.Create(List\`1 items) in /home/dev/shop/src/Shop/Services/OrderService.cs:line 22
+   at Shop.Tests.OrderTests.CreateRejectsEmpty() in /home/dev/shop/tests/Shop.Tests/OrderTests.cs:line 41
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+
+Run Settings
+    DisposeRunners: True
+    WorkDirectory: /home/dev/shop
+    ImageRuntimeVersion: 4.0.30319
+    ImageTargetFrameworkName: .NETCoreApp,Version=v8.0
+    ImageRequiresX86: False
+    ImageRequiresDefaultAppDomainAssemblyResolver: False
+    TargetRuntimeFramework: netcore-8.0
+    NumberOfTestWorkers: 8
+
+Test Run Summary
+  Overall result: Failed
+  Test Count: 412, Passed: 409, Failed: 2, Warnings: 0, Inconclusive: 0, Skipped: 1
+    Failed Tests - Failures: 1, Errors: 1, Invalid: 0
+    Skipped Tests - Ignored: 1, Explicit: 0, Other: 0
+  Start time: 2026-10-09 10:12:01Z
+    End time: 2026-10-09 10:12:05Z
+    Duration: 3.912 seconds
+
+Results (nunit3) saved as TestResult.xml
+`;
+}
+
+function dotnetMtpFail() {
+  const L = ['  Determining projects to restore...', '  All projects are up-to-date for restore.'];
+  for (const p of ['Shop.Domain', 'Shop.Infrastructure', 'Shop.Api', 'Shop.Tests']) L.push(`  ${p} -> /home/dev/shop/src/${p}/bin/Debug/net8.0/${p}.dll`);
+  L.push(
+    'Running tests from /home/dev/shop/tests/Shop.Tests/bin/Debug/net8.0/Shop.Tests.dll (net8.0|x64)',
+    'failed Shop.Tests.CartTests.Total_WithDiscount (12ms)',
+    '  Assert.Equal() Failure: Values differ',
+    '  Expected: 90',
+    '  Actual:   100',
+    '    at Shop.Tests.CartTests.Total_WithDiscount() in /home/dev/shop/tests/Shop.Tests/CartTests.cs:28',
+    '    at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)',
+    '/home/dev/shop/tests/Shop.Tests/bin/Debug/net8.0/Shop.Tests.dll (net8.0|x64) failed with 1 error(s) (3s 481ms)',
+    '',
+    'Test run summary: Failed! - /home/dev/shop/tests/Shop.Tests/bin/Debug/net8.0/Shop.Tests.dll (net8.0|x64)',
+    '  total: 412',
+    '  failed: 1',
+    '  succeeded: 410',
+    '  skipped: 1',
+    '  duration: 3s 481ms',
+    '',
+  );
+  return L.join('\n');
+}
+
+// ---------------------------------------------------------------------------------------------------------------
+// bazel
+
+function bazelTestFail() {
+  const L = ['INFO: Invocation ID: 7d3c4c1e-2f3b-4a8e-9b51-0f1c2d3e4f5a', 'Computing main repo mapping: ', 'Loading: ', 'Loading: 0 packages loaded', 'Analyzing: 64 targets (312 packages loaded, 9841 targets configured)', 'INFO: Analyzed 64 targets (512 packages loaded, 14532 targets configured).', 'INFO: Found 44 targets and 20 test targets...'];
+  for (let i = 1; i <= 60; i++) L.push(`[${(i * 41).toLocaleString('en-US')} / 2,412] Compiling src/main/java/com/acme/shop/${pick(domains)}/${pick(nouns)}${i}.java; ${i % 5}s linux-sandbox ... (8 actions running)`);
+  L.push(
+    'ERROR: /home/dev/shop/src/main/java/com/acme/shop/cart/BUILD.bazel:12:13: Building src/main/java/com/acme/shop/cart/libcart.jar (14 source files) failed: (Exit 1): java failed: error executing Javac command (from target //src/main/java/com/acme/shop/cart:cart) external/remotejdk17_linux/bin/java -XX:+UseParallelOldGC -XX:-CompactStrings --add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED ... (remaining 42 arguments skipped)',
+    'src/main/java/com/acme/shop/cart/Cart.java:22: error: cannot find symbol',
+    '    return computeTotal(items);',
+    '           ^',
+    '  symbol:   method computeTotal(List<Item>)',
+    '  location: class Cart',
+    'INFO: From Compiling src/main/java/com/acme/shop/api/Routes.java:',
+    'warning: [options] source value 8 is obsolete and will be removed in a future release',
+    'FAIL: //src/test/java/com/acme/shop/orders:OrderServiceTest (see /home/dev/.cache/bazel/_bazel_dev/1f2e3d4c/execroot/_main/bazel-out/k8-fastbuild/testlogs/src/test/java/com/acme/shop/orders/OrderServiceTest/test.log)',
+    'INFO: From Testing //src/test/java/com/acme/shop/orders:OrderServiceTest:',
+    '==================== Test output for //src/test/java/com/acme/shop/orders:OrderServiceTest:',
+    'JUnit4 Test Runner',
+    '.....E',
+    'Time: 0.412',
+    'There was 1 failure:',
+    '1) rejectsEmptyOrder(com.acme.shop.orders.OrderServiceTest)',
+    'java.lang.AssertionError: expected:<0> but was:<1>',
+    '\tat org.junit.Assert.fail(Assert.java:89)',
+    '\tat org.junit.Assert.failNotEquals(Assert.java:835)',
+    '\tat com.acme.shop.orders.OrderServiceTest.rejectsEmptyOrder(OrderServiceTest.java:33)',
+    '\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)',
+    '',
+    'FAILURES!!!',
+    'Tests run: 6,  Failures: 1',
+    '',
+    '================================================================================',
+    'INFO: Elapsed time: 48.221s, Critical Path: 31.07s',
+    'INFO: 812 processes: 214 internal, 598 linux-sandbox.',
+    'FAILED: Build did NOT complete successfully',
+  );
+  for (let i = 0; i < 18; i++) L.push(`//src/test/java/com/acme/shop/${domains[i % domains.length]}:${nouns[i % nouns.length].replace(/^./, (c) => c.toUpperCase())}Test${' '.repeat(30)}PASSED in ${(rnd() * 5).toFixed(1)}s`);
+  L.push(
+    '//src/test/java/com/acme/shop/orders:OrderServiceTest                    FAILED in 2.3s',
+    '  /home/dev/.cache/bazel/_bazel_dev/1f2e3d4c/execroot/_main/bazel-out/k8-fastbuild/testlogs/src/test/java/com/acme/shop/orders/OrderServiceTest/test.log',
+    '//src/test/java/com/acme/shop/cart:CartTest                              NO STATUS',
+    '',
+    'Executed 19 out of 20 tests: 18 tests pass, 1 fails locally and 1 was skipped.',
+    'There were tests whose specified size is too big. Use the --test_verbose_timeout_warnings command line option to see which ones these are.',
+    'FAILED: Build did NOT complete successfully',
+    '',
+  );
+  return L.join('\n');
+}
+
+// ---------------------------------------------------------------------------------------------------------------
+// JSON reporters
+
+function jestJsonFail() {
+  const testResults = [];
+  for (let f = 0; f < 60; f++) {
+    const d = domains[f % domains.length];
+    const assertionResults = [];
+    for (let t = 0; t < 6; t++) {
+      const failed = (f === 3 && t === 2) || (f === 41 && t === 0);
+      const message = f === 3
+        ? 'Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: 90\nReceived: 100\n    at Object.toBe (/home/dev/shop/src/cart/cart.test.ts:14:26)\n    at Promise.then.completed (/home/dev/shop/node_modules/jest-circus/build/utils.js:298:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (/home/dev/shop/node_modules/jest-circus/build/utils.js:231:10)'
+        : "TypeError: Cannot read properties of undefined (reading 'items')\n    at OrderService.create (/home/dev/shop/src/orders/service.ts:22:31)\n    at Object.<anonymous> (/home/dev/shop/src/orders/service.test.ts:33:20)\n    at Promise.then.completed (/home/dev/shop/node_modules/jest-circus/build/utils.js:298:28)";
+      assertionResults.push({
+        ancestorTitles: [d.replace(/^./, (c) => c.toUpperCase())], duration: Math.floor(rnd() * 30), failureDetails: failed ? [{ matcherResult: { actual: 100, expected: 90, message: '...', name: 'toBe', pass: false } }] : [],
+        failureMessages: failed ? [message] : [],
+        fullName: `${d} ${pick(verbs)} ${pick(nouns)}`, invocations: 1, location: null, numPassingAsserts: failed ? 0 : 1, retryReasons: [], status: failed ? 'failed' : 'passed', title: failed ? (f === 3 ? 'computes total with discount' : 'rejects an order without items') : `${pick(verbs)} ${pick(nouns)} ${t}`,
+      });
+    }
+    const anyFailed = assertionResults.some((a) => a.status === 'failed');
+    const name = f === 3 ? 'cart/cart' : f === 41 ? 'orders/service' : `${d}/${pick(nouns)}${f}`;
+    testResults.push({ assertionResults, endTime: 1760004724000 + f, message: anyFailed ? '● ...' : '', name: `/home/dev/shop/src/${name}.test.ts`, startTime: 1760004721000 + f, status: anyFailed ? 'failed' : 'passed', summary: '' });
+  }
+  const doc = { numFailedTestSuites: 2, numFailedTests: 2, numPassedTestSuites: 58, numPassedTests: 358, numPendingTestSuites: 0, numPendingTests: 0, numRuntimeErrorTestSuites: 0, numTodoTests: 0, numTotalTestSuites: 60, numTotalTests: 360, openHandles: [], snapshot: { added: 0, didUpdate: false, failure: false, filesAdded: 0, filesRemoved: 0, filesRemovedList: [], filesUnmatched: 0, filesUpdated: 0, matched: 32, total: 32, unchecked: 0, uncheckedKeysByFile: [], unmatched: 0, updated: 0 }, startTime: 1760004720000, success: false, testResults, wasInterrupted: false };
+  return `\n> shop@1.0.0 test\n> jest --json\n\n${JSON.stringify(doc)}\n`;
+}
+
+function goTestJsonFail() {
+  const L = [];
+  let t = 0;
+  const ev = (o) => L.push(JSON.stringify({ Time: `2026-10-09T10:12:${String(Math.floor(t++ / 40) % 60).padStart(2, '0')}.${String(t % 1000).padStart(3, '0')}Z`, ...o }));
+  for (const pkg of ['cart', 'catalog', 'customer', 'order']) {
+    const P = `github.com/acme/shop/internal/${pkg}`;
+    ev({ Action: 'start', Package: P });
+    for (let i = 0; i < 30; i++) {
+      const name = `Test${pkg.replace(/^./, (c) => c.toUpperCase())}${pick(nouns).replace(/^./, (c) => c.toUpperCase())}${i}`;
+      ev({ Action: 'run', Package: P, Test: name });
+      ev({ Action: 'output', Package: P, Test: name, Output: `=== RUN   ${name}\n` });
+      if (pkg === 'order' && i === 7) {
+        ev({ Action: 'output', Package: P, Test: name, Output: '    service_test.go:42: compute total: got 60.00, want 70.00\n' });
+        ev({ Action: 'output', Package: P, Test: name, Output: `--- FAIL: ${name} (0.00s)\n` });
+        ev({ Action: 'fail', Package: P, Test: name, Elapsed: 0 });
+      } else {
+        ev({ Action: 'output', Package: P, Test: name, Output: `--- PASS: ${name} (0.00s)\n` });
+        ev({ Action: 'pass', Package: P, Test: name, Elapsed: 0 });
+      }
+    }
+    if (pkg === 'order') {
+      ev({ Action: 'output', Package: P, Output: 'FAIL\n' });
+      ev({ Action: 'output', Package: P, Output: `FAIL\t${P}\t0.015s\n` });
+      ev({ Action: 'fail', Package: P, Elapsed: 0.015 });
+    } else {
+      ev({ Action: 'output', Package: P, Output: 'PASS\n' });
+      ev({ Action: 'output', Package: P, Output: `ok  \t${P}\t0.0${pkg.length}1s\n` });
+      ev({ Action: 'pass', Package: P, Elapsed: 0.02 });
+    }
+  }
+  return L.join('\n') + '\n';
+}
+
+function eslintJson() {
+  const files = [];
+  for (let f = 0; f < 120; f++) {
+    const d = domains[f % domains.length];
+    const messages = [];
+    if (f % 9 === 0) messages.push({ ruleId: 'no-unused-vars', severity: 2, message: `'${pick(nouns)}' is defined but never used.`, line: 3 + f, column: 7, nodeType: 'Identifier', messageId: 'unusedVar', endLine: 3 + f, endColumn: 12 });
+    if (f % 13 === 0) messages.push({ ruleId: 'eqeqeq', severity: 1, message: "Expected '===' and instead saw '=='.", line: 20, column: 15, nodeType: 'BinaryExpression', messageId: 'unexpected', endLine: 20, endColumn: 17 });
+    files.push({ filePath: `/home/dev/shop/src/${d}/${pick(nouns)}${f}.ts`, messages, suppressedMessages: [], errorCount: messages.filter((m) => m.severity === 2).length, fatalErrorCount: 0, warningCount: messages.filter((m) => m.severity === 1).length, fixableErrorCount: 0, fixableWarningCount: 0, usedDeprecatedRules: [] });
+  }
+  return JSON.stringify(files) + '\n';
+}
+
 const fixtures = {
   'pytest-pass.txt': pytestPass(),
   'pytest-fail.txt': pytestFail(),
@@ -1133,6 +1690,21 @@ const fixtures = {
   'git-status.txt': gitStatus(),
   'generic-fail.txt': genericFail(),
   'generic-pass.txt': genericPass(),
+  'mocha-pass.txt': mochaPass(),
+  'mocha-fail.txt': mochaFail(),
+  'mocha-json-fail.txt': mochaJsonFail(),
+  'rspec-fail.txt': rspecFail(),
+  'phpunit-fail.txt': phpunitFail(),
+  'pest-fail.txt': pestFail(),
+  'sbt-test-fail.txt': sbtTestFail(),
+  'sbt-compile-fail.txt': sbtCompileFail(),
+  'xunit-console-fail.txt': xunitConsoleFail(),
+  'nunit-console-fail.txt': nunitConsoleFail(),
+  'dotnet-mtp-fail.txt': dotnetMtpFail(),
+  'bazel-test-fail.txt': bazelTestFail(),
+  'jest-json-fail.txt': jestJsonFail(),
+  'go-test-json-fail.txt': goTestJsonFail(),
+  'eslint-json.txt': eslintJson(),
 };
 for (const [name, text] of Object.entries(fixtures)) out(name, text);
 process.stderr.write(`wrote ${Object.keys(fixtures).length} fixtures to ${DIR}\n`);

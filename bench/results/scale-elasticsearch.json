@@ -1,0 +1,146 @@
+{
+  "repo": "elasticsearch",
+  "commit": "ef9234a09",
+  "files": 50285,
+  "node": "v22.23.3",
+  "platform": "darwin-arm64",
+  "steps": {
+    "connectMs": 125,
+    "firstBuild": {
+      "searchableS": 31.5,
+      "refsReadyS": 82.3,
+      "callsDuringBuild": [
+        {
+          "at": 2.1,
+          "ms": 2015,
+          "text": "index building: 1000/33090 files parsed – use built-in search/read tools until then"
+        },
+        {
+          "at": 4.1,
+          "ms": 1,
+          "text": "index building: 4000/33090 files parsed, ~25 s left – use built-in search/read tools until then"
+        },
+        {
+          "at": 6.2,
+          "ms": 3,
+          "text": "index building: 7000/33090 files parsed, ~25 s left – use built-in search/read tools until then"
+        },
+        {
+          "at": 31.5,
+          "ms": 277,
+          "text": "find \"index shard allocation\" · 3 hits · ~295 tok · +344 more (raise limit or narrow query)"
+        }
+      ]
+    },
+    "concurrentIndex": {
+      "exit": 0,
+      "seconds": 80.1,
+      "output": [
+        "kopt: another kopt process (pid 9169) is indexing <clone>; waiting for it",
+        "indexed 33090 files (0 parsed, 33089 unchanged, 0 deleted) · 572554 symbols · 3801212 refs · 80.0s"
+      ]
+    },
+    "queries": {
+      "p50Ms": 54,
+      "maxMs": 496,
+      "calls": [
+        {
+          "tool": "kopt_find",
+          "args": "{\"query\":\"snapshot restore repository\"}",
+          "ms": 496,
+          "tokens": 677,
+          "head": "find \"snapshot restore repository\" · 8 hits · ~677 tok · +179 more (raise maxTokens or narrow query)"
+        },
+        {
+          "tool": "kopt_find",
+          "args": "{\"query\":\"circuit breaker memory limit\"}",
+          "ms": 246,
+          "tokens": 674,
+          "head": "find \"circuit breaker memory limit\" · 12 hits · ~674 tok · +222 more (raise limit or narrow query)"
+        },
+        {
+          "tool": "kopt_find",
+          "args": "{\"query\":\"IndexShard\"}",
+          "ms": 68,
+          "tokens": 635,
+          "head": "find \"IndexShard\" · 12 hits · ~635 tok · +71 more (raise limit or narrow query)"
+        },
+        {
+          "tool": "kopt_find",
+          "args": "{\"query\":\"how are search requests coordinated across shards\",\"mode\":\"pack\"}",
+          "ms": 291,
+          "tokens": 1351,
+          "head": "pack \"how are search requests coordinated across shards\" · 12 hits · 1 body · ~1351 tok · +161 more (raise limit or narr"
+        },
+        {
+          "tool": "kopt_find",
+          "args": "{\"query\":\"retention lease renewal\",\"mode\":\"pack\"}",
+          "ms": 192,
+          "tokens": 1603,
+          "head": "pack \"retention lease renewal\" · 12 hits · 1 body · ~1603 tok · +29 more (raise limit or narrow query)"
+        },
+        {
+          "tool": "kopt_find",
+          "args": "{\"query\":\"executeBulkRequest\",\"mode\":\"pack\"}",
+          "ms": 54,
+          "tokens": 1120,
+          "head": "pack \"executeBulkRequest\" · 7 hits · 1 body · ~1120 tok"
+        },
+        {
+          "tool": "kopt_read",
+          "args": "{\"target\":\"AllocationService\"}",
+          "ms": 4,
+          "tokens": 2369,
+          "head": "server/src/main/java/org/elasticsearch/cluster/routing/allocation/AllocationService.java:90-1017 #27nw skeleton"
+        },
+        {
+          "tool": "kopt_read",
+          "args": "{\"target\":\"IndexShard.applyIndexOperationOnPrimary\"}",
+          "ms": 3,
+          "tokens": 268,
+          "head": "server/src/main/java/org/elasticsearch/index/shard/IndexShard.java:998-1021 #3dot"
+        },
+        {
+          "tool": "kopt_refs",
+          "args": "{\"target\":\"IndexShard.applyIndexOperationOnPrimary\"}",
+          "ms": 5,
+          "tokens": 833,
+          "head": "refs #3dot IndexShard.applyIndexOperationOnPrimary · 23 usages in 8 files · ~833 tok"
+        },
+        {
+          "tool": "kopt_refs",
+          "args": "{\"target\":\"ClusterState.metadata\"}",
+          "ms": 29,
+          "tokens": 838,
+          "head": "refs #20nf ClusterState.metadata · 1627 usages in 685 files · ~838 tok · +684 more (raise maxTokens or narrow query)"
+        },
+        {
+          "tool": "kopt_outline",
+          "args": "{\"path\":\"server/src/main/java/org/elasticsearch/index/shard\"}",
+          "ms": 9,
+          "tokens": 1160,
+          "head": "outline server/src/main/java/org/elasticsearch/index/shard/ · 31 files · ~1160 tok · +18 more (narrow with path or focus"
+        }
+      ]
+    },
+    "refreshWritten": {
+      "files": 20,
+      "firstCallMs": 593,
+      "visibleInFirstCall": 20
+    },
+    "refreshPulled": {
+      "files": 200,
+      "exit": 0,
+      "seconds": 4.4,
+      "output": "indexed 33090 files (200 parsed, 32889 unchanged, 0 deleted) · 572774 symbols · 3801212 refs · 4.3s",
+      "serverSees": "find \"koptScaleProbePulled\" · 5 hits · ~241 tok · +195 more (raise limit or narrow query)"
+    },
+    "refreshNoop": {
+      "exit": 0,
+      "seconds": 0.9,
+      "output": "indexed 33090 files (0 parsed, 33089 unchanged, 0 deleted) · 572774 symbols · 3801212 refs · 0.8s"
+    },
+    "serverPeakRssMb": 2022,
+    "indexMb": 1067
+  }
+}

@@ -68,7 +68,7 @@ export function outline(store: Store, p: OutlineParams, ctx: ToolContext): ToolR
       case 'ambiguous':
         return result(`"${rel}" names ${t.total} symbols; pass a file or directory path (or kopt_read ${rel})`, maxTokens);
       case 'none':
-        return result(`no file or directory "${rel}"; kopt_outline . shows the repo map`, maxTokens);
+        return result(t.denied ? t.message : `no file or directory "${rel}"; kopt_outline . shows the repo map`, maxTokens);
     }
   });
 }
@@ -208,7 +208,7 @@ function repoMap(store: Store, dir: string, filter: PathFilter | undefined, focu
   }
   files.sort((a, b) => b.score - a.score || (a.path < b.path ? -1 : a.path > b.path ? 1 : 0));
 
-  const headReserve = estimateTokens(`${what} · 9999 files · ~99999 tok${moreSuffix(99999)}`) + 1;
+  const headReserve = estimateTokens(`${what} · 9999 files · ~99999 tok${moreSuffix(99999, 'scope')}`) + 1;
   const budget = tokensToChars(Math.max(0, maxTokens - headReserve));
   const footerReserve = files.length > 20 ? 150 : 0;
   const chosen: Array<{ f: MapFile; line: string }> = [];
@@ -247,7 +247,7 @@ function repoMap(store: Store, dir: string, filter: PathFilter | undefined, focu
     const footer = omittedSummary(files.slice(chosen.length), dir, tokensToChars(maxTokens - headReserve) - used - 2);
     if (footer) out.push(footer);
   }
-  const text = compose((tok) => `${what} · ${plural(chosen.length, 'file')} · ~${tok} tok${moreSuffix(omitted)}`, out.join('\n'), maxTokens);
+  const text = compose((tok) => `${what} · ${plural(chosen.length, 'file')} · ~${tok} tok${moreSuffix(omitted, 'scope')}`, out.join('\n'), maxTokens);
   return result(text, maxTokens, { kind: 'map', files: chosen.length, omitted });
 }
 

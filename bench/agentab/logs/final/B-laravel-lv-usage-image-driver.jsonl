@@ -1,0 +1,2 @@
+{"arm":"B","repo":"laravel","task":"lv-usage-image-driver","rep":1,"ts":"2026-10-09T23:19:23.956Z","ms":435,"cmd":"kopt refs \"Image.resolveDriver\"","kopt":true,"koptSub":"refs","chars":750,"tokens":250,"lines":6,"truncated":false,"exit":0}
+{"arm":"B","repo":"laravel","task":"lv-usage-image-driver","rep":1,"ts":"2026-10-09T23:19:28.270Z","ms":8,"cmd":"grep -n \"function resolveDriver\\|resolveDriver()\\|function toBytes\\|function dimensions\\|function dominantColor\" src/Illuminate/Image/Image.php","kopt":false,"chars":506,"tokens":169,"lines":9,"truncated":false,"exit":0}

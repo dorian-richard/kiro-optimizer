@@ -1,0 +1,118 @@
+{
+  "label": "kirograph",
+  "tool": "kirograph",
+  "package": "kirograph",
+  "version": "1.4.0",
+  "mode": "default",
+  "repo": {
+    "name": "exposed",
+    "url": "https://github.com/JetBrains/Exposed.git",
+    "tag": "1.5.0",
+    "commit": "84361204b6639cad5696506a26595c97afac3531",
+    "language": "kotlin",
+    "path": "bench/repos/exposed"
+  },
+  "headCommit": "84361204b6639cad5696506a26595c97afac3531",
+  "commitMatchesTasks": true,
+  "date": "2026-10-09T12:59:56.158Z",
+  "image": "kopt-bench/kirograph:1.4.0",
+  "imageId": "sha256:bc769b34b739a6d6b3ed1f2954ed9df3e387e6c6dcfc597528ca16d232dac57e",
+  "engine": "docker",
+  "limits": "memory=3g cpus=8",
+  "cgroupMemory": {
+    "maxBytes": 3221225472,
+    "peakBytes": 1184522240,
+    "oomKills": 0
+  },
+  "container": {
+    "node": "v22.23.3",
+    "arch": "arm64",
+    "platform": "linux",
+    "cpus": 10,
+    "memBytes": 8214851584,
+    "network": "none"
+  },
+  "primaryTool": "kirograph_context",
+  "toolArgsExample": {
+    "task": "<input>"
+  },
+  "serverCommand": {
+    "command": "kirograph",
+    "args": [
+      "serve",
+      "--mcp",
+      "--path",
+      "/work/<repo>"
+    ]
+  },
+  "oneSessionPerTask": true,
+  "indexOk": true,
+  "indexMs": 228059,
+  "indexSteps": [
+    {
+      "command": "kirograph init /work/exposed",
+      "ms": 448,
+      "exit": 0,
+      "signal": null,
+      "oomKills": 0
+    },
+    {
+      "command": "kirograph index /work/exposed",
+      "ms": 227611,
+      "exit": 0,
+      "signal": null,
+      "oomKills": 0
+    }
+  ],
+  "copyMs": 10626,
+  "indexDirs": [
+    "<repo>/.kirograph"
+  ],
+  "indexSizeBytes": 93937505,
+  "modelBytes": 0,
+  "indexStatus": "Graph\n  Files      5218\n  Symbols    35628\n  Edges      124179\n  Frameworks spring, docker-compose\n\n  By kind\n  ┌────────────┬──────────────────┐\n  │ variable   │ 17986            │\n  ├────────────┼──────────────────┤\n  │ import     │ 8574             │\n  ├────────────┼──────────────────┤\n  │ function   │ 7657             │\n  ├────────────┼──────────────────┤\n  │ class      │ 1332             │\n  ├────────────┼──────────────────┤\n  │ constant   │ 76               │\n  ├────────────┼──────────────────┤\n  │ type_alias │ 3                │\n  └────────────┴──────────────────┘\n\n  By language\n  ┌────────────┬──────────────────┐\n  │ html       │ 4336             │\n  ├────────────┼──────────────────┤\n  │ kotlin     │ 860              │\n  ├────────────┼──────────────────┤\n  │ sql        │ 8                │\n  ├────────────┼──────────────────┤\n  │ javascript │ 6                │\n  ├────────────┼──────────────────┤\n  │ css        │ 4                │\n  ├────────────┼──────────────────┤\n  │ yaml       │ 4                │\n  └────────────┴──────────────────┘\n\n  Sync\n  Status     idle\n  Pending    16 files pending\n  ⚠ Index may be stale. Run `kirograph sync` to update.\n\n  Semantic Search\n  Status     disabled",
+  "surface": {
+    "serverInfo": {
+      "name": "kirograph",
+      "version": "0.1.0"
+    },
+    "toolCount": 7,
+    "toolNames": [
+      "kirograph_search",
+      "kirograph_context",
+      "kirograph_node",
+      "kirograph_gain",
+      "kirograph_read",
+      "kirograph_retrieve",
+      "kirograph_budget"
+    ],
+    "toolsChars": 4418,
+    "toolsEstTokens": 1473,
+    "instructionsChars": 0,
+    "instructionsEstTokens": 0,
+    "primaryToolListed": true,
+    "file": "kirograph.surface.json"
+  },
+  "inputs": {
+    "search": {
+      "file": "kirograph-exposed.jsonl",
+      "tasks": 12,
+      "failures": 0,
+      "queryMsMedian": 67,
+      "queryMsP90": 95,
+      "startupMsMedian": 202
+    },
+    "question": {
+      "file": "kirograph-exposed-question.jsonl",
+      "tasks": 12,
+      "failures": 7,
+      "queryMsMedian": 24,
+      "queryMsP90": 61,
+      "startupMsMedian": 190
+    }
+  },
+  "charsPerToken": 3,
+  "errors": [
+    "7/12 question queries failed or returned isError"
+  ]
+}

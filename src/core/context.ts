@@ -8,11 +8,38 @@ import type { TelemetryEvent } from './types.js';
  * Kiro compaction replaces MCP tool results with "Tool response contents truncated for brevity",
  * so dedup is bounded by a window (calls + minutes) and every tool accepts `fresh: true` to bypass it.
  */
+/** What a Ledger remembers, as JSON (a CLI session keeps it in a file between calls). */
+export interface LedgerState {
+  calls: number;
+  seen: Array<[string, { call: number; at: number; digest: string }]>;
+  ranges: Array<[string, Array<{ key: string; start: number; end: number }>]>;
+}
+
 export class Ledger {
   private calls = 0;
   private seen = new Map<string, { call: number; at: number; digest: string }>();
+  /** Line ranges sent per path (a symbol inside an already-sent range is "unchanged" too). */
+  readonly ranges = new Map<string, Array<{ key: string; start: number; end: number }>>();
 
   constructor(private readonly windowCalls: number, private readonly windowMinutes: number, private readonly enabled = true) {}
+
+  /** The entries still inside the dedup window, as JSON. */
+  toState(now = Date.now()): LedgerState {
+    const seen = [...this.seen.entries()].filter(([, e]) => this.calls - e.call <= this.windowCalls && now - e.at <= this.windowMinutes * 60_000);
+    const keep = new Set(seen.map(([k]) => k));
+    const ranges = [...this.ranges.entries()].map(([p, arr]) => [p, arr.filter((r) => keep.has(r.key))] as [string, typeof arr]).filter(([, arr]) => arr.length);
+    return { calls: this.calls, seen, ranges };
+  }
+
+  /** Restores a saved state (ignored when malformed). */
+  load(state: unknown): void {
+    const st = state as Partial<LedgerState> | undefined;
+    if (!st || typeof st.calls !== 'number' || !Array.isArray(st.seen) || !Array.isArray(st.ranges)) return;
+    this.calls = st.calls;
+    this.seen = new Map(st.seen);
+    this.ranges.clear();
+    for (const [p, arr] of st.ranges) this.ranges.set(p, arr);
+  }
 
   /** Must be called once per tool invocation. */
   tick(): number {

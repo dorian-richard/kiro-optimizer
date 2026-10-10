@@ -4,6 +4,7 @@ export { find } from './find.js';
 export { read } from './read.js';
 export { outline } from './outline.js';
 export { refs } from './refs.js';
+export { failureContext } from './failures.js';
 export { resolveTarget, type ResolvedTarget, type SymbolCandidate } from './resolve.js';
 export { search, type Candidate, type SearchResult } from './search.js';
 export { type Extractor, setExtractor, setReextract, settleExtractions } from './source.js';

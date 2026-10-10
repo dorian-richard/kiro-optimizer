@@ -1,0 +1,302 @@
+
+ RUN  v3.2.7 /home/dev/shop
+
+(node:21605) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:21598) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+[perf] kopt hook (malformed input, via tsx): 117ms
+(node:21604) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/kiro.test.ts (11 tests) 3103ms
+   ✓ suggestKiroignore > excludes token sinks and never regular sources or build configuration  341ms
+   ✓ suggestKiroignore > collapses many output dirs into one pattern only when no source dir shares the name  366ms
+   ✓ installKiro > installs into a workspace, merging with existing configuration  327ms
+   ✓ installKiro > per-project mode (<root>/.kopt exists): ignores .kopt in git and in agent reads  351ms
+   ✓ installKiro > keeps user-edited kopt files unless forced, but updates files it wrote itself  311ms
+   ✓ installKiro > refreshes a stale kopt server entry while keeping user fields, and refuses to clobber invalid JSON  478ms
+[perf] kopt mcp spawn -> tools/list (via tsx): 1080ms
+(node:23263) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/hooks-shell.test.ts (4 tests) 5641ms
+   ✓ kopt hook through a shell > allow path: exit 0, empty stdout, empty stderr  3341ms
+   ✓ kopt hook through a shell > block path: exit 2 with a one-line reason on stderr and nothing on stdout  678ms
+   ✓ kopt hook through a shell > never leaks the node:sqlite ExperimentalWarning (SessionStart opens the index)  739ms
+   ✓ kopt hook through a shell > IDE 0.x legacy invocation: no stdin payload (pipe left open), data in USER_PROMPT, returns at once  875ms
+ ✓ test/bench-ab.test.ts (12 tests) 7011ms
+   ✓ run-kiro-cli-ab.sh with stubs > runs the plan, isolates arms, parses and analyzes  6895ms
+ ✓ test/indexer.index.test.ts (25 tests) 5979ms
+   ✓ git listing and workers > lists files through git (untracked included, .gitignore honored) and records HEAD  802ms
+   ✓ git listing and workers > bulk-loads with secondary indexes dropped, then restores them  684ms
+   ✓ git listing and workers > produces the same index with the worker pool  1368ms
+(node:25009) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/xplat.test.ts (48 tests | 1 skipped) 1841ms
+   ✓ parse worker pool > parses in worker threads with the same results as in-process  559ms
+ ✓ test/doctor.test.ts (3 tests) 2161ms
+   ✓ kopt doctor > passes every check after setup: silent allow path, exit-2 block path, MCP server with 6 tools  1917ms
+(node:25430) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/compress.lifecycle.test.ts (9 tests) 7412ms
+   ✓ stop signals kill running command trees > SIGTERM to `kopt run` kills the command it started  1294ms
+   ✓ stop signals kill running command trees > SIGINT to `kopt run` kills the command it started  1147ms
+   ✓ stop signals kill running command trees > SIGHUP to `kopt run` kills the command it started  1456ms
+   ✓ stop signals kill running command trees > removes its signal listeners once no command runs  351ms
+   ✓ commands that never exit > are refused with a one-line hint unless timeoutSec is given  2031ms
+   ✓ result size > small outputs come back as they are under a one-line exit header  368ms
+[size] tools/list: 2819 chars ~940 tok; instructions: 374 chars ~125 tok
+ ✓ test/bench-failures.test.ts (13 tests) 1751ms
+   ✓ analyzeFailures on a real index > classifies a callers line without paths (d), a missing symbol (c) and a ranking miss (a)  306ms
+   ✓ competitor results > runBench adds competitors that have a results file and scores them  447ms
+(node:26197) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:25940) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:25169) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/bench.test.ts (23 tests) 2732ms
+   ✓ nativeGrep > greps the most selective keywords first and broadens while under the cap  452ms
+   ✓ native strategies > native-ranged: ±context windows around the best matches, overlaps merged  394ms
+   ✓ runBench > drives kopt strategies through the retrieval contract (injected modules)  301ms
+kopt: find failed: database is not open
+kopt: read failed: database is not open
+kopt: outline failed: database is not open
+kopt: refs failed: database is not open
+ ✓ test/mcp.test.ts (13 tests) 1919ms
+   ✓ LocalRepo lifecycle > answers "index building" while the first build runs, then serves the store  464ms
+   ✓ LocalRepo lifecycle > refreshes on dirty marker / interval, one at a time, without blocking calls on slow refreshes  617ms
+   ✓ user-level server: project root after initialize > falls back to KOPT_ROOT, then to the git root of the cwd, when the client has no roots (Kiro IDE 0.12)  316ms
+ ✓ test/retrieval.test.ts (46 tests) 823ms
+ ✓ test/hooks.test.ts (34 tests) 1351ms
+   ✓ UserPromptSubmit front-load > skips when retrieval exceeds the time limit and survives a missing retrieval module  404ms
+   ✓ UserPromptSubmit front-load > closes the index it opened when retrieval fails or is too slow (an open handle locks index.db on Windows)  404ms
+ ✓ test/indexer.extract.test.ts (24 tests) 1270ms
+   ✓ best-effort languages > php, ruby, scala  439ms
+(node:27084) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/setup.test.ts (25 tests) 11322ms
+   ✓ kopt setup (user level, temp HOME) > generates a CLI 2.x agent the real kiro-cli accepts and selects as default (temp HOME)  2933ms
+   ✓ Kiro IDE 0.x legacy workspace hooks > writes a valid 0.12 .kiro.hook, excludes it from git, keeps user edits, and is removed by uninstall  378ms
+   ✓ global install (temp npm prefix) > installs from an npx cache copy into the global prefix with real npm  3998ms
+   ✓ global install (temp npm prefix) > packs a built npx copy as-is (no prepare, no symlink into the npx cache) and installs the tarball  3437ms
+(node:27085) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/telemetry.test.ts (7 tests) 58ms
+
+compression @900 tok:
+pytest-pass.txt          11500 -> 18 tok (99.8%)
+pytest-fail.txt          13013 -> 318 tok (97.6%)
+unittest-fail.txt        602 -> 223 tok (63.0%)
+jest-pass.txt            12533 -> 27 tok (99.8%)
+jest-fail.txt            1608 -> 358 tok (77.7%)
+vitest-pass.txt          2401 -> 24 tok (99.0%)
+vitest-fail.txt          1626 -> 125 tok (92.3%)
+maven-pass.txt           8418 -> 39 tok (99.5%)
+maven-compile-fail.txt   3071 -> 272 tok (91.1%)
+maven-test-fail.txt      3680 -> 263 tok (92.9%)
+gradle-pass.txt          4287 -> 27 tok (99.4%)
+gradle-fail.txt          1101 -> 274 tok (75.1%)
+dotnet-build-pass.txt    5210 -> 30 tok (99.4%)
+dotnet-build-fail.txt    630 -> 147 tok (76.7%)
+dotnet-test-fail.txt     830 -> 239 tok (71.2%)
+go-test-pass.txt         7254 -> 18 tok (99.8%)
+go-test-fail.txt         1539 -> 298 tok (80.6%)
+tsc-fail.txt             3459 -> 350 tok (89.9%)
+tsc-pretty-fail.txt      240 -> 141 tok (41.3%)
+eslint-fail.txt          5204 -> 178 tok (96.6%)
+npm-install.txt          628 -> 41 tok (93.5%)
+npm-build-fail.txt       2386 -> 212 tok (91.1%)
+cargo-test-pass.txt      5311 -> 23 tok (99.6%)
+cargo-build-fail.txt     2248 -> 182 tok (91.9%)
+cargo-test-fail.txt      2111 -> 98 tok (95.4%)
+git-log.txt              4405 -> 888 tok (79.8%)
+git-diff.txt             5268 -> 811 tok (84.6%)
+git-status.txt           655 -> 92 tok (86.0%)
+generic-fail.txt         4629 -> 188 tok (95.9%)
+generic-pass.txt         9031 -> 70 tok (99.2%)
+mocha-pass.txt           6903 -> 10 tok (99.9%)
+mocha-fail.txt           4445 -> 188 tok (95.8%)
+mocha-json-fail.txt      27323 -> 157 tok (99.4%)
+rspec-fail.txt           4368 -> 188 tok (95.7%)
+phpunit-fail.txt         462 -> 175 tok (62.1%)
+pest-fail.txt            6366 -> 86 tok (98.6%)
+sbt-test-fail.txt        4086 -> 171 tok (95.8%)
+sbt-compile-fail.txt     932 -> 167 tok (82.1%)
+xunit-console-fail.txt   441 -> 193 tok (56.2%)
+nunit-console-fail.txt   546 -> 198 tok (63.7%)
+dotnet-mtp-fail.txt      383 -> 101 tok (73.6%)
+bazel-test-fail.txt      3837 -> 313 tok (91.8%)
+jest-json-fail.txt       32718 -> 182 tok (99.4%)
+go-test-json-fail.txt    25630 -> 67 tok (99.7%)
+eslint-json.txt          10107 -> 519 tok (94.9%)
+ ✓ test/compress.filters.test.ts (79 tests) 723ms
+ ✓ test/indexer.resolve.test.ts (9 tests) 837ms
+ ✓ test/retrieval.stale.test.ts (7 tests) 818ms
+   ✓ staleness > tolerates a missing or broken indexer module  463ms
+ ✓ test/hooks-commands.test.ts (5 tests) 12ms
+ ❯ test/compress.command.test.ts (111 tests | 1 failed) 19ms
+   ✓ longRunningReason > npm run dev never exits 4ms
+   ✓ longRunningReason > npm start never exits 0ms
+   ✓ longRunningReason > npm run start:dev never exits 0ms
+   ✓ longRunningReason > npm run test:watch never exits 0ms
+   ✓ longRunningReason > npm run build -- --watch never exits 0ms
+   ✓ longRunningReason > yarn dev never exits 0ms
+   ✓ longRunningReason > pnpm dev never exits 0ms
+   ✓ longRunningReason > bun run dev never exits 0ms
+   ✓ longRunningReason > npx vite never exits 0ms
+   ✓ longRunningReason > vite preview never exits 0ms
+   ✓ longRunningReason > npx next dev never exits 0ms
+   ✓ longRunningReason > ng serve never exits 0ms
+   ✓ longRunningReason > ng test never exits 0ms
+   ✓ longRunningReason > npx tsc --watch never exits 0ms
+   ✓ longRunningReason > tsc -w -p . never exits 0ms
+   ✓ longRunningReason > tsc -b --watch never exits 0ms
+   ✓ longRunningReason > npx jest --watch never exits 0ms
+   ✓ longRunningReason > jest --watchAll never exits 0ms
+   ✓ longRunningReason > vitest watch never exits 0ms
+   ✓ longRunningReason > vitest --watch never exits 0ms
+   ✓ longRunningReason > webpack serve never exits 0ms
+   ✓ longRunningReason > webpack -w never exits 0ms
+   ✓ longRunningReason > node --watch app.js never exits 0ms
+   ✓ longRunningReason > nodemon server.js never exits 0ms
+   ✓ longRunningReason > ./gradlew bootRun never exits 0ms
+   ✓ longRunningReason > ./gradlew :app:bootRun never exits 0ms
+   ✓ longRunningReason > gradle run never exits 0ms
+   ✓ longRunningReason > gradle build --continuous never exits 0ms
+   ✓ longRunningReason > gradle test -t never exits 0ms
+   ✓ longRunningReason > mvn spring-boot:run never exits 0ms
+   ✓ longRunningReason > ./mvnw quarkus:dev never exits 0ms
+   ✓ longRunningReason > mvn jetty:run never exits 0ms
+   ✓ longRunningReason > sbt ~test never exits 0ms
+   ✓ longRunningReason > python manage.py runserver never exits 0ms
+   ✓ longRunningReason > flask run never exits 0ms
+   ✓ longRunningReason > uvicorn app.main:app --reload never exits 0ms
+   ✓ longRunningReason > python -m http.server 8000 never exits 0ms
+   ✓ longRunningReason > bin/rails server never exits 0ms
+   ✓ longRunningReason > bundle exec rails s never exits 0ms
+   ✓ longRunningReason > php artisan serve never exits 0ms
+   ✓ longRunningReason > php -S localhost:8000 never exits 0ms
+   ✓ longRunningReason > dotnet watch test never exits 0ms
+   ✓ longRunningReason > cargo watch -x test never exits 0ms
+   ✓ longRunningReason > docker compose up never exits 0ms
+   ✓ longRunningReason > docker-compose up --build never exits 0ms
+   ✓ longRunningReason > kubectl logs -f deploy/api never exits 0ms
+   ✓ longRunningReason > kubectl port-forward svc/api 8080:80 never exits 0ms
+   ✓ longRunningReason > tail -f build.log never exits 0ms
+   ✓ longRunningReason > celery -A proj worker never exits 0ms
+   ✓ longRunningReason > cd web && npm run dev never exits 0ms
+   ✓ longRunningReason > npm test exits by itself 0ms
+   ✓ longRunningReason > npm run build exits by itself 0ms
+   ✓ longRunningReason > npm run build:dev exits by itself 0ms
+   ✓ longRunningReason > npm test -w packages/api exits by itself 0ms
+   ✓ longRunningReason > npm run test -- --watch=false exits by itself 0ms
+   ✓ longRunningReason > npx jest --watchAll=false exits by itself 0ms
+   ✓ longRunningReason > npx jest -w 4 exits by itself 0ms
+   ✓ longRunningReason > jest --ci exits by itself 0ms
+   ✓ longRunningReason > vitest exits by itself 0ms
+   ✓ longRunningReason > npx vitest run exits by itself 0ms
+   ✓ longRunningReason > vite build exits by itself 0ms
+   ✓ longRunningReason > next build exits by itself 0ms
+   ✓ longRunningReason > next lint exits by itself 0ms
+   ✓ longRunningReason > ng test --watch=false exits by itself 0ms
+   ✓ longRunningReason > ng test --no-watch exits by itself 0ms
+   ✓ longRunningReason > ng build exits by itself 0ms
+   ✓ longRunningReason > tsc --noEmit exits by itself 0ms
+   ✓ longRunningReason > tsc -b exits by itself 0ms
+   ✓ longRunningReason > ./gradlew test exits by itself 0ms
+   ✓ longRunningReason > gradle build exits by itself 0ms
+   ✓ longRunningReason > mvn -q test exits by itself 0ms
+   ✓ longRunningReason > mvn spring-boot:build-image exits by itself 0ms
+   ✓ longRunningReason > sbt test exits by itself 0ms
+   ✓ longRunningReason > python manage.py test exits by itself 0ms
+   ✓ longRunningReason > pytest -x exits by itself 0ms
+   ✓ longRunningReason > dotnet test exits by itself 0ms
+   ✓ longRunningReason > dotnet run exits by itself 0ms
+   ✓ longRunningReason > cargo test exits by itself 0ms
+   ✓ longRunningReason > go test ./... exits by itself 0ms
+   ✓ longRunningReason > docker compose up -d exits by itself 0ms
+   ✓ longRunningReason > docker compose logs api exits by itself 0ms
+   ✓ longRunningReason > kubectl get pods exits by itself 0ms
+   ✓ longRunningReason > tail -n 50 build.log exits by itself 0ms
+   ✓ longRunningReason > git log --follow -- src/a.ts exits by itself 0ms
+   ✓ longRunningReason > grep -w foo src exits by itself 0ms
+   ✓ longRunningReason > curl -w "%{http_code}" http://localhost:3000 exits by itself 0ms
+   ✓ longRunningReason > timeout 30 npm run dev exits by itself 0ms
+   ✓ longRunningReason > npm run dev & sleep 5 && curl localhost:3000 exits by itself 0ms
+   ✓ longRunningReason > & .\gradlew.bat test exits by itself 0ms
+   ✓ longRunningReason > symfony server:start -d exits by itself 0ms
+   × longRunningReason > names the reason in a few words 7ms
+     → expected '--watch never exits' to be '--watch runs forever' // Object.is equality
+   ✓ isCacheableCommand > npm test may be answered from cache 0ms
+   ✓ isCacheableCommand > npm test -w packages/api may be answered from cache 0ms
+   ✓ isCacheableCommand > npx jest -w 4 may be answered from cache 0ms
+   ✓ isCacheableCommand > bazel test //... may be answered from cache 0ms
+   ✓ isCacheableCommand > sbt test may be answered from cache 0ms
+   ✓ isCacheableCommand > sbt "testOnly com.acme.FooSpec" may be answered from cache 0ms
+   ✓ isCacheableCommand > bundle exec rspec may be answered from cache 0ms
+   ✓ isCacheableCommand > vendor/bin/phpunit may be answered from cache 0ms
+   ✓ isCacheableCommand > php artisan test may be answered from cache 0ms
+   ✓ isCacheableCommand > npx mocha may be answered from cache 0ms
+   ✓ isCacheableCommand > rake test may be answered from cache 0ms
+   ✓ isCacheableCommand > golangci-lint run may be answered from cache 0ms
+   ✓ isCacheableCommand > npm run dev is never cached 0ms
+   ✓ isCacheableCommand > npx jest --watch is never cached 0ms
+   ✓ isCacheableCommand > bazel run //app is never cached 0ms
+   ✓ isCacheableCommand > sbt run is never cached 0ms
+   ✓ isCacheableCommand > sbt publish is never cached 0ms
+   ✓ isCacheableCommand > php artisan migrate is never cached 0ms
+   ✓ isCacheableCommand > rake db:migrate is never cached 0ms
+   ✓ isCacheableCommand > make test is never cached 0ms
+ ✓ test/compress.runner.test.ts (20 tests) 11776ms
+   ✓ runCommand > compresses a long successful run, stores the log and points to it  428ms
+   ✓ runCommand > keeps small outputs verbatim, merges stdout/stderr in arrival order, no expand pointer  400ms
+   ✓ runCommand > kills the whole process tree on timeout  3348ms
+   ✓ dedup cache (git workspace) > serves an identical re-run from cache until a file changes  5405ms
+   ✓ dedup cache (git workspace) > never caches non-deterministic commands  318ms
+   ✓ dedup cache (git workspace) > git commands use the git filter and are cacheable  492ms
+ ✓ test/cli.test.ts (14 tests) 17201ms
+   ✓ kopt hook > exits 0 on empty stdin and on non-object JSON  584ms
+   ✓ kopt hook > passes a well-formed event to the hooks module and never fails the session  609ms
+   ✓ kopt CLI > lists every command in --help  499ms
+   ✓ kopt CLI > reports usage errors on stderr with a non-zero exit  519ms
+   ✓ kopt CLI > init --dry-run lists the files it would write  978ms
+   ✓ kopt CLI > stats prints a report from an empty telemetry dir  362ms
+   ✓ kopt mcp (stdio) > speaks clean MCP on stdout and lists the 6 tools  3050ms
+   ✓ kopt run (end to end, needs compress) > quotes argv, prints compact output and propagates failure  1742ms
+   ✓ kopt find (end to end, needs indexer + retrieval) > indexes a tiny repo on first use and prints hits  2380ms
+   ✓ kopt mcp first build (worker thread, needs indexer + retrieval) > builds the index in the background and answers once ready  2568ms
+   ✓ zero-config commands (temp HOME) > setup --dry-run --no-global plans the user-level files and writes nothing  342ms
+   ✓ zero-config commands (temp HOME) > setup then doctor --quick then uninstall  1512ms
+   ✓ zero-config commands (temp HOME) > kopt mcp without --root serves the git root of its cwd, and nothing in a home directory  1920ms
+ ✓ test/compress.cache.test.ts (7 tests) 15731ms
+   ✓ workspace fingerprint: ignored state > env files and installed dependencies are inputs  1007ms
+   ✓ workspace fingerprint: ignored state > build outputs are part of the key but not of the inputs; caches and logs are ignored  628ms
+   ✓ workspace fingerprint without git: skipped dirs > tracks dependency markers and build outputs, not their whole content  547ms
+   ✓ kopt_run cache and ignored state > re-runs after a gitignored .env or a dependency install changes (no stale verdict)  2967ms
+   ✓ kopt_run cache and ignored state > does not cache a run during which a file changed, then caches the next one  5222ms
+   ✓ kopt_run cache and ignored state > a command that writes its own ignored build output is still cached  1635ms
+   ✓ kopt_run cache and ignored state > joins an identical run in progress instead of starting it twice  3186ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/compress.command.test.ts > longRunningReason > names the reason in a few words
+AssertionError: expected '--watch never exits' to be '--watch runs forever' // Object.is equality
+
+Expected: "--watch runs forever"
+Received: "--watch never exits"
+
+ ❯ test/compress.command.test.ts:109:50
+    107|   it('names the reason in a few words', () => {
+    108|     expect(longRunningReason('npm run dev')).toBe('script "dev" usuall…
+    109|     expect(longRunningReason('npx tsc --watch')).toBe('--watch runs fo…
+       |                                                  ^
+    110|     expect(longRunningReason('ng test')).toBe('ng test watches by defa…
+    111|     expect(longRunningReason('./gradlew bootRun')).toBe('run task runs…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 22 passed (23)
+      Tests  1 failed | 547 passed | 1 skipped (549)
+   Start at  16:25:28
+   Duration  18.48s (transform 4.80s, setup 0ms, collect 19.29s, tests 101.49s, environment 2ms, prepare 2.20s)

@@ -1,0 +1,69 @@
+{
+  "repo": {
+    "name": "gitea",
+    "url": "https://github.com/go-gitea/gitea.git",
+    "tag": "v28.1.0",
+    "commit": "4ebd5e319b6a9e629bfd7a04292a6fe85b08dee9",
+    "language": "go",
+    "path": "bench/repos/gitea"
+  },
+  "notes": "Held-out tasks (round 2), written after v0.2's tuning and before any kopt measurement on them; not derived from bench/results/failures.md. Gold read in the code with git grep and sed only. Re-check with `kopt bench bench/tasks-heldout/gitea.json --verify`.",
+  "tasks": [
+    {
+      "id": "ho-gt-locate-webhook-signature",
+      "kind": "locate",
+      "lang": "en",
+      "question": "Where does Gitea compute the HMAC signature headers that are sent with webhook deliveries?",
+      "search": "webhook signature hmac sha256 header secret delivery",
+      "gold": {
+        "files": [
+          "services/webhook/deliver.go"
+        ],
+        "symbols": [
+          {
+            "name": "addDefaultHeaders",
+            "file": "services/webhook/deliver.go",
+            "line": 94,
+            "kind": "function"
+          }
+        ]
+      },
+      "verifiedBy": "Read services/webhook/deliver.go: addDefaultHeaders computes HMAC-SHA1 and HMAC-SHA256 of the payload with the webhook secret and sets X-Gitea-Signature, X-Hub-Signature(-256) and friends."
+    },
+    {
+      "id": "ho-gt-usage-default-headers",
+      "kind": "usage",
+      "lang": "en",
+      "question": "Which functions call addDefaultHeaders in the webhook service?",
+      "search": "addDefaultHeaders",
+      "gold": {
+        "files": [
+          "services/webhook/deliver.go",
+          "services/webhook/matrix.go",
+          "services/webhook/payloader.go"
+        ],
+        "symbols": [
+          {
+            "name": "newDefaultRequest",
+            "file": "services/webhook/deliver.go",
+            "line": 34,
+            "kind": "function"
+          },
+          {
+            "name": "newMatrixRequest",
+            "file": "services/webhook/matrix.go",
+            "line": 32,
+            "kind": "function"
+          },
+          {
+            "name": "prepareJSONRequest",
+            "file": "services/webhook/payloader.go",
+            "line": 101,
+            "kind": "function"
+          }
+        ]
+      },
+      "verifiedBy": "git grep 'addDefaultHeaders(' over services/: deliver.go L91 (newDefaultRequest), matrix.go L60 (newMatrixRequest), payloader.go L119 (prepareJSONRequest)."
+    }
+  ]
+}

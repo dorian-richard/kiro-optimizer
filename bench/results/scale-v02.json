@@ -1,0 +1,85 @@
+{
+  "schema": "kopt-scale-v02/1",
+  "date": "2026-10-09",
+  "summary": "Big-repository check of the v0.2 indexing changes: before = fe64765 plus only the stack-overflow fix (654422d), after = 42930b0. Both builds run back to back on the same clones, mostly at load 3-10, macOS on Apple silicon (10 cores, 16 GB RAM), Node v22.23.3. kopt driven the way Kiro does: an MCP client sending the project root, the hook commands as kopt setup writes them, and the CLI. Only macOS was measured.",
+  "source": "scale-fix measurement report of the v0.2 integration (scripts and raw results kept outside the repository: idx2.sh, cold-bench.mjs, resp-bench.mjs, incr2.sh, run-bench2.mjs, concurrent2.sh, hook-bench.mjs)",
+  "builds": { "before": "fe64765 + 654422d", "after": "42930b0" },
+  "machine": { "os": "macOS 27", "cpu": "Apple silicon, 10 cores", "memoryGB": 16, "node": "v22.23.3" },
+  "repos": [
+    { "id": "elasticsearch", "name": "elastic/elasticsearch", "commit": "ef9234a", "language": "Java", "trackedFiles": 50285, "indexedFiles": 33090 },
+    { "id": "vscode", "name": "microsoft/vscode", "commit": "dd036a1", "language": "TypeScript", "trackedFiles": 20323, "indexedFiles": 14713 }
+  ],
+  "tables": [
+    {
+      "id": "cli-first-build",
+      "title": "First build from the CLI (kopt index)",
+      "columns": ["elasticsearch before", "elasticsearch after", "vscode before", "vscode after"],
+      "rows": [
+        { "label": "wall time", "values": ["124.3 s", "79.5 s", "28.5 s", "27.9 s"] },
+        { "label": "user CPU", "values": ["205 s", "155 s", "88 s", "79 s"] },
+        { "label": "reference resolution", "values": ["89.4 s", "46.3 s", "12.6 s", "10.0 s"] },
+        { "label": "peak memory (RSS)", "values": ["2.12 GB", "2.04 GB", "1.66 GB", "1.59 GB"] },
+        { "label": "index on disk", "values": ["1,048 MB", "941 MB", "381 MB", "338 MB"] },
+        { "label": "references resolved", "values": ["2,230,249", "2,230,247", "762,233", "762,234"] }
+      ],
+      "notes": [
+        "The 1-2 reference differences come from which of two same-named declarations gets the lower symbol id; a forced full re-resolve of the same index gives identical checksums with both builds.",
+        "An 8 GB laptop simulated on elasticsearch (2 GB heap, 2 parse workers): the build completes in 98 s with 2.03 GB peak memory."
+      ]
+    },
+    {
+      "id": "mcp-first-build",
+      "title": "First build through MCP, as Kiro does it (fresh cache, kopt_find and kopt_refs called every 3 s)",
+      "columns": ["elasticsearch before", "elasticsearch after", "vscode before", "vscode after"],
+      "rows": [
+        { "label": "first kopt_find answer", "values": ["132 s", "32 s", "30.5 s", "17.7 s"] },
+        { "label": "first kopt_refs answer", "values": ["132 s", "87 s", "27.5 s", "29.0 s"] },
+        { "label": "\"building\" answers / total time they blocked", "values": ["8 / 120 s", "25 / 11 s", "1 / 15 s", "3 / 5 s"] },
+        { "label": "memory 70 s after the build", "values": ["520 MB", "422 MB", "573 MB", "553 MB"] }
+      ],
+      "notes": [
+        "A call during the build answers almost at once, for example: index building: 15000/33090 files parsed, ~20 s left – use built-in search/read tools until then."
+      ]
+    },
+    {
+      "id": "mcp-freeze",
+      "title": "Warm MCP server while the index changes (a tools/list every 100 ms measures how long other calls are frozen)",
+      "columns": ["elasticsearch before", "elasticsearch after", "vscode before", "vscode after"],
+      "rows": [
+        { "label": "50 files edited, reported by the hooks: longest freeze", "values": ["1,679 ms", "15 ms", "695 ms", "10 ms"] },
+        { "label": "git checkout of those 50 files: longest freeze", "values": ["2,042 ms", "91 ms", "558 ms", "65 ms"] },
+        { "label": "40 searches 2 s apart: p95 / max latency", "values": ["939 / 1,744 ms", "336 / 841 ms", "133 / 438 ms", "136 / 143 ms"] }
+      ],
+      "notes": ["The search right after an edit still finds the new code (it waits at most 2 s for those files)."]
+    },
+    {
+      "id": "es-other",
+      "title": "Other measurements on elasticsearch",
+      "columns": ["before", "after"],
+      "rows": [
+        { "label": "kopt index --refresh, 50 files edited", "values": ["4.8 s", "3.0 s"] },
+        { "label": "kopt index --refresh, 1 new file", "values": ["2.65 s", "1.1 s"] },
+        { "label": "kopt index --refresh, nothing changed or 1 file edited", "values": ["about 1-1.5 s", "about 1-1.5 s"] },
+        { "label": "full re-resolve of an existing index", "values": ["still running after 651 s (stopped)", "39-44 s"] },
+        { "label": "200 call-chain lookups after a full pass", "values": ["6,577 ms", "10 ms"] },
+        { "label": "prompt hook (UserPromptSubmit), p50", "values": ["286 ms", "171 ms"] },
+        { "label": "other hooks", "values": ["45-55 ms", "45-55 ms"] },
+        { "label": "kopt_run git log -n 3000", "values": ["1,248 ms", "706 ms"] },
+        { "label": "other calls frozen during that kopt_run", "values": ["581 ms", "51 ms"] }
+      ],
+      "notes": []
+    }
+  ],
+  "quality": [
+    "elasticsearch: 27 of 29 queries return the same top hits with both builds; the 2 that differ are vague plain-language queries.",
+    "Offline benchmark (kopt-pack and kopt-hits+read on spring-framework, django, medusa, gitea): same tasks found, same recall, same tokens.",
+    "Per-lookup proxy on elasticsearch, unchanged between the builds: 20 lookups through kopt (kopt_find, then kopt_read of the first handle) cost 26,869 tokens, against 419,941 for the native path (a grep of the identifier, then a read_file of the file holding the answer, capped at 2,000 lines): -94%. It is an upper bound: it assumes the agent uses kopt for every lookup.",
+    "kopt_run reduces 831k tokens of raw git log output to about 880.",
+    "Before the stack-overflow fix, kopt answered nothing on a repository of elasticsearch's size."
+  ],
+  "caveats": [
+    "Only macOS was measured; the new code (lock file, git-state stamp, worker thread, async git calls) uses only portable Node APIs.",
+    "Peak memory on elasticsearch is still about 2 GB during the first build, and varies by about 150 MB from run to run on macOS.",
+    "The final v0.2 build (983e221) was not re-measured at this scale; bench/results/scale-elasticsearch.md is a later re-check with the round-2 build through bench/scale/run.mjs."
+  ]
+}

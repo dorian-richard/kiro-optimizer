@@ -1,5 +1,5 @@
 import type { Node } from 'web-tree-sitter';
-import { baseTypeName, Ex, isConstName, isUpperStart, Vars, type Scope } from '../extract.js';
+import { baseTypeName, declaredType, Ex, isConstName, isUpperStart, Vars, type Scope } from '../extract.js';
 import type { SymbolKind } from '../../core/types.js';
 
 const TYPE_NODES = ['type_identifier'];
@@ -23,7 +23,7 @@ function stringValue(node: Node | null | undefined): string | undefined {
 function annotationType(node: Node | null | undefined): string | undefined {
   if (!node) return undefined;
   const inner = node.type === 'type_annotation' ? node.namedChildren[0] : node;
-  return inner ? baseTypeName(inner.text) : undefined;
+  return inner ? declaredType(inner.text) : undefined;
 }
 
 function isPrivate(member: Node, nameNode: Node | null): boolean {
@@ -367,8 +367,9 @@ function importStmt(ex: Ex, node: Node, scope: Scope): void {
 function exportStmt(ex: Ex, node: Node, scope: Scope): void {
   const source = stringValue(node.childForFieldName('source'));
   if (source) {
-    // re-export: `export { a } from './x'`, `export * from './x'`
+    // re-export: `export { a } from './x'`, `export * from './x'` (recorded as an import of `*`)
     ex.addImport(source);
+    if (!node.namedChildren.some((c) => c?.type === 'export_clause' || c?.type === 'namespace_export')) ex.addRef(scope, '*', 'import', node, source);
     for (const c of node.namedChildren) {
       if (c?.type !== 'export_clause') continue;
       for (const s of c.namedChildren) {
@@ -457,9 +458,31 @@ function declaration(ex: Ex, decl: Node, scope: Scope, outer: Node, exported: bo
   }
 }
 
+/** The function of an immediately invoked function expression: `(function () {...})()`, `(() => {...})()`, `(function () {...}).call(this)`. */
+function iifeFunction(fn: Node | null): Node | null {
+  let f = fn;
+  if (f?.type === 'member_expression') {
+    const prop = f.childForFieldName('property')?.text;
+    if (prop !== 'call' && prop !== 'apply') return null;
+    f = f.childForFieldName('object');
+  }
+  while (f?.type === 'parenthesized_expression') f = f.namedChildren[0];
+  return f && FUNCTION_VALUES.has(f.type) ? f : null;
+}
+
 function callExpr(ex: Ex, node: Node, scope: Scope): void {
   const fn = node.childForFieldName('function');
   const args = node.childForFieldName('arguments');
+  // Module pattern of pre-ES-module scripts (jQuery plugins, AngularJS 1.x files): a top-level IIFE holds the
+  // file's declarations, which are indexed as if they were top-level.
+  const iife = scope.local ? null : iifeFunction(fn);
+  if (iife) {
+    const body = iife.childForFieldName('body');
+    if (body?.type === 'statement_block') ex.visitChildren(body, scope);
+    else if (body) ex.visit(ex, body, { ...scope, local: true });
+    if (args) ex.visitChildren(args, scope);
+    return;
+  }
   if (fn) {
     if (fn.type === 'identifier') {
       const text = fn.text;
@@ -468,15 +491,16 @@ function callExpr(ex: Ex, node: Node, scope: Scope): void {
         if (spec) ex.addImport(spec);
         return;
       }
-      ex.addRef(scope, ex.dealias(text), 'call', fn);
+      ex.noteCall(node, ex.addRef(scope, ex.dealias(text), 'call', fn));
     } else if (fn.type === 'member_expression') {
       const prop = fn.childForFieldName('property');
       const obj = fn.childForFieldName('object');
-      if (prop) {
-        const q = obj?.text;
-        ex.addRef(scope, prop.text.replace(/^#/, ''), 'call', prop, q, ex.receiverHint(q, scope));
+      const ref = prop ? ex.addRef(scope, prop.text.replace(/^#/, ''), 'call', prop, obj?.text, ex.receiverHint(obj?.text, scope)) : undefined;
+      ex.noteCall(node, ref);
+      if (obj) {
+        ex.visit(ex, obj, scope);
+        ex.chainHint(ref, obj);
       }
-      if (obj) ex.visit(ex, obj, scope);
     } else if (fn.type === 'import') {
       const spec = stringValue(args?.namedChildren[0]);
       if (spec) ex.addImport(spec);
@@ -502,6 +526,16 @@ function expressionStmt(ex: Ex, node: Node, scope: Scope): void {
       if (prop && obj.endsWith('.prototype')) {
         const cls = obj.slice(0, -'.prototype'.length);
         functionLike(ex, { name: prop, kind: 'method', node, fn: right, scope, exported: true, qname: `${cls}.${prop}` });
+        return;
+      }
+    }
+    // CommonJS classes: `module.exports = class Foo {}`, `exports.Foo = class {}`, `Foo.Template = class Bar extends X {}`
+    if (left?.type === 'member_expression' && right?.type === 'class') {
+      const prop = left.childForFieldName('property')?.text;
+      const own = right.childForFieldName('name')?.text;
+      const name = own ?? (left.text === 'module.exports' ? 'exports' : prop);
+      if (name) {
+        classDecl(ex, right, scope, node, true, own ? undefined : name);
         return;
       }
     }
@@ -555,7 +589,7 @@ export function visitTs(ex: Ex, node: Node, scope: Scope): void {
       return;
     case 'new_expression': {
       const c = node.childForFieldName('constructor');
-      if (c?.type === 'identifier') ex.addRef(scope, ex.dealias(c.text), 'new', c);
+      if (c?.type === 'identifier') ex.noteCall(node, ex.addRef(scope, ex.dealias(c.text), 'new', c));
       else if (c?.type === 'member_expression') {
         const prop = c.childForFieldName('property');
         if (prop) ex.addRef(scope, prop.text, 'new', prop, c.childForFieldName('object')?.text);
@@ -578,6 +612,16 @@ export function visitTs(ex: Ex, node: Node, scope: Scope): void {
     case 'decorator':
       decorator(ex, node, scope);
       return;
+    case 'jsx_closing_element':
+      // `</Form.Item>` repeats the opening element's name
+      return;
+    case 'member_expression': {
+      // `obj.field`, `this.x = v`; CommonJS `module.exports` / `exports.x` and `import.meta` are not members
+      const o = node.childForFieldName('object');
+      const commonJs = !!o && (o.type === 'meta_property' || o.type === 'import' || /^(?:module|exports|module\.exports|import\.meta(?:\.env)?|process(?:\.env)?)$/.test(o.text));
+      ex.memberRef(scope, node, commonJs ? null : node.childForFieldName('property'), o);
+      return;
+    }
     case 'arrow_function':
     case 'function_expression':
     case 'function':

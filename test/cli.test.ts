@@ -17,7 +17,12 @@ let home: string;
 // Index caches of temp repos: a temp dir, shared with the spawned CLI through the environment.
 process.env.KOPT_CACHE_DIR = mkdtempSync(join(tmpdir(), 'kopt-cli-cache-'));
 
-const env = () => ({ ...process.env, KOPT_HOME: home, KOPT_TELEMETRY: '0', KOPT_ROOT: '' });
+// The caller's KOPT_SESSION (an agent running the suite through kopt) would give every spawned CLI its dedup ledger.
+const env = () => {
+  const e: NodeJS.ProcessEnv = { ...process.env, KOPT_HOME: home, KOPT_TELEMETRY: '0', KOPT_ROOT: '' };
+  delete e.KOPT_SESSION;
+  return e;
+};
 
 function kopt(args: string[], input?: string, extraEnv: Record<string, string> = {}) {
   const t0 = Date.now();
@@ -127,7 +132,7 @@ describe('kopt mcp (stdio)', () => {
     await client.connect(transport);
     const { tools } = await client.listTools();
     const ms = Date.now() - t0;
-    expect(tools.map((t) => t.name)).toEqual(['kopt_find', 'kopt_read', 'kopt_outline', 'kopt_refs', 'kopt_run', 'kopt_expand']);
+    expect(tools.map((t) => t.name)).toEqual(['kopt_find', 'kopt_read', 'kopt_refs', 'kopt_run']);
     expect(errors).toEqual([]);
     process.stderr.write(`[perf] kopt mcp spawn -> tools/list (via tsx): ${ms}ms\n`);
     const res = (await client.callTool({ name: 'kopt_find', arguments: { query: 'refund' } })) as any;
@@ -155,10 +160,30 @@ describe('kopt run (end to end, needs compress)', () => {
       ? ['run', '--root', repo, 'node', '-e', "console.log('its fine'); process.exit(3)"]
       : ['run', '--root', repo, 'sh', '-c', "echo 'it''s fine'; exit 3"]);
     expect(r.stdout).toContain("its fine");
-    expect(r.status).toBe(1);
+    expect(r.status).toBe(3); // the command's own exit code
     const ok = kopt(['run', '--root', repo, win ? 'Write-Output hello | ForEach-Object { $_.ToUpper() }' : 'echo hello | tr a-z A-Z']);
     expect(ok.stdout).toContain('HELLO');
     expect(ok.status).toBe(0);
+    rmSync(repo, { recursive: true, force: true });
+  });
+
+  it.skipIf(!existsSync(join(ROOT, 'src', 'compress', 'index.ts')))('kopt read <log handle> --grep / --start --end reads the stored output, as kopt expand does', () => {
+    const repo = mkdtempSync(join(tmpdir(), 'kopt-cli-log-'));
+    const lines = Array.from({ length: 60 }, (_, i) => `line ${i + 1}${i === 41 ? ' FAIL needle' : ''}`);
+    const script = `for (const l of ${JSON.stringify(lines)}) console.log(l); process.exit(1)`;
+    const r = kopt(['run', '--root', repo, '--max-tokens', '60', 'node', '-e', script]);
+    const handle = /kopt_read (o[0-9a-f]+)/.exec(r.stdout)?.[1];
+    if (!handle) process.stderr.write(`[cli read log] ${r.stdout}\n${r.stderr}\n`);
+    expect(handle).toBeTruthy();
+    const grep = kopt(['read', handle!, '--grep', 'needle', '--root', repo]);
+    expect(grep.status).toBe(0);
+    expect(grep.stdout).toContain('line 42 FAIL needle');
+    expect(grep.stdout).not.toContain('line 10\n');
+    const range = kopt(['read', `${handle}:2-3`, '--root', repo]);
+    expect(range.stdout).toContain('line 2');
+    expect(range.stdout).toContain('line 3');
+    expect(range.stdout).not.toContain('line 42');
+    expect(kopt(['expand', handle!, '--grep', 'needle', '--root', repo]).stdout).toContain('line 42 FAIL needle');
     rmSync(repo, { recursive: true, force: true });
   });
 });
@@ -172,6 +197,23 @@ describe('kopt find (end to end, needs indexer + retrieval)', () => {
     if (r.status !== 0) process.stderr.write(`[cli find] ${r.stderr}\n`);
     expect(r.status).toBe(0);
     expect(r.stdout).toContain('computeRefund');
+    rmSync(repo, { recursive: true, force: true });
+  });
+});
+
+describe('kopt CLI sessions (KOPT_SESSION)', () => {
+  const ready = existsSync(join(ROOT, 'src', 'indexer', 'index.ts')) && existsSync(join(ROOT, 'src', 'retrieval', 'index.ts'));
+  it.skipIf(!ready)('keep their dedup ledger between calls; calls without a session stay stateless', () => {
+    const repo = mkdtempSync(join(tmpdir(), 'kopt-cli-session-'));
+    writeFileSync(join(repo, 'refund.ts'), 'export function computeRefund(total: number, fees: number): number {\n  return total - fees;\n}\n');
+    const first = kopt(['read', 'computeRefund', '--root', repo], undefined, { KOPT_SESSION: 'agent-1' });
+    expect(first.stdout).toContain('return total - fees;');
+    const again = kopt(['read', 'computeRefund', '--root', repo], undefined, { KOPT_SESSION: 'agent-1' });
+    expect(again.stdout).toMatch(/refund\.ts:1-3 #\w+ unchanged \(shown in call 1\)/);
+    // another session, or no session at all, gets the code
+    expect(kopt(['read', 'computeRefund', '--root', repo], undefined, { KOPT_SESSION: 'agent-2' }).stdout).toContain('return total - fees;');
+    expect(kopt(['read', 'computeRefund', '--root', repo]).stdout).toContain('return total - fees;');
+    expect(kopt(['read', 'computeRefund', '--root', repo]).stdout).toContain('return total - fees;');
     rmSync(repo, { recursive: true, force: true });
   });
 });
@@ -231,6 +273,16 @@ describe('zero-config commands (temp HOME)', () => {
     expect(r.stdout).toContain(`would write ${join('~', '.kiro', 'hooks', 'kopt.json')}\n`);
     expect(r.stdout).toMatch(/dry run/);
     expect(existsSync(join(e.HOME, '.kiro'))).toBe(false);
+    rmSync(e.HOME, { recursive: true, force: true });
+  });
+
+  it('setup leaves a development checkout alone unless --global is given (flag order)', () => {
+    const e = sandboxEnv();
+    const plain = kopt(['setup', '--dry-run', '--no-doctor'], undefined, e);
+    expect(plain.status).toBe(0);
+    expect(plain.stdout).not.toMatch(/would run: npm/);
+    const global = kopt(['setup', '--dry-run', '--no-doctor', '--global'], undefined, e);
+    expect(global.stdout).toMatch(/would run: npm pack .* && npm install -g <tarball>/);
     rmSync(e.HOME, { recursive: true, force: true });
   });
 

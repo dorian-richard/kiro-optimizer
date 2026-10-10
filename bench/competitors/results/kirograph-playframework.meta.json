@@ -1,0 +1,118 @@
+{
+  "label": "kirograph",
+  "tool": "kirograph",
+  "package": "kirograph",
+  "version": "1.4.0",
+  "mode": "default",
+  "repo": {
+    "name": "playframework",
+    "url": "https://github.com/playframework/playframework.git",
+    "tag": "3.0.12",
+    "commit": "316f494b2d1292c250c19685f21189ab077d7229",
+    "language": "scala",
+    "path": "bench/repos/playframework"
+  },
+  "headCommit": "316f494b2d1292c250c19685f21189ab077d7229",
+  "commitMatchesTasks": true,
+  "date": "2026-10-09T13:32:11.411Z",
+  "image": "kopt-bench/kirograph:1.4.0",
+  "imageId": "sha256:bc769b34b739a6d6b3ed1f2954ed9df3e387e6c6dcfc597528ca16d232dac57e",
+  "engine": "docker",
+  "limits": "memory=3g cpus=8",
+  "cgroupMemory": {
+    "maxBytes": 3221225472,
+    "peakBytes": 681324544,
+    "oomKills": 0
+  },
+  "container": {
+    "node": "v22.23.3",
+    "arch": "arm64",
+    "platform": "linux",
+    "cpus": 10,
+    "memBytes": 8214851584,
+    "network": "none"
+  },
+  "primaryTool": "kirograph_context",
+  "toolArgsExample": {
+    "task": "<input>"
+  },
+  "serverCommand": {
+    "command": "kirograph",
+    "args": [
+      "serve",
+      "--mcp",
+      "--path",
+      "/work/<repo>"
+    ]
+  },
+  "oneSessionPerTask": true,
+  "indexOk": true,
+  "indexMs": 103666,
+  "indexSteps": [
+    {
+      "command": "kirograph init /work/playframework",
+      "ms": 414,
+      "exit": 0,
+      "signal": null,
+      "oomKills": 0
+    },
+    {
+      "command": "kirograph index /work/playframework",
+      "ms": 103252,
+      "exit": 0,
+      "signal": null,
+      "oomKills": 0
+    }
+  ],
+  "copyMs": 3820,
+  "indexDirs": [
+    "<repo>/.kirograph"
+  ],
+  "indexSizeBytes": 78368600,
+  "modelBytes": 0,
+  "indexStatus": "Graph\n  Files      1706\n  Symbols    35301\n  Edges      90201\n  Frameworks express, play\n\n  By kind\n  ┌────────────┬──────────────────┐\n  │ import     │ 10582            │\n  ├────────────┼──────────────────┤\n  │ variable   │ 10179            │\n  ├────────────┼──────────────────┤\n  │ function   │ 6191             │\n  ├────────────┼──────────────────┤\n  │ method     │ 4515             │\n  ├────────────┼──────────────────┤\n  │ class      │ 2750             │\n  ├────────────┼──────────────────┤\n  │ property   │ 596              │\n  ├────────────┼──────────────────┤\n  │ trait      │ 312              │\n  ├────────────┼──────────────────┤\n  │ interface  │ 130              │\n  ├────────────┼──────────────────┤\n  │ type_alias │ 42               │\n  ├────────────┼──────────────────┤\n  │ enum       │ 4                │\n  └────────────┴──────────────────┘\n\n  By language\n  ┌────────────┬──────────────────┐\n  │ scala      │ 921              │\n  ├────────────┼──────────────────┤\n  │ java       │ 618              │\n  ├────────────┼──────────────────┤\n  │ html       │ 77               │\n  ├────────────┼──────────────────┤\n  │ css        │ 45               │\n  ├────────────┼──────────────────┤\n  │ sql        │ 34               │\n  ├────────────┼──────────────────┤\n  │ javascript │ 7                │\n  ├────────────┼──────────────────┤\n  │ yaml       │ 4                │\n  └────────────┴──────────────────┘\n\n  Sync\n  Status     idle\n  Pending    4 files pending\n\n  Semantic Search\n  Status     disabled",
+  "surface": {
+    "serverInfo": {
+      "name": "kirograph",
+      "version": "0.1.0"
+    },
+    "toolCount": 7,
+    "toolNames": [
+      "kirograph_search",
+      "kirograph_context",
+      "kirograph_node",
+      "kirograph_gain",
+      "kirograph_read",
+      "kirograph_retrieve",
+      "kirograph_budget"
+    ],
+    "toolsChars": 4418,
+    "toolsEstTokens": 1473,
+    "instructionsChars": 0,
+    "instructionsEstTokens": 0,
+    "primaryToolListed": true,
+    "file": "kirograph.surface.json"
+  },
+  "inputs": {
+    "search": {
+      "file": "kirograph-playframework.jsonl",
+      "tasks": 12,
+      "failures": 0,
+      "queryMsMedian": 44,
+      "queryMsP90": 51,
+      "startupMsMedian": 167
+    },
+    "question": {
+      "file": "kirograph-playframework-question.jsonl",
+      "tasks": 12,
+      "failures": 6,
+      "queryMsMedian": 28,
+      "queryMsP90": 50,
+      "startupMsMedian": 156
+    }
+  },
+  "charsPerToken": 3,
+  "errors": [
+    "6/12 question queries failed or returned isError"
+  ]
+}

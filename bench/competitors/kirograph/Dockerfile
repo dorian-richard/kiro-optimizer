@@ -23,12 +23,6 @@ COPY kirograph/package.json kirograph/package-lock.json ./
 RUN npm ci --no-audit --no-fund
 ENV PATH=/opt/tool/node_modules/.bin:$PATH
 
-# The harness: official MCP SDK + driver script.
-WORKDIR /opt/harness
-COPY harness/package.json harness/package-lock.json ./
-RUN npm ci --omit=dev --no-audit --no-fund
-COPY harness/run-tool.mjs ./
-
 # Bake the default embedding model by indexing a one-file project with embeddings on.
 RUN if [ "$BAKE_EMBEDDING_MODEL" = "1" ]; then \
       set -e; mkdir -p /tmp/bake && cd /tmp/bake \
@@ -41,6 +35,13 @@ RUN if [ "$BAKE_EMBEDDING_MODEL" = "1" ]; then \
       && cd / && rm -rf /tmp/bake; \
     fi \
  && chmod -R a+rwX /home/bench
+
+# The harness: official MCP SDK + driver script. Copied after the model bake so that editing the
+# driver does not invalidate the 523 MB download (run.sh also bind-mounts the current driver).
+WORKDIR /opt/harness
+COPY harness/package.json harness/package-lock.json ./
+RUN npm ci --omit=dev --no-audit --no-fund
+COPY harness/run-tool.mjs ./
 
 USER node
 WORKDIR /work

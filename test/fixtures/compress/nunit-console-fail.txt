@@ -1,0 +1,45 @@
+NUnit Console 3.17.0 (Release)
+Copyright (c) 2022 Charlie Poole, Rob Prouse
+Thursday, October 9, 2026 10:12:01 AM
+
+Runtime Environment
+   OS Version: Linux 6.5.0.1015
+   Runtime: .NET 8.0.1
+
+Test Files
+    tests/Shop.Tests/bin/Debug/net8.0/Shop.Tests.dll
+
+Errors, Failures and Warnings
+
+1) Failed : Shop.Tests.CartTests.TotalWithDiscount
+  Expected: 90
+  But was:  100
+
+   at Shop.Tests.CartTests.TotalWithDiscount() in /home/dev/shop/tests/Shop.Tests/CartTests.cs:line 28
+
+2) Error : Shop.Tests.OrderTests.CreateRejectsEmpty
+System.NullReferenceException : Object reference not set to an instance of an object.
+   at Shop.Services.OrderService.Create(List`1 items) in /home/dev/shop/src/Shop/Services/OrderService.cs:line 22
+   at Shop.Tests.OrderTests.CreateRejectsEmpty() in /home/dev/shop/tests/Shop.Tests/OrderTests.cs:line 41
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+
+Run Settings
+    DisposeRunners: True
+    WorkDirectory: /home/dev/shop
+    ImageRuntimeVersion: 4.0.30319
+    ImageTargetFrameworkName: .NETCoreApp,Version=v8.0
+    ImageRequiresX86: False
+    ImageRequiresDefaultAppDomainAssemblyResolver: False
+    TargetRuntimeFramework: netcore-8.0
+    NumberOfTestWorkers: 8
+
+Test Run Summary
+  Overall result: Failed
+  Test Count: 412, Passed: 409, Failed: 2, Warnings: 0, Inconclusive: 0, Skipped: 1
+    Failed Tests - Failures: 1, Errors: 1, Invalid: 0
+    Skipped Tests - Ignored: 1, Explicit: 0, Other: 0
+  Start time: 2026-10-09 10:12:01Z
+    End time: 2026-10-09 10:12:05Z
+    Duration: 3.912 seconds
+
+Results (nunit3) saved as TestResult.xml

@@ -52,12 +52,35 @@ export function compose(head: (tok: number) => string, body: string, maxTokens: 
   return enforce(text, maxTokens);
 }
 
+/**
+ * Header + body within `maxTokens`: drops trailing body lines (counted in "+k more") until the whole text fits,
+ * so the cap never cuts lines silently and the header's ~tok matches the text.
+ */
+export function fitBody(head: (more: number) => (tok: number) => string, body: string[], more: number, maxTokens: number): string {
+  const lines = [...body];
+  let m = more;
+  for (;;) {
+    const text = compose(head(m), lines.join('\n'), Number.MAX_SAFE_INTEGER);
+    if (estimateTokens(text) <= maxTokens || !lines.length) return compose(head(m), lines.join('\n'), maxTokens);
+    lines.pop();
+    m++;
+  }
+}
+
 export function result(text: string, maxTokens: number, meta?: Record<string, unknown>, baselineTokens?: number): ToolResult {
   const t = enforce(text, maxTokens);
   const r: ToolResult = { text: t, tokens: estimateTokens(t) };
   if (baselineTokens !== undefined) r.baselineTokens = baselineTokens;
   if (meta) r.meta = meta;
   return r;
+}
+
+/** The answer with one more trailing line (a resolution note), when it still fits `maxTokens`. */
+export function withNote(r: ToolResult, note: string | undefined, maxTokens: number): ToolResult {
+  if (!note) return r;
+  const text = `${r.text}\n${note}`;
+  const tokens = estimateTokens(text);
+  return tokens <= maxTokens ? { ...r, text, tokens } : r;
 }
 
 /** Tools never throw: unexpected errors (I/O, SQLite busy...) become a one-line answer. */
@@ -71,8 +94,14 @@ export function guard(label: string, maxTokens: number, fn: () => ToolResult): T
   }
 }
 
-export function moreSuffix(k: number): string {
-  return k > 0 ? ` · +${k} more (raise maxTokens or narrow query)` : '';
+/**
+ * "+k more (...)" header suffix naming the constraint that actually cut the list, so that following the hint
+ * returns more: the token budget, the result limit, or (repo map) the scope.
+ */
+export function moreSuffix(k: number, why: 'maxTokens' | 'limit' | 'scope' = 'maxTokens'): string {
+  if (k <= 0) return '';
+  const hint = why === 'limit' ? 'raise limit or narrow query' : why === 'scope' ? 'narrow with path or focus' : 'raise maxTokens or narrow query';
+  return ` · +${k} more (${hint})`;
 }
 
 export function quote(q: string, max = 60): string {
@@ -94,11 +123,9 @@ export function unchangedLine(loc: string, handle: string | undefined, call: num
 }
 
 // Ranges shown per ledger, so a symbol inside an already-sent range is not re-sent either.
-const shownRanges = new WeakMap<Ledger, Map<string, Array<{ key: string; start: number; end: number }>>>();
 
 export function noteShownRange(ledger: Ledger, path: string, start: number, end: number, key: string): void {
-  let m = shownRanges.get(ledger);
-  if (!m) shownRanges.set(ledger, (m = new Map()));
+  const m = ledger.ranges;
   const arr = m.get(path) ?? [];
   if (!arr.some((r) => r.key === key)) arr.push({ key, start, end });
   if (arr.length > 64) arr.shift();
@@ -113,7 +140,7 @@ export function coveringShownRange(
   end: number,
   digestOf: (s: number, e: number) => string,
 ): { key: string; start: number; end: number } | undefined {
-  const arr = shownRanges.get(ledger)?.get(path);
+  const arr = ledger.ranges.get(path);
   if (!arr) return undefined;
   for (const r of arr) {
     if (r.start <= start && r.end >= end && ledger.wasShown(r.key, digestOf(r.start, r.end))) return r;
@@ -141,9 +168,13 @@ export function normalizeRel(p: string, root?: string): string {
 
 const TEST_PATH_RE =
   /(^|\/)(tests?|__tests__|__mocks__|spec|specs|testing|e2e)\/|\.(spec|test|e2e)\.[^/]+$|(Test|Tests|IT|Spec)\.(java|kt|kts|scala|cs|groovy|swift)$|_test\.(go|py|rb|exs?)$|(^|\/)test_[^/]+\.py$|_spec\.rb$/;
+/** Code that is not the product: fixtures, sbt scripted tests, documentation snippets, examples, benchmarks. */
+const NON_PRODUCT_PATH_RE =
+  /(^|\/)(sbt-test|fixtures?|__fixtures__|__snapshots__|testdata|test-?data|test-?fixtures|testFixtures|integration-tests?|it-tests?|documentation|docs?|examples?|samples?|jmh|benchmarks?)\//;
 
+/** Tests and other non-product code (fixtures, docs snippets, examples, benchmarks): demoted in rankings. */
 export function isTestPath(path: string): boolean {
-  return TEST_PATH_RE.test(path);
+  return TEST_PATH_RE.test(path) || NON_PRODUCT_PATH_RE.test(path);
 }
 
 const TEST_TERMS = new Set(['test', 'tests', 'spec', 'specs', 'mock', 'mocks', 'junit', 'fixture', 'fixtures', 'testing', 'unittest', 'e2e', 'jest', 'vitest', 'pytest', 'stub', 'stubs']);

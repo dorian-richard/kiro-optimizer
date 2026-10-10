@@ -1,0 +1,267 @@
+{
+  "repo": "playframework",
+  "language": "scala",
+  "repoRoot": "bench/repos/playframework",
+  "headCommit": "316f494b2d1292c250c19685f21189ab077d7229",
+  "date": "2026-10-09T22:39:45.443Z",
+  "index": {
+    "built": true,
+    "durationMs": 2237,
+    "files": 1427,
+    "symbols": 18592,
+    "refs": 81803,
+    "path": "<index-dir>/.kopt-playframework/index.db"
+  },
+  "files": {
+    "indexed": 1427,
+    "skipped": 0,
+    "skippedByReason": {},
+    "indexedByLang": {
+      "java": 619,
+      "javascript": 7,
+      "scala": 801
+    }
+  },
+  "langs": [
+    {
+      "lang": "scala",
+      "files": 801,
+      "lines": 114049,
+      "symbols": 12054,
+      "symbolsPerKloc": 105.69,
+      "byKind": {
+        "method": {
+          "count": 5142,
+          "perKloc": 45.09
+        },
+        "property": {
+          "count": 4251,
+          "perKloc": 37.27
+        },
+        "class": {
+          "count": 2068,
+          "perKloc": 18.13
+        },
+        "trait": {
+          "count": 348,
+          "perKloc": 3.05
+        },
+        "constant": {
+          "count": 194,
+          "perKloc": 1.7
+        },
+        "function": {
+          "count": 51,
+          "perKloc": 0.45
+        }
+      },
+      "refs": 53461,
+      "refsResolved": 20480,
+      "resolvedRate": 0.3831,
+      "refsWithCandidate": 35647,
+      "resolvedOfCandidates": 0.5745,
+      "refsByKind": {
+        "call": {
+          "total": 17221,
+          "resolved": 6204
+        },
+        "read": {
+          "total": 11777,
+          "resolved": 2602
+        },
+        "type_ref": {
+          "total": 11655,
+          "resolved": 5293
+        },
+        "new": {
+          "total": 5495,
+          "resolved": 2825
+        },
+        "import": {
+          "total": 5392,
+          "resolved": 2235
+        },
+        "inherit": {
+          "total": 1324,
+          "resolved": 873
+        },
+        "implement": {
+          "total": 569,
+          "resolved": 430
+        },
+        "write": {
+          "total": 28,
+          "resolved": 18
+        }
+      },
+      "parse": {
+        "sampledFiles": 801,
+        "sampledLines": 114850,
+        "filesWithErrors": 0,
+        "errorNodes": 0,
+        "missingNodes": 0,
+        "errorFileRate": 0,
+        "errorsPerKloc": 0,
+        "parseFailures": 0,
+        "worst": []
+      },
+      "precision": {
+        "sampled": 30,
+        "nameOk": 30,
+        "startOk": 30,
+        "endOk": 30,
+        "signatureOk": 30,
+        "allOk": 30,
+        "rate": 1,
+        "failures": []
+      }
+    },
+    {
+      "lang": "java",
+      "files": 619,
+      "lines": 61231,
+      "symbols": 6538,
+      "symbolsPerKloc": 106.78,
+      "byKind": {
+        "method": {
+          "count": 3990,
+          "perKloc": 65.16
+        },
+        "class": {
+          "count": 800,
+          "perKloc": 13.07
+        },
+        "field": {
+          "count": 764,
+          "perKloc": 12.48
+        },
+        "constructor": {
+          "count": 505,
+          "perKloc": 8.25
+        },
+        "constant": {
+          "count": 289,
+          "perKloc": 4.72
+        },
+        "interface": {
+          "count": 186,
+          "perKloc": 3.04
+        },
+        "enum": {
+          "count": 4,
+          "perKloc": 0.07
+        }
+      },
+      "refs": 28230,
+      "refsResolved": 14004,
+      "resolvedRate": 0.4961,
+      "refsWithCandidate": 18981,
+      "resolvedOfCandidates": 0.7378,
+      "refsByKind": {
+        "call": {
+          "total": 11843,
+          "resolved": 5912
+        },
+        "type_ref": {
+          "total": 9449,
+          "resolved": 4263
+        },
+        "import": {
+          "total": 3238,
+          "resolved": 1252
+        },
+        "new": {
+          "total": 1409,
+          "resolved": 890
+        },
+        "read": {
+          "total": 1055,
+          "resolved": 562
+        },
+        "write": {
+          "total": 604,
+          "resolved": 601
+        },
+        "inherit": {
+          "total": 439,
+          "resolved": 380
+        },
+        "implement": {
+          "total": 193,
+          "resolved": 144
+        }
+      },
+      "parse": {
+        "sampledFiles": 619,
+        "sampledLines": 61843,
+        "filesWithErrors": 0,
+        "errorNodes": 0,
+        "missingNodes": 0,
+        "errorFileRate": 0,
+        "errorsPerKloc": 0,
+        "parseFailures": 0,
+        "worst": []
+      },
+      "precision": {
+        "sampled": 30,
+        "nameOk": 30,
+        "startOk": 30,
+        "endOk": 30,
+        "signatureOk": 30,
+        "allOk": 30,
+        "rate": 1,
+        "failures": []
+      }
+    },
+    {
+      "lang": "javascript",
+      "files": 7,
+      "lines": 253,
+      "symbols": 0,
+      "symbolsPerKloc": 0,
+      "byKind": {},
+      "refs": 112,
+      "refsResolved": 6,
+      "resolvedRate": 0.0536,
+      "refsWithCandidate": 68,
+      "resolvedOfCandidates": 0.0882,
+      "refsByKind": {
+        "call": {
+          "total": 88,
+          "resolved": 6
+        },
+        "read": {
+          "total": 24,
+          "resolved": 0
+        }
+      },
+      "parse": {
+        "sampledFiles": 0,
+        "sampledLines": 0,
+        "filesWithErrors": 0,
+        "errorNodes": 0,
+        "missingNodes": 0,
+        "errorFileRate": 0,
+        "errorsPerKloc": 0,
+        "parseFailures": 0,
+        "worst": []
+      },
+      "precision": {
+        "sampled": 0,
+        "nameOk": 0,
+        "startOk": 0,
+        "endOk": 0,
+        "signatureOk": 0,
+        "allOk": 0,
+        "rate": 0,
+        "failures": []
+      }
+    }
+  ],
+  "settings": {
+    "parseSamplePerLang": 1000,
+    "precisionSamplePerLang": 30,
+    "seed": "playframework"
+  },
+  "durationMs": 1528
+}

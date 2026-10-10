@@ -101,3 +101,112 @@ describe('staleness', () => {
     expect(second.text).toBe(`${RS}:23-31 ${hd('RefundService.computeRefund')}\n${slice(text, 23, 31)}`);
   });
 });
+
+// Overloads and call sites placed before the declaration they call: the cases where line-distance matching fails.
+describe('staleness with overloads and call sites', () => {
+  const SVC = 'src/a/Svc.java';
+  const svcText = [
+    'package a;',
+    '',
+    'public class Svc {',
+    '    public void run(Order o) {',
+    '        validate(o);',
+    '    }',
+    '',
+    '    public void place(Order o) {',
+    '        validate(o);',
+    '        log(o);',
+    '    }',
+    '',
+    '    public void place(Order o, int qty) {',
+    '        validate(o);',
+    '    }',
+    '',
+    '    private void validate(Order o) {',
+    '        check(o);',
+    '    }',
+    '}',
+    '',
+  ].join('\n');
+  let t: Seeded;
+  let c: ToolContext;
+  const th = (id: string) => symbolHandle(t.ids[id]);
+  const shifted = '// 1\n// 2\n// 3\n// 4\n// 5\n' + svcText;
+
+  // Minimal Java parse of the fixture, standing in for the indexer's extractFile.
+  async function parseSvc(path: string, text: string): Promise<ExtractedFile> {
+    const lines = text.split('\n');
+    const symbols: ExtractedFile['symbols'] = [];
+    lines.forEach((l, i) => {
+      const m = /^\s*(?:public|private) (class|void) (\w+)/.exec(l);
+      if (!m) return;
+      let depth = 0;
+      let end = i;
+      for (let j = i; j < lines.length; j++) {
+        depth += (lines[j].match(/\{/g) ?? []).length - (lines[j].match(/\}/g) ?? []).length;
+        if (depth <= 0) {
+          end = j;
+          break;
+        }
+      }
+      const cls = m[1] === 'class';
+      symbols.push({
+        name: m[2], qualifiedName: cls ? `a.${m[2]}` : `a.Svc.${m[2]}`, kind: cls ? 'class' : 'method', startLine: i + 1, endLine: end + 1,
+        startByte: 0, endByte: 0, signature: l.trim().replace(/\s*\{$/, ''), exported: l.includes('public'), ...(cls ? {} : { parent: 0 }),
+      });
+    });
+    return { path, lang: 'java', lineCount: lines.length, imports: [], refs: [], symbols };
+  }
+
+  beforeEach(() => {
+    setReextract(false);
+    setExtractor(undefined);
+    t = seedStore({
+      specs: [
+        {
+          path: SVC, lang: 'java', namespace: 'a', rank: 0.5, text: svcText,
+          symbols: [
+            { key: 'Svc', kind: 'class', exported: true },
+            { key: 'Svc.run', kind: 'method', exported: true },
+            { key: 'Svc.place', id: 'place1', kind: 'method', exported: true, at: 'public void place(Order o)' },
+            { key: 'Svc.place', id: 'place2', kind: 'method', exported: true, at: 'public void place(Order o, int qty)' },
+            { key: 'Svc.validate', kind: 'method', at: 'private void validate(' },
+          ],
+        },
+      ],
+    });
+    c = newToolContext(defaultConfig(t.root));
+    writeFileSync(join(t.root, SVC), shifted);
+  });
+  afterEach(() => {
+    setExtractor(undefined);
+    t.cleanup();
+  });
+
+  it('re-locates a declaration, not a call site placed before it', () => {
+    const r = read(t.store, { target: th('Svc.validate') }, c);
+    expect(r.text.split('\n')[0]).toBe(`${SVC}:22-24 ${th('Svc.validate')}`);
+    expect(r.text).toContain('    private void validate(Order o) {');
+  });
+
+  it('matches an overload by its signature after a re-parse', async () => {
+    setReextract(true);
+    setExtractor(parseSvc);
+    read(t.store, { target: th('place2') }, c);
+    await settleExtractions();
+    const r = read(t.store, { target: th('place2'), fresh: true }, c);
+    expect(r.text).toBe(`${SVC}:18-20 ${th('place2')}\n${slice(shifted, 18, 20)}`);
+    expect(read(t.store, { target: th('place1'), fresh: true }, c).text.split('\n')[0]).toBe(`${SVC}:13-16 ${th('place1')}`);
+  });
+
+  it('maps path:LINE of a changed file to the symbol covering that line now', async () => {
+    setReextract(true);
+    setExtractor(parseSvc);
+    // Before the re-parse is ready: a window around the requested line, never a range that misses it.
+    const first = read(t.store, { target: `${SVC}:19` }, c);
+    expect(first.text.split('\n')[0]).toBe(`${SVC}:1-25`);
+    await settleExtractions();
+    const r = read(t.store, { target: `${SVC}:19`, fresh: true }, c);
+    expect(r.text.split('\n')[0]).toBe(`${SVC}:18-20 ${th('place2')}`);
+  });
+});

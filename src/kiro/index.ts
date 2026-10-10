@@ -12,21 +12,20 @@
 import { existsSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { defaultConfig, loadConfig, usesProjectDataDir } from '../core/config.js';
-import { hookCommandLine, resolveKoptCommand, shellArg, type KoptCommand } from './command.js';
-import { detectSurfaces, hookPlan } from './detect.js';
+import { hookCommandLine, isTransientPath, shellArg, type KoptCommand } from './command.js';
 import { ensureArrayValue } from './jsonc.js';
 import { kiroignoreBlock, mergeKiroignore, suggestKiroignore } from './kiroignore.js';
 import { hostEnv } from './paths.js';
 import { Plan, readState, readText, writeState, type InstallResult } from './plan.js';
-import { AUTO_APPROVE, DEFAULT_EXPLORER_MODEL, IGNORE_SETTING, mergeMcpServer, readTemplate, renderTemplate, writeUserConfig } from './setup.js';
+import { AUTO_APPROVE, DEFAULT_EXPLORER_MODEL, IGNORE_SETTING, MCP_TIMEOUTS, mergeMcpServer, readTemplate, renderTemplate, setupUser, userCommand, writeLauncher } from './setup.js';
 
 export { suggestKiroignore, kiroignoreBlock, mergeKiroignore, removeKiroignoreBlock } from './kiroignore.js';
 export { kiroHomeDir, kiroUserSettingsPath, kiroCliSettingsPath, hostEnv, type HostEnv } from './paths.js';
-export { AUTO_APPROVE, DEFAULT_EXPLORER_MODEL, GENERIC_IGNORE, globalInstall, setupUser, writeUserConfig, type SetupOptions, type SetupResult, type GlobalInstall, type NpmRunner } from './setup.js';
+export { AUTO_APPROVE, DEFAULT_EXPLORER_MODEL, GENERIC_IGNORE, MCP_TIMEOUTS, globalInstall, privateInstall, setupUser, writeUserConfig, type SetupOptions, type SetupResult, type GlobalInstall, type NpmRunner } from './setup.js';
 export { uninstallKiro, type UninstallOptions } from './uninstall.js';
 export { runDoctor, formatChecks, runHookCommand, type Check, type DoctorReport } from './doctor.js';
 export { detectSurfaces, detectIde, detectCli, describeSurfaces, hookPlan, type Surfaces, type SurfaceChoice } from './detect.js';
-export { resolveKoptCommand, hookCommandLine, type KoptCommand } from './command.js';
+export { resolveKoptCommand, hookCommandLine, launcherPath, launcherScript, stableNodePath, type KoptCommand } from './command.js';
 export { ensureLegacyWorkspaceHooks, removeLegacyWorkspaceHooks, legacyHooksWanted, legacyHookFiles } from './legacy.js';
 export type { InstallResult } from './plan.js';
 
@@ -43,10 +42,12 @@ export function shellQuote(arg: string): string {
   return shellArg(arg);
 }
 
-/** How Kiro starts kopt on this machine (KOPT_HOOK_COMMAND=node|shim forces one form; KOPT_CLI sets bin.js). */
+/**
+ * How Kiro starts kopt on this machine: absolute Node + bin.js for MCP, the private launcher for hooks
+ * (KOPT_HOOK_COMMAND=node|shim forces another form; KOPT_CLI sets bin.js).
+ */
 export function koptCommand(): KoptCommand {
-  const force = process.env.KOPT_HOOK_COMMAND === 'node' || process.env.KOPT_HOOK_COMMAND === 'shim' ? process.env.KOPT_HOOK_COMMAND : undefined;
-  return resolveKoptCommand({ bin: process.env.KOPT_CLI || undefined, force });
+  return userCommand(hostEnv(), process.env.KOPT_CLI || undefined);
 }
 
 /** Hook command line for workspace hook files. */
@@ -58,36 +59,35 @@ export function hookCommand(source = 'workspace'): string {
 export function mcpServerEntry(o: Pick<InstallOptions, 'root' | 'scope'>, cmd: KoptCommand = koptCommand()): Record<string, unknown> {
   const args = [...cmd.mcp.args];
   if (o.scope === 'workspace') args.push('--root', resolve(o.root));
-  return { command: cmd.mcp.command, args, autoApprove: [...AUTO_APPROVE] };
+  return { command: cmd.mcp.command, args, autoApprove: [...AUTO_APPROVE], ...MCP_TIMEOUTS };
 }
 
 export async function installKiro(o: InstallOptions): Promise<InstallResult> {
   const root = resolve(o.root);
   const workspace = o.scope === 'workspace';
-  const userDir = defaultConfig(root).userDir;
-  const plan = new Plan(!!o.dryRun, !!o.force, userDir);
-  const cmd = koptCommand();
-  const state = readState(userDir);
-
   if (!workspace) {
     // user scope = the global (setup) layout, without the global npm install step
-    const h = hostEnv();
-    const surfaces = detectSurfaces(h);
-    const forced = surfaces.ide || surfaces.cli ? undefined : 'all';
-    writeUserConfig({ h, cmd, plan, hooks: hookPlan(surfaces, forced), surfaces, state, forced, explorerModel: o.explorerModel });
-    plan.finish();
-    if (!o.dryRun) writeState(userDir, state);
-    if (o.dryRun) plan.notes.unshift('dry run: nothing was written.');
-    return plan.result();
+    const r = await setupUser({ noInstallStep: true, dryRun: o.dryRun, force: o.force, explorerModel: o.explorerModel });
+    return { written: r.written, skipped: r.skipped, notes: r.notes, removed: r.removed };
   }
+
+  const userDir = defaultConfig(root).userDir;
+  const plan = new Plan(!!o.dryRun, !!o.force, userDir);
+  const state = readState(userDir);
+  let cmd = koptCommand();
+  if (isTransientPath(cmd.bin)) {
+    return { written: [], skipped: [], notes: ['kopt runs from the npx cache, which npm deletes: run kopt setup first (it installs kopt for good), then kopt init.'], removed: [] };
+  }
+  // the hooks below run the user-level launcher (~/.kopt/bin/kopt): write it when missing or stale
+  cmd = writeLauncher(plan, cmd, process.platform);
 
   const base = join(root, '.kiro');
 
   // 1. MCP server
   const mcpPath = join(base, 'settings', 'mcp.json');
   mergeMcpServer(plan, mcpPath, mcpServerEntry(o, cmd), { force: !!o.force });
-  if (cmd.kind === 'node') {
-    plan.notes.push('mcp.json holds absolute local paths (node, kopt): keep .kiro/settings/mcp.json out of git, or use kopt setup (user-level) in shared repos.');
+  if (cmd.kind !== 'shim') {
+    plan.notes.push('the MCP entry and the hooks use absolute paths of this machine (Node, kopt, ~/.kopt/bin): keep .kiro/settings/mcp.json and .kiro/hooks/kopt.json out of git (or set KOPT_HOOK_COMMAND=shim for the portable bare `kopt` form), or use kopt setup on each machine.');
   }
 
   // 2. steering
