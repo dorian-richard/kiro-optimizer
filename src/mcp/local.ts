@@ -29,6 +29,7 @@ import { IndexHost, WorkerUnavailable } from './index-host.js';
 import { withModules, type IndexPhase, type IndexStats, type Modules } from './modules.js';
 import { createServer, localTelemetrySink, type RepoHandle } from './server.js';
 import { executeTool, parseToolArgs, toolNeedsStore, type ExecuteResult, type ToolName } from './tools.js';
+import { warmLoginShellPath } from '../compress/runner.js';
 
 export interface LocalRepoOptions {
   modules?: Partial<Modules>;
@@ -518,6 +519,8 @@ export async function serveStdio(config: KoptConfig, opts: StdioOptions = {}): P
     process.stdin.once('close', resolve);
   });
   await server.connect(transport);
+  // kopt_run's PATH includes the login shell's: read it now, not on the first command.
+  warmLoginShellPath();
   await closed;
   await server.close().catch(() => {});
   repo.close();
@@ -749,6 +752,7 @@ export async function serveStdioAuto(base: KoptConfig, opts: StdioOptions & { en
     process.stdin.once('close', resolveClosed);
   });
   await server.connect(transport);
+  warmLoginShellPath();
   await closed;
   await server.close().catch(() => {});
   repo.close();

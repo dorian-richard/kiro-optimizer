@@ -15,7 +15,7 @@ import { capLine } from './filters/common.js';
 import { compressNormalized, VERDICT_FILTERS } from './filters/index.js';
 import { normalizeOutput } from './normalize.js';
 import { OutputStore, sha1, type RunEntry } from './outputs.js';
-import { DEFAULT_TIMEOUT_SEC, execCapture, type ExecResult } from './runner.js';
+import { DEFAULT_TIMEOUT_SEC, execCapture, type ExecResult, notFoundHint } from './runner.js';
 
 export { normalizeOutput } from './normalize.js';
 export { longRunningReason, parseCommand } from './command.js';
@@ -440,10 +440,14 @@ async function execute(i: ExecuteInput): Promise<Execution> {
   // Everything below is synchronous: no other kopt_run of this process can interleave with the index update.
   const idx = i.store.load();
   const handle = i.store.newHandle(idx, `${i.command}\0${after?.key ?? ''}`);
-  const { text, filter, elided } = renderRun({
+  const rendered = renderRun({
     command: i.command, exitCode: res.exitCode, durationMs: res.durationMs, normalized, baselineTokens, handle, maxTokens: i.maxTokens,
     root: cfg.root, timedOutSec: res.timedOut ? i.timeoutSec : undefined, cancelled: res.cancelled, droppedChars: res.droppedChars,
   });
+  const { filter, elided } = rendered;
+  // exit 127: say which program is missing and where the PATH came from (Kiro may start kopt with a minimal PATH)
+  const hint = notFoundHint(i.command, res);
+  const text = hint ? `${rendered.text}\n${hint}` : rendered.text;
 
   try {
     i.store.writeLog(idx, handle, normalized, i.command);
@@ -467,6 +471,7 @@ async function execute(i: ExecuteInput): Promise<Execution> {
       meta: {
         handle, filter, exitCode: res.exitCode, durationMs: res.durationMs, cached: false, cacheable: i.cacheable, stored: storable, elided,
         rawTokens, timedOut: res.timedOut, cancelled: res.cancelled, droppedChars: res.droppedChars, outputChars: res.totalChars,
+        ...(hint ? { notFound: true } : {}),
       },
     },
   };

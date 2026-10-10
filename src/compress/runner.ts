@@ -5,9 +5,9 @@
 // shell tool there (pwsh 7 when on PATH, it accepts `&&`; else Windows PowerShell 5.1), else cmd.exe.
 // KOPT_SHELL overrides (path or name: bash, sh, pwsh, powershell, cmd).
 
-import { execFileSync, spawn, spawnSync } from 'node:child_process';
-import { existsSync } from 'node:fs';
-import { constants as osConstants } from 'node:os';
+import { type ChildProcess, execFileSync, spawn, spawnSync } from 'node:child_process';
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
+import { homedir, constants as osConstants, userInfo } from 'node:os';
 import { posix as posixPath, win32 as winPath } from 'node:path';
 import { StringDecoder } from 'node:string_decoder';
 
@@ -31,6 +31,8 @@ export interface ExecOptions {
 
 export interface ExecResult {
   output: string;
+  /** Where the command's PATH came from (commandPath), for the "not found" hint. */
+  pathSources?: string[];
   exitCode: number;
   signal?: string;
   timedOut: boolean;
@@ -94,6 +96,289 @@ export function quietEnv(extra?: Record<string, string | undefined>): NodeJS.Pro
     else env[k] = v;
   }
   return env;
+}
+
+// ---------------------------------------------------------------------------------------------------------------
+// Command PATH
+//
+// Kiro started from the Dock (macOS) or a desktop launcher (Linux) may give its MCP servers a minimal environment
+// (PATH=/usr/bin:/bin): `npm test` would exit 127. On Linux and macOS a command gets the PATH kopt started with,
+// then the folder of the Node running kopt, then the PATH of the user's login shell (resolved once per process, in
+// the background, output never shown), then common bin folders that exist, without duplicates. Windows keeps the
+// inherited PATH (programs started from the Start menu get the user's PATH from the registry there).
+
+/** Used in place of an empty PATH (a shell would fall back to similar folders). */
+const SYSTEM_PATH = ['/usr/local/bin', '/usr/bin', '/bin', '/usr/sbin', '/sbin'];
+const LOGIN_PATH_TIMEOUT_MS = 3000;
+const PATH_MARK = '__KOPT_PATH__';
+
+export interface LoginPath {
+  /** The login shell asked (absolute path), when there is one. */
+  shell?: string;
+  /** Its PATH, undefined when it could not be read (no shell, timeout, unexpected output). */
+  path?: string;
+}
+
+let loginPath: Promise<LoginPath> | undefined;
+/** The login shell's PATH once read (commands then start without waiting). */
+let loginPathRead: LoginPath | undefined;
+
+function userShell(env: NodeJS.ProcessEnv): string | undefined {
+  const fromEnv = envGet(env, 'SHELL');
+  if (fromEnv && fromEnv.startsWith('/')) return fromEnv;
+  try {
+    const s = userInfo().shell;
+    return s && s.startsWith('/') ? s : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+/** Absolute folders of a PATH value read from a shell, or undefined when it does not look like one. */
+function parsePathValue(text: string): string | undefined {
+  const a = text.indexOf(PATH_MARK);
+  const b = a < 0 ? -1 : text.indexOf(PATH_MARK, a + PATH_MARK.length);
+  if (b < 0) return undefined;
+  const dirs = text.slice(a + PATH_MARK.length, b).split(':').filter((d) => d.startsWith('/') && !/[\n\r$]/.test(d));
+  return dirs.length ? dirs.join(':') : undefined;
+}
+
+/**
+ * PATH of `shell` started as an interactive login shell (`$SHELL -ilc`, as editors do to get the terminal's
+ * environment): stdin closed, stderr dropped, stdout only parsed between markers, killed after `timeoutMs`.
+ */
+export function readLoginShellPath(shell: string | undefined, timeoutMs = LOGIN_PATH_TIMEOUT_MS): Promise<LoginPath> {
+  return new Promise((resolveP) => {
+    if (!shell || !existsSync(shell)) return resolveP({ shell });
+    let out = '';
+    let done = false;
+    let child: ChildProcess | undefined;
+    const end = (path?: string) => {
+      if (done) return;
+      done = true;
+      clearTimeout(timer);
+      resolveP({ shell, path });
+    };
+    const timer = setTimeout(() => {
+      // its own process group: whatever the profile started goes too
+      if (child?.pid) killOne(-child.pid, 'SIGKILL');
+      end();
+    }, timeoutMs);
+    try {
+      child = spawn(shell, ['-ilc', `printf '${PATH_MARK}%s${PATH_MARK}' "$PATH"`], {
+        cwd: safeHome(),
+        env: inheritedEnv(),
+        stdio: ['ignore', 'pipe', 'ignore'],
+        detached: true,
+        windowsHide: true,
+      });
+    } catch {
+      end();
+      return;
+    }
+    child.stdout?.on('data', (c: Buffer) => {
+      if (out.length < 1 << 20) out += c.toString('utf8');
+    });
+    child.stdout?.on('error', () => {});
+    child.on('error', () => end());
+    child.on('close', () => end(parsePathValue(out)));
+  });
+}
+
+function safeHome(): string {
+  try {
+    const h = homedir();
+    return h && existsSync(h) ? h : '/';
+  } catch {
+    return '/';
+  }
+}
+
+const loginPathOff = () => process.platform === 'win32' || process.env.KOPT_LOGIN_PATH === '0';
+
+/** The login shell's PATH, read once per process (KOPT_LOGIN_PATH=0 skips it; never on Windows). */
+export function loginShellPath(): Promise<LoginPath> {
+  if (loginPathOff()) return Promise.resolve({});
+  loginPath ??= readLoginShellPath(userShell(process.env)).then((v) => (loginPathRead = v));
+  return loginPath;
+}
+
+/** Starts reading the login shell's PATH now (the MCP server calls it at startup, so no kopt_run waits for it). */
+export function warmLoginShellPath(): void {
+  void loginShellPath();
+}
+
+function isDir(p: string): boolean {
+  try {
+    return statSync(p).isDirectory();
+  } catch {
+    return false;
+  }
+}
+
+function readTextOr(p: string): string | undefined {
+  try {
+    return readFileSync(p, 'utf8');
+  } catch {
+    return undefined;
+  }
+}
+
+function listDirOr(p: string): string[] {
+  try {
+    return readdirSync(p);
+  } catch {
+    return [];
+  }
+}
+
+const semverKey = (v: string) => v.replace(/^v/, '').split('.').map((n) => n.padStart(6, '0')).join('.');
+
+/** bin folder of nvm's default Node (`nvm alias default`, aliases such as lts/* followed), when installed. */
+export function nvmDefaultBin(nvmDir: string, readText: (p: string) => string | undefined = readTextOr, listDir: (p: string) => string[] = listDirOr): string | undefined {
+  let name = 'default';
+  for (let hop = 0; hop < 6; hop++) {
+    if (name.split('/').includes('..')) return undefined;
+    const value = readText(posixPath.join(nvmDir, 'alias', name))?.trim();
+    if (!value) return undefined;
+    if (value === 'node' || value === 'stable' || /^v?\d+(\.\d+){0,2}$/.test(value)) {
+      const want = value === 'node' || value === 'stable' ? '' : value.replace(/^v/, '');
+      const versions = listDir(posixPath.join(nvmDir, 'versions', 'node'))
+        .filter((v) => /^v\d+\.\d+\.\d+$/.test(v))
+        .filter((v) => !want || v.slice(1) === want || v.slice(1).startsWith(want + '.'))
+        .sort((a, b) => (semverKey(a) < semverKey(b) ? -1 : 1));
+      const best = versions[versions.length - 1];
+      return best ? posixPath.join(nvmDir, 'versions', 'node', best, 'bin') : undefined;
+    }
+    name = value; // another alias (lts/*, lts/jod, a user alias)
+  }
+  return undefined;
+}
+
+export interface CommandPathInput {
+  platform?: NodeJS.Platform;
+  /** Environment kopt started with (PATH, NVM_DIR). */
+  env?: NodeJS.ProcessEnv;
+  /** The Node running kopt (process.execPath). */
+  execPath?: string;
+  login?: LoginPath;
+  home?: string;
+  /** Folder check (tests). */
+  isDir?: (p: string) => boolean;
+  /** nvm lookups (tests). */
+  readText?: (p: string) => string | undefined;
+  listDir?: (p: string) => string[];
+}
+
+export interface CommandPath {
+  /** PATH of the command; undefined keeps the inherited one (Windows). */
+  path?: string;
+  /** Where it came from, for the "not found" hint. */
+  sources: string[];
+}
+
+/** The PATH kopt_run gives a command (see the section comment). Pure: every input is injectable. */
+export function commandPath(i: CommandPathInput = {}): CommandPath {
+  const platform = i.platform ?? process.platform;
+  const env = i.env ?? process.env;
+  if (platform === 'win32') return { sources: ["kopt's PATH"] };
+  const exists = i.isDir ?? isDir;
+  const seen = new Set<string>();
+  const out: string[] = [];
+  const add = (dirs: Array<string | undefined>): string[] => {
+    const added: string[] = [];
+    for (const raw of dirs) {
+      const t = raw?.trim();
+      const d = t && t.length > 1 ? t.replace(/\/+$/, '') : t;
+      if (!d || !d.startsWith('/') || seen.has(d)) continue;
+      seen.add(d);
+      out.push(d);
+      added.push(d);
+    }
+    return added;
+  };
+  const sources: string[] = [];
+  const inherited = add((envGet(env, 'PATH') ?? '').split(':'));
+  if (inherited.length) sources.push("kopt's PATH");
+  else if (add(SYSTEM_PATH).length) sources.push('system folders (kopt got no PATH)');
+  if (add([posixPath.dirname(i.execPath ?? process.execPath)]).length) sources.push("kopt's Node folder");
+  if (i.login?.path) {
+    if (add(i.login.path.split(':')).length) sources.push(`${i.login.shell} login PATH`);
+  } else if (i.login?.shell) sources.push(`no ${i.login.shell} login PATH (unreadable)`);
+  const home = i.home ?? safeHome();
+  const nvmDir = envGet(env, 'NVM_DIR') || posixPath.join(home, '.nvm');
+  const common = ['/opt/homebrew/bin', '/usr/local/bin', posixPath.join(home, '.local', 'bin'), nvmDefaultBin(nvmDir, i.readText, i.listDir)];
+  const extra = add(common.filter((d): d is string => !!d && exists(d)));
+  if (extra.length) sources.push(extra.join(', '));
+  return { path: out.join(':'), sources };
+}
+
+export interface CommandEnv {
+  env: NodeJS.ProcessEnv;
+  /** Where its PATH came from (commandPath). */
+  sources: string[];
+}
+
+function envWith(extra: Record<string, string | undefined> | undefined, login: LoginPath | undefined): CommandEnv | undefined {
+  const own = process.platform === 'win32' || (!!extra && 'PATH' in extra);
+  if (!own && !login) return undefined;
+  const env = quietEnv(extra);
+  if (own) return { env, sources: ["kopt's PATH"] };
+  const cp = commandPath({ login });
+  if (cp.path) env.PATH = cp.path;
+  return { env, sources: cp.sources };
+}
+
+/** quietEnv + the command PATH, now when the login shell's PATH is known (or not wanted), else undefined. */
+export function commandEnvNow(extra?: Record<string, string | undefined>): CommandEnv | undefined {
+  return envWith(extra, loginPathOff() ? {} : loginPathRead);
+}
+
+/** quietEnv + the command PATH (commandPath, with the login shell's PATH: read once, waited for once). */
+export async function commandEnv(extra?: Record<string, string | undefined>): Promise<CommandEnv> {
+  return commandEnvNow(extra) ?? envWith(extra, await loginShellPath())!;
+}
+
+// ---------------------------------------------------------------------------------------------------------------
+// "command not found"
+
+/** Exit code of cmd.exe for an unknown command. */
+const CMD_NOT_FOUND = 9009;
+
+const NOT_FOUND_RES: RegExp[] = [
+  /command not found:\s*([^\s:'"`]+)\s*$/m, // zsh
+  /:\s*([^\s:'"`]+):\s*(?:command\s+)?not found\s*$/m, // bash, sh, dash, busybox
+  /env:\s*'?([^\s:'"`]+)'?:\s*No such file or directory/m, // a `#!/usr/bin/env node` script
+  /The term '([^']+)' is not recognized/m, // PowerShell
+  /^'([^']+)' is not recognized as an internal or external command/m, // cmd.exe
+];
+
+/** The program a "not found" failure names, else the command's first word. */
+export function missingProgram(command: string, output: string): string | undefined {
+  for (const re of NOT_FOUND_RES) {
+    const m = re.exec(output);
+    if (m) return m[1];
+  }
+  const words = command.trim().replace(/^&\s*/, '').split(/\s+/);
+  const first = words.find((w) => !/^[A-Za-z_][A-Za-z0-9_]*=/.test(w));
+  return first?.replace(/^["']|["']$/g, '') || undefined;
+}
+
+/**
+ * One line for a command the shell could not find (exit 127, or 9009 from cmd.exe): which program, and where the
+ * PATH came from, so the agent does not retry blindly. Undefined for any other result.
+ */
+export function notFoundHint(command: string, res: Pick<ExecResult, 'exitCode' | 'output' | 'timedOut' | 'cancelled' | 'pathSources'>, platform: NodeJS.Platform = process.platform): string | undefined {
+  if (res.timedOut || res.cancelled) return undefined;
+  if (res.exitCode !== 127 && !(platform === 'win32' && res.exitCode === CMD_NOT_FOUND)) return undefined;
+  const prog = missingProgram(command, res.output);
+  if (!prog) return undefined;
+  const from = (res.pathSources?.length ? res.pathSources : ["kopt's PATH"]).join(' + ');
+  const fix =
+    platform === 'win32'
+      ? 'install it or add its folder to your user PATH, then restart Kiro'
+      : 'install it, or add its folder to the "env" PATH of the kopt server (~/.kiro/settings/mcp.json)';
+  return `kopt: "${prog}" not found on kopt_run's PATH (${from}); ${fix}`;
 }
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -431,6 +716,12 @@ function killOne(pid: number, signal: NodeJS.Signals): void {
 }
 
 export function execCapture(o: ExecOptions): Promise<ExecResult> {
+  // Started at once when the PATH is known (every command but the first of a process that did not warm it up).
+  const now = commandEnvNow(o.env);
+  return now ? spawnCapture(o, now) : commandEnv(o.env).then((e) => spawnCapture(o, e));
+}
+
+function spawnCapture(o: ExecOptions, { env, sources }: CommandEnv): Promise<ExecResult> {
   const cap = o.maxCaptureChars ?? MAX_CAPTURE_CHARS;
   const capture = new Capture(Math.floor(cap * 0.2), Math.ceil(cap * 0.8));
   const started = Date.now();
@@ -447,7 +738,7 @@ export function execCapture(o: ExecOptions): Promise<ExecResult> {
 
     const child = spawn(sh.file, sh.args, {
       cwd: o.cwd,
-      env: quietEnv(o.env),
+      env,
       stdio: ['ignore', 'pipe', 'pipe'],
       // Own process group on POSIX so a timeout can kill the command and everything it spawned. On Windows the
       // shell stays in this process's kill-on-close job object, and taskkill /T ends the whole tree (timeouts,
@@ -476,6 +767,7 @@ export function execCapture(o: ExecOptions): Promise<ExecResult> {
       else code = 1;
       resolvePromise({
         output: spawnError ? `${capture.text()}${spawnError}` : capture.text(),
+        pathSources: sources,
         exitCode: code,
         signal: exitSignal ?? undefined,
         timedOut,

@@ -68,7 +68,12 @@ modules and no compiler needed. Kiro starts kopt with absolute paths, so nothing
 `<absolute node> <kopt>/dist/bin.js mcp`, and hooks run a small launcher, `~/.kopt/bin/kopt` (`kopt.cmd` on Windows),
 that turns any failure into a silent allow. Re-run `kopt setup` after upgrading or moving Node (see
 [docs/INSTALL.md](INSTALL.md)). `kopt_run` uses PowerShell 7 when it is on `PATH`, else Windows PowerShell 5.1, else
-cmd.exe. On Linux and macOS it uses bash, else sh. `KOPT_SHELL` overrides the shell.
+cmd.exe. On Linux and macOS it uses bash, else sh. `KOPT_SHELL` overrides the shell. On Linux and macOS the commands
+get the `PATH` kopt started with, then the folder of the Node running kopt, then the `PATH` of your login shell
+(read once, in the background, with `$SHELL -ilc`), then `/opt/homebrew/bin`, `/usr/local/bin`, `~/.local/bin` and
+nvm's default Node when they exist: `npm test` works even when Kiro gives kopt `PATH=/usr/bin:/bin`. A command
+that is still not found (exit 127, or 9009 from cmd.exe) ends with one `kopt:` line naming the program and where
+the `PATH` came from.
 
 ## Measuring savings
 

@@ -135,7 +135,8 @@ describe('stop signals kill running command trees', () => {
   it('removes its signal listeners once no command runs', async () => {
     const before = process.listenerCount('SIGINT');
     const p = execCapture({ command: node('setTimeout(() => {}, 200)'), cwd: tmpdir(), timeoutMs: 10_000 });
-    expect(activeCommandCount()).toBe(1);
+    // the first command of a process may wait for the login shell's PATH before it starts
+    expect(await waitFor(() => activeCommandCount() === 1, 5000)).toBe(true);
     expect(process.listenerCount('SIGINT')).toBe(before + 1);
     await p;
     expect(activeCommandCount()).toBe(0);

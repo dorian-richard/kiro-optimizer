@@ -119,6 +119,7 @@ Restricting repository files to harmless keys is planned.
 | `KOPT_HOOKS` | `0`: disable all kopt hooks |
 | `KOPT_TELEMETRY` | `0`: no local usage log (`kopt stats` then has nothing to report); `1`: write it even when a config file turns it off |
 | `KOPT_SHELL` | shell for `kopt_run` / `kopt run`: a name (`bash`, `sh`, `pwsh`, `powershell`, `cmd`) or a path |
+| `KOPT_LOGIN_PATH` | `0`: do not add the login shell's `PATH` to the `PATH` of `kopt_run` commands (Linux, macOS) |
 | `KOPT_SESSION` | session id that CLI tool commands record in the usage log (default `cli`). When set, the CLI keeps that session's dedup ledger between calls (`<dataDir>/ledgers`, 30-minute window, as the MCP server within a session): an agent driving kopt through the shell gets "unchanged" for code it was already sent. Unset, every CLI call is stateless |
 | `KOPT_DEBUG` | print the stack trace of CLI errors, and hook error messages, on stderr (do not leave it on: hook output reaches Kiro) |
 | `KOPT_INDEX_DEBUG` | `1`: indexer debug logs on stderr |
