@@ -319,7 +319,9 @@ describe('robustness', () => {
     times.sort((a, b) => a - b);
     const p50 = times[Math.floor(times.length / 2)];
     const p90 = times[Math.floor(times.length * 0.9)];
-    expect(p50).toBeLessThan(10);
+    // Typically ~1 ms; the bounds only catch real regressions, since shared CI runners add noise
+    // (a p50 of 10.3 ms was seen on a GitHub Linux runner).
+    expect(p50).toBeLessThan(25);
     expect(p90).toBeLessThan(50);
   });
 });
