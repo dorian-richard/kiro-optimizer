@@ -1,12 +1,14 @@
 // What kopt_read / kopt_outline (and every tool that quotes source lines: find pack bodies, refs code lines, the
 // source hints of a failing kopt_run) may serve from disk. The read-only tools are auto-approved, so a path is
 // refused when it leaves the project (`..`, absolute elsewhere, a symlink pointing out), lies inside `.git`, or is
-// excluded by .gitignore / .git/info/exclude / .kiroignore (nested files, the .gitignore files of a parent
-// repository when the project is a subfolder of one, and Kiro's global kiroignore included): an agent cannot read
-// through kopt what git and Kiro keep out of the project. loadSource() (source.ts) applies this check to every file
+// excluded by .gitignore / .git/info/exclude / the user's global git excludes (core.excludesFile) / .kiroignore
+// (nested files, the .gitignore files of a parent repository when the project is a subfolder of one, and Kiro's
+// global kiroignore included): an agent cannot read through kopt what git and Kiro keep out of the project. loadSource() (source.ts) applies this check to every file
 // it reads, so no caller can skip it.
 
+import { execFileSync } from 'node:child_process';
 import { readFileSync, realpathSync, statSync } from 'node:fs';
+import { homedir } from 'node:os';
 import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 import ignore, { type Ignore } from 'ignore';
 import { IgnoreRules, globalKiroignorePath } from '../indexer/walker.js';
@@ -86,6 +88,32 @@ interface GitLayout {
   prefix: string;
   /** `info/exclude` of the repository (the shared git dir of a linked worktree). */
   exclude: string;
+  /** The user's excludes file (globalExcludesFile). */
+  userExclude: string;
+}
+
+/**
+ * The excludes file git reads for the work tree `top` besides the .gitignore files and info/exclude:
+ * `core.excludesFile` (global or repository config, `~` expanded by git), else `$XDG_CONFIG_HOME/git/ignore`, else
+ * `~/.config/git/ignore`. A usual place for `.envrc`, `*.pem` and other files kept out of every repository.
+ */
+export function globalExcludesFile(top: string, env: NodeJS.ProcessEnv = process.env): string {
+  let configured = '';
+  try {
+    configured = execFileSync('git', ['config', '--path', '--get', 'core.excludesFile'], {
+      cwd: top,
+      env,
+      encoding: 'utf8',
+      timeout: 5_000,
+      stdio: ['ignore', 'pipe', 'ignore'],
+      windowsHide: true,
+    }).trim();
+  } catch {
+    // not set (exit 1), or no git: the default location
+  }
+  if (configured) return isAbsolute(configured) ? configured : resolve(top, configured);
+  if (env.XDG_CONFIG_HOME) return join(env.XDG_CONFIG_HOME, 'git', 'ignore');
+  return join(env.HOME || homedir(), '.config', 'git', 'ignore');
 }
 
 const layouts = new Map<string, { at: number; layout: GitLayout | undefined }>();
@@ -107,7 +135,7 @@ function gitLayout(root: string): GitLayout | undefined {
     if (found) {
       const dirs = findGitDirs(dir);
       const prefix = relative(dir, resolve(root)).split(sep).join('/');
-      layout = { top: dir, prefix, exclude: join(dirs?.commonDir ?? join(dir, '.git'), 'info', 'exclude') };
+      layout = { top: dir, prefix, exclude: join(dirs?.commonDir ?? join(dir, '.git'), 'info', 'exclude'), userExclude: globalExcludesFile(dir) };
       break;
     }
     const up = dirname(dir);
@@ -127,18 +155,23 @@ function rulesFor(rel: string, isDir: boolean, file: string, rules: IgnoreRules)
 }
 
 /**
- * Ignore rules that apply to `rel`: Kiro's global kiroignore and every .kiroignore from the root down; git's
- * info/exclude and every .gitignore from the work tree top (the root, or a parent repository) down to its folder.
- * (The `exclude` setting only keeps noise out of the index.)
+ * Ignore rules that apply to `rel`: Kiro's global kiroignore and every .kiroignore from the root down (a match in any
+ * of them excludes); git's rules from the work tree top (the root, or a parent repository) down to its folder, by
+ * increasing precedence: the user's excludes file, info/exclude, then every .gitignore (nothing re-includes a file
+ * inside an excluded folder). (The `exclude` setting only keeps noise out of the index.)
  */
 function ignored(root: string, rel: string, isDir: boolean): boolean {
-  const kiro = new IgnoreRules(root, [], { load: cachedIgnore, base: cachedIgnore(globalKiroignorePath()) ?? NONE });
+  const kiro = new IgnoreRules(root, [], { load: cachedIgnore, base: cachedIgnore(globalKiroignorePath()) ?? NONE, semantics: 'kiro' });
   if (rulesFor(rel, isDir, '.kiroignore', kiro)) return true;
   const g = gitLayout(root);
   const top = g?.top ?? root;
   const gitRel = g?.prefix ? `${g.prefix}/${rel}` : rel;
-  const info = cachedIgnore(g?.exclude ?? join(root, '.git', 'info', 'exclude')) ?? NONE;
-  return rulesFor(gitRel, isDir, '.gitignore', new IgnoreRules(top, [], { load: cachedIgnore, base: info }));
+  const base: Ignore[] = [];
+  for (const file of [g?.userExclude, g?.exclude ?? join(root, '.git', 'info', 'exclude')]) {
+    const ig = file ? cachedIgnore(file) : undefined;
+    if (ig) base.push(ig);
+  }
+  return rulesFor(gitRel, isDir, '.gitignore', new IgnoreRules(top, [], { load: cachedIgnore, base }));
 }
 
 /** The reasons that only depend on how `rel` is spelled and on the ignore files. */

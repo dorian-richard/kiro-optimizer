@@ -1,8 +1,10 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
+import { appendFileSync, mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import { defaultConfig } from '../src/core/config.js';
+import { filterPaths, ignoreTestsOnePath, listFiles } from '../src/indexer/walker.js';
 import { newToolContext, type ToolContext } from '../src/core/context.js';
 import { failureContext, find, outline, read, refs, setExtractor, setReextract, settleExtractions } from '../src/retrieval/index.js';
 import { Store, symbolHandle } from '../src/store/store.js';
@@ -306,5 +308,153 @@ describe('access rules from the enclosing git repository', () => {
     } finally {
       store.close();
     }
+  });
+});
+
+// Acceptance test of v0.2.1: files ignored only by the user's global git excludes were served; a nested ignore file
+// could re-include a file inside an excluded folder (git cannot), and a nested .kiroignore re-included what the root
+// one excludes (Kiro cannot); a folder a deeper .gitignore re-includes stayed unreadable.
+describe('ignore semantics of git and Kiro', () => {
+  let top: string;
+  const REFUSED = (p: string) => `${p}: not readable through kopt (excluded by .gitignore or .kiroignore)`;
+  // never the developer's git setup: no inherited repository or global config file
+  const gitEnv = () => ({ ...process.env, GIT_DIR: undefined, GIT_WORK_TREE: undefined, GIT_CONFIG_GLOBAL: undefined, GIT_CONFIG_SYSTEM: undefined, GIT_CONFIG_NOSYSTEM: '1' });
+  const git = (cwd: string, ...args: string[]) => spawnSync('git', args, { cwd, env: gitEnv(), encoding: 'utf8' });
+  const hasGit = git(tmpdir(), '--version').status === 0;
+  const files = (root: string, spec: Record<string, string>) => {
+    for (const [rel, text] of Object.entries(spec)) {
+      mkdirSync(dirname(join(root, rel)), { recursive: true });
+      writeFileSync(join(root, rel), text);
+    }
+  };
+  const readAt = (root: string, target: string) => {
+    const store = Store.open(':memory:', { root });
+    try {
+      return read(store, { target }, newToolContext(defaultConfig(root))).text;
+    } finally {
+      store.close();
+    }
+  };
+  const repo = (name: string) => {
+    const dir = join(top, name);
+    mkdirSync(dir, { recursive: true });
+    if (hasGit) git(dir, 'init', '-q');
+    else mkdirSync(join(dir, '.git', 'info'), { recursive: true });
+    return dir;
+  };
+  beforeAll(() => {
+    top = mkdtempSync(join(tmpdir(), 'kopt-ignore-'));
+  });
+  afterAll(() => rmSync(top, { recursive: true, force: true }));
+
+  it('the single-path test of `ignore` is available (folders are checked on their own)', () => {
+    expect(ignoreTestsOnePath()).toBe(true);
+  });
+
+  it.runIf(hasGit)('global git excludes: core.excludesFile (`~` expanded, repository config included), else XDG_CONFIG_HOME, else ~/.config/git/ignore', () => {
+    const keys = ['HOME', 'XDG_CONFIG_HOME', 'GIT_CONFIG_GLOBAL', 'GIT_CONFIG_SYSTEM', 'GIT_CONFIG_NOSYSTEM', 'GIT_DIR', 'GIT_WORK_TREE'] as const;
+    const prev = Object.fromEntries(keys.map((k) => [k, process.env[k]]));
+    const home = join(top, 'home');
+    // what git itself says, with the same environment
+    const gitIgnores = (cwd: string, p: string) => spawnSync('git', ['check-ignore', '-q', p], { cwd, env: process.env }).status === 0;
+    try {
+      for (const k of keys) delete process.env[k];
+      process.env.HOME = home;
+      process.env.GIT_CONFIG_NOSYSTEM = '1';
+      files(home, { '.config/git/ignore': '*.secret\n' });
+      const a = repo('xdg-default');
+      files(a, { 'token.secret': 'LEAK-default\n', 'ok.txt': 'ok\n' });
+      expect(readAt(a, 'token.secret')).toBe(REFUSED('token.secret'));
+      expect(gitIgnores(a, 'token.secret')).toBe(true);
+      expect(readAt(a, 'ok.txt')).toBe('ok.txt:1-1\nok');
+
+      process.env.XDG_CONFIG_HOME = join(home, 'xdg');
+      files(home, { 'xdg/git/ignore': '.envrc\n' });
+      const b = repo('xdg');
+      files(b, { '.envrc': 'export TOKEN=LEAK-xdg\n', 'token.secret': 'served\n' });
+      expect(readAt(b, '.envrc')).toBe(REFUSED('.envrc'));
+      expect(readAt(b, 'token.secret')).toBe('token.secret:1-1\nserved'); // git reads one of the two, not both
+      expect([gitIgnores(b, '.envrc'), gitIgnores(b, 'token.secret')]).toEqual([true, false]);
+
+      files(home, { '.gitconfig': '[core]\n\texcludesFile = ~/gx\n', gx: 'creds.ini\n' });
+      const c = repo('configured');
+      files(c, { 'creds.ini': 'LEAK-configured\n', '.envrc': 'served\n' });
+      expect(readAt(c, 'creds.ini')).toBe(REFUSED('creds.ini'));
+      expect(readAt(c, '.envrc')).toBe('.envrc:1-1\nserved');
+      expect([gitIgnores(c, 'creds.ini'), gitIgnores(c, '.envrc')]).toEqual([true, false]);
+
+      const d = repo('repo-config');
+      files(home, { 'repo-ignore': 'local.only\n' });
+      appendFileSync(join(d, '.git', 'config'), `[core]\n\texcludesFile = ${join(home, 'repo-ignore').replace(/\\/g, '/')}\n`);
+      files(d, { 'local.only': 'LEAK-repo-config\n', 'creds.ini': 'served\n' });
+      expect(readAt(d, 'local.only')).toBe(REFUSED('local.only'));
+      expect(readAt(d, 'creds.ini')).toBe('creds.ini:1-1\nserved');
+      expect([gitIgnores(d, 'local.only'), gitIgnores(d, 'creds.ini')]).toEqual([true, false]);
+    } finally {
+      for (const k of keys) {
+        if (prev[k] === undefined) delete process.env[k];
+        else process.env[k] = prev[k];
+      }
+    }
+  });
+
+  const TREE: Record<string, string> = {
+    '.gitignore': 'logs/\nbuild\n*.key\n',
+    'logs/.gitignore': '*\n!app.ts\n',
+    'logs/app.ts': 'export const LEAK_nested = 1;\n',
+    'www/apps/book/.gitignore': '!/app/learn/build\n',
+    'www/apps/book/app/learn/build/page.ts': 'export const page = 1;\n',
+    'www/apps/book/app/learn/build/x.key': 'LEAK-key\n',
+    'www/apps/book/app/other/build/out.ts': 'export const LEAK_build = 1;\n',
+    'deep/.gitignore': '!*.key\n',
+    'deep/kept.key': 'served\n',
+    '.kiroignore': 'kiro-secret.ts\n*.gen.ts\n!keep.gen.ts\n',
+    'src/.kiroignore': '!kiro-secret.ts\n',
+    'src/kiro-secret.ts': 'export const LEAK_kiro = 1;\n',
+    'src/keep.gen.ts': 'export const kept = 1;\n',
+    'src/drop.gen.ts': 'export const LEAK_gen = 1;\n',
+    'src/ok.ts': 'export const ok = 1;\n',
+  };
+
+  it('a file inside an excluded folder stays excluded; a folder a deeper .gitignore re-includes is readable (as git says)', () => {
+    const r = repo('nested');
+    files(r, TREE);
+    const verdicts: Record<string, boolean> = {
+      'logs/app.ts': true,
+      'www/apps/book/app/learn/build/page.ts': false,
+      'www/apps/book/app/learn/build/x.key': true,
+      'www/apps/book/app/other/build/out.ts': true,
+      'deep/kept.key': false,
+      'src/ok.ts': false,
+    };
+    for (const [p, refused] of Object.entries(verdicts)) {
+      if (hasGit) expect(git(r, 'check-ignore', '-q', p).status === 0, `git check-ignore ${p}`).toBe(refused);
+      const text = readAt(r, p);
+      if (refused) expect(text, p).toBe(REFUSED(p));
+      else expect(text, p).toMatch(new RegExp(`^${p.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}:1-1\n`));
+    }
+  });
+
+  it('.kiroignore: a nested file cannot re-include what another one excludes; a file can within itself', () => {
+    const r = repo('kiro');
+    files(r, TREE);
+    expect(readAt(r, 'src/kiro-secret.ts')).toBe(REFUSED('src/kiro-secret.ts'));
+    expect(readAt(r, 'src/drop.gen.ts')).toBe(REFUSED('src/drop.gen.ts'));
+    expect(readAt(r, 'src/keep.gen.ts')).toBe('src/keep.gen.ts:1-1\nexport const kept = 1;');
+  });
+
+  it('the indexer lists and refreshes by the same rules (git listing, walk without git, explicit paths)', async () => {
+    const expected = ['src/keep.gen.ts', 'src/ok.ts', 'www/apps/book/app/learn/build/page.ts'];
+    const r = repo('index-git');
+    files(r, TREE);
+    const plain = join(top, 'index-plain');
+    files(plain, TREE);
+    for (const root of hasGit ? [r, plain] : [plain]) {
+      // no default excludes (they leave out build/ folders as noise)
+      const listed = (await listFiles({ ...defaultConfig(root), exclude: [] })).files;
+      expect(listed, root).toEqual(expected);
+    }
+    const { keep } = filterPaths({ ...defaultConfig(plain), exclude: [] }, Object.keys(TREE).filter((p) => p.endsWith('.ts')));
+    expect(keep.sort()).toEqual(expected);
   });
 });

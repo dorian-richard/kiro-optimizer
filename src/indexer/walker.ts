@@ -53,20 +53,65 @@ function loadIgnore(abs: string): Ignore | undefined {
 export interface IgnoreRulesOptions {
   /** Compiled rules of an ignore file, undefined when it is missing (default: read and compile it). */
   load?: (abs: string) => Ignore | undefined;
-  /** Rules that apply from the root, in place of `extra` + Kiro's global kiroignore. */
-  base?: Ignore;
+  /** Rules that apply from the root, lowest precedence first, in place of `extra` + Kiro's global kiroignore. */
+  base?: Ignore | Ignore[];
+  /** How the ignore files combine (default 'git'): see IgnoreRules. */
+  semantics?: 'git' | 'kiro';
 }
 
-/** Applies ignore files from the root down; deeper files can re-include (`!pattern`) like git does. */
+type TestResult = { ignored: boolean; unignored: boolean };
+type RuleSet = { test(path: string, checkUnignored: boolean, mode: string): TestResult };
+
+const ruleSet = (ig: Ignore) => (ig as unknown as { _rules?: RuleSet })._rules;
+
+/**
+ * `ignore` 7 tests one path without its parent folders on its rule set (`ignore().test()` applies the parent folders
+ * first). Probed once: a release without it (or with another signature) makes testOne use the public test.
+ */
+const ONE_PATH = (() => {
+  try {
+    const rules = ruleSet(ignore().add(['a/', 'b']));
+    return rules?.test('a/c', true, 'regex')?.ignored === false && rules.test('b', true, 'regex')?.ignored === true;
+  } catch {
+    return false;
+  }
+})();
+
+/**
+ * One path against the rules of one ignore file, without the file's verdict on the parent folders: the folders are
+ * checked on their own, across all the files that apply. Without the single-path test, the public test can only
+ * exclude more (a folder a deeper file re-includes stays excluded).
+ */
+function testOne(ig: Ignore, path: string): TestResult {
+  return ONE_PATH ? ruleSet(ig)!.test(path, true, 'regex') : ig.test(path);
+}
+
+/** Whether the single-path test of `ignore` is used (checked by the tests: an upgrade must not lose it silently). */
+export function ignoreTestsOnePath(): boolean {
+  return ONE_PATH;
+}
+
+/**
+ * Applies ignore files from the root down.
+ * - 'git': like git, the deepest file with a matching pattern decides, so a deeper file can re-include (`!pattern`)
+ *   what a shallower one excludes; but no file can re-include anything inside an excluded folder (folders are
+ *   checked from the top down, the first excluded one decides).
+ * - 'kiro': like Kiro, each ignore file is its own evaluator and a match in any of them excludes: a nested
+ *   `.kiroignore` cannot re-include what the root one or the global kiroignore excludes.
+ */
 export class IgnoreRules {
   private readonly scoped: Scoped[] = [];
   private readonly load: (abs: string) => Ignore | undefined;
+  private readonly kiro: boolean;
+  /** Folders already checked ('git'), cleared when an ignore file is added. */
+  private readonly folders = new Map<string, boolean>();
 
   /** The access checks (src/retrieval/access.ts) pass cached rules: they run on every file a tool quotes. */
   constructor(private readonly root: string, extra: string[] = [], opts: IgnoreRulesOptions = {}) {
     this.load = opts.load ?? loadIgnore;
+    this.kiro = opts.semantics === 'kiro';
     if (opts.base) {
-      this.scoped.push({ dir: '', ig: opts.base });
+      for (const ig of Array.isArray(opts.base) ? opts.base : [opts.base]) this.scoped.push({ dir: '', ig });
       return;
     }
     const base = ignore();
@@ -82,20 +127,47 @@ export class IgnoreRules {
     if (!ig) return;
     this.scoped.push({ dir, ig });
     this.scoped.sort((a, b) => a.dir.length - b.dir.length);
+    this.folders.clear();
   }
 
   ignores(rel: string, isDir = false): boolean {
-    let ignored = false;
-    for (const { dir, ig } of this.scoped) {
-      if (dir && !rel.startsWith(dir + '/')) continue;
-      const sub = dir ? rel.slice(dir.length + 1) : rel;
-      if (!sub) continue;
-      const r = ig.test(isDir ? sub + '/' : sub);
-      if (r.ignored) ignored = true;
-      else if (r.unignored) ignored = false;
+    if (this.kiro) {
+      for (const { dir, ig } of this.scoped) {
+        const sub = within(dir, rel);
+        if (sub && ig.ignores(isDir ? sub + '/' : sub)) return true;
+      }
+      return false;
     }
-    return ignored;
+    for (let at = rel.indexOf('/'); at > 0; at = rel.indexOf('/', at + 1)) {
+      const folder = rel.slice(0, at);
+      let excluded = this.folders.get(folder);
+      if (excluded === undefined) {
+        excluded = this.decide(folder, true);
+        this.folders.set(folder, excluded);
+      }
+      if (excluded) return true;
+    }
+    return this.decide(rel, isDir);
   }
+
+  /** git: the deepest ignore file with a pattern matching `rel` itself decides (its last matching pattern). */
+  private decide(rel: string, isDir: boolean): boolean {
+    for (let i = this.scoped.length - 1; i >= 0; i--) {
+      const { dir, ig } = this.scoped[i];
+      const sub = within(dir, rel);
+      if (!sub) continue;
+      const r = testOne(ig, isDir ? sub + '/' : sub);
+      if (r.ignored) return true;
+      if (r.unignored) return false;
+    }
+    return false;
+  }
+}
+
+/** `rel` relative to the folder `dir` of an ignore file, undefined when that file does not apply to it. */
+function within(dir: string, rel: string): string | undefined {
+  if (!dir) return rel || undefined;
+  return rel.startsWith(dir + '/') && rel.length > dir.length + 1 ? rel.slice(dir.length + 1) : undefined;
 }
 
 function gitList(root: string): Promise<string[] | undefined> {
@@ -115,7 +187,7 @@ function gitList(root: string): Promise<string[] | undefined> {
 /** Recursive walk honoring .gitignore files; prunes ignored directories early. */
 function walk(root: string, rules: IgnoreRules): string[] {
   const out: string[] = [];
-  const git = new IgnoreRules(root);
+  const git = new IgnoreRules(root, [], { base: [] });
   const stack: string[] = [''];
   while (stack.length) {
     const dir = stack.pop()!;
@@ -144,7 +216,7 @@ function walk(root: string, rules: IgnoreRules): string[] {
 
 export async function listFiles(config: KoptConfig): Promise<ListResult> {
   const root = config.root;
-  const rules = new IgnoreRules(root, config.exclude);
+  const rules = new IgnoreRules(root, config.exclude, { semantics: 'kiro' });
   // git also works from a subdirectory of a repository (paths come back relative to cwd)
   const listed = await gitList(root);
   let files: string[];
@@ -172,20 +244,21 @@ export async function listFiles(config: KoptConfig): Promise<ListResult> {
 
 /** Filters an explicit path list (incremental runs) through the same rules as a full listing. */
 export function filterPaths(config: KoptConfig, paths: string[]): { keep: string[]; dropped: string[] } {
-  const rules = new IgnoreRules(config.root, config.exclude);
+  const git = new IgnoreRules(config.root, [], { base: [] });
+  const kiro = new IgnoreRules(config.root, config.exclude, { semantics: 'kiro' });
   const dirs = new Set<string>(['']);
   for (const p of paths) {
     const parts = p.split('/');
     for (let i = 1; i < parts.length; i++) dirs.add(parts.slice(0, i).join('/'));
   }
   for (const d of [...dirs].sort((a, b) => a.length - b.length)) {
-    // .gitignore files use the same syntax; good enough for explicit paths (no git call per file)
-    if (existsSync(join(config.root, d, '.gitignore'))) rules.addFile(d, '.gitignore');
-    if (existsSync(join(config.root, d, '.kiroignore'))) rules.addFile(d, '.kiroignore');
+    // the .gitignore files of the folders on the way (no git call per file)
+    if (existsSync(join(config.root, d, '.gitignore'))) git.addFile(d, '.gitignore');
+    if (existsSync(join(config.root, d, '.kiroignore'))) kiro.addFile(d, '.kiroignore');
   }
   const keep: string[] = [];
   const dropped: string[] = [];
-  for (const p of paths) (languageForPath(p) && !rules.ignores(p) ? keep : dropped).push(p);
+  for (const p of paths) (languageForPath(p) && !git.ignores(p) && !kiro.ignores(p) ? keep : dropped).push(p);
   return { keep, dropped };
 }
 
