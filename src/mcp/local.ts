@@ -127,9 +127,13 @@ export class LocalRepo implements RepoHandle {
   private phaseMs: Partial<Record<IndexPhase['phase'], number>> = {};
   /** First build: symbols and search are written, references are being resolved. */
   private searchable = false;
+  /** The last refresh of the chain running now (a follow-up of the files reported meanwhile, else the refresh). */
   private refreshing?: Promise<void>;
   /** Whether a call should wait (bounded) for the running refresh: files the agent wrote, or the start-up catch-up. */
   private refreshWaitable = false;
+  /** Files the hooks reported while a refresh ran, for the follow-up queued after it (not started yet). */
+  private readonly queuedPaths = new Set<string>();
+  private followUpQueued = false;
   private progress = { done: 0, total: 0 };
   private lastCheck = 0;
   private lastFull = 0;
@@ -418,14 +422,18 @@ export class LocalRepo implements RepoHandle {
    * runs when git state moved, every fullRefreshIntervalMs, or when the hooks reported too many paths.
    */
   private maybeRefresh(): Promise<void> | undefined {
-    if (this.refreshing) return this.refreshWaitable ? this.refreshing : undefined;
+    if (this.refreshing) {
+      // The agent just wrote a file while a refresh runs (a full check started before the write, or a refresh of
+      // other files): the call waits for a pass that includes it, queued after the running one.
+      const reported = this.reportedPaths();
+      if (reported?.length) return this.queueFollowUp(reported);
+      return this.refreshWaitable ? this.refreshing : undefined;
+    }
     const now = Date.now();
-    const dirty = fileStamp(this.dirtyPath);
     const intervalDue = now - this.lastCheck >= this.o.refreshIntervalMs;
-    if (dirty === this.lastDirty && !intervalDue && !this.pendingPaths.size) return undefined;
-    this.lastDirty = dirty;
-    const paths = [...new Set([...this.pendingPaths, ...this.takeDirtyPaths()])];
-    this.pendingPaths.clear();
+    const reported = this.reportedPaths();
+    if (!reported && !intervalDue) return undefined;
+    const paths = reported ?? [];
     let full = false;
     if (intervalDue) {
       this.lastCheck = now;
@@ -438,12 +446,52 @@ export class LocalRepo implements RepoHandle {
     if (full) this.lastFull = now;
     const waitable = !full || this.startupCheck;
     this.startupCheck = false;
-    this.refreshWaitable = waitable;
-    this.refreshing = this.refresh(full ? undefined : paths).finally(() => {
+    const run = this.track(this.refresh(full ? undefined : paths), waitable);
+    return waitable ? run : undefined;
+  }
+
+  /**
+   * Paths the hooks reported since the last look (and the ones a refresh could not index), consumed; undefined when
+   * the dirty marker did not change and nothing is pending.
+   */
+  private reportedPaths(): string[] | undefined {
+    const dirty = fileStamp(this.dirtyPath);
+    if (dirty === this.lastDirty && !this.pendingPaths.size) return undefined;
+    this.lastDirty = dirty;
+    const paths = [...new Set([...this.pendingPaths, ...this.takeDirtyPaths()])];
+    this.pendingPaths.clear();
+    return paths;
+  }
+
+  /** Makes `run` the refresh calls join, until it settles (unless a follow-up was chained after it meanwhile). */
+  private track(run: Promise<void>, waitable: boolean): Promise<void> {
+    const tracked: Promise<void> = run.finally(() => {
+      if (this.refreshing !== tracked) return;
       this.refreshing = undefined;
       this.refreshWaitable = false;
     });
-    return waitable ? this.refreshing : undefined;
+    this.refreshing = tracked;
+    this.refreshWaitable = waitable;
+    return tracked;
+  }
+
+  /**
+   * A refresh of `paths` once the running one is done (one pass at a time: they share the writer); paths reported
+   * before it starts join it. Returns the pass the caller waits for (bounded by refreshWaitMs in acquire).
+   */
+  private queueFollowUp(paths: string[]): Promise<void> {
+    for (const p of paths) this.queuedPaths.add(p);
+    if (this.followUpQueued && this.refreshing) return this.refreshing;
+    this.followUpQueued = true;
+    const after = this.refreshing ?? Promise.resolve();
+    const next = after.then(() => {
+      this.followUpQueued = false;
+      const batch = [...this.queuedPaths];
+      this.queuedPaths.clear();
+      // too many for a targeted pass (a script rewrote a folder): the full check covers them
+      return batch.length ? this.refresh(batch.length > this.o.refreshMaxFiles ? undefined : batch) : undefined;
+    });
+    return this.track(next, true);
   }
 
   /** Complete lines appended to the dirty file since the last read. */

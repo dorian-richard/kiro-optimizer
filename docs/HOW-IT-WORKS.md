@@ -34,7 +34,8 @@ flowchart LR
    resolved too. A call that would have to wait more than 15 s answers at once with the progress and an estimate
    (`index building: 12000/33090 files parsed, ~2 min left – use built-in search/read tools until then`).
 5. **Incremental refresh.** Hooks record the files the agent writes; before answering a tool call, the server
-   re-indexes those files (waiting 2 s at most). At most every 30 s, on a tool call (there is no timer), it compares a
+   re-indexes those files (waiting 2 s at most), after the refresh already running if there is one (a full check
+   that started before the write does not see it). At most every 30 s, on a tool call (there is no timer), it compares a
    few git files (HEAD, the branch ref, `.git/index`) and runs the full freshness check (listing + size/date of every
    file), which catches pulls and checkouts, when they changed, and every 2 minutes in any case. All indexing runs in
    a worker thread, so tool calls keep answering meanwhile, and one process at a time indexes a project (a lock file

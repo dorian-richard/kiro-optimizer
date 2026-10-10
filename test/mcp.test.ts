@@ -1,4 +1,4 @@
-import { mkdtempSync, readFileSync, rmSync, utimesSync, writeFileSync, mkdirSync } from 'node:fs';
+import { appendFileSync, mkdtempSync, readFileSync, rmSync, utimesSync, writeFileSync, mkdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
@@ -321,6 +321,86 @@ describe('LocalRepo lifecycle', () => {
     await repo.acquire();
     expect(counts.refresh).toBe(2);
     expect(counts.paths).toEqual([undefined, ['src/a.ts', 'src/b.ts']]); // startup = full check, then only hook-reported paths
+    repo.close();
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // Acceptance test of v0.2.0: idle, `git add`, a call (full check started, not awaited), a write + PostToolUse hook,
+  // a call: it answered from the old index, because a running full refresh was never awaited.
+  it('a call right after a write waits for a pass that includes it, queued after a running full refresh', async () => {
+    const root = mkdtempSync(join(tmpdir(), 'kopt-local-'));
+    const cfg = defaultConfig(root);
+    seedStore(indexPath(cfg));
+    const passes: Array<{ paths?: string[]; start: number; end: number }> = [];
+    let active = 0;
+    let maxActive = 0;
+    const stats: IndexStats = { filesSeen: 1, filesIndexed: 1, filesUnchanged: 0, filesDeleted: 0, symbols: 2, refs: 0, durationMs: 1 };
+    const indexer = async (): Promise<IndexerModule> => ({
+      async indexRepo() {
+        return stats;
+      },
+      async refreshIndex(_s, opts) {
+        const pass = { paths: opts.paths, start: Date.now(), end: 0 };
+        passes.push(pass);
+        maxActive = Math.max(maxActive, ++active);
+        // a slow full check (listing + stat of every file), a quick targeted pass
+        await new Promise((r) => setTimeout(r, opts.paths ? 30 : 500));
+        active--;
+        pass.end = Date.now();
+        return stats;
+      },
+    });
+    const repo = new LocalRepo(cfg, { modules: { indexer } as Partial<Modules>, refreshIntervalMs: 50, fullRefreshIntervalMs: 0, log: () => {} });
+    const dirty = join(cfg.dataDir, 'dirty');
+    const report = (path: string, bump: number) => {
+      mkdirSync(cfg.dataDir, { recursive: true });
+      appendFileSync(dirty, `${path}\n`);
+      utimesSync(dirty, new Date(), new Date(Date.now() + bump));
+    };
+    await repo.acquire(); // start-up catch-up (awaited)
+    expect(passes.map((p) => p.paths)).toEqual([undefined]);
+    await new Promise((r) => setTimeout(r, 80));
+    const t0 = Date.now();
+    await repo.acquire(); // interval due: a full check starts and is not awaited
+    expect(Date.now() - t0).toBeLessThan(300);
+    expect(passes).toHaveLength(2);
+    // the agent writes two files (PostToolUse hooks) and searches while the full check still runs
+    report('src/new.ts', 5_000);
+    const a = repo.acquire();
+    report('src/other.ts', 10_000);
+    const b = repo.acquire();
+    await Promise.all([a, b]);
+    const full = passes[1];
+    const targeted = passes[2];
+    expect(targeted?.paths).toEqual(['src/new.ts', 'src/other.ts']); // one pass for both, after the full one
+    expect(targeted.end).toBeGreaterThan(0); // done before the calls answered
+    expect(targeted.start).toBeGreaterThanOrEqual(full.end);
+    expect(maxActive).toBe(1);
+    expect(Date.now() - t0).toBeLessThan(2_000);
+    // no file reported since: the next call does not wait (a periodic full check may start, never a targeted pass)
+    const t1 = Date.now();
+    await repo.acquire();
+    expect(Date.now() - t1).toBeLessThan(200);
+    expect(passes.slice(3).every((p) => p.paths === undefined)).toBe(true);
+    repo.close();
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  it('the wait for a written file is bounded (refreshWaitMs) when the running refresh is slower', async () => {
+    const root = mkdtempSync(join(tmpdir(), 'kopt-local-'));
+    const cfg = defaultConfig(root);
+    seedStore(indexPath(cfg));
+    const counts = { build: 0, refresh: 0, paths: [] as (string[] | undefined)[] };
+    const repo = new LocalRepo(cfg, { modules: { indexer: fakeIndexer({ refreshMs: 900, counts }) } as Partial<Modules>, refreshWaitMs: 150, refreshIntervalMs: 60_000, log: () => {} });
+    await repo.acquire(); // start-up full check: waited for at most 150 ms, still running
+    mkdirSync(cfg.dataDir, { recursive: true });
+    writeFileSync(join(cfg.dataDir, 'dirty'), 'src/a.ts\n');
+    utimesSync(join(cfg.dataDir, 'dirty'), new Date(), new Date(Date.now() + 5000));
+    const t0 = Date.now();
+    await repo.acquire();
+    expect(Date.now() - t0).toBeLessThan(700);
+    for (let i = 0; i < 100 && counts.paths.length < 2; i++) await new Promise((r) => setTimeout(r, 20));
+    expect(counts.paths).toEqual([undefined, ['src/a.ts']]); // the queued pass still runs
     repo.close();
     rmSync(root, { recursive: true, force: true });
   });
