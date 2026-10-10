@@ -31,7 +31,23 @@ public tag, on a copy of spring-framework).
   relative too.
 - **Stale `kopt_find` right after a write.** When a full freshness check was running (after a git change) and the
   agent wrote a file, the next call answered from the old index. A call now waits, 2 s at most, for a refresh of the
-  files the hooks reported, queued after the running one.
+  files the hooks reported, queued after the running one. When the full check is due on that very call (the agent
+  was idle for 2 minutes, or git state moved), the written files are re-indexed first, in a pass the call waits for,
+  and the full check runs after it.
+
+Found by the verification of these fixes:
+
+- **Security: files ignored only by the user's global git excludes were served.** `core.excludesFile` (global or
+  repository config), else `$XDG_CONFIG_HOME/git/ignore` or `~/.config/git/ignore`, now apply, below `info/exclude`,
+  as in git.
+- **Security: a nested ignore file could re-include a file inside an excluded folder.** Folders are now checked
+  from the top down and the first excluded one decides (git's rule), in the access check and in the indexer. A nested
+  `.kiroignore` no longer re-includes what another one excludes (each Kiro ignore file is its own evaluator). A
+  folder that a deeper `.gitignore` re-includes (`!/app/learn/build`) is readable again.
+- **Login shell.** Its `PATH` is taken as soon as the shell prints it: a profile that leaves a background job on
+  stdout no longer makes the read wait for the 3 s timeout and report the `PATH` as unreadable, and the job is left
+  running. The MCP server reads it only when `kopt_run` is not turned off (`disabledTools`, `KOPT_DISABLE_RUN=1`),
+  and `kopt run` in a terminal skips it (`KOPT_LOGIN_PATH=1` restores it).
 
 ## v0.2.0 (2026-10-10)
 

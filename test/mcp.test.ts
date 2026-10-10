@@ -386,6 +386,58 @@ describe('LocalRepo lifecycle', () => {
     rmSync(root, { recursive: true, force: true });
   });
 
+  // Acceptance test of v0.2.1: idle for 2 minutes (or a `git add` meanwhile), then a write + PostToolUse hook and a
+  // call. A full check was due, the written file went into it, and the call did not wait for it: stale answer.
+  it('a write when a full check is due too: the written file first (waited for), then the full check (not waited for)', async () => {
+    const root = mkdtempSync(join(tmpdir(), 'kopt-local-'));
+    const cfg = defaultConfig(root);
+    seedStore(indexPath(cfg));
+    const passes: Array<{ paths?: string[]; start: number; end: number }> = [];
+    let active = 0;
+    let maxActive = 0;
+    const stats: IndexStats = { filesSeen: 1, filesIndexed: 1, filesUnchanged: 0, filesDeleted: 0, symbols: 2, refs: 0, durationMs: 1 };
+    const indexer = async (): Promise<IndexerModule> => ({
+      async indexRepo() {
+        return stats;
+      },
+      async refreshIndex(_s, opts) {
+        const pass = { paths: opts.paths, start: Date.now(), end: 0 };
+        passes.push(pass);
+        maxActive = Math.max(maxActive, ++active);
+        // a full check longer than a call may wait (refreshWaitMs), a quick targeted pass
+        await new Promise((r) => setTimeout(r, opts.paths ? 30 : 1_500));
+        active--;
+        pass.end = Date.now();
+        return stats;
+      },
+    });
+    const repo = new LocalRepo(cfg, { modules: { indexer } as Partial<Modules>, refreshIntervalMs: 50, fullRefreshIntervalMs: 100, refreshWaitMs: 1_000, log: () => {} });
+    const dirty = join(cfg.dataDir, 'dirty');
+    await repo.acquire(); // start-up catch-up: waited for at most refreshWaitMs
+    for (let i = 0; i < 200 && !passes[0]?.end; i++) await new Promise((r) => setTimeout(r, 20));
+    await new Promise((r) => setTimeout(r, 150)); // idle: the next look is due for a full check
+    mkdirSync(cfg.dataDir, { recursive: true });
+    appendFileSync(dirty, 'src/new.ts\n');
+    utimesSync(dirty, new Date(), new Date(Date.now() + 5_000));
+    const t0 = Date.now();
+    await repo.acquire();
+    const answered = Date.now();
+    expect(passes.map((p) => p.paths)).toEqual([undefined, ['src/new.ts'], undefined]);
+    const [, targeted, full] = passes;
+    expect(targeted.end).toBeGreaterThan(0);
+    expect(targeted.end).toBeLessThanOrEqual(answered); // the call answered with the written file indexed
+    expect(answered - t0).toBeLessThan(900); // and did not wait for the full check
+    expect(full.start).toBeGreaterThanOrEqual(targeted.end);
+    expect(full.end).toBe(0);
+    // a call while the full check runs, nothing written since: no wait
+    const t1 = Date.now();
+    await repo.acquire();
+    expect(Date.now() - t1).toBeLessThan(300);
+    expect(maxActive).toBe(1);
+    repo.close();
+    rmSync(root, { recursive: true, force: true });
+  });
+
   it('the wait for a written file is bounded (refreshWaitMs) when the running refresh is slower', async () => {
     const root = mkdtempSync(join(tmpdir(), 'kopt-local-'));
     const cfg = defaultConfig(root);

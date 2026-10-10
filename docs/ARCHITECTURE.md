@@ -260,8 +260,9 @@ Three levels, from cheapest to most conclusive. Results: [BENCHMARKS.md](BENCHMA
   - `kopt_read` refuses ignored files, `.git` and paths or links that leave the project;
   - measurement: the 11-language corpus, held-out tasks, the agent A/B, and `kopt bench ab` for real credits.
 - **v0.2.1**: the fixes of the v0.2.0 acceptance test ([CHANGELOG.md](../CHANGELOG.md)): every file text kopt
-  quotes passes the access rules, `kopt_run` finds the user's tools under a minimal `PATH` and names a missing one, a
-  node:test filter (the TAP filter of the list below), and no stale answer right after a write.
+  quotes passes the access rules (with git's global excludes and its rule that nothing re-includes a file inside an
+  excluded folder), `kopt_run` finds the user's tools under a minimal `PATH` and names a missing one, a node:test
+  filter (the TAP filter of the list below), and no stale answer right after a write.
 - **Next** (from the A/B blockers and the FAQ review, most urgent first):
   - a committed `kopt.config.json` must not set `root`, `dataDir`, `userDir` or the governor (an allowlist of
     repository-level keys);

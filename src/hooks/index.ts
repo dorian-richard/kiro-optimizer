@@ -29,8 +29,8 @@ import type { KoptConfig } from '../core/config.js';
 import { findProjectRoot, indexPath, isUnsafeRoot, loadConfig, userDirFor } from '../core/config.js';
 import { estimateTokens } from '../core/tokens.js';
 import type { TelemetryEvent } from '../core/types.js';
-import { kiroHomeDir } from '../kiro/paths.js';
-import { appendPrivateFile, atomicWrite, mkdirPrivate, readJson, readTextFile, repoRelative, withFileLock } from '../telemetry/fsutil.js';
+import { koptMcpInstalled, koptRunAvailable } from '../kiro/mcpentry.js';
+import { appendPrivateFile, atomicWrite, mkdirPrivate, readJson, repoRelative, withFileLock } from '../telemetry/fsutil.js';
 import { pruneTelemetry, record } from '../telemetry/record.js';
 import { analyzeCommand, isReadOnlyCommand } from './commands.js';
 import { governorFingerprint } from './fingerprint.js';
@@ -133,38 +133,7 @@ export function logHookError(config: KoptConfig | undefined, err: unknown, event
   }
 }
 
-/** The `kopt` entry of mcp.json (workspace config wins over user config), when present. */
-export function koptMcpEntry(root: string): Record<string, any> | undefined {
-  const home = kiroHomeDir();
-  for (const file of [join(root, '.kiro', 'settings', 'mcp.json'), join(home, 'settings', 'mcp.json')]) {
-    try {
-      const cfg = JSON.parse(readTextFile(file));
-      const s = cfg?.mcpServers?.kopt;
-      if (s && typeof s === 'object' && !Array.isArray(s)) return s;
-    } catch { /* missing or invalid */ }
-  }
-  return undefined;
-}
-
-/** Is the kopt MCP server configured and enabled? */
-export function koptMcpInstalled(root: string): boolean {
-  const s = koptMcpEntry(root);
-  return !!s && s.disabled !== true;
-}
-
-/**
- * Can the agent call kopt_run? The server registers it unless its entry disables it (`disabledTools` lists it, or
- * env KOPT_DISABLE_RUN=1). Redirecting to a tool the model cannot call would cost two requests for nothing.
- */
-export function koptRunAvailable(root: string): boolean {
-  const s = koptMcpEntry(root);
-  if (!s || s.disabled === true) return false;
-  const disabled = Array.isArray(s.disabledTools) ? s.disabledTools.map(String) : [];
-  if (disabled.some((t: string) => koptToolName(t) === 'kopt_run' || t === '*')) return false;
-  const env = s.env && typeof s.env === 'object' ? s.env : {};
-  if (String(env.KOPT_DISABLE_RUN ?? '') === '1') return false;
-  return true;
-}
+export { koptMcpEntry, koptMcpInstalled, koptRunAvailable } from '../kiro/mcpentry.js';
 
 /**
  * Size of a text file whose whole-file read would cost more than `minTokens` (estimated from its bytes), else

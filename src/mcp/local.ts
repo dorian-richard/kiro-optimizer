@@ -30,6 +30,7 @@ import { withModules, type IndexPhase, type IndexStats, type Modules } from './m
 import { createServer, localTelemetrySink, type RepoHandle } from './server.js';
 import { executeTool, parseToolArgs, toolNeedsStore, type ExecuteResult, type ToolName } from './tools.js';
 import { warmLoginShellPath } from '../compress/runner.js';
+import { koptRunTurnedOff } from '../kiro/mcpentry.js';
 
 export interface LocalRepoOptions {
   modules?: Partial<Modules>;
@@ -134,6 +135,8 @@ export class LocalRepo implements RepoHandle {
   /** Files the hooks reported while a refresh ran, for the follow-up queued after it (not started yet). */
   private readonly queuedPaths = new Set<string>();
   private followUpQueued = false;
+  /** A full check due when the agent had just written files: runs once the targeted pass (and its follow-ups) is done. */
+  private fullAfter?: { waitable: boolean };
   private progress = { done: 0, total: 0 };
   private lastCheck = 0;
   private lastFull = 0;
@@ -419,7 +422,10 @@ export class LocalRepo implements RepoHandle {
    * Starts (or joins) a refresh; returns a promise only when the caller should wait for it (bounded by
    * refreshWaitMs): a refresh of the files the agent wrote, or the start-up catch-up. Every refreshIntervalMs the
    * dirty marker and the git state stamp are compared; the full freshness check (listing + stat of every file)
-   * runs when git state moved, every fullRefreshIntervalMs, or when the hooks reported too many paths.
+   * runs when git state moved, every fullRefreshIntervalMs, or when the hooks reported too many paths. When the
+   * agent wrote files and a full check is due too (it was idle, or git state moved), the written files go first in a
+   * targeted pass the call waits for, and the full check runs after it: on a large repository it takes longer than
+   * a call may wait, so a search right after a write would otherwise answer from the old index.
    */
   private maybeRefresh(): Promise<void> | undefined {
     if (this.refreshing) {
@@ -444,8 +450,13 @@ export class LocalRepo implements RepoHandle {
     if (!full && paths.length > this.o.refreshMaxFiles) full = true;
     if (!full && !paths.length) return undefined;
     if (full) this.lastFull = now;
-    const waitable = !full || this.startupCheck;
+    const startup = this.startupCheck;
     this.startupCheck = false;
+    if (full && paths.length && paths.length <= this.o.refreshMaxFiles) {
+      this.fullAfter = { waitable: startup };
+      return this.track(this.refresh(paths), true);
+    }
+    const waitable = !full || startup;
     const run = this.track(this.refresh(full ? undefined : paths), waitable);
     return waitable ? run : undefined;
   }
@@ -463,12 +474,18 @@ export class LocalRepo implements RepoHandle {
     return paths;
   }
 
-  /** Makes `run` the refresh calls join, until it settles (unless a follow-up was chained after it meanwhile). */
+  /**
+   * Makes `run` the refresh calls join, until it settles (unless a follow-up was chained after it meanwhile). When the
+   * chain is done, a full check deferred behind a targeted pass (fullAfter) starts.
+   */
   private track(run: Promise<void>, waitable: boolean): Promise<void> {
     const tracked: Promise<void> = run.finally(() => {
       if (this.refreshing !== tracked) return;
       this.refreshing = undefined;
       this.refreshWaitable = false;
+      const full = this.fullAfter;
+      this.fullAfter = undefined;
+      if (full && this.state === 'ready') void this.track(this.refresh(), full.waitable);
     });
     this.refreshing = tracked;
     this.refreshWaitable = waitable;
@@ -568,7 +585,7 @@ export async function serveStdio(config: KoptConfig, opts: StdioOptions = {}): P
   });
   await server.connect(transport);
   // kopt_run's PATH includes the login shell's: read it now, not on the first command.
-  warmLoginShellPath();
+  if (!koptRunTurnedOff(config.root)) warmLoginShellPath();
   await closed;
   await server.close().catch(() => {});
   repo.close();
@@ -791,6 +808,9 @@ export async function serveStdioAuto(base: KoptConfig, opts: StdioOptions & { en
     onRoot: (root, config) => {
       log(`project root ${root} (index: ${indexPath(config)})`);
       void legacyHooksFor(root, config, log);
+      // kopt_run's PATH includes the login shell's: read it now (once), not on the first command, unless the user
+      // turned kopt_run off (that would start their interactive profile for nothing)
+      if (!koptRunTurnedOff(root, env)) warmLoginShellPath();
     },
   });
   const transport = new StdioServerTransport();
@@ -800,7 +820,6 @@ export async function serveStdioAuto(base: KoptConfig, opts: StdioOptions & { en
     process.stdin.once('close', resolveClosed);
   });
   await server.connect(transport);
-  warmLoginShellPath();
   await closed;
   await server.close().catch(() => {});
   repo.close();

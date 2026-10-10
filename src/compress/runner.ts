@@ -145,7 +145,9 @@ function parsePathValue(text: string): string | undefined {
 
 /**
  * PATH of `shell` started as an interactive login shell (`$SHELL -ilc`, as editors do to get the terminal's
- * environment): stdin closed, stderr dropped, stdout only parsed between markers, killed after `timeoutMs`.
+ * environment): stdin closed, stderr dropped, stdout only parsed between markers, killed after `timeoutMs`. The
+ * PATH is taken as soon as both markers arrive: a profile that leaves a background job holding stdout (`cmd &`)
+ * would otherwise delay the end of the stream until the timeout, and that job is the user's, left running.
  */
 export function readLoginShellPath(shell: string | undefined, timeoutMs = LOGIN_PATH_TIMEOUT_MS): Promise<LoginPath> {
   return new Promise((resolveP) => {
@@ -157,12 +159,17 @@ export function readLoginShellPath(shell: string | undefined, timeoutMs = LOGIN_
       if (done) return;
       done = true;
       clearTimeout(timer);
+      // a background job of the profile may keep the pipe open: kopt neither waits for it nor closes the pipe on it
+      // (its next write would fail); what it prints is read and dropped
+      (child?.stdout as { unref?: () => void } | null | undefined)?.unref?.();
+      child?.unref();
       resolveP({ shell, path });
     };
     const timer = setTimeout(() => {
-      // its own process group: whatever the profile started goes too
-      if (child?.pid) killOne(-child.pid, 'SIGKILL');
-      end();
+      const path = parsePathValue(out);
+      // its own process group: whatever the profile started goes too (only when the shell never printed its PATH)
+      if (!path && child?.pid) killOne(-child.pid, 'SIGKILL');
+      end(path);
     }, timeoutMs);
     try {
       child = spawn(shell, ['-ilc', `printf '${PATH_MARK}%s${PATH_MARK}' "$PATH"`], {
@@ -177,7 +184,10 @@ export function readLoginShellPath(shell: string | undefined, timeoutMs = LOGIN_
       return;
     }
     child.stdout?.on('data', (c: Buffer) => {
-      if (out.length < 1 << 20) out += c.toString('utf8');
+      if (done || out.length >= 1 << 20) return;
+      out += c.toString('utf8');
+      const path = parsePathValue(out);
+      if (path) end(path);
     });
     child.stdout?.on('error', () => {});
     child.on('error', () => end());
@@ -194,9 +204,22 @@ function safeHome(): string {
   }
 }
 
-const loginPathOff = () => process.platform === 'win32' || process.env.KOPT_LOGIN_PATH === '0';
+/** Set by `kopt run` (see runFromTerminal). */
+let fromTerminal = false;
 
-/** The login shell's PATH, read once per process (KOPT_LOGIN_PATH=0 skips it; never on Windows). */
+const loginPathOff = () =>
+  process.platform === 'win32' || process.env.KOPT_LOGIN_PATH === '0' || (fromTerminal && process.env.KOPT_LOGIN_PATH !== '1');
+
+/**
+ * `kopt run` (CLI) starts from a terminal or an agent's shell, whose PATH already comes from the user's profile: no
+ * login shell is started for it (that costs the profile's start-up time, up to 3 s, on every call). KOPT_LOGIN_PATH=1
+ * starts it anyway.
+ */
+export function runFromTerminal(): void {
+  fromTerminal = true;
+}
+
+/** The login shell's PATH, read once per process (KOPT_LOGIN_PATH=0 skips it; never on Windows nor for `kopt run`). */
 export function loginShellPath(): Promise<LoginPath> {
   if (loginPathOff()) return Promise.resolve({});
   loginPath ??= readLoginShellPath(userShell(process.env)).then((v) => (loginPathRead = v));

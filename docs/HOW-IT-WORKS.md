@@ -37,7 +37,9 @@ flowchart LR
    re-indexes those files (waiting 2 s at most), after the refresh already running if there is one (a full check
    that started before the write does not see it). At most every 30 s, on a tool call (there is no timer), it compares a
    few git files (HEAD, the branch ref, `.git/index`) and runs the full freshness check (listing + size/date of every
-   file), which catches pulls and checkouts, when they changed, and every 2 minutes in any case. All indexing runs in
+   file), which catches pulls and checkouts, when they changed, and every 2 minutes in any case. When that check is
+   due on a call that follows a write, the written files are re-indexed first (the call waits for them) and the full
+   check runs after, without holding the call. All indexing runs in
    a worker thread, so tool calls keep answering meanwhile, and one process at a time indexes a project (a lock file
    next to the index). When the project has a complete index and the kopt MCP server is configured, a session start
    also triggers a background `kopt index --refresh --if-idle` (at most once a minute).
@@ -71,7 +73,8 @@ that turns any failure into a silent allow. Re-run `kopt setup` after upgrading 
 [docs/INSTALL.md](INSTALL.md)). `kopt_run` uses PowerShell 7 when it is on `PATH`, else Windows PowerShell 5.1, else
 cmd.exe. On Linux and macOS it uses bash, else sh. `KOPT_SHELL` overrides the shell. On Linux and macOS the commands
 get the `PATH` kopt started with, then the folder of the Node running kopt, then the `PATH` of your login shell
-(read once, in the background, with `$SHELL -ilc`), then `/opt/homebrew/bin`, `/usr/local/bin`, `~/.local/bin` and
+(read once, in the background, with `$SHELL -ilc`, when the MCP server opens a project and `kopt_run` is not turned
+off; `kopt run` in a terminal already has your shell's `PATH` and skips it), then `/opt/homebrew/bin`, `/usr/local/bin`, `~/.local/bin` and
 nvm's default Node when they exist: `npm test` works even when Kiro gives kopt `PATH=/usr/bin:/bin`. A command
 that is still not found (exit 127, or 9009 from cmd.exe) ends with one `kopt:` line naming the program and where
 the `PATH` came from.

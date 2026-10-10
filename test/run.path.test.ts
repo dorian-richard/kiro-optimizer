@@ -2,14 +2,17 @@
 // v0.2.0: `npm test` exited 127 with no hint). The command PATH adds the folder of kopt's Node, the login shell's
 // PATH and common bin folders; a command that still is not found gets one line naming it and the PATH sources.
 import { spawnSync } from 'node:child_process';
-import { chmodSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { chmodSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
+import { Client } from '@modelcontextprotocol/sdk/client/index.js';
+import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
 import { defaultConfig } from '../src/core/config.js';
 import { newToolContext } from '../src/core/context.js';
 import { runCommand } from '../src/compress/index.js';
 import { commandPath, execCapture, missingProgram, notFoundHint, nvmDefaultBin, readLoginShellPath } from '../src/compress/runner.js';
+import { koptRunTurnedOff } from '../src/kiro/mcpentry.js';
 
 const WIN = process.platform === 'win32';
 const ROOT = resolve(__dirname, '..');
@@ -87,6 +90,123 @@ describe.skipIf(WIN)('login shell PATH', () => {
     expect(Date.now() - t0).toBeLessThan(5000);
     expect(await readLoginShellPath(fakeShell('exit 3'))).toEqual({ shell: expect.any(String), path: undefined });
     expect(await readLoginShellPath('/nonexistent/shell')).toEqual({ shell: '/nonexistent/shell' });
+  });
+
+  // Acceptance test of v0.2.1: a profile starting a background job (`cmd &`) that keeps stdout open made the read
+  // wait for the timeout, report the PATH as unreadable, and kill the job with the shell's process group.
+  it('a profile that leaves a background job on stdout: the PATH as soon as it is printed, the job left running', async () => {
+    const pidFile = join(tempDir('bgjob'), 'bg.pid');
+    const sh = fakeShell(`sh -c 'echo $$ > "${pidFile}"; exec sleep 30' &\nPATH=/bg/bin:/usr/bin; export PATH; eval "$2"`);
+    const t0 = Date.now();
+    expect(await readLoginShellPath(sh, 3000)).toEqual({ shell: sh, path: '/bg/bin:/usr/bin' });
+    expect(Date.now() - t0).toBeLessThan(2000);
+    let pid = 0;
+    for (let i = 0; i < 100 && !pid; i++) {
+      pid = existsSync(pidFile) ? Number(readFileSync(pidFile, 'utf8').trim()) || 0 : 0;
+      if (!pid) await new Promise((r) => setTimeout(r, 20));
+    }
+    expect(pid).toBeGreaterThan(0);
+    try {
+      await new Promise((r) => setTimeout(r, 200));
+      expect(() => process.kill(pid, 0)).not.toThrow(); // still running
+    } finally {
+      try {
+        process.kill(pid, 'SIGKILL');
+      } catch {
+        // already gone
+      }
+    }
+  });
+});
+
+// The login shell runs the user's interactive profile (up to 3 s): only where kopt_run may need its PATH.
+describe.skipIf(WIN)('the login shell starts only when kopt_run may need it', () => {
+  const tsx = join(ROOT, 'node_modules', 'tsx', 'dist', 'loader.mjs');
+  /** A fake login shell that records each start. */
+  function markerShell(): { sh: string; marker: string } {
+    const dir = tempDir('markersh');
+    const marker = join(dir, 'started');
+    const sh = join(dir, 'fakesh');
+    writeFileSync(sh, `#!/bin/sh\necho started >> "${marker}"\nPATH=/marker/bin:/usr/bin; export PATH; eval "$2"\n`);
+    chmodSync(sh, 0o755);
+    return { sh, marker };
+  }
+  function boxEnv(extra: Record<string, string>): Record<string, string> {
+    const box = tempDir('loginsh-home');
+    const e: Record<string, string> = {};
+    for (const [k, v] of Object.entries(process.env)) if (v !== undefined && !/^KOPT_(LOGIN_PATH|DISABLE_RUN|SESSION|ROOT)$/.test(k)) e[k] = v;
+    return { ...e, HOME: box, KOPT_HOME: join(box, '.kopt'), KOPT_CACHE_DIR: join(box, 'cache'), KOPT_KIRO_HOME: join(box, '.kiro'), KOPT_TELEMETRY: '0', ...extra };
+  }
+  function project(mcpEntry?: Record<string, unknown>): string {
+    const repo = tempDir('loginsh-repo');
+    mkdirSync(join(repo, '.git'), { recursive: true });
+    writeFileSync(join(repo, 'README.md'), '# demo\n');
+    if (mcpEntry) {
+      mkdirSync(join(repo, '.kiro', 'settings'), { recursive: true });
+      writeFileSync(join(repo, '.kiro', 'settings', 'mcp.json'), JSON.stringify({ mcpServers: { kopt: mcpEntry } }));
+    }
+    return repo;
+  }
+
+  it('kopt run (CLI): not started, the terminal PATH is the user\'s; KOPT_LOGIN_PATH=1 starts it', () => {
+    const repo = project();
+    const { sh, marker } = markerShell();
+    const run = (extra: Record<string, string>) =>
+      spawnSync(process.execPath, ['--no-warnings', '--import', tsx, CLI, 'run', '--root', repo, 'node', '-e', 'process.exit(0)'], {
+        cwd: ROOT,
+        env: boxEnv({ SHELL: sh, ...extra }),
+        encoding: 'utf8',
+        timeout: 60_000,
+      });
+    const r = run({});
+    expect(r.status, r.stdout + r.stderr).toBe(0);
+    expect(existsSync(marker)).toBe(false);
+    expect(run({ KOPT_LOGIN_PATH: '1' }).status).toBe(0);
+    expect(existsSync(marker)).toBe(true);
+  });
+
+  it('kopt mcp: started at start-up, not when kopt_run is turned off (KOPT_DISABLE_RUN=1, disabledTools)', async () => {
+    const serve = async (args: string[], cwd: string, extra: Record<string, string>) => {
+      const { sh, marker } = markerShell();
+      const transport = new StdioClientTransport({
+        command: process.execPath,
+        args: ['--no-warnings', '--import', tsx, CLI, 'mcp', ...args],
+        cwd,
+        env: boxEnv({ SHELL: sh, KOPT_INDEX_ON_START: '0', ...extra }),
+        stderr: 'pipe',
+      });
+      const client = new Client({ name: 'test', version: '0' });
+      await client.connect(transport);
+      // answered once the project root is decided (the user-level server warms up then)
+      await client.callTool({ name: 'kopt_expand', arguments: { handle: 'o0000000' } });
+      return { client, marker };
+    };
+    const on = project();
+    const off = project({ command: 'kopt', args: ['mcp'], disabledTools: ['kopt_run'] });
+    const servers = await Promise.all([
+      serve(['--root', on], ROOT, {}),
+      serve([], on, {}),
+      serve(['--root', on], ROOT, { KOPT_DISABLE_RUN: '1' }),
+      serve([], off, {}),
+    ]);
+    try {
+      for (const s of servers.slice(0, 2)) {
+        for (let i = 0; i < 250 && !existsSync(s.marker); i++) await new Promise((r) => setTimeout(r, 20));
+        expect(existsSync(s.marker)).toBe(true);
+      }
+      await new Promise((r) => setTimeout(r, 300));
+      for (const s of servers.slice(2)) expect(existsSync(s.marker)).toBe(false);
+    } finally {
+      await Promise.all(servers.map((s) => s.client.close().catch(() => {})));
+    }
+  });
+
+  it('koptRunTurnedOff: the server environment, then the kopt entry of mcp.json; no entry found counts as on', () => {
+    expect(koptRunTurnedOff(project(), { KOPT_DISABLE_RUN: '1' })).toBe(true);
+    expect(koptRunTurnedOff(project({ command: 'kopt', disabledTools: ['mcp_kopt_kopt_run'] }), {})).toBe(true);
+    expect(koptRunTurnedOff(project({ command: 'kopt', env: { KOPT_DISABLE_RUN: '1' } }), {})).toBe(true);
+    expect(koptRunTurnedOff(project({ command: 'kopt', disabled: true }), {})).toBe(true);
+    expect(koptRunTurnedOff(project({ command: 'kopt', disabledTools: ['kopt_find'] }), {})).toBe(false);
   });
 });
 

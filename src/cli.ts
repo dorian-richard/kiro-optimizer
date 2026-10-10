@@ -428,9 +428,11 @@ async function main(): Promise<void> {
     .option('--root <dir>')
     .passThroughOptions()
     .action(
-      wrap(async (cmd: string[], o: { cwd?: string; timeout?: number; maxTokens?: number; fresh?: boolean; root?: string }) =>
-        tool('kopt_run', { command: await commandLine(cmd), cwd: o.cwd, timeoutSec: o.timeout, maxTokens: o.maxTokens, fresh: o.fresh }, o.root),
-      ),
+      wrap(async (cmd: string[], o: { cwd?: string; timeout?: number; maxTokens?: number; fresh?: boolean; root?: string }) => {
+        // the terminal's PATH is already the user's: no login shell (see runFromTerminal)
+        (await import('./compress/runner.js')).runFromTerminal();
+        return tool('kopt_run', { command: await commandLine(cmd), cwd: o.cwd, timeoutSec: o.timeout, maxTokens: o.maxTokens, fresh: o.fresh }, o.root);
+      }),
     );
 
   program
