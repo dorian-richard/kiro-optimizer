@@ -21,7 +21,7 @@ public tag, on a copy of spring-framework).
   folder of the Node running kopt, then the login shell's `PATH` (read once with `$SHELL -ilc`, in the background,
   output never shown; `KOPT_LOGIN_PATH=0` skips it), then `/opt/homebrew/bin`, `/usr/local/bin`, `~/.local/bin` and
   nvm's default Node when they exist. Windows keeps the inherited `PATH`. A command that is still not found (exit
-  127, or 9009 from cmd.exe) ends with one line naming the missing program and where the `PATH` came from.
+  127, or cmd.exe's "is not recognized") ends with one line naming the missing program and where the `PATH` came from.
 - **`kopt_run` summary of a failing node:test run.** A new filter for `node --test` (TAP, which node prints when the
   output is not a terminal, as under `kopt_run`; spec and dot reporters too) keeps each failing test as
   `FAIL <file> > <suite> > <name>`, the assertion message with its diff, the expected and actual values, and the

@@ -365,15 +365,18 @@ export async function commandEnv(extra?: Record<string, string | undefined>): Pr
 // ---------------------------------------------------------------------------------------------------------------
 // "command not found"
 
-/** Exit code of cmd.exe for an unknown command. */
+/** ERRORLEVEL cmd.exe sets for an unknown command (a batch file passes it on; `cmd /c` itself exits 1). */
 const CMD_NOT_FOUND = 9009;
+
+/** cmd.exe's message for an unknown command. */
+const CMD_NOT_RECOGNIZED = /^'([^']+)' is not recognized as an internal or external command/m;
 
 const NOT_FOUND_RES: RegExp[] = [
   /command not found:\s*([^\s:'"`]+)\s*$/m, // zsh
   /:\s*([^\s:'"`]+):\s*(?:command\s+)?not found\s*$/m, // bash, sh, dash, busybox
   /env:\s*'?([^\s:'"`]+)'?:\s*No such file or directory/m, // a `#!/usr/bin/env node` script
   /The term '([^']+)' is not recognized/m, // PowerShell
-  /^'([^']+)' is not recognized as an internal or external command/m, // cmd.exe
+  CMD_NOT_RECOGNIZED, // cmd.exe
 ];
 
 /** The program a "not found" failure names, else the command's first word. */
@@ -388,12 +391,14 @@ export function missingProgram(command: string, output: string): string | undefi
 }
 
 /**
- * One line for a command the shell could not find (exit 127, or 9009 from cmd.exe): which program, and where the
- * PATH came from, so the agent does not retry blindly. Undefined for any other result.
+ * One line for a command the shell could not find (exit 127; on Windows also 9009, or a failure with cmd.exe's
+ * "is not recognized" line, since `cmd /c` exits 1 for an unknown command): which program, and where the PATH came
+ * from, so the agent does not retry blindly. Undefined for any other result.
  */
 export function notFoundHint(command: string, res: Pick<ExecResult, 'exitCode' | 'output' | 'timedOut' | 'cancelled' | 'pathSources'>, platform: NodeJS.Platform = process.platform): string | undefined {
   if (res.timedOut || res.cancelled) return undefined;
-  if (res.exitCode !== 127 && !(platform === 'win32' && res.exitCode === CMD_NOT_FOUND)) return undefined;
+  const cmdNotFound = platform === 'win32' && (res.exitCode === CMD_NOT_FOUND || (res.exitCode !== 0 && CMD_NOT_RECOGNIZED.test(res.output)));
+  if (res.exitCode !== 127 && !cmdNotFound) return undefined;
   const prog = missingProgram(command, res.output);
   if (!prog) return undefined;
   const from = (res.pathSources?.length ? res.pathSources : ["kopt's PATH"]).join(' + ');

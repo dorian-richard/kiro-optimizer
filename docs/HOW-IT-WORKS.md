@@ -76,7 +76,7 @@ get the `PATH` kopt started with, then the folder of the Node running kopt, then
 (read once, in the background, with `$SHELL -ilc`, when the MCP server opens a project and `kopt_run` is not turned
 off; `kopt run` in a terminal already has your shell's `PATH` and skips it), then `/opt/homebrew/bin`, `/usr/local/bin`, `~/.local/bin` and
 nvm's default Node when they exist: `npm test` works even when Kiro gives kopt `PATH=/usr/bin:/bin`. A command
-that is still not found (exit 127, or 9009 from cmd.exe) ends with one `kopt:` line naming the program and where
+that is still not found (exit 127, or cmd.exe's "is not recognized") ends with one `kopt:` line naming the program and where
 the `PATH` came from.
 
 ## Measuring savings

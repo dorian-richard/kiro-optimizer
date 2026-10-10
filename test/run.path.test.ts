@@ -289,9 +289,16 @@ describe('a command that is not found', () => {
     expect(notFoundHint('npm test', { ...res, timedOut: true }, 'linux')).toBeUndefined();
     expect(notFoundHint('npm test', { ...res, exitCode: 9009, output: "'npm' is not recognized as an internal or external command," }, 'win32')).toMatch(/^kopt: "npm" not found .*restart Kiro$/);
     expect(notFoundHint('npm test', { ...res, exitCode: 9009 }, 'linux')).toBeUndefined();
+    // `cmd /c` exits 1 for an unknown command (9009 is the ERRORLEVEL a batch file sees): its message decides
+    const cmdOut = "'definitely-not-a-command-kopt' is not recognized as an internal or external command,\noperable program or batch file.";
+    expect(notFoundHint('definitely-not-a-command-kopt', { ...res, exitCode: 1, output: cmdOut }, 'win32')).toMatch(/^kopt: "definitely-not-a-command-kopt" not found .*restart Kiro$/);
+    expect(notFoundHint('npm test', { ...res, exitCode: 1, output: "> x\n'jest' is not recognized as an internal or external command," }, 'win32')).toMatch(/^kopt: "jest" not found /);
+    expect(notFoundHint('npm test', { ...res, exitCode: 1, output: '1 failing test' }, 'win32')).toBeUndefined();
+    expect(notFoundHint('npm test', { ...res, exitCode: 0, output: cmdOut }, 'win32')).toBeUndefined();
+    expect(notFoundHint('npm test', { ...res, exitCode: 1, output: cmdOut }, 'linux')).toBeUndefined();
   });
 
-  it.runIf(WIN)('Windows: cmd.exe exit 9009 gets the hint too', async () => {
+  it.runIf(WIN)('Windows: an unknown command under cmd.exe gets the hint too', async () => {
     const prev = process.env.KOPT_SHELL;
     process.env.KOPT_SHELL = process.env.ComSpec || 'cmd.exe';
     try {
@@ -299,8 +306,10 @@ describe('a command that is not found', () => {
       const cfg = defaultConfig(root);
       cfg.dataDir = join(root, '.kopt');
       const r = await runCommand({ command: 'definitely-not-a-command-kopt' }, newToolContext(cfg));
-      expect(r.meta?.exitCode).toBe(9009);
+      // `cmd /c` exits 1 here; 9009 is the ERRORLEVEL inside cmd.exe (and what a batch file passes on)
+      expect([1, 9009], r.text).toContain(r.meta?.exitCode);
       expect(r.text).toMatch(/kopt: "definitely-not-a-command-kopt" not found on kopt_run's PATH/);
+      expect(r.meta?.notFound).toBe(true);
     } finally {
       if (prev === undefined) delete process.env.KOPT_SHELL;
       else process.env.KOPT_SHELL = prev;
