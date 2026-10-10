@@ -1,6 +1,6 @@
 # kiro-optimizer: architecture and design decisions
 
-> Status: v0.2 pre-release (October 2026). This document explains why the tool is built the way it is.
+> Status: v0.2.1 (October 2026). This document explains why the tool is built the way it is.
 > The detailed sources (repositories read, Kiro docs, published benchmarks) are summarized in the appendix. Measured
 > results are in [BENCHMARKS.md](BENCHMARKS.md).
 
@@ -259,6 +259,9 @@ Three levels, from cheapest to most conclusive. Results: [BENCHMARKS.md](BENCHMA
     across processes, cheaper freshness checks;
   - `kopt_read` refuses ignored files, `.git` and paths or links that leave the project;
   - measurement: the 11-language corpus, held-out tasks, the agent A/B, and `kopt bench ab` for real credits.
+- **v0.2.1**: the fixes of the v0.2.0 acceptance test ([CHANGELOG.md](../CHANGELOG.md)): every file text kopt
+  quotes passes the access rules, `kopt_run` finds the user's tools under a minimal `PATH` and names a missing one, a
+  node:test filter (the TAP filter of the list below), and no stale answer right after a write.
 - **Next** (from the A/B blockers and the FAQ review, most urgent first):
   - a committed `kopt.config.json` must not set `root`, `dataDir`, `userDir` or the governor (an allowlist of
     repository-level keys);
@@ -269,7 +272,7 @@ Three levels, from cheapest to most conclusive. Results: [BENCHMARKS.md](BENCHMA
   - TypeScript/JavaScript locals from `new X(...)` and Rust `self.` calls in `kopt_refs`; a completeness check that
     skips comments;
   - a failing re-run that repeats its failure list; a routing line that brings kopt use back (measured in A/B);
-  - a TAP filter; content-producing Maven goals passed through;
+  - content-producing Maven goals passed through;
   - a `kopt-explorer` the IDE can load; spec steering and the tool-call budget for "Run all tasks".
 - **Later**: SCIP indexers for Java, TS and .NET, run locally; search across several local repositories; optional local
   embeddings; "Code Mode" (the model writes a script that queries the local index); a "fast apply" step for fewer

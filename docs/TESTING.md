@@ -42,15 +42,12 @@ npx -y github:dorian-richard/kiro-optimizer setup
 
 Puis **redémarrez Kiro** (dans l'IDE : recharger la fenêtre). kopt démarre alors tout seul dans chaque projet ouvert.
 
-> **Tant que la v0.2 n'est pas fusionnée dans `main`**, cette commande installe la v0.1 (la tête de `main`). Pour
-> tester la version que décrit ce guide, lancez setup depuis un checkout de celle-ci :
-> `npm ci && npm run build && node dist/bin.js setup --global`.
-
-Pour tester une version précise et pouvoir dire laquelle (`kopt --version` affiche 0.2.0), épinglez l'étiquette
-de la version, ou un commit précis :
+Cette commande installe la tête de `main`. Pour tester une version précise et pouvoir dire laquelle
+(`kopt --version` affiche 0.2.1), épinglez l'étiquette de la version, ou un commit précis (les changements de chaque
+version : [CHANGELOG.md](../CHANGELOG.md), en anglais) :
 
 ```bash
-npx -y github:dorian-richard/kiro-optimizer#v0.2.0 setup
+npx -y github:dorian-richard/kiro-optimizer#v0.2.1 setup
 npx -y github:dorian-richard/kiro-optimizer#<SHA complet> setup
 ```
 

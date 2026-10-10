@@ -1,6 +1,6 @@
 {
   "name": "kiro-optimizer",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Token optimizer for Kiro (IDE + CLI): budgeted code intelligence MCP, output compression, session governor hooks; runs entirely on the developer machine",
   "type": "module",
   "license": "MIT",

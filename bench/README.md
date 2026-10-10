@@ -9,7 +9,7 @@ levels:
 | level | tool | what it measures | cost | status |
 |---|---|---|---|---|
 | **Offline** (proxy) | `kopt bench` | tokens returned to the model for ONE exploration step, and recall of verified gold items | free, a few seconds | working: 11 languages, 138 tasks + 22 held-out |
-| **Compression** | `bench/compress/run.mjs` | what `kopt_run`'s filters return for the committed test, build and git outputs | free, under a second | working: 50 fixtures |
+| **Compression** | `bench/compress/run.mjs` | what `kopt_run`'s filters return for the committed test, build and git outputs | free, under a second | working: 54 fixtures |
 | **Agent A/B** | `bench/agentab` | tokens that really entered each agent's context, calls, a modeled session cost and graded answers, real agents on 21 tasks | agent runs | final v0.2 run committed (`results/agent-ab-final.md`): exploration -23% [-38%, -8%], test diagnosis +16% [-31%, +67%] |
 | **Online** (A/B) | `kopt bench ab` | real Kiro credits per task (headless kiro-cli on your own repository), with graded answers | Kiro credits | preflight verified live against kiro-cli 2.28; its one headless request was refused by Kiro (account suspended by anti-abuse, 0 credits); everything else tested with a kiro-cli simulator; no credit measured yet |
 

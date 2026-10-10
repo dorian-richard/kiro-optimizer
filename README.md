@@ -6,7 +6,7 @@
 tools (code search, code reads, callers, compressed test and build output), free hooks that stop wasteful actions, and
 a 42-word steering file. Everything runs locally: no server, no cloud account, nothing leaves your machine.
 
-**Status: v0.2.0** (git tag `v0.2.0`). Linux, macOS and Windows. Interfaces may still change.
+**Status: v0.2.1** (git tag `v0.2.1`, [changelog](CHANGELOG.md)). Linux, macOS and Windows. Interfaces may still change.
 
 ## Results: what you save
 

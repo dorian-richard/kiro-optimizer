@@ -5,11 +5,11 @@ bases de code : sur quoi repose le gain annoncé, ce qui a vraiment été mesur�
 mal tourner. Chaque réponse distingue ce qui est **mesuré** (avec le fichier de résultats), ce qui est **lu dans le
 code ou la documentation**, et ce qui n'est **pas mesuré**.
 
-État : kopt v0.2.0 (étiquette git `v0.2.0`), au 2026-10-10. Les chiffres
-viennent des fichiers de `bench/results` ; la source tenue à jour est [BENCHMARKS.md](BENCHMARKS.md) (en anglais),
-avec une version HTML à graphiques, [benchmarks.html](benchmarks.html), qui sera publiée à l'adresse
-<https://dorian-richard.github.io/kiro-optimizer/benchmarks.html> une fois la v0.2 sur `main` et GitHub Pages activé
-(pas encore). Pour tester kopt vous-même : [TESTING.md](TESTING.md).
+État : kopt v0.2.1 (étiquette git `v0.2.1`), au 2026-10-10 ; ce qui a changé depuis la v0.2.0 est dans
+[CHANGELOG.md](../CHANGELOG.md) (en anglais). Les chiffres viennent des fichiers de `bench/results` ; la source tenue
+à jour est [BENCHMARKS.md](BENCHMARKS.md) (en anglais), avec une version HTML à graphiques,
+[benchmarks.html](benchmarks.html), publiée à l'adresse <https://dorian-richard.github.io/kiro-optimizer/benchmarks.html>.
+Pour tester kopt vous-même : [TESTING.md](TESTING.md).
 
 En une phrase : sur l'exploration de code, des agents réels équipés de kopt ont coûté environ un cinquième de moins
 (-23 % [IC 95 % : -38 %, -8 %], 15 tâches) sans perte d'exactitude ; sur le diagnostic de tests, aucun gain mesurable ;
@@ -498,6 +498,15 @@ imbriqués et `kiroignore` global compris). Essai : un `.env` ignoré par git, u
 ainsi plus strict que les outils de lecture de Kiro, qui ne respectent pas `.gitignore` par défaut. Attention en
 revanche à ce que l'index stocke (question suivante).
 
+**La v0.2.1 ferme un contournement** trouvé par le test de recette de la v0.2.0 : un nom de fichier sans `/` et sans
+extension connue (`debug.log`, `id_rsa`, `server.key`, `cert.pem`, `*.iml`), ou écrit `./debug.log`, était pris pour
+un nom de symbole et lu sur le disque sans le contrôle. Désormais, tout texte de fichier que kopt cite passe par le
+même contrôle : `kopt_read` (handle, nom, chemin, plage), les plans de fichiers, les corps de `kopt_find`, les lignes
+de code de `kopt_refs` et les indications de source de `kopt_run`. Un nom qui est aussi un fichier ignoré donne le
+symbole, ou un refus. Le contrôle couvre aussi l'emplacement réel du chemin (un lien symbolique interne vers un
+fichier ignoré), les `.gitignore` et `info/exclude` du dépôt englobant (projet ouvert dans un sous-dossier, worktrees)
+et les graphies Windows qui ouvrent un fichier ignoré.
+
 ### 33. `kopt_run` contourne-t-il les permissions shell de Kiro ?
 
 Oui, en partie. `kopt_run` est un outil MCP : les listes d'autorisation et d'interdiction de commandes de Kiro
@@ -550,7 +559,7 @@ Pas encore comme il faudrait :
   release, pas de somme de contrôle. Le paquet est `private` et n'est pas sur npm.
 - **Le nom `kiro-optimizer` n'est pas réservé sur le registre npm** (404 le 2026-10-10) : si quelqu'un le publiait, un
   `npm update -g` de routine pourrait remplacer kopt, hooks compris.
-- `kopt --version` affiche 0.2.0 : pour savoir exactement quel commit est installé, épinglez l'étiquette `v0.2.0` ou un SHA.
+- `kopt --version` affiche 0.2.1 : pour savoir exactement quel commit est installé, épinglez l'étiquette `v0.2.1` ou un SHA.
 - Les dépendances sont en plages `^` et npm n'applique pas le lockfile d'une dépendance git.
 - **Épingler** : `npx -y github:dorian-richard/kiro-optimizer#<SHA complet de 40 caractères> setup`. **Revenir en
   arrière** : la même commande avec un SHA plus ancien. **Retirer** : `kopt uninstall`, puis

@@ -7,7 +7,10 @@ section covers indexing on two large repositories. Every number on this page com
 [`bench/results`](../bench/results), and **none of them is a Kiro credit**: Kiro credits have not been measured by us
 (see [Limits](#limits-what-these-numbers-are-not)). Teams can measure their own with `kopt bench ab`.
 
-kopt <!--v:version-->0.2.0<!--/v--> (git tag `v0.2.0`), the release that follows the v0.1 prototype. Measured on 2026-10-09 and 2026-10-10. Builds and dates per data set:
+kopt <!--v:version-->0.2.1<!--/v-->. The retrieval, agent and scale measurements were taken with v0.2.0 (git tag
+`v0.2.0`), the release that follows the v0.1 prototype, on 2026-10-09 and 2026-10-10; v0.2.1 returns the same
+offline retrieval results on the same indexes, and the command-output figures below include its node:test filter.
+Builds and dates per data set:
 [Data sources and versions](#data-sources-and-versions). An HTML version with charts, generated from the same data,
 is [`docs/benchmarks.html`](benchmarks.html), published at
 <https://dorian-richard.github.io/kiro-optimizer/benchmarks.html>.

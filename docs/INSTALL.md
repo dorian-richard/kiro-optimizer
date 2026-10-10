@@ -6,8 +6,8 @@ The [README](../README.md) one-liner is all most people need:
 npx -y github:dorian-richard/kiro-optimizer setup
 ```
 
-Restart Kiro afterwards. Until v0.2 is merged into `main`, this command installs v0.1 (the head of `main`); to
-install v0.2, run `npm ci && npm run build && node dist/bin.js setup --global` from a checkout of it.
+Restart Kiro afterwards. This command installs the head of `main`; to install a given release, pin its tag
+(`npx -y github:dorian-richard/kiro-optimizer#v0.2.1 setup`, see [CHANGELOG.md](../CHANGELOG.md)).
 
 This page explains what `setup` does, which files it writes on each OS and for each Kiro surface, the optional
 per-project mode, and troubleshooting. kopt runs entirely on your machine: there is no server to deploy and nothing

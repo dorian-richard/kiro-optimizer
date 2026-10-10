@@ -11,7 +11,7 @@ import { findProjectRoot } from './core/config.js';
 import type { Modules } from './mcp/modules.js';
 import type { ToolName } from './mcp/tools.js';
 
-const VERSION = '0.2.0';
+const VERSION = '0.2.1';
 
 const modules = async (): Promise<Modules> => (await import('./mcp/modules.js')).defaultModules;
 
