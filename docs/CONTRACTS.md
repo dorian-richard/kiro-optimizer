@@ -129,8 +129,10 @@ under `via wrapper`, then unresolved same-name refs of a related kind under `pos
 another symbol of that name) or `incomplete: ...` (what may be missing). Fields list their `read` / `write` refs.
 
 `read`/`outline` serve only paths inside the project that are not excluded by .gitignore / .kiroignore (nested
-files, .git/info/exclude and Kiro's global kiroignore included); `.git` and links leaving the project are refused
-with one line (`src/retrieval/access.ts`).
+files, .git/info/exclude, the .gitignore files of a parent repository and Kiro's global kiroignore included); `.git`
+and links leaving the project are refused with one line (`src/retrieval/access.ts`). The check runs in
+`loadSource()`, so it holds for every file text a tool quotes (find pack bodies, refs code lines, run source hints)
+and for every target spelling: a name that is also an ignored file resolves to the symbol or is refused.
 
 ### compress — `src/compress/`
 ```ts

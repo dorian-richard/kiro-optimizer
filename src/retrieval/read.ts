@@ -27,7 +27,7 @@ import {
 import { fileSymbols, resolveTarget, type ResolvedTarget, type SymbolCandidate } from './resolve.js';
 import { search } from './search.js';
 import { descendantIds, fitEntries, functionSkeleton, isContainer, skeletonEntries } from './skeleton.js';
-import { type Located, type Source, currentExtraction, loadSource, locate, relocate, sliceLines } from './source.js';
+import { type Located, type Source, currentExtraction, loadSource, locate, relocate, sliceLines, unavailable } from './source.js';
 import { methodFamily, unresolvedCount } from './usage.js';
 
 /** Largest maxTokens a caller may pass (MAX_TOKENS_CAP of the MCP layer): one call can return up to this. */
@@ -94,7 +94,7 @@ export interface SymbolSectionOpts {
 /** Body (verbatim, deduped) or skeleton of one symbol. Falls back to a skeleton when the body does not fit. */
 export function symbolSection(store: Store, sym: SymbolRow, file: FileRow, o: SymbolSectionOpts): Section & { overBudget?: { tokens: number; start: number; end: number } } {
   const src = loadSource(store, file.path, file);
-  if (!src) return { kind: 'error', text: `${file.path}: source not available (file missing on disk)` };
+  if (!src) return { kind: 'error', text: unavailable(store, file.path, 'source not available (file missing on disk)') };
   const loc = locate(store, src, sym);
   const handle = h(sym.id);
   const loc0 = `${file.path}:${loc.start}-${loc.end}`;
@@ -468,7 +468,7 @@ function symbolHead(store: Store, sym: SymbolRow, file: FileRow, src: Source, ob
 
 function readRange(store: Store, path: string, file: FileRow | undefined, start: number, end: number, ctx: ToolContext, maxTokens: number, fresh: boolean): ToolResult {
   const src = loadSource(store, path, file);
-  if (!src) return message(`${path}: source not available`, maxTokens);
+  if (!src) return message(unavailable(store, path), maxTokens);
   const n = src.lines.length;
   if (start > n) return message(`${path} has ${n} lines; requested ${start}-${end}`, maxTokens);
   const e = Math.min(end, n);
@@ -510,7 +510,7 @@ function fitRange(src: Source, start: number, end: number, maxTokens: number): {
 function readFile(store: Store, path: string, file: FileRow | undefined, mode: ReadMode | undefined, ctx: ToolContext, b: ReadBudgets, fresh: boolean): ToolResult {
   const maxTokens = b.range;
   const src = loadSource(store, path, file);
-  if (!src) return message(`${path}: source not available`, maxTokens);
+  if (!src) return message(unavailable(store, path), maxTokens);
   const n = src.lines.length;
   const meta = { resolved: 'file', mode: mode ?? 'auto' };
   if (mode === 'card') return result(fileCard(store, path, file, src), maxTokens, meta);

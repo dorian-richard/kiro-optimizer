@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { appendFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, utimesSync, writeFileSync } from 'node:fs';
+import { appendFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, utimesSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
@@ -413,6 +413,29 @@ describe('expand', () => {
     expect(expand({ handle: 'o000000' }, newToolContext(cfg)).text).toMatch(/^unknown output handle o000000 /);
     expect(expand({ handle: '../../etc/passwd' }, newToolContext(cfg)).text).toMatch(/^unknown output handle/);
     expect(expand({ handle, grep: '(' }, newToolContext(cfg)).text).toMatch(/^invalid grep regex/);
+  });
+});
+
+describe('OutputStore log reads', () => {
+  it('serves only plain log files it wrote: no handle path tricks, no links', () => {
+    const dataDir = tempDir('logread');
+    const store = new OutputStore(dataDir);
+    const idx = store.load();
+    const h = store.newHandle(idx, 'cmd');
+    store.writeLog(idx, h, 'line 1\n', 'cmd');
+    expect(store.readLog(h)).toBe('line 1\n');
+    for (const bad of ['../outputs/' + h, `${h}.log`, h.toUpperCase(), 'o12345', '']) expect(store.readLog(bad), bad).toBeUndefined();
+    const secret = join(tempDir('logsecret'), '.env');
+    writeFileSync(secret, 'LEAK-env\n');
+    try {
+      symlinkSync(secret, store.logPath('oabcdef'));
+    } catch {
+      return; // Windows without symlink rights
+    }
+    expect(store.readLog('oabcdef')).toBeUndefined();
+    const c = defaultConfig(dataDir);
+    c.dataDir = dataDir;
+    expect(expand({ handle: 'oabcdef' }, newToolContext(c)).text).toMatch(/^unknown output handle oabcdef /);
   });
 });
 

@@ -6,7 +6,7 @@ import { join } from 'node:path';
 import type { ExtractedFile, ExtractedSymbol } from '../core/types.js';
 import type { FileRow, SymbolRow } from '../store/schema.js';
 import type { Store } from '../store/store.js';
-import { staysInside } from './access.js';
+import { deniedMessage, denyReason } from './access.js';
 import { sha1 } from './common.js';
 
 export interface Source {
@@ -19,9 +19,13 @@ export interface Source {
   hash?: string;
 }
 
+/**
+ * Current text of a repo file, undefined when it is missing or may not be served (access.ts: outside the project,
+ * a link leaving it, inside .git, git/kiro-ignored). Every tool that quotes source reads it here, so the check
+ * holds whatever the caller resolved (a handle, a name, a path, an indexed file that became ignored since).
+ */
 export function loadSource(store: Store, path: string, file?: FileRow): Source | undefined {
-  // Never follow a link out of the project (a symlink committed in a cloned repository).
-  if (store.root && !staysInside(store.root, join(store.root, path))) return undefined;
+  if (denyReason(store.root, path)) return undefined;
   const row = file ?? store.fileByPath(path);
   let raw: string | undefined;
   try {
@@ -50,6 +54,12 @@ export function loadSource(store: Store, path: string, file?: FileRow): Source |
     }
   }
   return src;
+}
+
+/** Why loadSource() returned nothing for `path`, as one line (`missing` describes the not-on-disk case). */
+export function unavailable(store: Store, path: string, missing = 'source not available'): string {
+  const reason = denyReason(store.root, path);
+  return reason ? deniedMessage(path, reason) : `${path}: ${missing}`;
 }
 
 /**

@@ -3,7 +3,7 @@
 // (0700) and every file in it is 0600 (POSIX; Windows profile folders are already per-user).
 
 import { createHash } from 'node:crypto';
-import { chmodSync, existsSync, mkdirSync, readdirSync, readFileSync, statSync, unlinkSync, writeFileSync } from 'node:fs';
+import { chmodSync, existsSync, lstatSync, mkdirSync, readdirSync, readFileSync, statSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { renameWithRetry } from '../telemetry/fsutil.js';
 
@@ -115,10 +115,16 @@ export class OutputStore {
     this.evict(idx);
   }
 
+  /**
+   * A log by handle (kopt_read o3fad54): only the strict handle form, and only a plain file kopt wrote. A link
+   * left in the folder (pointing at a repo's .env, say) is not one of its logs and is never followed.
+   */
   readLog(handle: string): string | undefined {
     if (!HANDLE_RE.test(handle)) return undefined;
     try {
-      return readFileSync(this.logPath(handle), 'utf8');
+      const p = this.logPath(handle);
+      if (!lstatSync(p).isFile()) return undefined;
+      return readFileSync(p, 'utf8');
     } catch {
       return undefined;
     }

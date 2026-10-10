@@ -29,7 +29,7 @@ import {
 import { fileSkeleton, symbolSection } from './read.js';
 import { fileSymbols, resolveTarget } from './resolve.js';
 import { buildFtsQuery, selectFtsTerms, stemTerm } from './search.js';
-import { loadSource } from './source.js';
+import { loadSource, unavailable } from './source.js';
 
 interface MapFile {
   id: number;
@@ -75,7 +75,7 @@ export function outline(store: Store, p: OutlineParams, ctx: ToolContext): ToolR
 
 function fileOutline(store: Store, path: string, file: FileRow | undefined, maxTokens: number): ToolResult {
   const src = loadSource(store, path, file);
-  if (!src) return result(`${path}: source not available`, maxTokens);
+  if (!src) return result(unavailable(store, path), maxTokens);
   const n = src.lines.length;
   const full = estimateTokens(src.text);
   const what = `outline ${path}`;

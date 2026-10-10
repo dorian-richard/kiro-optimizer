@@ -10,8 +10,9 @@ v0.1 (`test/mcp.test.ts` keeps it under 350). In the agent A/B, kopt's prompt ad
 <!--v:ab.koptPrompt-->+282<!--/v--> tokens per request, measured with the model's own tokenizer. The other parameters are still accepted, and the outputs name them where
 they help. `kopt_outline` and `kopt_expand` are reached through `kopt_read` (a directory, `mode: "outline"`, a
 `kopt_run` log handle) and still answer by name. The three read-only tools are auto-approved in `mcp.json`, so
-`kopt_read` refuses, in one line, files excluded by `.gitignore` or `.kiroignore`, anything under `.git`, and paths
-or symlinks that leave the project. `kopt_run` executes commands, so Kiro still asks before running it. Every tool
+`kopt_read` refuses, in one line, files excluded by `.gitignore`, `.git/info/exclude` or `.kiroignore` (whatever the
+spelling: `debug.log`, `./id_rsa`, a symlink to one), anything under `.git`, and paths or symlinks that leave the
+project; the same check applies to every line kopt quotes from disk (`kopt_find` bodies, `kopt_refs` code lines). `kopt_run` executes commands, so Kiro still asks before running it. Every tool
 returns compact text and accepts `maxTokens`, clamped to 50-8000. Handles such as `#sn` (symbols) and `o3fad54`
 (command outputs) can be passed from one tool to another.
 

@@ -126,15 +126,14 @@ export function symbolsForName(store: Store, name: string): SymRow[] {
   return hits.filter((x) => tier(x.match) === bestTier).map((x) => x.row);
 }
 
-/**
- * Refusal for a path-like target that leaves the project, lies in .git or is git/kiro-ignored (see access.ts).
- * Names (no separator, no extension) are not paths and pass.
- */
-function guard(store: Store, rel: string, maybeName: boolean): ResolvedTarget | undefined {
-  if (maybeName && !looksLikePath(rel) && !/^[./]/.test(rel)) return undefined;
-  const reason = denyReason(store.root, rel, onDisk(store, rel) === 'dir');
+/** Refusal for a target that leaves the project, lies in .git or is git/kiro-ignored (see access.ts). */
+function guard(store: Store, rel: string, isDir: boolean): Extract<ResolvedTarget, { kind: 'none' }> | undefined {
+  const reason = denyReason(store.root, rel, isDir);
   return reason ? { kind: 'none', query: rel, message: deniedMessage(rel, reason), denied: true } : undefined;
 }
+
+/** A target that may name a symbol (`debug.log` can be `Logger.log`-like): no separator, no leading dot. */
+const mayBeName = (raw: string) => !/[\/]/.test(raw) && !raw.startsWith('.');
 
 interface SymbolAt {
   symbol: SymbolRow;
@@ -192,7 +191,7 @@ export function resolveTarget(store: Store, target: string): ResolvedTarget {
   const m = /^(.+?)(?::|#L)(\d+)(?:\s*-\s*L?(\d+))?$/.exec(raw.replace(/^(.+?:\d+):\d+$/, '$1'));
   if (m) {
     const rel = normalizeRel(m[1], store.root);
-    const denied = guard(store, rel, false);
+    const denied = guard(store, rel, onDisk(store, rel) === 'dir');
     if (denied) return denied;
     const f = asFile(store, rel);
     if (f.kind === 'file') {
@@ -220,9 +219,17 @@ export function resolveTarget(store: Store, target: string): ResolvedTarget {
     if (rows.length) return pickCandidates(store, raw, rows);
     return qualifiedFallback(store, raw) ?? { kind: 'none', query: raw, message: `no symbol matches "${raw}"` };
   }
-  const denied = guard(store, rel, true);
-  if (denied) return denied;
   const f = asFile(store, rel);
+  // Whatever exists on disk under this spelling passes the access rules before anything is read; a path-like target
+  // is checked even when missing (`../x` says "outside the project"). A name exists nowhere on disk: nothing to read.
+  if (f.kind || looksLikePath(rel) || /^[./]/.test(raw)) {
+    const denied = guard(store, rel, f.kind === 'dir');
+    if (denied) {
+      // Both a symbol name and a refused file (`debug.log`, `config`): the symbol, never the file.
+      const rows = mayBeName(raw) && !/\s/.test(raw) ? symbolsForName(store, raw) : [];
+      return rows.length ? pickCandidates(store, raw, rows) : denied;
+    }
+  }
   if (f.kind === 'file') return { kind: 'file', path: rel, file: f.file };
   if (f.kind === 'dir') return { kind: 'dir', path: rel.replace(/\/+$/, '') };
 
@@ -231,7 +238,10 @@ export function resolveTarget(store: Store, target: string): ResolvedTarget {
   if (looksLikePath(raw)) {
     const byName = rel.includes('/') ? [] : symbolsForName(store, raw);
     if (byName.length) return pickCandidates(store, raw, byName);
-    const files = filesBySuffix(store, rel);
+    // An indexed file that is refused now (ignored since it was indexed, tracked but matching an ignore rule).
+    const all = filesBySuffix(store, rel);
+    const files = all.filter((x) => !denyReason(store.root, x.path));
+    if (!files.length && all.length) return guard(store, all[0].path, false)!;
     if (files.length === 1) return { kind: 'file', path: files[0].path, file: files[0] };
     if (files.length > 1) {
       const list = files.slice(0, 5).map((f) => f.path).join(', ');

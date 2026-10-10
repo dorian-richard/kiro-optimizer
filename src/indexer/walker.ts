@@ -40,23 +40,47 @@ function kiroHome(): string {
   return process.env.KOPT_KIRO_HOME || process.env.KIRO_HOME || join(homedir(), '.kiro');
 }
 
+/** Kiro's global ignore file (`~/.kiro/settings/kiroignore`). */
+export function globalKiroignorePath(): string {
+  return join(kiroHome(), 'settings', 'kiroignore');
+}
+
+function loadIgnore(abs: string): Ignore | undefined {
+  const lines = readIgnore(abs);
+  return lines ? ignore().add(lines) : undefined;
+}
+
+export interface IgnoreRulesOptions {
+  /** Compiled rules of an ignore file, undefined when it is missing (default: read and compile it). */
+  load?: (abs: string) => Ignore | undefined;
+  /** Rules that apply from the root, in place of `extra` + Kiro's global kiroignore. */
+  base?: Ignore;
+}
+
 /** Applies ignore files from the root down; deeper files can re-include (`!pattern`) like git does. */
 export class IgnoreRules {
   private readonly scoped: Scoped[] = [];
+  private readonly load: (abs: string) => Ignore | undefined;
 
-  constructor(private readonly root: string, extra: string[] = []) {
+  /** The access checks (src/retrieval/access.ts) pass cached rules: they run on every file a tool quotes. */
+  constructor(private readonly root: string, extra: string[] = [], opts: IgnoreRulesOptions = {}) {
+    this.load = opts.load ?? loadIgnore;
+    if (opts.base) {
+      this.scoped.push({ dir: '', ig: opts.base });
+      return;
+    }
     const base = ignore();
     if (extra.length) base.add(extra);
-    const global = readIgnore(join(kiroHome(), 'settings', 'kiroignore'));
+    const global = readIgnore(globalKiroignorePath());
     if (global) base.add(global);
     this.scoped.push({ dir: '', ig: base });
   }
 
   /** Registers an ignore file located at `dir` (repo-relative, '' for root). */
   addFile(dir: string, file: string): void {
-    const lines = readIgnore(join(this.root, dir, file));
-    if (!lines) return;
-    this.scoped.push({ dir, ig: ignore().add(lines) });
+    const ig = this.load(join(this.root, dir, file));
+    if (!ig) return;
+    this.scoped.push({ dir, ig });
     this.scoped.sort((a, b) => a.dir.length - b.dir.length);
   }
 

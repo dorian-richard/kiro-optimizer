@@ -201,6 +201,29 @@ describe('kopt find (end to end, needs indexer + retrieval)', () => {
   });
 });
 
+describe('kopt read access rules (end to end, needs indexer + retrieval)', () => {
+  const ready = existsSync(join(ROOT, 'src', 'indexer', 'index.ts')) && existsSync(join(ROOT, 'src', 'retrieval', 'index.ts'));
+  // The acceptance repro of v0.2.0: root-level ignored files with no known extension were served.
+  it.skipIf(!ready)('refuses git-ignored root files (debug.log, id_rsa, ./debug.log, info/exclude) and still reads code', () => {
+    const repo = mkdtempSync(join(tmpdir(), 'kopt-cli-deny-'));
+    spawnSync('git', ['init', '-q'], { cwd: repo });
+    writeFileSync(join(repo, '.gitignore'), '*.log\nid_rsa\n');
+    writeFileSync(join(repo, 'app.py'), 'def f():\n  return 1\n');
+    writeFileSync(join(repo, 'debug.log'), 'LEAK_LOG\n');
+    writeFileSync(join(repo, 'id_rsa'), 'LEAK_KEY\n');
+    writeFileSync(join(repo, 'server.key'), 'LEAK_SERVER_KEY\n');
+    if (existsSync(join(repo, '.git', 'info'))) writeFileSync(join(repo, '.git', 'info', 'exclude'), 'server.key\n');
+    else writeFileSync(join(repo, '.gitignore'), '*.log\nid_rsa\nserver.key\n');
+    for (const target of ['debug.log', './debug.log', 'id_rsa', 'server.key']) {
+      const r = kopt(['read', target, '--root', repo]);
+      expect(r.stdout, target).toMatch(/: not readable through kopt \(excluded by \.gitignore or \.kiroignore\)/);
+      expect(r.stdout + r.stderr, target).not.toMatch(/LEAK_/);
+    }
+    expect(kopt(['read', 'f', '--root', repo]).stdout).toContain('return 1');
+    rmSync(repo, { recursive: true, force: true });
+  });
+});
+
 describe('kopt CLI sessions (KOPT_SESSION)', () => {
   const ready = existsSync(join(ROOT, 'src', 'indexer', 'index.ts')) && existsSync(join(ROOT, 'src', 'retrieval', 'index.ts'));
   it.skipIf(!ready)('keep their dedup ledger between calls; calls without a session stay stateless', () => {

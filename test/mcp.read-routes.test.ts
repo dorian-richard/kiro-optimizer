@@ -116,3 +116,29 @@ describe('kopt_read answers for the folded tools', () => {
     expect(listedSpelling('full output: kopt_expand o1a2b3c')).toBe('full output: kopt_read o1a2b3c');
   });
 });
+
+describe('kopt_read access rules through the MCP tool (every route)', () => {
+  it('refuses ignored files and folders whatever the route: name-like file, ./path, mode outline, directory', async () => {
+    writeFileSync(join(root, '.gitignore'), 'debug.log\nbuild/\n*.pem\n');
+    writeFileSync(join(root, 'debug.log'), 'LEAK-log\n');
+    writeFileSync(join(root, 'cert.pem'), 'LEAK-pem\n');
+    mkdirSync(join(root, 'build'), { recursive: true });
+    writeFileSync(join(root, 'build', 'out.ts'), 'export const LEAK = "build";\n');
+    for (const args of [
+      { target: 'debug.log' },
+      { target: './debug.log' },
+      { target: 'debug.log', mode: 'outline' },
+      { target: 'cert.pem' },
+      { target: 'cert.pem', mode: 'outline' },
+      { target: 'build' },
+      { target: 'build/' },
+      { target: 'build/out.ts' },
+      { target: 'build/out.ts', mode: 'outline' },
+    ]) {
+      const r = await call('kopt_read', args);
+      expect(r.isError, JSON.stringify(args)).toBe(false);
+      expect(r.text, JSON.stringify(args)).toMatch(/not readable through kopt \(excluded by \.gitignore or \.kiroignore\)/);
+      expect(r.text).not.toMatch(/LEAK/);
+    }
+  });
+});
