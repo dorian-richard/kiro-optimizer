@@ -498,6 +498,8 @@ describe('output normalization', () => {
     const text = "location: '/private/var/folders/x/T/kopt-a/test/a.test.js:4:1'\nat (file:///var/folders/x/T/kopt-a/src/b.js:2:3)";
     expect(relativizeRoot(text, roots, 'darwin')).toBe("location: 'test/a.test.js:4:1'\nat (file://src/b.js:2:3)");
     expect(relativizeRoot('/srv/old/var/folders/x/T/kopt-a/z', roots, 'darwin')).toBe('/srv/old/var/folders/x/T/kopt-a/z');
+    // Windows file URLs: file:///C:/... -> file://<relative>, like POSIX ones
+    expect(relativizeRoot('at f (file:///C:/Users/dev/repo/test/a.test.js:4:9)', ['C:\\Users\\dev\\repo'], 'win32')).toBe('at f (file://test/a.test.js:4:9)');
   });
 });
 

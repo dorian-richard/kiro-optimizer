@@ -199,6 +199,8 @@ export function relativizeRoot(text: string, roots: string[], platform: NodeJS.P
       variants.add(trimmed.replace(/\\/g, '/'));
       variants.add(trimmed.replace(/\//g, '\\'));
       variants.add(trimmed.replace(/\//g, '\\').replace(/\\/g, '\\\\'));
+      // file URLs (`file:///C:/repo/a.js`, node's ESM stack frames): the slash before the drive goes with the root
+      if (/^[A-Za-z]:/.test(trimmed)) variants.add(`/${trimmed.replace(/\\/g, '/')}`);
     }
   }
   // Longest first, and only where a path starts: `/var/x` must not eat the middle of `/private/var/x/a.js` (macOS

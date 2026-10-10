@@ -41,8 +41,10 @@ function realRel(root: string, rel: string): string | null | undefined {
     return undefined;
   }
   const rr = realRoot(root);
-  if (real === rr) return '';
-  if (!real.startsWith(rr.endsWith(sep) ? rr : rr + sep)) return null;
+  // Windows paths compare without case (a drive letter or folder may come back in another case)
+  const fold = (p: string) => (process.platform === 'win32' ? p.toLowerCase() : p);
+  if (fold(real) === fold(rr)) return '';
+  if (!fold(real).startsWith(fold(rr.endsWith(sep) ? rr : rr + sep))) return null;
   return relative(rr, real).split(sep).join('/');
 }
 
